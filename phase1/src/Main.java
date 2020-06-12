@@ -1,0 +1,4 @@
+//hello!
+
+public class Main {
+}
