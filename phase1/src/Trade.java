@@ -7,7 +7,7 @@ public abstract class Trade {
     private boolean IsCompleted; // transaction is done (permanent: once, temporary: twice)
     private int numConfirmations; // once they set up the meeting, if they confirmed
     private static int totalTrade;
-    private HashMap meeting; //think of something else better
+    private HashMap<String, String> meeting; //think of something else better
 
     /**
      * @param type
@@ -19,7 +19,7 @@ public abstract class Trade {
         this.IsCompleted = false;
         this.numConfirmations = 0;
         totalTrade += 1;
-        this.meeting = new HashMap(); //come back to this
+        this.meeting = new HashMap<String, String>(); //come back to this
     }
 
     public String getTradeType() {
@@ -27,12 +27,12 @@ public abstract class Trade {
     }
     // ask if we need setter for type of trade
 
-    public HashMap getMeetingInfo() {
-        return meeting;
+    public HashMap<String, String> getMeetingInfo() {
+        return this.meeting;
     }
 
-    public void setMeetingInfo(HashMap newMeetingInfo) {
-        meeting = newMeetingInfo;
+    public void setMeetingInfo(HashMap<String, String> newMeetingInfo) {
+        this.meeting = newMeetingInfo;
     }
 
     public int getNumOfEdits() {
@@ -48,19 +48,19 @@ public abstract class Trade {
     }
 
     public boolean getIsCompleted() {
-        return IsCompleted;
+        return this.IsCompleted;
     }
 
     public void setIsCompleted(boolean newIsCompleted) {
-        IsCompleted = newIsCompleted;
+        this.IsCompleted = newIsCompleted;
     }
 
-    public int getnumConfirmations() {
-        return numConfirmations;
+    public int getNumConfirmations() {
+        return this.numConfirmations;
     }
 
-    public void incrementnumConfirmations() {
-        numConfirmations++;
+    public void incrementNumConfirmations() {
+        this.numConfirmations++;
     }
 
 // confirmation of meeting time/place for temporary vs. permanent
