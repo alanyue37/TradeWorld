@@ -1,8 +1,9 @@
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
-public class UserManager implements Serializable {
-    private ArrayList<User> users = new ArrayList<>();
+public class StandardUserManager implements Serializable {
+    private HashMap<String, StandardUser> users = new HashMap<>();
     private ArrayList<String> unfreezeRequests = new ArrayList<>();
 
     /**
@@ -11,13 +12,24 @@ public class UserManager implements Serializable {
      * @param password The submitted password.
      * @return Whether or not the username/password combination is valid.
      */
-    public boolean authenticateUser(String email, String password){
-        for (User user : users){
-            if (user.getEmail().equals(email) && user.getPassword().equals(password)){
-                return true;
-            }
+    boolean login(String email, String password) {
+        StandardUser account = users.get(email);
+        return password.equals(account.getPassword());
+    }
+
+    /**
+     * Checks a StandardUser and adds it to users if the email is unique
+     * @param name The name of the StandardUser
+     * @param email The email of the StandardUser
+     * @param password The password of the StandardUser
+     * @return Whether or not the StandardUser was successfully added
+     */
+    boolean createStandardUser(String name, String email, String password) {
+        if (users.containsKey(email)) {
+            return false;
         }
-        return false;
+        users.put(email, new StandardUser(name, email, password));
+        return true;
     }
 
     /**
@@ -26,12 +38,10 @@ public class UserManager implements Serializable {
      * @return A User object with the user's information, or null if no matching user is found.
      */
     public User getUserByEmail(String email){
-        for (User user : users){
-            if (user.getEmail().equals(email)){
-                return user;
-            }
+        if (!users.containsKey(email)) {
+            return null;
         }
-        return null;
+        return users.get(email);
     }
 
     /**
@@ -39,8 +49,8 @@ public class UserManager implements Serializable {
      * @return A list of all users who are below the borrowing ratio.
      */
     public ArrayList<User> getUsersBelowThreshold(){
-        ArrayList<User> result = new ArrayList<User>();
-        for (User user : users){
+        ArrayList<User> result = new ArrayList<>();
+        for (StandardUser user : users.values()){
             if (user.getNumItemsBorrowed() - user.getNumItemsLent() >= 1) { //TODO allow changing this ratio requirement
                 result.add(user);
             }

@@ -1,66 +1,35 @@
-import java.lang.reflect.Array;
-import java.util.ArrayList;
+public abstract class User {
+    private String name;
+    private String email;
+    private String password;
 
-public class User extends AbstractUser{
-    private ArrayList<Integer> inventory = new ArrayList<>();
-    private ArrayList<Integer> wishlist = new ArrayList<>();
-    private String city;
-    private boolean frozen;
-    private int numItemsBorrowed;
-    private int numItemsLent;
-
-    public ArrayList<Integer> getInventory(){
-        return inventory;
+    public User(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
     }
 
-    public void addToInventory(int itemID){
-        inventory.add(itemID);
+    public String getName(){
+        return name;
     }
 
-    public void removeFromInventory(int itemID){
-        inventory.remove(Integer.valueOf(itemID));
+    public void setName(String name){
+        this.name = name;
     }
 
-    public ArrayList<Integer> getWishlist(){
-        return wishlist;
+    public String getEmail(){
+        return email;
     }
 
-    public void addToWishlist(int itemID){
-        wishlist.add(itemID);
+    public void setEmail(String email){
+        this.email = email;
     }
 
-    public void removeFromWishlist(int itemID){
-        wishlist.remove(Integer.valueOf(itemID));
+    public String getPassword(){
+        return password;
     }
 
-    public String getCity(){
-        return city;
-    }
-
-    public void setCity(String city){
-        this.city = city;
-    }
-    public boolean isFrozen(){
-        return frozen;
-    }
-
-    public void setFrozen(boolean frozen){
-        this.frozen = frozen;
-    }
-
-    public int getNumItemsBorrowed(){
-        return numItemsBorrowed;
-    }
-
-    public void incrementNumItemsBorrowed(){
-        numItemsBorrowed++;
-    }
-
-    public int getNumItemsLent(){
-        return numItemsLent;
-    }
-
-    public void incrementNumItemsLent(){
-        numItemsLent++;
+    public void setPassword(String password){
+        this.password = password;
     }
 }
