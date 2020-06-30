@@ -1,4 +1,5 @@
-public abstract class User {
+public class User {
+
     private String name;
     private String email;
     private String password;
@@ -31,5 +32,13 @@ public abstract class User {
 
     public void setPassword(String password){
         this.password = password;
+    }
+
+    public boolean getIsAdmin() {
+        return true;
+    }
+
+    public String toString() {
+        return name + "\n" + email;
     }
 }
