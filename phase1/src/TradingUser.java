@@ -1,24 +1,24 @@
-import java.lang.reflect.Array;
-import java.util.ArrayList;
+import java.util.HashSet;
 
-public class StandardUser extends User{
-    private ArrayList<Integer> inventory;
-    private ArrayList<Integer> wishlist;
+public class TradingUser extends User{
+
+    private final HashSet<Integer> inventory;
+    private final HashSet<Integer> wishlist;
     private String city;
     private boolean frozen;
     private int numItemsBorrowed;
     private int numItemsLent;
 
-    public StandardUser(String name, String email, String password) {
+    public TradingUser(String name, String email, String password) {
         super(name, email, password);
-        inventory = new ArrayList<>();
-        wishlist = new ArrayList<>();
+        inventory = new HashSet<>();
+        wishlist = new HashSet<>();
         frozen = false;
         numItemsBorrowed = 0;
         numItemsLent = 0;
     }
 
-    public ArrayList<Integer> getInventory(){
+    public HashSet<Integer> getInventory(){
         return inventory;
     }
 
@@ -27,10 +27,10 @@ public class StandardUser extends User{
     }
 
     public void removeFromInventory(int itemID){
-        inventory.remove(Integer.valueOf(itemID));
+        inventory.remove(itemID);
     }
 
-    public ArrayList<Integer> getWishlist(){
+    public HashSet<Integer> getWishlist(){
         return wishlist;
     }
 
@@ -39,7 +39,7 @@ public class StandardUser extends User{
     }
 
     public void removeFromWishlist(int itemID){
-        wishlist.remove(Integer.valueOf(itemID));
+        wishlist.remove(itemID);
     }
 
     public String getCity(){
@@ -73,4 +73,22 @@ public class StandardUser extends User{
     public void incrementNumItemsLent(){
         numItemsLent++;
     }
+
+    @Override
+    public boolean getIsAdmin() {
+        return false;
+    }
+
+    public String toString() {
+        String status;
+        if (isFrozen()) {
+            status = "Currently Frozen";
+        }
+        else {
+            status = "In Good Standing";
+        }
+        return super.toString() + "\n" + "From " + city + "\n" + status + "\n" + "Have Borrowed " +
+                getNumItemsBorrowed() + " Items \n" + "Have Lent " + getNumItemsLent() + "Items";
+    }
+
 }
