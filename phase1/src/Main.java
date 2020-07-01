@@ -6,5 +6,4 @@ public class Main {
         TradeSystem ts = new TradeSystem();
         ts.run();
     }
-
 }
