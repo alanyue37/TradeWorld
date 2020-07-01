@@ -1,13 +1,53 @@
 public class TwoWayTrade extends Trade {
     private String user1;
     private String user2;
-    // unique ids of the items
+    private int item1;
+    private int item2;
 
     /**
-     * @param type
+     * @param type the type (temporary or permanent) of this Trade
+     * @param user1 the username of the first user of this Trade
+     * @param user2 the username of the second user of this Trade
+     * @param item1 the ID of the item that user1 will be trading
+     * @param item2 the ID of the item that user2 will be trading
      */
-    public TwoWayTrade(String type) {
+    public TwoWayTrade(String type, String user1, String user2, int item1, int item2) {
         super(type);
+        this.user1 = user1;
+        this.user2 = user2;
+        this.item1 = item1;
+        this.item2 = item2;
+    }
+
+    public String getUser1() {
+        return this.user1;
+    }
+
+    public String getUser2() {
+        return this.user2;
+    }
+
+    public int getItem1() {
+        return item1;
+    }
+
+    public int getItem2() {
+        return item2;
+    }
+
+    public int getItemOfUser(String user) {
+        if (user.equals(this.user1)) {
+            return this.item1;
+        } else {
+            return this.item2;
+        }
+    }
+
+    public int getUserofItem(int item) {
+        if (item == this.item1) {
+            return this.item1;
+        } else {
+            return this.item2;
+        }
     }
 }
-
