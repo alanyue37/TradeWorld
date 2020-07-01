@@ -160,4 +160,8 @@ public class UserManager implements Serializable {
         unfreezeRequests.add(email);
     }
 
+    public HashSet<String> getUnfreezeRequests(HashSet<String> unfreezeRequests) {
+        return unfreezeRequests;
+    }
+
 }
