@@ -33,7 +33,7 @@ public class DataManager {
             return tm;
         } else {
             boolean success = file.createNewFile();
-            TradeModel tm = new TradeModel(null, null, null, null);
+            TradeModel tm = new TradeModel(null, null, null);
             saveToFile(filePath, tm);
             return tm;
         }
