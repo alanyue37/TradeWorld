@@ -1,14 +1,16 @@
+import java.util.Date;
+
 public class Meeting {
     private String location;
-    private String time;    //ask later if string or time
+    private Date meetingTime;    //ask later if string or time
     private int numOfEdits;
     private int numConfirmations; //seen other in real life (0, 1 or 2)
     private boolean IsCompleted; //real life meeting is completed
     private boolean IsConfirmed; //time/place is confirmed by the other user
 
-    public Meeting(String location, String time){
+    public Meeting(String location, Date time){
         this.location = location;
-        this.time = time;
+        this.meetingTime = time;
     }
 
     public String getLocation(){
@@ -19,12 +21,12 @@ public class Meeting {
         this.location = newLocation;
     }
 
-    public String getTime(){
-        return this.time;
+    public Date getTime(){
+        return this.meetingTime;
     }
 
-    public void setTime(String newTime){
-        this.time = newTime;
+    public void setTime(Date newTime){
+        this.meetingTime = newTime;
     }
 
     public int getNumOfEdits(){

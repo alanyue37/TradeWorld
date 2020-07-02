@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Date;
 
 public abstract class Trade {
     private String type;  //temporary or permanent
@@ -6,6 +7,7 @@ public abstract class Trade {
     private boolean IsOpened; //transaction is done (1 for permanent, 2 for temporary)
     private static int totalTrade;
     private ArrayList<Meeting> meeting; //think of something else better
+    private Date creationDate;
 
     /** Construct trade given type (temporary or permanent)
      * @param type temporary or permanent trade
@@ -13,9 +15,10 @@ public abstract class Trade {
     public Trade(String type) {
         this.type = type;
         this.idOfTrade = totalTrade + 1;
-        this.IsOpened = false;
+        this.IsOpened = true;
         totalTrade += 1;
-        // implement meeting in constructor
+        this.meeting = new ArrayList<Meeting>();
+        this.creationDate = new Date();
     }
 
     /**
@@ -28,20 +31,63 @@ public abstract class Trade {
     // ask if we need setter for type of trade
 
     /**
-     *
-     * @return
+     * Getter for the ID of the trade.
+     * @return the ID of the trade.
      */
     public int getIdOfTrade() {
         return this.idOfTrade;
     }
 
+    /**
+     * Getter for status of the trade: whether the trade is still opened.
+     * @return for permanent trade, true if the meeting has occurred (and is confirmed). for temporary trade, true if
+     * both meeting has occurred (and is confirmed)
+     */
     public boolean getIsOpened() {
         return this.IsOpened;
     }
 
+    /**
+     * Change the IsOpened to false (close the trade)
+     */
     public void changeIsOpened() {
         this.IsOpened = false;
     }
+
+    /**
+     * Getter for the total number of trades that has been created.
+     * @return the number of total trades created
+     */
+    public int getTotalTrade(){
+        return totalTrade;
+    }
+
+    /**
+     * Getter for the meeting array list.
+     * @return list of meeting.
+     */
+    public ArrayList<Meeting> getMeetingList(){
+        return this.meeting;
+    }
+
+    /**
+     * Add another meeting to the list of meeting (if temporary trade)
+     * @param newMeeting second meeting time to return items (for temporary trade)
+     */
+    public void incrementMeetingList(Meeting newMeeting){
+        this.meeting.add(newMeeting);
+    }
+
+    /**
+     * Return the date of creation of the trade
+     * @return creationDate (date the trade was created)
+     */
+    public Date getCreationDate(){
+        return this.creationDate;
+    }
+
+    // no setter I guess for date?
+
 
     //do we need a setter? or automatically?
 
