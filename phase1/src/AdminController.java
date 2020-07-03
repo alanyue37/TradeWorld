@@ -1,7 +1,20 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashSet;
 
+/**
+ *
+ */
 public class AdminController {
-    private final TradeModel tradeModel;
+
+    private TradeModel tradeModel = new TradeModel();
+
+    /**
+     * Prompts the AdminUser to enter input
+     */
+
 
     /**
      * @param tradeModel for AdminController
