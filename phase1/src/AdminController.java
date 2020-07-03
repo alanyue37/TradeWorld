@@ -3,17 +3,41 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Scanner;
 
 /**
- *
+ * A controller class that sends Admin input to Use Cases
  */
 public class AdminController {
-
-    private TradeModel tradeModel = new TradeModel();
+    private final TradeModel tradeModel;
+    Scanner keyboard = new Scanner(System.in);
 
     /**
-     * Prompts the AdminUser to enter input
+     *
      */
+
+
+
+
+
+    public void askAdminForCreateAccountInfo() {
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     /**
