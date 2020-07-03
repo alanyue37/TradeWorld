@@ -23,5 +23,17 @@ public class MeetingManager {
         }
     }
 
+    public boolean isIncompleteMeeting(Meeting meeting){
+        Date today = new Date();
+        if (meeting.getIsCompleted()){
+            return false;
+        }
+        if (meeting.getIsConfirmed()){
+            return meeting.getTime().before(today);
+        }
+        return false;
+    }
+
+
     // public void setLimitOfEdits(int
 }
