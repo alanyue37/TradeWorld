@@ -10,20 +10,7 @@ import java.util.Scanner;
  */
 public class AdminController {
     private final TradeModel tradeModel;
-    Scanner keyboard = new Scanner(System.in);
-
-    /**
-     *
-     */
-
-
-
-
-
-    public void askAdminForCreateAccountInfo() {
-
-
-    }
+    private AdminPresenter adminPresenter;
 
 
 
@@ -40,12 +27,20 @@ public class AdminController {
 
 
 
-    /**
-     * @param tradeModel for AdminController
-     */
 
-    public AdminController(TradeModel tradeModel) {
-        this.tradeModel = tradeModel;
+    public void askAdminForCreateAccountInfo () {
+        System.out.println(adminPresenter.createAccountOrLogin());
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        try {
+            String input = br.readLine();
+            if (input.equals("create an account")) {
+                createAdmin(input, input, input);
+            } else if (input.equals("login")) {
+                adminLogin(input, input);
+            }
+        } catch (IOException e) {
+            System.out.println("Try Again!");
+        }
     }
 
     /**
@@ -53,7 +48,7 @@ public class AdminController {
      * @param email for createAccount
      * @param password for createAccount
      */
-    public void createAdmin(String name, String email, String password) {
+    private void createAdmin(String name, String email, String password) {
         tradeModel.getUserManager().createAdminUser(name, email, password);
     }
 
@@ -63,6 +58,15 @@ public class AdminController {
      */
     public void adminLogin(String email, String password) {
         tradeModel.getUserManager().admin_login(email, password);
+    }
+
+
+    /**
+     * @param tradeModel for AdminController
+     */
+
+    public AdminController(TradeModel tradeModel) {
+        this.tradeModel = tradeModel;
     }
 
     /**

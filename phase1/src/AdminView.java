@@ -1,10 +1,10 @@
 /**
- * class View is the text UI
+ * class AdminView is the text UI
  */
-public class View {
+public class AdminView {
     private AdminPresenter s;
     /**
-     * @param s that the presenter sends
+     * @param s that the AdminPresenter sends
      */
     public void print(String s) {
         System.out.println(s);
