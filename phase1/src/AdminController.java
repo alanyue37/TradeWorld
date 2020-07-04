@@ -1,9 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Scanner;
 
 /**
  * A controller class that sends Admin input to Use Cases
@@ -11,26 +9,25 @@ import java.util.Scanner;
 public class AdminController {
     private final TradeModel tradeModel;
     private AdminPresenter adminPresenter;
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
+    /**
+     * Checks whether the AdminUser wants to continue to see the other menu options or not.
+     */
+    public void startMenu() {
+        adminPresenter.startMenu();
+        try {
+            String input = br.readLine();
+            if (input.equals("continue")) {
+                askAdminForCreateAccountInfo();
+            }
+        } catch (IOException e) {
+            System.out.println("Oops, Try Again!");
+        }
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public void askAdminForCreateAccountInfo () {
-        System.out.println(adminPresenter.createAccountOrLogin());
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    public void askAdminForCreateAccountInfo() {
+        adminPresenter.createAccount();
         try {
             String input = br.readLine();
             if (input.equals("create an account")) {
@@ -39,9 +36,26 @@ public class AdminController {
                 adminLogin(input, input);
             }
         } catch (IOException e) {
-            System.out.println("Try Again!");
+            System.out.println("Oops, Try Again!");
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * @param name for createAccount

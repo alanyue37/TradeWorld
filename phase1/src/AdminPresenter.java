@@ -21,7 +21,6 @@ public class AdminPresenter implements Iterable<String>{
         this.im = im;
         this.tm = tm;
         this.tradeModel = tradeModel;
-
     }
 
     public void startMenu() {
