@@ -1,11 +1,17 @@
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 public class TradeManager implements Serializable {
     private int limitOfEdits;
     private ArrayList<Trade> listOfTrades;
     private MeetingManager meetingManager;
+    private int limitOfIncomplete; // should we put this here? or should we get it from somewhere else?
+
+    // need constructor
+
+    // getTrade(tradeid)
 
     public void addTrade(Trade newTrade){
         this.listOfTrades.add(newTrade);
@@ -33,7 +39,7 @@ public class TradeManager implements Serializable {
         return openTrades;
     }
 
-    public boolean isIncompleteTrade(Trade openTrade) {
+    private boolean isIncompleteTrade(Trade openTrade) {
         if (openTrade.getTradeType().equals("permanent")) {
             if (meetingManager.isIncompleteMeeting(openTrade.getMeetingList().get(0))) {
                 return true;
@@ -63,4 +69,60 @@ public class TradeManager implements Serializable {
 
     // limit of edits?
 
+    private HashMap<String, Integer> getIncompleteUsernamesOneWay(ArrayList<Trade> trades) {
+        HashMap<String, Integer> usernameCount = new HashMap<>();
+        for (Trade trade : trades) {
+            if (trade instanceof OneWayTrade) {
+                String giver = ((OneWayTrade) trade).getGiverUsername();
+                String receiver = ((OneWayTrade) trade).getReceiverUsername();
+                if (!(usernameCount.containsKey(giver))) {
+                    usernameCount.put(giver, 1);
+                } else {
+                    usernameCount.replace(giver, usernameCount.get(giver) + 1);
+                }
+                if (!(usernameCount.containsKey(receiver))) {
+                    usernameCount.put(receiver, 1);
+                } else {
+                    usernameCount.replace(receiver, usernameCount.get(receiver) + 1);
+                }
+            }
+        } return usernameCount;
+    }
+
+    private HashMap<String, Integer> getIncompleteUsernamesTwoWay(ArrayList<Trade> trades) {
+        HashMap<String, Integer> usernameCount = new HashMap<>();
+        for (Trade trade : trades) {
+            if (trade instanceof TwoWayTrade) {
+                String user1 = ((TwoWayTrade) trade).getUser1();
+                String user2 = ((TwoWayTrade) trade).getUser2();
+                if (!(usernameCount.containsKey(user1))) {
+                    usernameCount.put(user1, 1);
+                } else {
+                    usernameCount.replace(user1, usernameCount.get(user1) + 1);
+                }
+                if (!(usernameCount.containsKey(user2))) {
+                    usernameCount.put(user2, 1);
+                } else {
+                    usernameCount.replace(user2, usernameCount.get(user2) + 1);
+                }
+            }
+        } return usernameCount;
+    }
+
+    public ArrayList<String> getIncompleteUsernames() {
+        ArrayList<Trade> incompleteTrades = getIncompleteTrade();
+        HashMap<String, Integer> usernamesOneWay = getIncompleteUsernamesOneWay(incompleteTrades);
+        HashMap<String, Integer> usernamesTwoWay = getIncompleteUsernamesTwoWay(incompleteTrades);
+        ArrayList<String> incompleteUsernames = new ArrayList<>();
+        for (String user : usernamesOneWay.keySet()) {
+            if (usernamesOneWay.get(user) > limitOfIncomplete) {
+                incompleteUsernames.add(user);
+            }
+        }
+        for (String user : usernamesTwoWay.keySet()) {
+            if (usernamesTwoWay.get(user) > limitOfIncomplete) {
+                incompleteUsernames.add(user);
+            }
+        } return incompleteUsernames;
+    }
 }
