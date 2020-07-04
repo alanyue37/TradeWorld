@@ -4,17 +4,15 @@ import java.util.HashMap;
  * Manages notifications for the AdminUser.
  */
 public class AdminNotifyManager {
-    private final UserManager um;
     private final HashMap<String, User> adminUsersRequests;
-    private HashMap<String, Item> requestItemToBeAdded;
+    private final HashMap<String, Item> requestItemToBeAdded;
 
     /**
      * A constructor for class AdminNotifyManager.
-     * @param um which is UserManager.
      */
-    public AdminNotifyManager(UserManager um) {
-        this.um = um;
+    public AdminNotifyManager() {
         adminUsersRequests = new HashMap<>();
+        requestItemToBeAdded = new HashMap<>();
     }
 
     /**
@@ -28,6 +26,15 @@ public class AdminNotifyManager {
     }
 
     /**
+     * Allows users to make request to become an AdminUser.
+     * @param email is the email address of the user.
+     * @param user is the user itself.
+     */
+    public void makeRequest(String email, User user) {
+        adminUsersRequests.put(email, user);
+    }
+
+    /**
      * A getter method for the users that request to become an administrative user.
      *  @return adminUserRequests.
      */
@@ -36,6 +43,17 @@ public class AdminNotifyManager {
     }
 
     /**
+     * Adds the email of the user and the item to be added by the AdminUser if the item can/ should
+     * be added to the list.
+     * @param email is the email address of the user that wants to request to add the item.
+     * @param item is the item that the user wants to put in its available lists (i.e., inventory).
+     */
+    public void requestToAddItem(String email, Item item) {
+        requestItemToBeAdded.put(email, item);
+    }
+
+    /**
+     *
      * @return a hashmap with a key representing the user's email and value representing the item to be added.
      */
     public HashMap<String, Item> getRequestItemToBeAdded() {

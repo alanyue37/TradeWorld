@@ -199,8 +199,10 @@ public class AdminController {
             String addInput = br.readLine();
             if (addInput.equals("yes")) {
                 addItemToInventory(str.get(i), toBeAdded);
+                ++i;
+            } else if (addInput.equals("no")) {
+                ++i;
             }
-            ++i;
         }
     }
 

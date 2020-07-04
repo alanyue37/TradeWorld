@@ -48,7 +48,7 @@ public class AdminPresenter {
 
     public void setThreshold() {
         System.out.println("How much does the user have to (at least) lend than they have borrowed in order to make " +
-                "a non-lending transaction? Enter a number for the Lending Threshold: ");
+                "a non-lending transaction? Enter a whole number for the Lending Threshold: ");
     }
 
     public void end() {
