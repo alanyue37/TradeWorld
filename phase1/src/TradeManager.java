@@ -1,5 +1,4 @@
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -128,8 +127,6 @@ public class TradeManager implements Serializable {
             }
         } return incompleteUsernames;
     }
-
-    //abstract function instead?
 
     private Date getLastConfirmedMeetingTime(Trade trade){
         if (trade.getMeetingList().isEmpty()){
