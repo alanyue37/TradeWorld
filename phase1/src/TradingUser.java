@@ -1,6 +1,6 @@
 import java.util.HashSet;
 
-public class TradingUser extends User{
+public class TradingUser extends User {
 
     private final HashSet<Integer> inventory;
     private final HashSet<Integer> wishlist;
