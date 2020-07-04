@@ -1,12 +1,11 @@
-import java.util.HashSet;
+import java.util.HashMap;
 
 /**
- * Manages all notifications and send to the AdminUser
+ * Manages notifications for the AdminUser.
  */
 public class AdminNotifyManager {
-    private UserManager um = new UserManager();
-    private HashSet<User> adminUsersRequests;
-    private HashSet<User> adminUsersConfirmed;
+    private UserManager um;
+    private HashMap<String, User> adminUsersRequests;
 
     /**
      * Contructor for AdminNotifyManager
@@ -15,6 +14,10 @@ public class AdminNotifyManager {
     public AdminNotifyManager(UserManager um) {
         this.um = um;
     }
+
+
+
+
 
     public void addOtherAdminMembers() {
         adminUsersConfirmed.addAll(adminUsersRequests);
@@ -37,21 +40,4 @@ public class AdminNotifyManager {
         }
     }
 
-
-
-
-    /// should I use methods from UserManager or these?
-    /**
-     * @return a hashset of regularUsers
-     */
-    public HashSet<String> notifyUnfreezeRequests() {
-        return um.getUnfreezeRequests();
-    }
-
-    /**
-     * @return a hashset of regularAccounts that have to get frozen
-     */
-    public HashSet<String> notifyToFreezeAccounts() {
-        return um.getFreezeAccounts();
-    }
 }

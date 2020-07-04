@@ -1,27 +1,13 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.NoSuchElementException;
 
 
 /**
  * AdminPresenter prompts an AdminUser for inputs
  */
-public class AdminPresenter implements Iterable<String>{
-    private final List<String> prompts = new ArrayList<>();
-    private int curr = 0;
-    private UserManager um = new UserManager();
-    private ItemManager im = new ItemManager();
-    private TradeManager tm = new TradeManager();
-    private AdminNotifyManager anm = new AdminNotifyManager(um);
-    private TradeModel tradeModel = new TradeModel(um, im, tm);
+public class AdminPresenter {
+    private AdminNotifyManager anm;
+    private final TradeModel tradeModel;
 
-    public AdminPresenter(UserManager um, ItemManager im, TradeManager tm, TradeModel tradeModel) {
-        this.um = um;
-        this.im = im;
-        this.tm = tm;
+    public AdminPresenter(UserManager um, ItemManager im, TradeManager tm, TradeModel tradeModel, AdminNotifyManager anm) {
         this.tradeModel = tradeModel;
     }
 

@@ -7,44 +7,53 @@ import java.io.InputStreamReader;
  */
 public class AdminController {
     private final TradeModel tradeModel;
-    private AdminPresenter adminPresenter;
-    private BufferedReader br;
-    private AdminNotifyManager adminNotifyManager;
-    private ItemManager itemManager;
-    private UserManager um;
+    private final AdminPresenter adminPresenter;
+    private final BufferedReader br;
+    private AdminNotifyManager anm;
 
-    public AdminController(TradeModel tradeModel, AdminPresenter adminPresenter, AdminNotifyManager adminNotifyManager, ItemManager im, UserManager um) {
+    public AdminController(TradeModel tradeModel, AdminPresenter adminPresenter, AdminNotifyManager anm) {
         this.tradeModel = tradeModel;
         this.adminPresenter = adminPresenter;
-        this.adminNotifyManager = adminNotifyManager;
-        this.itemManager = im;
-        this.um = um;
+        this.anm = anm;
         this.br = new BufferedReader(new InputStreamReader(System.in));
     }
+
     /**
-     * Checks whether the AdminUser wants to continue to see the other menu options or not.
+     * Asks whether the AdminUser wants to continue to see the other menu options or not.
+     * If the AdminUser types in "exit", the AdminUser is brought back to the startMenu() and presents the same
+     * options again until the AdminUser types "continue."
+     * @throws IOException if something goes wrong.
      */
-    public void startMenu() {
+    public void startMenu() throws IOException {
         adminPresenter.startMenu();
-        try {
-            String input = br.readLine();
-            if (input.equals("continue")) {
-                askAdminForCreateAccountInfo();
-            }
-        } catch (IOException e) {
-            System.out.println("Something went wrong!");
+        String input = br.readLine();
+        if (input.equals("continue")) {
+            askAdminForCreateAccountInfo();
+        } else if (input.equals("exit")) {
+            adminPresenter.startMenu();
         }
     }
 
+    /**
+     * Asks the AdminUser to type in "continue" or "login."
+     * @throws IOException if something goes wrong.
+     */
     public void chooseLoginOptions() throws IOException {
         adminPresenter.chooseCreateAccountOrLogin();
         String choiceInput = br.readLine();
         if (choiceInput.equals("create an account")) {
             askAdminForCreateAccountInfo();
-        } askAdminLoginInfo();
+        } else if (choiceInput.equals("log in")) {
+            askAdminLoginInfo();
+        }
     }
 
-    public void askAdminForCreateAccountInfo() throws IOException {
+    /**
+     * A helper function for chooseLoginOptions().
+     * Asks the AdminUser to type in their name, email, and password to create an account.
+     * @throws IOException if something goes wrong.
+     */
+    private void askAdminForCreateAccountInfo() throws IOException {
         adminPresenter.accountEnterName();
         String nameInput = br.readLine();
         adminPresenter.accountEnterEmail();
@@ -54,10 +63,21 @@ public class AdminController {
         createAdmin(nameInput, emailInput, passwordInput);
     }
 
+    /**
+     * A helper function for askAdminForCreateAccountInfo().
+     * @param name for the AdminUser name.
+     * @param email for the AdminUser email.
+     * @param password for the AdminUser password.
+     */
     private void createAdmin(String name, String email, String password) {
         tradeModel.getUserManager().createAdminUser(name, email, password);
     }
 
+    /**
+     * A helper function for chooseLoginOptions().
+     * Asks the AdminUser to type in their email and password if they already have an existing account.
+     * @throws IOException if something goes wrong.
+     */
     public void askAdminLoginInfo() throws IOException {
         adminPresenter.accountEnterEmail();
         String emailInput = br.readLine();
@@ -66,10 +86,19 @@ public class AdminController {
         adminLogin(emailInput, passwordInput);
     }
 
-    public void adminLogin(String email, String password) {
+    /**
+     * A helper function for askAdminLoginInfo().
+     * @param email for the AdminUser email.
+     * @param password for the AdminUser password.
+     */
+    private void adminLogin(String email, String password) {
         tradeModel.getUserManager().admin_login(email, password);
     }
 
+    /**
+     *
+     * @throws IOException if something goes wrong.
+     */
     public void askAdminToAddNewAdmin() throws IOException {
         adminPresenter.addNewAdminUser();
         String addInput = br.readLine();
@@ -93,9 +122,7 @@ public class AdminController {
      }
 
     public void confirmToFreeze(String email) {
-        if (tradeModel.getTradeManager().isfrozen == false) {
-            tradeModel.getUserManager().freeze(email);
-        }
+        tradeModel.getUserManager().freeze(email);
     }
 
      public void askAdminToUnfreezeUsers() throws IOException {
@@ -109,9 +136,7 @@ public class AdminController {
      }
 
     public void confirmToUnfreeze(String unfreezeRequests) {
-        for (String user:  tradeModel.getUserManager().getUnfreezeRequests()) {
-            tradeModel.getUserManager().unfreeze(user);
-        }
+        tradeModel.getUserManager().unfreeze(unfreezeRequests);
     }
 
      public void askAdminToChangeStatusToAvailable() throws IOException {
