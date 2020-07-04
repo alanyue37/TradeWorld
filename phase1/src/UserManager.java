@@ -8,6 +8,7 @@ public class UserManager implements Serializable {
     private final HashMap<String, TradingUser> tradingUsers;
     private final HashMap<String, User> adminUsers;
     private final HashSet<String> unfreezeRequests;
+    private final HashSet<String> freezeAccounts;
     private int threshold;
 
     /**
@@ -17,6 +18,7 @@ public class UserManager implements Serializable {
         tradingUsers = new HashMap<>();
         adminUsers = new HashMap<>();
         unfreezeRequests = new HashSet<>();
+        freezeAccounts = new HashSet<>();
     }
 
     /**
@@ -160,8 +162,16 @@ public class UserManager implements Serializable {
         unfreezeRequests.add(email);
     }
 
+    public void markUserForFreezing(String email) {
+        freezeAccounts.add(email);
+    }
+
     public HashSet<String> getUnfreezeRequests(HashSet<String> unfreezeRequests) {
         return unfreezeRequests;
+    }
+
+    public HashSet<String> getFreezeAccounts(HashSet<String> freezeAccounts) {
+        return freezeAccounts;
     }
 
 }
