@@ -174,13 +174,12 @@ public class UserManager implements Serializable {
         return this.freezeAccounts;
     }
 
-    public HashMap<String, User> addToAdminUsers(String email, User user) {
+    public void addToAdminUsers(String email, User user) {
         adminUsers.put(email, user);
     }
 
     public HashMap<String, User> getAdminUsers() {
         return this.adminUsers;
     }
-
 
 }

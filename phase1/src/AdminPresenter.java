@@ -1,18 +1,12 @@
-
-
 /**
  * AdminPresenter prompts an AdminUser for inputs
  */
 public class AdminPresenter {
-    private AdminNotifyManager anm;
-    private final TradeModel tradeModel;
-
-    public AdminPresenter(UserManager um, ItemManager im, TradeManager tm, TradeModel tradeModel, AdminNotifyManager anm) {
-        this.tradeModel = tradeModel;
+    public AdminPresenter() {
     }
 
     public void startMenu() {
-        System.out.println("Welcome! Enter 'continue' to continue or 'exit' to exit");
+        System.out.println("Welcome! Type 'continue' to see more options or 'exit' to exit");
     }
 
     public void chooseCreateAccountOrLogin() {
@@ -20,86 +14,45 @@ public class AdminPresenter {
     }
 
     public void accountEnterName() {
-        System.out.println("Enter Name: ");
+        System.out.println("Enter your name: ");
     }
 
     public void accountEnterEmail() {
-        System.out.println("Enter Email: ");
+        System.out.println("Enter your email: ");
     }
 
     public void accountEnterPassword() {
-        System.out.println("Enter Password: ");
+        System.out.println("Enter your password: ");
     }
 
-    public void addNewAdminUser() {
-        System.out.println("Add New Admin User: " + anm.adminUserToString());
+    public void addNewAdminUser(String adminUsersToBeAdded) {
+        System.out.println("Type 'yes' to make this user an admin user." + "Add New Admin User: " + adminUsersToBeAdded);
     }
 
-
-    public void freezeAccounts() {
-        System.out.println("Freeze Accounts: ");
+    public void freezeAccounts(String freeze) {
+        System.out.println("This account has to be frozen. Type 'confirm to freeze this account. " +
+                "Freeze Account for: " + freeze);
     }
 
-    public void unfreezeAccounts() {
-        System.out.println("Requests for Unfreezing Accounts: ");
+    public void unfreezeAccounts(String unfreeze) {
+        System.out.println("This user has their account frozen and is requesting to unfreeze. " +
+                "Type 'confirm' to unfreeze this account. Unfreeze Account for: " + unfreeze);
     }
 
-    public void addItemToInventory() {
-        System.out.println("Add this item to this User's Inventory?: ");
+    public void addItemToInventory(String itemToBeAdded) {
+        System.out.println("The user wants to add an item to their inventory. " +
+                "Type 'yes' to add this item or 'no' to not add this item. Add this item to this User's Inventory?: "
+                + itemToBeAdded);
     }
 
-
-    public void addItemForAD() {
-        System.out.println("Add item for advertisement?: " + um.toString());
-    }
 
     public void setThreshold() {
-        System.out.println("Set Threshold for lending: ");
+        System.out.println("How much does the user have to (at least) lend than they have borrowed in order to make " +
+                "a non-lending transaction? Enter a number for the Lending Threshold: ");
     }
 
-
-
-
-
-
-
-
-
-
-
-    /**
-     * Checks whether there is another prompt after current prompt
-     * Citation of code: based on the class studentPropertiesIterator.java (week 6)
-     */
-    @Override
-    public boolean hasNext() {
-        return curr < prompts.size();
+    public void end() {
+        System.out.println("See you soon!");
     }
-
-    /**
-     * @return the next prompt to print
-     * Citation of code: based on the class studentPropertiesIterator.java (week 6)
-     */
-    @Override
-    public String next() {
-        String input;
-        try {
-            input = prompts.get(curr);
-        } catch (IndexOutOfBoundsException e) {
-            throw new NoSuchElementException();
-        } curr += 1;
-        return input;
-    }
-
-    /**
-     * Removes the prompt from the screen
-     * Citation of code: based on the class studentPropertiesIterator.java (week 6)
-     */
-    @Override
-    public void remove() {
-        throw new UnsupportedOperationException("Not Supported.");
-    }
-
-
 }
 
