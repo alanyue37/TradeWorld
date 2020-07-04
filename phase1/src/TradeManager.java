@@ -13,7 +13,53 @@ public class TradeManager implements Serializable {
 
     // need constructor
 
-    // getTrade(tradeid)
+    public Trade getTrade(int tradeid) {
+        for (int i = 0; i < this.listOfTrades.size(); i++) {
+            if (listOfTrades.get(i).getIdOfTrade() == tradeid) {
+                return listOfTrades.get(i);
+            }
+        } return null;
+    }
+
+    public void agreeMeeting(int tradeid) {
+        Trade trade = getTrade(tradeid);
+        Meeting meeting = trade.getMeetingList().get(trade.getMeetingList().size() - 1);
+        meetingManager.confirmAgreement(meeting);
+    }
+
+    public ArrayList<String> agreeTradeOneWay(int tradeid) {
+        Trade trade = getTrade(tradeid);
+        Meeting meeting = trade.getMeetingList().get(trade.getMeetingList().size() - 1);
+        meetingManager.meetingHappened(meeting);
+        if (trade.getTradeType().equals("Permanent")) {
+            trade.changeIsOpened();
+        } else if (trade.getTradeType().equals("Temporary") && trade.getMeetingList().size() == 2) {
+            trade.changeIsOpened();
+        }
+        ArrayList<String> tradelist = new ArrayList<>();
+        tradelist.add(((OneWayTrade) trade).getGiverUsername());
+        tradelist.add(((OneWayTrade) trade).getReceiverUsername());
+        tradelist.add(String.valueOf(((OneWayTrade) trade).getItemId()));
+        return tradelist;
+    } // [giver, receiver, item]
+
+    public ArrayList<String> agreeTradeTwoWay(int tradeid) {
+        Trade trade = getTrade(tradeid);
+        Meeting meeting = trade.getMeetingList().get(trade.getMeetingList().size() - 1);
+        meetingManager.meetingHappened(meeting);
+        if (trade.getTradeType().equals("Permanent")) {
+            trade.changeIsOpened();
+        } else if (trade.getTradeType().equals("Temporary") && trade.getMeetingList().size() == 2) {
+            trade.changeIsOpened();
+        }
+        ArrayList<String> tradelist = new ArrayList<>();
+        tradelist.add(((TwoWayTrade) trade).getUser1());
+        tradelist.add(((TwoWayTrade) trade).getUser2());
+        tradelist.add(String.valueOf(((TwoWayTrade) trade).getItem1()));
+        tradelist.add(String.valueOf(((TwoWayTrade) trade).getItem2()));
+        return tradelist;
+    } // [user1, user2, item1, item2]
+
 
     public void addTrade(Trade newTrade){
         this.listOfTrades.add(newTrade);
