@@ -166,12 +166,12 @@ public class UserManager implements Serializable {
         freezeAccounts.add(email);
     }
 
-    public HashSet<String> getUnfreezeRequests(HashSet<String> unfreezeRequests) {
-        return unfreezeRequests;
+    public HashSet<String> getUnfreezeRequests() {
+        return this.unfreezeRequests;
     }
 
-    public HashSet<String> getFreezeAccounts(HashSet<String> freezeAccounts) {
-        return freezeAccounts;
+    public HashSet<String> getFreezeAccounts() {
+        return this.freezeAccounts;
     }
 
 }

@@ -76,5 +76,7 @@ public class ItemManager implements Serializable {
         return true;
     }
 
-
+    public String ToString(Item item) {
+        return item.getName() + ": " + item.getDescription();
+    }
 }

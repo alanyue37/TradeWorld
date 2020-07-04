@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -32,15 +33,22 @@ public class AdminPresenter implements Iterable<String>{
         System.out.println("Type 'create an account' to create an AdminAccount or 'Login' to login to an AdminAccount: ");
     }
 
-    public void createAccount() {
-        String[] createAccount = {"Enter Name: ", "Enter Email: ", "Enter Password: "};
-        for (int curr = 0; curr < createAccount.length; ++curr)
-            System.out.println(createAccount[curr]);
+    public void accountEnterName() {
+        System.out.println("Enter Name: ");
     }
 
-    public void addNewAdminUsers() {
-        System.out.println("Add New Admin User(s): ");
+    public void accountEnterEmail() {
+        System.out.println("Enter Email: ");
     }
+
+    public void accountEnterPassword() {
+        System.out.println("Enter Password: ");
+    }
+
+    public void addNewAdminUser() {
+        System.out.println("Add New Admin User: " + anm.adminUserToString());
+    }
+
 
     public void freezeAccounts() {
         System.out.println("Freeze Accounts: ");
@@ -54,17 +62,17 @@ public class AdminPresenter implements Iterable<String>{
         System.out.println("Add this item to this User's Inventory?: ");
     }
 
-    public void addItemToWishlist() {
-        System.out.println("Add this item to this User's Wishlist?: ");
-    }
 
     public void addItemForAD() {
-        System.out.println("Add item for advertisement?: ");
+        System.out.println("Add item for advertisement?: " + um.toString());
     }
 
     public void setThreshold() {
         System.out.println("Set Threshold for lending: ");
     }
+
+
+
 
 
 
