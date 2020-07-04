@@ -32,6 +32,21 @@ public class MeetingManager {
         return false;
     }
 
+    public boolean getMeetingCompleted(Meeting meeting){
+        return meeting.getIsCompleted();
+    }
+
+    public boolean getExchangeConfirmed(Meeting meeting){
+        return meeting.getIsConfirmed();
+    }
+
+    public Date getConfirmedMeetingTime(Meeting meeting){
+        if (meeting.getIsConfirmed()){
+            return meeting.getTime();
+        }
+        return null;
+    }
+
 
     // public void setLimitOfEdits(int
 }
