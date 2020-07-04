@@ -117,7 +117,7 @@ public class AdminController {
      * @param newAdminUser is the AdminUser itself.
      */
     private void addNewAdmins(String newAdminUserEmail, User newAdminUser){
-        anm.addAdminMembers(newAdminUserEmail, newAdminUser);
+        tradeModel.getUserManager().addNewAdminUsers(newAdminUserEmail, newAdminUser);
     }
 
     /**

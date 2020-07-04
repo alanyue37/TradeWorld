@@ -18,15 +18,6 @@ public class AdminNotifyManager {
     }
 
     /**
-     * @param newAdminUserEmail is the user's email that is to become an admin.
-     * @param newAdminUser is the user object.
-     */
-    public void addAdminMembers(String newAdminUserEmail, User newAdminUser) {
-        HashMap<String, User> existingAdminUsers = um.getAdminUsers();
-        existingAdminUsers.put(newAdminUserEmail, newAdminUser);
-    }
-
-    /**
      * @return a string which includes the email's of users that request to become an administrative user.
      */
     public String toStringAdminUsers() {
