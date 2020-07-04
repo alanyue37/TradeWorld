@@ -8,6 +8,7 @@ public class UserManager implements Serializable {
     private final HashMap<String, TradingUser> tradingUsers;
     private final HashMap<String, User> adminUsers;
     private final HashSet<String> unfreezeRequests;
+    private final HashSet<String> freezeAccounts;
     private int threshold;
 
     /**
@@ -17,6 +18,7 @@ public class UserManager implements Serializable {
         tradingUsers = new HashMap<>();
         adminUsers = new HashMap<>();
         unfreezeRequests = new HashSet<>();
+        freezeAccounts = new HashSet<>();
     }
 
     /**
@@ -158,6 +160,44 @@ public class UserManager implements Serializable {
      */
     public void markUserForUnfreezing(String email){
         unfreezeRequests.add(email);
+    }
+
+    /**
+     * Adds a user to freeze their account.
+     * @param email is the email of the user.
+     */
+    public void markUserForFreezing(String email) {
+        freezeAccounts.add(email);
+    }
+
+    /**
+     * @return a hashset of strings that has all unfreezeRequests.
+     */
+    public HashSet<String> getUnfreezeRequests() {
+        return this.unfreezeRequests;
+    }
+
+    /**
+     * @return a hashset of strings that has all accounts that should be frozen.
+     */
+    public HashSet<String> getFreezeAccounts() {
+        return this.freezeAccounts;
+    }
+
+    /**
+     * Adds new Administrative Users to AdminUsers.
+     * @param email is the email of the user.
+     * @param user is the user itself.
+     */
+    public void addNewAdminUsers(String email, User user) {
+        adminUsers.put(email, user);
+    }
+
+    /**
+     * @return all the adminUsers.
+     */
+    public HashMap<String, User> getAdminUsers() {
+        return this.adminUsers;
     }
 
 }

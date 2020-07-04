@@ -37,4 +37,5 @@ public class TradeModel implements Serializable {
     public void setTradeManager(TradeManager tradeManager) { this.tradeManager = tradeManager; }
 
     public TradeManager getTradeManager() { return tradeManager; }
+
 }
