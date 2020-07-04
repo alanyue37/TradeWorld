@@ -14,6 +14,7 @@ public class AdminPresenter implements Iterable<String>{
     private UserManager um = new UserManager();
     private ItemManager im = new ItemManager();
     private TradeManager tm = new TradeManager();
+    private AdminNotifyManager anm = new AdminNotifyManager(um);
     private TradeModel tradeModel = new TradeModel(um, im, tm);
 
     public AdminPresenter(UserManager um, ItemManager im, TradeManager tm, TradeModel tradeModel) {

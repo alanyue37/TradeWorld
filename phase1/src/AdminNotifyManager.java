@@ -16,10 +16,12 @@ public class AdminNotifyManager {
 
     /**
      * @param item to be put on advertisement by the AdminUser
-     * @return a string in the format "Name: Description"
+     * change the isAvailable variable from false to true.
      */
-    public String putOnAD(Item item) {
-        return item.getName() + ": " + item.getDescription();
+    public void putOnAD(Item item) {
+        if (!item.isAvailable()) {
+            item.setAvailable(true);
+        }
     }
 
     /**
