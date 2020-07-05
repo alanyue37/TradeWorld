@@ -2,8 +2,6 @@ import java.util.Date;
 
 public class MeetingManager {
 
-    private int limitOfEdits;
-
     public void changeMeeting(Meeting meeting, String location, Date time) {
         meeting.setLocation(location);
         meeting.setTime(time);
@@ -11,11 +9,11 @@ public class MeetingManager {
     }
     // come back to this
 
-    public void confirmMeeting(Meeting meeting) {
+    public void confirmAgreement(Meeting meeting) {
         meeting.changeIsConfirmed();
     }
 
-    public void confirmTrade(Meeting meeting) {
+    public void meetingHappened(Meeting meeting) {
         meeting.incrementNumConfirmations();
 
         if (meeting.getNumConfirmations() == 2) {
@@ -32,6 +30,21 @@ public class MeetingManager {
             return meeting.getTime().before(today);
         }
         return false;
+    }
+
+    public boolean getMeetingCompleted(Meeting meeting){
+        return meeting.getIsCompleted();
+    }
+
+    public boolean getExchangeConfirmed(Meeting meeting){
+        return meeting.getIsConfirmed();
+    }
+
+    public Date getConfirmedMeetingTime(Meeting meeting){
+        if (meeting.getIsConfirmed()){
+            return meeting.getTime();
+        }
+        return null;
     }
 
 
