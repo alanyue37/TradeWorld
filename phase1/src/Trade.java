@@ -2,11 +2,11 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public abstract class Trade {
-    private String type;  //temporary or permanent
+    private String type;  // temporary or permanent
     private int idOfTrade;
-    private boolean IsOpened; //transaction is done (1 for permanent, 2 for temporary)
+    private boolean IsOpened; // transaction is done (1 meeting for permanent, 2 for temporary)
     private static int totalTrade;
-    private ArrayList<Meeting> meeting; //think of something else better
+    private ArrayList<Meeting> meeting;
     private Date creationDate;
 
     /** Construct trade given type (temporary or permanent)
@@ -28,7 +28,6 @@ public abstract class Trade {
     public String getTradeType() {
         return this.type;
     }
-    // ask if we need setter for type of trade
 
     /**
      * Getter for the ID of the trade.
@@ -63,8 +62,8 @@ public abstract class Trade {
     }
 
     /**
-     * Getter for the meeting array list.
-     * @return list of meeting.
+     * Getter for the meeting array list
+     * @return list of meeting
      */
     public ArrayList<Meeting> getMeetingList(){
         return this.meeting;
@@ -86,14 +85,9 @@ public abstract class Trade {
         return this.creationDate;
     }
 
-    // no setter I guess for date?
-
-
-    //do we need a setter? or automatically?
-
-    // meeting getters**
-
-
-// confirmation of meeting time/place for temporary vs. permanent
-// opened/not opened variable or like getter with if(...) then(true/false)
+    /**
+     * Returns users involved in the trade, regardless of type
+     * @return list of users in trade
+     */
+    public abstract ArrayList<String> getUsers();
 }

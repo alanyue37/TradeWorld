@@ -1,8 +1,10 @@
+import java.util.ArrayList;
+
 public class TwoWayTrade extends Trade {
     private String user1;
     private String user2;
-    private int item1;
-    private int item2;
+    private String item1;
+    private String item2;
 
     /**
      * @param type the type (temporary or permanent) of this Trade
@@ -11,7 +13,7 @@ public class TwoWayTrade extends Trade {
      * @param item1 the ID of the item that user1 will be trading
      * @param item2 the ID of the item that user2 will be trading
      */
-    public TwoWayTrade(String type, String user1, String user2, int item1, int item2) {
+    public TwoWayTrade(String type, String user1, String user2, String item1, String item2) {
         super(type);
         this.user1 = user1;
         this.user2 = user2;
@@ -27,15 +29,20 @@ public class TwoWayTrade extends Trade {
         return this.user2;
     }
 
-    public int getItem1() {
+    public String getItem1() {
         return item1;
     }
 
-    public int getItem2() {
+    public String getItem2() {
         return item2;
     }
 
-    public int getItemOfUser(String user) {
+    /**
+     * Getter for the item ID based on the user trading it
+     * @param user the user who is trading an item
+     * @return the item ID that the given user is trading
+     */
+    public String getItemOfUser(String user) {
         if (user.equals(this.user1)) {
             return this.item1;
         } else {
@@ -43,11 +50,24 @@ public class TwoWayTrade extends Trade {
         }
     }
 
-    public int getUserofItem(int item) {
-        if (item == this.item1) {
+    /**
+     * Getter for the user based on the item being trading
+     * @param item the ID of the item being traded
+     * @return user that is trading the given item
+     */
+    public String getUserofItem(String item) {
+        if (item.equals(this.item1)) {
             return this.item1;
         } else {
             return this.item2;
         }
+    }
+
+    @Override
+    public ArrayList<String> getUsers() {
+        ArrayList<String> users = new ArrayList<>();
+        users.add(user1);
+        users.add(user2);
+        return users;
     }
 }
