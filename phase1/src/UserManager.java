@@ -200,4 +200,23 @@ public class UserManager implements Serializable {
         return this.adminUsers;
     }
 
+    /**
+     * @param email The users given email
+     * @return a string version of the users inventory
+     */
+    public String getInventory(String email) {
+        TradingUser account = tradingUsers.get(email);
+        return String.valueOf(account.getInventory());
+        // TODO: can we get the names of the items from the account
+    }
+
+    /**
+     * @param email The users given email
+     * @return a string version of the users wishlist
+     */
+    public String getWishlist(String email) {
+        TradingUser account = tradingUsers.get(email);
+        return String.valueOf(account.getWishlist());
+        // TODO: can we get the names of the items from the account
+    }
 }
