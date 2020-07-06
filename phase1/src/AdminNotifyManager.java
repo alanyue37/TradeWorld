@@ -1,7 +1,7 @@
 import java.util.HashMap;
 
 /**
- * Manages notifications for the AdminUser.
+ * Manages notifications for the AdminUser. Uses the User and Item entities only.
  */
 public class AdminNotifyManager {
     private final HashMap<String, User> adminUsersRequests;
@@ -44,7 +44,8 @@ public class AdminNotifyManager {
 
     /**
      * Adds the email of the user and the item to be added by the AdminUser if the item can/ should
-     * be added to the list.
+     * be added to the list. This is a way to prevent the users from putting in items such as cars and intangible items
+     * in their inventories.
      * @param email is the email address of the user that wants to request to add the item.
      * @param item is the item that the user wants to put in its available lists (i.e., inventory).
      */
