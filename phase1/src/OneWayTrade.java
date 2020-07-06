@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Represents a one way trade, where one user gives an item to another user
@@ -9,7 +10,7 @@ public class OneWayTrade extends Trade {
     private String receiverUsername;
 
 
-    /** Constructs a one way trade
+    /**
      * @param type the type (temporary or permanent) of this Trade
      * @param giver the user who is giving the item in this Trade
      * @param receiver the user who is receiving the item in this Trade
@@ -57,4 +58,22 @@ public class OneWayTrade extends Trade {
         users.add(receiverUsername);
         return users;
     }
+
+    @Override
+    public  ArrayList<String> getItems(){
+        ArrayList<String> items = new ArrayList<>();
+        items.add(this.itemId);
+        return items;
+    }
+
+    @Override
+    public HashMap<String, String> userToItem(){
+        HashMap<String, String> userToItem = new HashMap<>();
+        userToItem.put(giverUsername, itemId);
+        userToItem.put(receiverUsername, null);
+        return userToItem;
+    }
+
 }
+
+// do we need setters for the item, giver, and receiver?

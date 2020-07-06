@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Represents a trade to exchange item(s)
@@ -94,4 +95,8 @@ public abstract class Trade {
      * @return list of users in trade
      */
     public abstract ArrayList<String> getUsers();
+
+    public abstract ArrayList<String> getItems();
+
+    public abstract HashMap<String, String> userToItem();
 }
