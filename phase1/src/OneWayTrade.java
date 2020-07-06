@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class OneWayTrade extends Trade {
     private String itemId;
@@ -38,6 +39,22 @@ public class OneWayTrade extends Trade {
         users.add(receiverUsername);
         return users;
     }
+
+    @Override
+    public  ArrayList<String> getItems(){
+        ArrayList<String> items = new ArrayList<>();
+        items.add(this.itemId);
+        return items;
+    }
+
+    @Override
+    public HashMap<String, String> userToItem(){
+        HashMap<String, String> userToItem = new HashMap<>();
+        userToItem.put(giverUsername, itemId);
+        userToItem.put(receiverUsername, null);
+        return userToItem;
+    }
+
 }
 
 // do we need setters for the item, giver, and receiver?

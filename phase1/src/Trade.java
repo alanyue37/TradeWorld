@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 public abstract class Trade {
     private String type;  // temporary or permanent
@@ -90,4 +91,8 @@ public abstract class Trade {
      * @return list of users in trade
      */
     public abstract ArrayList<String> getUsers();
+
+    public abstract ArrayList<String> getItems();
+
+    public abstract HashMap<String, String> userToItem();
 }

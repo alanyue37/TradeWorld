@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class TwoWayTrade extends Trade {
     private String user1;
@@ -69,5 +70,21 @@ public class TwoWayTrade extends Trade {
         users.add(user1);
         users.add(user2);
         return users;
+    }
+
+    @Override
+    public ArrayList<String> getItems(){
+        ArrayList<String> items = new ArrayList<>();
+        items.add(item1);
+        items.add(item2);
+        return items;
+    }
+
+    @Override
+    public HashMap<String, String> userToItem(){
+        HashMap<String, String> userToItem = new HashMap<>();
+        userToItem.put(user1, item1);
+        userToItem.put(user2, item2);
+        return userToItem;
     }
 }
