@@ -1,12 +1,15 @@
 import java.util.ArrayList;
 
+/**
+ * Represents a one way trade, where one user gives an item to another user
+ */
 public class OneWayTrade extends Trade {
     private String itemId;
     private String giverUsername;
     private String receiverUsername;
 
 
-    /**
+    /** Constructs a one way trade
      * @param type the type (temporary or permanent) of this Trade
      * @param giver the user who is giving the item in this Trade
      * @param receiver the user who is receiving the item in this Trade
@@ -19,18 +22,34 @@ public class OneWayTrade extends Trade {
         this.itemId = itemId;
     }
 
+    /**
+     * Gets the item ID of the item being traded
+     * @return item ID of item being traded
+     */
     public String getItemId() {
         return this.itemId;
     }
 
+    /**
+     * Gets the username of the user giving the item
+     * @return username of the giver
+     */
     public String getGiverUsername(){
         return this.giverUsername;
     }
 
+    /**
+     * Gets the username of the user receiving the item
+     * @return username of the receiver
+     */
     public String getReceiverUsername(){
         return this.receiverUsername;
     }
 
+    /**
+     * Gets users involved in the one way trade
+     * @return list of users in trade
+     */
     @Override
     public ArrayList<String> getUsers() {
         ArrayList<String> users = new ArrayList<>();
@@ -39,5 +58,3 @@ public class OneWayTrade extends Trade {
         return users;
     }
 }
-
-// do we need setters for the item, giver, and receiver?
