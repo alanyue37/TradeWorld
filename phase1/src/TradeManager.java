@@ -22,7 +22,7 @@ public class TradeManager implements Serializable {
     }
 
     /**
-     * Agrees to meeting details (time, location) of the trade with ID "tradeId."
+     * Agrees to meeting details (time, location) of the trade with ID "tradeId"
      * @param tradeId ID of the trade
      */
     public void agreeMeeting(int tradeId) {
@@ -70,9 +70,9 @@ public class TradeManager implements Serializable {
     }
 
     /**
-     * Given tradeId, return the trade.
-     * @param tradeId id of the trade
-     * @return trade with tradeid "tradeId"
+     * Given tradeId, return the trade
+     * @param tradeId ID of the trade
+     * @return trade with the ID "tradeId"
      */
     private Trade getTrade(int tradeId){
         if (this.ongoingTrades.containsKey(tradeId)){
@@ -108,7 +108,7 @@ public class TradeManager implements Serializable {
      * Given the tradeId, returns a hashmap that maps the user's Username to the item they own. If it is a one-way
      * trade, then one user will map to null, indicating they are not giving any item.
      * @param tradeId ID of the trade
-     * @return hashmap which maps user (of the trade) to their item.
+     * @return hashmap which maps user (of the trade) to their item
      */
     public HashMap<String, String> getUserAndItem(int tradeId){
         return getTrade(tradeId).userToItem();
@@ -315,15 +315,13 @@ public class TradeManager implements Serializable {
         HashMap<String, Integer> partnersMap = new HashMap<>();
         for (Trade trade : trades) {
             for (String trader : trade.getUsers()) {
-                if (!(trader.equals(user))) {
                     if (!(partnersMap.containsKey(trader))) {
                         partnersMap.put(trader, 1);
                     } else { partnersMap.replace(trader, partnersMap.get(trader) + 1); }
-                }
             }
-        } return partnersMap;
+        } partnersMap.remove(user);
+        return partnersMap;
     }
-    // any way to reduce this to less loops?
 
     private ArrayList<String> sortPartnersList(HashMap<String, Integer> partners) {
         ArrayList<String> sorted = new ArrayList<>();
@@ -344,26 +342,40 @@ public class TradeManager implements Serializable {
      * Returns arraylist of the top "num" most frequent trading partners of user "user"
      * @param num the number of most frequent trading partners wanted
      * @param user the username of the user to get their most frequent trading partners
-     * @return arraylist of usernames that are the most frequent trading partners of user "user"
+     * @return arraylist of usernames that are the most frequent trading partners of user "user." If "num" is greater
+     * than the number of trading partners that "user" has, all of their trading partners are returned.
      */
     public ArrayList<String> getFrequentPartners(int num, String user) {
         HashMap<String, Integer> partners = getPartnersMap(user);
         ArrayList<String> frequentPartners = sortPartnersList(partners); // assumes that sort partners give best partner first
-        if (num >= frequentPartners.size()){
+        if (num >= frequentPartners.size()) {
             return frequentPartners;
         }
         return (ArrayList<String>) frequentPartners.subList(0, num);
     }
 
+    private ArrayList<Trade> sortTradesMeetingDate(ArrayList<Trade> trades) {
+        ArrayList<Trade> sorted = new ArrayList<>();
+        sorted.add(trades.get(0));
+        for (int i = 1; i < trades.size(); i++) {
+            int ii = 0;
+            while (ii < sorted.size() && getLastConfirmedMeetingTime(sorted.get(ii)).before(getLastConfirmedMeetingTime(trades.get(i)))) {
+                ii++;
+            } sorted.add(ii, trades.get(i));
+        } return sorted;
+    }
+
     private ArrayList<String> getItemsTraded(String user) {
-        ArrayList<Trade> trades = getTradeOfUser(user);
         ArrayList<String> items = new ArrayList<>();
-        for (Trade trade : trades) {
-            if (!(trade.getIsOpened()) || !(isIncompleteTrade(trade))) {
-                if (trade instanceof OneWayTrade) {
-                    items.add(((OneWayTrade) trade).getItemId());
-                } else { items.add(((TwoWayTrade) trade).getItemOfUser(user)); }
-            }
+        ArrayList<Trade> trades = new ArrayList<>();
+        for (Trade trade : getTradeOfUser(user)) {
+            if (!(trade.getIsOpened())) { trades.add(trade); }
+        }
+        for (Trade sortedTrade : sortTradesMeetingDate(trades)) {
+            if (sortedTrade instanceof OneWayTrade && user.equals(((OneWayTrade) sortedTrade).getGiverUsername())) {
+                items.add(((OneWayTrade) sortedTrade).getItemId());
+            } else if (sortedTrade instanceof TwoWayTrade) {
+                items.add(((TwoWayTrade) sortedTrade).getItemOfUser(user)); }
         } return items;
     }
 
@@ -371,13 +383,14 @@ public class TradeManager implements Serializable {
      * Returns arraylist of the top "num" most recently traded item IDs of user "user"
      * @param num the number of most recently traded item IDs wanted
      * @param user the username of the user to get most recently traded item IDs
-     * @return arraylist of item IDs that were the most recently traded by user "user"
+     * @return arraylist of item IDs that were the most recently traded by user "user." If "num" is greater
+     * than the number of items that "user" has traded, all of the items traded are returned.
      */
     public ArrayList<String> getRecentItemsTraded(int num, String user) {
         ArrayList<String> tradedItems = getItemsTraded(user);
         ArrayList<String> recentItems = new ArrayList<>();
         int i = tradedItems.size() - 1;
-        while (i >= tradedItems.size() - num) {
+        while (i >= tradedItems.size() - num && i >= 0) {
             recentItems.add(tradedItems.get(i));
             i--;
         } return recentItems;
