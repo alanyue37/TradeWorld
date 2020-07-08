@@ -1,15 +1,20 @@
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
+/**
+ * Represents a trade to exchange item(s)
+ */
 public abstract class Trade {
-    private String type;  //temporary or permanent
+    private String type;
     private int idOfTrade;
-    private boolean IsOpened; //transaction is done (1 for permanent, 2 for temporary)
+    private boolean IsOpened;
     private static int totalTrade;
-    private ArrayList<Meeting> meeting; //think of something else better
+    private ArrayList<Meeting> meeting;
     private Date creationDate;
 
-    /** Construct trade given type (temporary or permanent)
+
+    /** Constructs trade given the type (temporary or permanent)
      * @param type temporary or permanent trade
      */
     public Trade(String type) {
@@ -17,45 +22,44 @@ public abstract class Trade {
         this.idOfTrade = totalTrade + 1;
         this.IsOpened = true;
         totalTrade += 1;
-        this.meeting = new ArrayList<Meeting>();
+        this.meeting = new ArrayList<>();
         this.creationDate = new Date();
     }
 
     /**
-     * Getter for the type of the trade (permanent or temporary)
+     * Gets the type of the trade (permanent or temporary)
      * @return type of the trade: temporary or permanent
      */
     public String getTradeType() {
         return this.type;
     }
-    // ask if we need setter for type of trade
 
     /**
-     * Getter for the ID of the trade.
-     * @return the ID of the trade.
+     * Gets the ID of the trade
+     * @return the ID of the trade
      */
     public int getIdOfTrade() {
         return this.idOfTrade;
     }
 
     /**
-     * Getter for status of the trade: whether the trade is still opened.
-     * @return for permanent trade, true if the meeting has occurred (and is confirmed). for temporary trade, true if
-     * both meeting has occurred (and is confirmed)
+     * Gets status of the trade: whether the trade is opened or closed
+     * @return for permanent trade, false if the meeting has occurred (and is confirmed); for temporary trade, false if
+     * both meetings have occurred (and is confirmed)
      */
     public boolean getIsOpened() {
         return this.IsOpened;
     }
 
     /**
-     * Change the IsOpened to false (close the trade)
+     * Changes IsOpened to false (close the trade)
      */
     public void changeIsOpened() {
         this.IsOpened = false;
     }
 
     /**
-     * Getter for the total number of trades that has been created.
+     * Gets the total number of trades that has been created
      * @return the number of total trades created
      */
     public int getTotalTrade(){
@@ -63,37 +67,36 @@ public abstract class Trade {
     }
 
     /**
-     * Getter for the meeting array list.
-     * @return list of meeting.
+     * Gets the array list of meeting(s)
+     * @return list of meeting(s)
      */
     public ArrayList<Meeting> getMeetingList(){
         return this.meeting;
     }
 
     /**
-     * Add another meeting to the list of meeting (if temporary trade)
-     * @param newMeeting second meeting time to return items (for temporary trade)
+     * Adds another meeting to the list of meeting (if temporary trade)
+     * @param newMeeting second meeting to return items (for temporary trade)
      */
     public void incrementMeetingList(Meeting newMeeting){
         this.meeting.add(newMeeting);
     }
 
     /**
-     * Return the date of creation of the trade
+     * Gets the date of creation of the trade
      * @return creationDate (date the trade was created)
      */
     public Date getCreationDate(){
         return this.creationDate;
     }
 
-    // no setter I guess for date?
+    /**
+     * Gets users involved in the trade
+     * @return list of users in trade
+     */
+    public abstract ArrayList<String> getUsers();
 
+    public abstract ArrayList<String> getItems();
 
-    //do we need a setter? or automatically?
-
-    // meeting getters**
-
-
-// confirmation of meeting time/place for temporary vs. permanent
-// opened/not opened variable or like getter with if(...) then(true/false)
+    public abstract HashMap<String, String> userToItem();
 }

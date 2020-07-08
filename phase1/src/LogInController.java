@@ -4,12 +4,11 @@ import java.io.InputStreamReader;
 
 public class LogInController {
 
-    private UserManager userManager;
-    private LogInPresenter presenter;
-    private BufferedReader br;
+    private final UserManager userManager;
+    private final LogInPresenter presenter;
+    private final BufferedReader br;
     private String email;
     private String password;
-    private String name;
 
     public LogInController(UserManager um) {
         userManager = um;
@@ -83,7 +82,7 @@ public class LogInController {
     private void newTradingUser() throws IOException {
         presenter.newAccount();
         presenter.nextLine();
-        name = br.readLine();
+        String name = br.readLine();
         if (name.equals("exit")) {
             //do something
             return;
