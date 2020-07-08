@@ -1,7 +1,18 @@
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+
+import java.io.Serializable;
+
+enum userTypes {
+    TRADING,
+    ADMIN
+}
+
+enum itemSets {
+    INVENTORY,
+    WISHLIST
+}
 
 public class UserManager implements Serializable {
 
@@ -39,115 +50,161 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Check a TradingUser's email and password on login.
-     * @param email The submitted email.
+     * Check a User's username and password on login.
+     * @param username The submitted username.
      * @param password The submitted password.
      * @return Whether or not the username/password combination is valid.
      */
-    public boolean trader_login(String email, String password) {
-        User account = tradingUsers.get(email);
+    public boolean login(String username, String password, userTypes type) {
+        User account = null;
+        switch (type) {
+            case TRADING:
+                account = tradingUsers.get(username);
+                break;
+            case ADMIN:
+                account = adminUsers.get(username);
+                break;
+        }
         return password.equals(account.getPassword());
     }
 
     /**
-     * Check an administrative user's email and password on login.
-     * @param email The submitted email.
-     * @param password The submitted password.
-     * @return Whether or not the username/password combination is valid.
-     */
-    public boolean admin_login(String email, String password) {
-        User account = adminUsers.get(email);
-        return password.equals(account.getPassword());
-    }
-
-    /**
-     * Create a TradingUser and add it to the list of TradingUsers if the email is unique
+     * Create a TradingUser and add it to the set of TradingUsers if the username is unique
      * @param name The name of the TradingUser
-     * @param email The email of the TradingUser
+     * @param username The username of the TradingUser
      * @param password The password of the TradingUser
      * @return Whether or not the TradingUser was successfully added
      */
-    public boolean createTradingUser(String name, String email, String password) {
-        if (tradingUsers.containsKey(email)) {
+    public boolean createTradingUser(String name, String username, String password) {
+        if (tradingUsers.containsKey(username) | adminUsers.containsKey(username)) {
             return false;
         }
-        tradingUsers.put(email, new TradingUser(name, email, password));
+        tradingUsers.put(username, new TradingUser(name, username, password));
         return true;
     }
 
     /**
-     * Create an administrative user and add it to the list of administrative users if the email is unique
+     * Create an administrative user and add it to the set of administrative users if the username is unique
      * @param name The name of the administrative user
-     * @param email The email of the administrative user
+     * @param username The username of the administrative user
      * @param password The password of the administrative user
      * @return Whether or not the administrative user was successfully added
      */
-    public boolean createAdminUser(String name, String email, String password) {
-        if (adminUsers.containsKey(email)) {
+    public boolean createAdminUser(String name, String username, String password) {
+        if (tradingUsers.containsKey(username) | adminUsers.containsKey(username)) {
             return false;
         }
-        adminUsers.put(email, new User(name, email, password));
+        adminUsers.put(username, new User(name, username, password));
         return true;
     }
 
     /**
-     * Gets a user's information given their email, or null if no matching user is found.
-     * @param email The email of the user to look up.
-     * @return A User object with the user's information, or null if no matching user is found.
+     * Set the password of a particular User
+     * @param username The username of the chosen User
+     * @param password The intended password
+     * @param type The type of User
      */
-    public TradingUser getUserByEmail(String email){
-        if (!tradingUsers.containsKey(email)) {
-            return null;
+    public void setPasswordByUsername(String username, String password, userTypes type) {
+        User account = null;
+        switch (type) {
+            case TRADING:
+                account = tradingUsers.get(username);
+                break;
+            case ADMIN:
+                account = adminUsers.get(username);
+                break;
         }
-        return tradingUsers.get(email);
+        account.setPassword(password);
     }
 
     /**
-     * Add the id of a particular item to a user's inventory
-     * @param email The given email
-     * @param item The given item
+     * Updates a chosen TradingUser's credit attribute
+     * @param increment Whether to increment or decrement
      */
-    public void addToInventory(String email, Item item) {
-        TradingUser account = tradingUsers.get(email);
-        account.addToInventory(item.getId());
+    public void updateCreditByUsername(String username, boolean increment) {
+        TradingUser account = tradingUsers.get(username);
+        if(increment) {
+            account.incrementCredit();
+        }
+        else {
+            account.decrementCredit();
+        }
     }
 
     /**
-     * Remove the id of a particular item in a user's inventory
-     * @param email The given email
-     * @param item The given item
+     * Get a particular set of item ids stored in a TradingUser
+     * @param username The username of the chosen TradingUser
+     * @param set The name of the requested set
+     * @return The requested set
      */
-    public void removeFromInventory(String email, Item item) {
-        TradingUser account = tradingUsers.get(email);
-        account.removeFromInventory(item.getId());
+    public HashSet<String> getSetByUsername(String username, itemSets set) {
+        TradingUser account = tradingUsers.get(username);
+        HashSet<String> requestedSet = null;
+        switch (set) {
+            case INVENTORY:
+                requestedSet = account.getInventory();
+                break;
+            case WISHLIST:
+                requestedSet = account.getWishlist();
+                break;
+        }
+        return requestedSet;
     }
 
     /**
-     * Freeze the account of a particular TradingUser
-     * @param email The given email
+     * Add the id of a particular item to one of the sets stored in a TradingUser
+     * @param username The username of the chosen TradingUser
+     * @param id The id of the given item
+     * @param set The name of the requested set
      */
-    public void freeze(String email) {
-        TradingUser account = tradingUsers.get(email);
-        account.setFrozen(true);
+    public void addToSet(String username, String id, itemSets set) {
+        TradingUser account = tradingUsers.get(username);
+        switch (set) {
+            case INVENTORY:
+                account.addToInventory(id);
+                break;
+            case WISHLIST:
+                account.addToWishlist(id);
+                break;
+        }
     }
 
     /**
-     * Unfreeze the account of a particular TradingUser
-     * @param email The given email
+     * Remove the id of a particular item from one of the sets stored in a TradingUser
+     * @param username The username of the chosen TradingUser
+     * @param id The id of the given item
+     * @param set The name of the requested set
      */
-    public void unfreeze(String email) {
-        TradingUser account = tradingUsers.get(email);
-        account.setFrozen(false);
+    public void removeFromSet(String username, String id, itemSets set) {
+        TradingUser account = tradingUsers.get(username);
+        switch (set) {
+            case INVENTORY:
+                account.removeFromInventory(id);
+                break;
+            case WISHLIST:
+                account.removeFromWishlist(id);
+                break;
+        }
     }
 
     /**
-     * Gets a list of all users who are below the borrowing ratio.
-     * @return A list of all users who are below the borrowing ratio.
+     * Freeze or unfreeze the account of a particular TradingUser
+     * @param username The given username
+     * @param frozen Whether or not the intended account should be frozen or unfrozen
      */
-    public ArrayList<User> getUsersBelowThreshold(){
+    public void freeze(String username, boolean frozen) {
+        TradingUser account = tradingUsers.get(username);
+        account.setFrozen(frozen);
+    }
+
+    /**
+     * Gets a list of all TradingUsers who are below the borrowing ratio and are not currently frozen
+     * @return A list of all TradingUsers who are below the borrowing ratio and are not currently frozen
+     */
+    public ArrayList<User> getUsersForFreezing(){
         ArrayList<User> result = new ArrayList<>();
         for (TradingUser trader : tradingUsers.values()){
-            if (trader.getNumItemsBorrowed() - trader.getNumItemsLent() >= getThreshold()) {
+            if (trader.getCredit() >= getThreshold() && !trader.isFrozen()) {
                 result.add(trader);
             }
         }
@@ -155,11 +212,19 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Adds a user to the unfreeze request queue.
-     * @param email The email of the user requesting an unfreeze.
+     * Get the set of all TradingUsers who have requested to be unfrozen
+     * @return The set of all TradingUsers who have requested to be unfrozen
      */
-    public void markUserForUnfreezing(String email){
-        unfreezeRequests.add(email);
+    public HashSet<String> getUnfreezeRequests() {
+        return unfreezeRequests;
+    }
+
+    /**
+     * Adds a TradingUser to the unfreeze request queue.
+     * @param username The username of the TradingUser requesting an unfreeze.
+     */
+    public void markUserForUnfreezing(String username){
+        unfreezeRequests.add(username);
     }
 
     /**
