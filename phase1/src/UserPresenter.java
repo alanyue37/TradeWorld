@@ -39,11 +39,11 @@ public class UserPresenter {
     }
 
     public void printUserInventory(String email){
-        System.out.println("Inventory" + tradeModel.getUserManager().getInventory(email));
+        System.out.println("Inventory" + tradeModel.getUserManager().getSetByUsername(email, itemSets.INVENTORY));
     }
 
     public void printUserWishlist(String email){
-        System.out.println("Wishlist" + tradeModel.getUserManager().getWishlist(email));
+        System.out.println("Wishlist" + tradeModel.getUserManager().getSetByUsername(email, itemSets.WISHLIST));
     }
 
     public void printAvailableItems(){

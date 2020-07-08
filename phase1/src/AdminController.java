@@ -94,7 +94,7 @@ public class AdminController {
      * @param password is the AdminUser password.
      */
     private void adminLogin(String email, String password) {
-        tradeModel.getUserManager().admin_login(email, password);
+        tradeModel.getUserManager().login(email, password, userTypes.ADMIN);
     }
 
     /**
@@ -118,50 +118,54 @@ public class AdminController {
      */
     private void addNewAdmins(String newAdminUserEmail, User newAdminUser){
         tradeModel.getUserManager().addNewAdminUsers(newAdminUserEmail, newAdminUser);
+        //I think the functionality of addNewAdminUsers would have to be implemented in the controller and call
+        // createAdminUser in the use case
     }
 
     /**
      * Asks the admin to freeze the accounts of the user.
      * @throws IOException if something goes wrong.
      */
-     public void askAdminToFreezeUsers() throws IOException {
-         for (String freeze : tradeModel.getUserManager().getFreezeAccounts()) {
-             adminPresenter.freezeAccounts(freeze);
-             String confirmationInput = br.readLine();
-             if (confirmationInput.equals("confirm")) {
-                 confirmToFreeze(freeze);
-             }
-         }
-     }
+    public void askAdminToFreezeUsers() throws IOException {
+        for (String freeze : tradeModel.getUserManager().getFreezeAccounts()) {
+            //I think the functionality of getFreezeAccounts would have to be implemented in the controller and call
+            // getUsersForFreezing in the use case
+            adminPresenter.freezeAccounts(freeze);
+            String confirmationInput = br.readLine();
+            if (confirmationInput.equals("confirm")) {
+                confirmToFreeze(freeze);
+            }
+        }
+    }
 
     /**
      * A helper function for askAdminToFreezeUsers().
      * @param email is the email of the account that is to be frozen by the AdminUser.
      */
     private void confirmToFreeze(String email) {
-        tradeModel.getUserManager().freeze(email);
+        tradeModel.getUserManager().freeze(email, true);
     }
 
     /**
      * Asks the admin to unfreeze the accounts of the user.
      * @throws IOException if something goes wrong.
      */
-     public void askAdminToUnfreezeUsers() throws IOException {
-         for (String unfreeze : tradeModel.getUserManager().getUnfreezeRequests()) {
-             adminPresenter.unfreezeAccounts(unfreeze);
-             String confirmationInput = br.readLine();
-             if (confirmationInput.equals("confirm")) {
-                 confirmToUnfreeze(unfreeze);
-             }
-         }
-     }
+    public void askAdminToUnfreezeUsers() throws IOException {
+        for (String unfreeze : tradeModel.getUserManager().getUnfreezeRequests()) {
+            adminPresenter.unfreezeAccounts(unfreeze);
+            String confirmationInput = br.readLine();
+            if (confirmationInput.equals("confirm")) {
+                confirmToUnfreeze(unfreeze);
+            }
+        }
+    }
 
     /**
      * A helper function for askAdminToFreezeUsers().
      * @param  unfreezeRequests the email of the account that is to be unfrozen by the AdminUser.
      */
     public void confirmToUnfreeze(String unfreezeRequests) {
-        tradeModel.getUserManager().unfreeze(unfreezeRequests);
+        tradeModel.getUserManager().freeze(unfreezeRequests, false);
     }
 
     /**
@@ -182,9 +186,9 @@ public class AdminController {
      * A helper function for askAdminToChangeStatusToAvailable().
      * @param item is the item that has its availability status changed from false to true.
      */
-     public void changeAvailability(Item item) {
-         anm.changeAvailability(item);
-     }
+    public void changeAvailability(Item item) {
+        anm.changeAvailability(item);
+    }
 
     /**
      * When users request an AdminUser to add an item to their available list of items, the AdminUser must review
@@ -210,7 +214,7 @@ public class AdminController {
      * @param item is the item that the TradingUser requests to be added to their inventory.
      */
     public void addItemToInventory(String email, Item item) {
-        tradeModel.getUserManager().addToInventory(email, item);
+        tradeModel.getUserManager().addToSet(email, item.getId(), itemSets.INVENTORY);
     }
 
     /**
@@ -225,8 +229,3 @@ public class AdminController {
         tradeModel.getUserManager().setThreshold(threshold);
     }
 }
-
-
-
-
-

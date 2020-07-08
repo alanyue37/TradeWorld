@@ -72,7 +72,8 @@ public class LogInController {
             //do something
             return;
         }
-        if ((!isAdmin && !userManager.trader_login(email, password)) || (isAdmin && !userManager.admin_login(email, password))) {
+        if ((!isAdmin && !userManager.login(email, password, userTypes.TRADING)) ||
+                (isAdmin && !userManager.login(email, password, userTypes.ADMIN))) {
             presenter.invalidAccount();
             presenter.nextLine();
             logIn(isAdmin);
