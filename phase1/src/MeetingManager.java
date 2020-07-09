@@ -2,12 +2,17 @@ import java.util.Date;
 
 public class MeetingManager {
 
+
     public void changeMeeting(Meeting meeting, String location, Date time) {
         meeting.setLocation(location);
         meeting.setTime(time);
         meeting.incrementNumOfEdits();
     }
     // come back to this
+
+    public Meeting createMeeting(String location, Date time){
+        return new Meeting(location, time);
+    }
 
     /**
      * agree with the meeting time, place that the other user suggested (only need one user to confirm since we can
@@ -68,5 +73,4 @@ public class MeetingManager {
     }
 
 
-    // public void setLimitOfEdits(int
 }
