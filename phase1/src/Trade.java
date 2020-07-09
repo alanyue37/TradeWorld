@@ -1,27 +1,27 @@
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Represents a trade to exchange item(s)
  */
 public abstract class Trade {
     private String type;
-    private int idOfTrade;
+    private String idOfTrade;
     private boolean IsOpened;
-    private static int totalTrade;
     private ArrayList<Meeting> meeting;
     private Date creationDate;
 
+    private static AtomicInteger counter = new AtomicInteger();
 
     /** Constructs trade given the type (temporary or permanent)
      * @param type temporary or permanent trade
      */
     public Trade(String type) {
         this.type = type;
-        this.idOfTrade = totalTrade + 1;
+        this.idOfTrade = String.valueOf(counter.getAndIncrement());
         this.IsOpened = true;
-        totalTrade += 1;
         this.meeting = new ArrayList<>();
         this.creationDate = new Date();
     }
@@ -38,7 +38,7 @@ public abstract class Trade {
      * Gets the ID of the trade
      * @return the ID of the trade
      */
-    public int getIdOfTrade() {
+    public String getIdOfTrade() {
         return this.idOfTrade;
     }
 
@@ -56,14 +56,6 @@ public abstract class Trade {
      */
     public void changeIsOpened() {
         this.IsOpened = false;
-    }
-
-    /**
-     * Gets the total number of trades that has been created
-     * @return the number of total trades created
-     */
-    public int getTotalTrade(){
-        return totalTrade;
     }
 
     /**
