@@ -69,6 +69,9 @@ public class UserManager implements Serializable {
                 account = adminUsers.get(username);
                 break;
         }
+        if (account == null){
+            return false;
+        }
         return password.equals(account.getPassword());
     }
 
@@ -107,7 +110,7 @@ public class UserManager implements Serializable {
     /**
      * Set the password of a particular User
      *
-     * @param username The username of the chosen User
+     * @param username The username of the chosen User. Must be a valid username for an existing User.
      * @param password The intended password
      * @param type     The type of User
      */
@@ -127,6 +130,7 @@ public class UserManager implements Serializable {
     /**
      * Updates a chosen TradingUser's credit attribute
      *
+     * @param username The username of the chosen TradingUser. Must be a valid username for an existing TradingUser.
      * @param increment Whether to increment or decrement
      */
     public void updateCreditByUsername(String username, boolean increment) {
@@ -162,7 +166,7 @@ public class UserManager implements Serializable {
     /**
      * Add the id of a particular item to one of the sets stored in a TradingUser
      *
-     * @param username The username of the chosen TradingUser
+     * @param username The username of the chosen TradingUser. Must be a valid username for an existing TradingUser.
      * @param id       The id of the given item
      * @param set      The name of the requested set
      */
@@ -181,7 +185,7 @@ public class UserManager implements Serializable {
     /**
      * Remove the id of a particular item from one of the sets stored in a TradingUser
      *
-     * @param username The username of the chosen TradingUser
+     * @param username The username of the chosen TradingUser. Must be a valid username for an existing TradingUser.
      * @param id       The id of the given item
      * @param set      The name of the requested set
      */
@@ -200,7 +204,7 @@ public class UserManager implements Serializable {
     /**
      * Freeze or unfreeze the account of a particular TradingUser
      *
-     * @param username The given username
+     * @param username The username of the TradingUser involved. Must be a valid username for an existing TradingUser.
      * @param frozen   Whether or not the intended account should be frozen or unfrozen
      */
     public void freeze(String username, boolean frozen) {
@@ -235,7 +239,7 @@ public class UserManager implements Serializable {
     /**
      * Adds a TradingUser to the unfreeze request queue.
      *
-     * @param username The username of the TradingUser requesting an unfreeze.
+     * @param username The username of the TradingUser requesting an unfreeze. Must be a valid username for an existing TradingUser.
      */
     public void markUserForUnfreezing(String username) {
         unfreezeRequests.add(username);
