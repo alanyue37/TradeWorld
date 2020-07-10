@@ -3,7 +3,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-
 /**
  * Presenter for logging in.
  * Structure of some methods copied from ReadWriteEx

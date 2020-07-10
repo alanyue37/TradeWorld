@@ -1,12 +1,24 @@
 /**
  * AdminPresenter prompts an AdminUser for inputs
  */
-public class AdminPresenter {
-    public AdminPresenter() {
+public class AdminPresenter extends LogInPresenter {
+
+    public AdminPresenter(UserManager um) {
+        super(um);
     }
 
     public void startMenu() {
-        System.out.println("Welcome! Type 'continue' to see more options or 'exit' to exit");
+        System.out.println("Welcome! Type \"exit\" to exit and 1 to see more options");
+    }
+
+    public void giveMenuOptions() {
+        System.out.println("Admin Options\n " +
+                "Enter 2 to add New Admins\n" +
+                "Enter 3 to Freeze User Accounts\n" +
+                "Enter 4 to Unfreeze User Accounts\n" +
+                "Enter 5 to change Availability of items\n" +
+                "Enter 6 to set a Lending Threshold\n" +
+                "\n Type \"exit\" at any time to exit.");
     }
 
     public void chooseCreateAccountOrLogin() {
@@ -26,11 +38,11 @@ public class AdminPresenter {
     }
 
     public void addNewAdminUser(String adminUsersToBeAdded) {
-        System.out.println("Type 'yes' to make this user an admin user." + "Add New Admin User: " + adminUsersToBeAdded);
+        System.out.println("Type '1' to make this user an admin user." + "Add New Admin User: " + adminUsersToBeAdded);
     }
 
     public void freezeAccounts(String freeze) {
-        System.out.println("This account has to be frozen. Type 'confirm to freeze this account. " +
+        System.out.println("This account has to be frozen. Type 1 to freeze this account. " +
                 "Freeze Account for: " + freeze);
     }
 
@@ -48,7 +60,7 @@ public class AdminPresenter {
 
     public void setThreshold() {
         System.out.println("How much does the user have to (at least) lend than they have borrowed in order to make " +
-                "a non-lending transaction? Enter a number for the Lending Threshold: ");
+                "a non-lending transaction? Enter a whole number for the Lending Threshold: ");
     }
 
     public void end() {

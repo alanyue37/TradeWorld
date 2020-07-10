@@ -50,6 +50,4 @@ public class UserPresenter {
         System.out.println("Inventory" + tradeModel.getItemManager().getAvailableItems());
     }
 
-
-
 }
