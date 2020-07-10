@@ -53,4 +53,8 @@ public class Item {
     public void setAvailable(boolean available) {
         this.available = available;
     }
+
+    public String toString() {
+        return "Name: " + name + "\nOwner: " + owner + "\nDescription: " + description + "\nAvailable: " + available;
+    }
 }

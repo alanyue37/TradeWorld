@@ -17,34 +17,42 @@ public class ItemManager implements Serializable {
         return confirmedItems.containsKey(itemId) || pendingItems.containsKey(itemId);
     }
 
-    public Item getConfirmedItem(String itemId) {
-        return confirmedItems.get(itemId);
+    public String getConfirmedItem(String itemId) {
+        return String.valueOf(confirmedItems.get(itemId));
     }
 
-    public List<Item> getConfirmedItems() {
-        return (List<Item>) confirmedItems.values();
+    public List<String> getConfirmedItems() {
+        List<String> items = new ArrayList<>();
+        for (Item item : confirmedItems.values()) {
+            items.add(String.valueOf(item));
+        }
+        return items;
     }
 
-    public Item getPendingItem(String itemId) {
-        return pendingItems.get(itemId);
+    public String getPendingItem(String itemId) {
+        return String.valueOf(pendingItems.get(itemId));
     }
 
-    public List<Item> getPendingItems() {
-        return (List<Item>) pendingItems.values();
+    public List<String> getPendingItems() {
+        List<String> items = new ArrayList<>();
+        for (Item item : pendingItems.values()) {
+            items.add(String.valueOf(item));
+        }
+        return items;
     }
 
-    public List<Item> getAvailableItems() {
-        List<Item> items = new ArrayList();
+    public List<String> getAvailableItems() {
+        List<String> items = new ArrayList<>();
         for (Item item : confirmedItems.values()) {
             if (item.isAvailable()) {
-                items.add(item);
+                items.add(String.valueOf(item));
             }
         }
         return items;
     }
 
     public String getOwner(String itemId) {
-        Item item = getConfirmedItem(itemId);
+        Item item = confirmedItems.get(itemId);
         if (item == null) {
             return null;
         }
@@ -57,7 +65,7 @@ public class ItemManager implements Serializable {
     }
 
     public boolean confirmItem(String itemId) {
-        Item item = getPendingItem(itemId);
+        Item item = pendingItems.get(itemId);
         if (item == null) {
             return false;
         }
