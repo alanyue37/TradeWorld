@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
-public class UserController {
+public class UserController implements RunnableController {
     private final BufferedReader br;
     TradeModel tradeModel;
     UserPresenter presenter;
@@ -14,15 +14,12 @@ public class UserController {
         this.tradeModel = tradeModel;
     }
 
-    public String run() {
+    public void run() {
         try {
-            if (!selectMenu()) {
-                return null;
-            }
+            selectMenu(); // TODO: I didn't understand why it was returning null before. Are you trying to loop?
         } catch (IOException e) {
             System.out.println("Something bad happened.");
         }
-        return null;
     }
 
     private boolean selectMenu() throws IOException {

@@ -14,8 +14,7 @@ public class LogInPresenter implements Iterator<String> {
     private UserManager userManager;
     private int current = 0;
 
-    public LogInPresenter(UserManager um) {
-        userManager = um;
+    public LogInPresenter() {
     }
 
     /**

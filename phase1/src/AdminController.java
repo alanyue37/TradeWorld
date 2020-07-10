@@ -6,16 +6,14 @@ import java.util.*;
 /**
  * A controller class that sends Admin input to Use Cases
  */
-public class AdminController {
+public class AdminController implements RunnableController {
     private final TradeModel tradeModel;
     private final AdminPresenter adminPresenter;
     private final BufferedReader br;
-    private final  AdminNotifyManager anm;
 
-    public AdminController(TradeModel tradeModel, AdminPresenter adminPresenter, AdminNotifyManager anm) {
+    public AdminController(TradeModel tradeModel) {
         this.tradeModel = tradeModel;
-        this.adminPresenter = adminPresenter;
-        this.anm = anm;
+        this.adminPresenter = new AdminPresenter();
         this.br = new BufferedReader(new InputStreamReader(System.in));
     }
 
@@ -223,6 +221,17 @@ public class AdminController {
         String thresholdInput = br.readLine();
         int threshold = Integer.parseInt(thresholdInput);
         tradeModel.getUserManager().setThreshold(threshold);
+    }
+
+    @Override
+    public void run() {
+        try {
+            startMenu();
+            // TODO: Why does startMenu throw IOException? The description is very vague ("something bad"). Elaborate or remove.
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 
