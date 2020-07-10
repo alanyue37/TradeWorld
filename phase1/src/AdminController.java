@@ -9,8 +9,10 @@ import java.util.*;
 public class AdminController {
     private final TradeModel tradeModel;
     private final AdminPresenter adminPresenter;
+//    private final AdminPresenter presenter; // should be called presenter to match other classes
     private final BufferedReader br;
     private final  AdminNotifyManager anm;
+//    private String username;
 
     public AdminController(TradeModel tradeModel, AdminPresenter adminPresenter, AdminNotifyManager anm) {
         this.tradeModel = tradeModel;
@@ -18,6 +20,14 @@ public class AdminController {
         this.anm = anm;
         this.br = new BufferedReader(new InputStreamReader(System.in));
     }
+
+//    The new constructor
+//    public AdminController(TradeModel tradeModel, String username) {
+//        br = new BufferedReader(new InputStreamReader(System.in));
+//        this.tradeModel = tradeModel;
+//        this.username = username;
+//        presenter = new AdminPresenter(tradeModel);
+//    }
 
     /**
      * Asks whether the AdminUser wants to continue to see the other menu options or not.

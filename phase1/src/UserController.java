@@ -7,12 +7,21 @@ public class UserController implements RunnableController {
     private final BufferedReader br;
     TradeModel tradeModel;
     UserPresenter presenter;
+//    private String username;
 
     public UserController(TradeModel tradeModel){
         br = new BufferedReader(new InputStreamReader(System.in));
         presenter = new UserPresenter(tradeModel);
         this.tradeModel = tradeModel;
     }
+
+//    The new constructor take takes in username as well
+//    public UserController(TradeModel tradeModel, String username){
+//        br = new BufferedReader(new InputStreamReader(System.in));
+//        this.tradeModel = tradeModel;
+//        this.username = username;
+//        presenter = new UserPresenter(tradeModel);
+//    }
 
     public void run() {
         try {

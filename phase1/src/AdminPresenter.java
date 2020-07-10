@@ -1,11 +1,17 @@
 /**
  * AdminPresenter prompts an AdminUser for inputs
  */
-public class AdminPresenter extends LogInPresenter {
+public class AdminPresenter extends LogInPresenter { // this shouldn't extend LogInPresenter
+
+//    private UserManager userManager;
 
     public AdminPresenter(UserManager um) {
         super(um);
     }
+
+//    public AdminPresenter(TradeModel tm) {
+//        userManager = tm.getUserManager();
+//    }
 
     public void startMenu() {
         System.out.println("Welcome! Type \"exit\" to exit and 1 to see more options");
