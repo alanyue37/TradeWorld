@@ -34,7 +34,33 @@ public class AdminController {
                 adminPresenter.startMenu();
                 break;
             case "1":
-                chooseLoginOptions();
+                giveMenuOptions();
+                break;
+            default:
+                adminPresenter.menuTryAgain();
+        }
+    }
+
+    public void giveMenuOptions() throws IOException {
+        adminPresenter.giveMenuOptions();
+        String input = br.readLine();
+        switch (input) {
+            case "1":
+
+            case "2":
+                askAdminToAddNewAdmin();
+                break;
+            case "3":
+                askAdminToFreezeUsers();
+                break;
+            case "4":
+                askAdminToUnfreezeUsers();
+                break;
+            case "5":
+                askAdminToChangeStatusToAvailable();
+                break;
+            case "6":
+                askAdminToSetLendingThreshold();
                 break;
             default:
                 adminPresenter.menuTryAgain();
@@ -115,11 +141,11 @@ public class AdminController {
      * @throws IOException if something goes wrong.
      */
      public void askAdminToFreezeUsers() throws IOException {
-         for (String freeze : tradeModel.getUserManager().getFreezeAccounts()) {
-             adminPresenter.freezeAccounts(freeze);
+         for (User freeze : tradeModel.getUserManager().getUsersForFreezing()) {
+             adminPresenter.freezeAccounts(freeze.getUsername());
              String confirmationInput = br.readLine();
              if (confirmationInput.equals("1")) {
-                 tradeModel.getUserManager().freeze(freeze, true);
+                 tradeModel.getUserManager().freeze(freeze.getUsername(), true);
              }
          }
      }
@@ -138,7 +164,6 @@ public class AdminController {
          }
      }
 
-
     /**
      * Asks the Admin to confirm whether this item should be added to the system or not.
      * @throws IOException if something goes wrong.
@@ -153,33 +178,24 @@ public class AdminController {
         }
     }
 
-
     /**
      * When users request an AdminUser to add an item to their available list of items, the AdminUser must review
      * the item and puts the item in the inventory of the user.
      * @throws IOException if something goes wrong.
      */
-    public void askAdminToAddItemToInventory() throws IOException {
-
-
-
-
-
-
-        ArrayList<String> str = new ArrayList<>(anm.getRequestItemToBeAdded().keySet());
+    public void askAdminToAddItemToInventory(String emailInput) throws IOException {
         int i = 0;
-        for (Item toBeAdded : anm.getRequestItemToBeAdded().values()) {
-            adminPresenter.addItemToInventory(toBeAdded.toString());
+        for (Item toBeAdded : tradeModel.getItemManager().getPendingItems()) {
+            adminPresenter.addItemToInventory(toBeAdded.getId());
             String addInput = br.readLine();
             if (addInput.equals("yes")) {
-                tradeModel.getUserManager().addToSet(emailInput, str.get(i), toBeAdded);
+                tradeModel.getUserManager().addToSet(emailInput, toBeAdded.getId(), itemSets.INVENTORY);
                 ++i;
             } else if (addInput.equals("no")) {
                 ++i;
             }
         }
     }
-
 
     /**
      * The admin can change the lending threshold that is, how much does the user have to lend than they have borrowed
