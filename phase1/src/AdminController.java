@@ -160,13 +160,19 @@ public class AdminController {
      * @throws IOException if something goes wrong.
      */
     public void askAdminToAddItemToInventory() throws IOException {
+
+
+
+
+
+
         ArrayList<String> str = new ArrayList<>(anm.getRequestItemToBeAdded().keySet());
         int i = 0;
         for (Item toBeAdded : anm.getRequestItemToBeAdded().values()) {
             adminPresenter.addItemToInventory(toBeAdded.toString());
             String addInput = br.readLine();
             if (addInput.equals("yes")) {
-                tradeModel.getUserManager().addToInventory(str.get(i), toBeAdded);
+                tradeModel.getUserManager().addToSet(emailInput, str.get(i), toBeAdded);
                 ++i;
             } else if (addInput.equals("no")) {
                 ++i;
