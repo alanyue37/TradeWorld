@@ -56,16 +56,17 @@ public class UserController {
                 presenter.printInputItemName();
                 String itemName = br.readLine();
                 tradeModel.getUserManager().addToWishlist(tradeModel.getItemManager().getConfirmedItem(itemName));
+                //I'm not sure which user's wishlist this item is being added to.
                 break;
             case "6":
                 presenter.printInputUserEmail();
                 String email = br.readLine();
-                tradeModel.getUserManager().unfreeze(email);
+                tradeModel.getUserManager().freeze(email, true);
                 break;
             case "7":
                 presenter.printInputUserId();
                 String userId = br.readLine();
-                tradeModel.getUserManager().getLastThreeTrades(userId);
+                tradeModel.getUserManager().getLastThreeTrades(userId); //I think this is a method for TradeManager?
                 break;
             case "8":
                 System.out.println("Request a trade");
