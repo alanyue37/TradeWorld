@@ -60,14 +60,4 @@ public class AdminNotifyManager {
     public HashMap<String, Item> getRequestItemToBeAdded() {
         return this.requestItemToBeAdded;
     }
-
-    /**
-     * @param item to be put on advertisement by the AdminUser
-     * change the isAvailable variable from false to true.
-     */
-    public void changeAvailability(Item item) {
-        if (!item.isAvailable()) {
-            item.setAvailable(true);
-        }
-    }
 }

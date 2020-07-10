@@ -1,12 +1,14 @@
 /**
  * AdminPresenter prompts an AdminUser for inputs
  */
-public class AdminPresenter {
-    public AdminPresenter() {
+public class AdminPresenter extends LogInPresenter {
+
+    public AdminPresenter(UserManager um) {
+        super(um);
     }
 
     public void startMenu() {
-        System.out.println("Welcome! Type 'continue' to see more options or 'exit' to exit");
+        System.out.println("Welcome! Type 0 to exit and 1 to see more options");
     }
 
     public void chooseCreateAccountOrLogin() {
@@ -26,11 +28,11 @@ public class AdminPresenter {
     }
 
     public void addNewAdminUser(String adminUsersToBeAdded) {
-        System.out.println("Type 'yes' to make this user an admin user." + "Add New Admin User: " + adminUsersToBeAdded);
+        System.out.println("Type '1' to make this user an admin user." + "Add New Admin User: " + adminUsersToBeAdded);
     }
 
     public void freezeAccounts(String freeze) {
-        System.out.println("This account has to be frozen. Type 'confirm to freeze this account. " +
+        System.out.println("This account has to be frozen. Type 1 to freeze this account. " +
                 "Freeze Account for: " + freeze);
     }
 

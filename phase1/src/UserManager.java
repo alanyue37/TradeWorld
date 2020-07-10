@@ -212,14 +212,6 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Get the set of all TradingUsers who have requested to be unfrozen
-     * @return The set of all TradingUsers who have requested to be unfrozen
-     */
-    public HashSet<String> getUnfreezeRequests() {
-        return unfreezeRequests;
-    }
-
-    /**
      * Adds a TradingUser to the unfreeze request queue.
      * @param username The username of the TradingUser requesting an unfreeze.
      */
