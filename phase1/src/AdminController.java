@@ -29,7 +29,7 @@ public class AdminController {
         adminPresenter.startMenu();
         String input = br.readLine();
         switch (input) {
-            case "0":
+            case "exit":
                 adminPresenter.end();
                 adminPresenter.startMenu();
                 break;
@@ -62,6 +62,8 @@ public class AdminController {
             case "6":
                 askAdminToSetLendingThreshold();
                 break;
+            case "exit":
+                startMenu();
             default:
                 adminPresenter.menuTryAgain();
         }

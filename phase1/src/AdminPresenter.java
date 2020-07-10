@@ -8,7 +8,17 @@ public class AdminPresenter extends LogInPresenter {
     }
 
     public void startMenu() {
-        System.out.println("Welcome! Type 0 to exit and 1 to see more options");
+        System.out.println("Welcome! Type \"exit\" to exit and 1 to see more options");
+    }
+
+    public void giveMenuOptions() {
+        System.out.println("Admin Options\n " +
+                "Enter 2 to add New Admins\n" +
+                "Enter 3 to Freeze User Accounts\n" +
+                "Enter 4 to Unfreeze User Accounts\n" +
+                "Enter 5 to change Availability of items\n" +
+                "Enter 6 to set a Lending Threshold\n" +
+                "\n Type \"exit\" at any time to exit.");
     }
 
     public void chooseCreateAccountOrLogin() {
