@@ -12,7 +12,7 @@ public class AdminController {
     private final BufferedReader br;
     private final  AdminNotifyManager anm;
 
-    public AdminController(TradeModel tradeModel, AdminPresenter adminPresenter, AdminNotifyManager anm) {
+    public AdminController(TradeModel tradeModel, AdminPresenter adminPresenter) {
         this.tradeModel = tradeModel;
         this.adminPresenter = adminPresenter;
         this.anm = anm;
@@ -46,7 +46,7 @@ public class AdminController {
         String input = br.readLine();
         switch (input) {
             case "1":
-
+                askAdminForCreateAccountInfo();
             case "2":
                 askAdminToAddNewAdmin();
                 break;
@@ -132,11 +132,9 @@ public class AdminController {
             String addInput = br.readLine();
             if (addInput.equals("yes")) {
                 tradeModel.getUserManager().addNewAdminUsers(adminUsersToBeAdded, anm.getAdminUsersRequests().get(adminUsersToBeAdded));
-
             }
         }
     }
-
 
     /**
      * Asks the admin to freeze the accounts of the user.
