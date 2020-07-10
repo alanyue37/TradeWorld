@@ -13,8 +13,8 @@ public class LogInPresenter implements Iterator<String> {
     private UserManager userManager;
     private int current = 0;
 
-    public LogInPresenter(UserManager um) {
-        userManager = um;
+    public LogInPresenter(TradeModel tm) {
+        userManager = tm.getUserManager();
     }
 
     /**
@@ -60,22 +60,22 @@ public class LogInPresenter implements Iterator<String> {
     }
 
     public void logIn() {
-        prompts.add("Enter your email");
+        prompts.add("Enter your username");
         prompts.add("Enter your password");
     }
 
     public void invalidAccount() {
-        prompts.add("Invalid email or password\n Please try again");
+        prompts.add("Invalid username or password");
     }
 
     public void newAccount() {
         prompts.add("Enter your name");
-        prompts.add("Enter your email");
+        prompts.add("Enter your username");
         prompts.add("Enter your password");
     }
 
-    public void emailTaken(String email) {
-        prompts.add("Email " + email + " is taken\n Please try again");
+    public void usernameTaken(String username) {
+        prompts.add("Username " + username + " is taken");
     }
 
 }

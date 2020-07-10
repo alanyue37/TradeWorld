@@ -7,19 +7,19 @@ public class LogInController {
     private final UserManager userManager;
     private final LogInPresenter presenter;
     private final BufferedReader br;
-    private String email;
+    private String username;
     private String password;
 
-    public LogInController(UserManager um) {
-        userManager = um;
-        presenter = new LogInPresenter(userManager);
+    public LogInController(TradeModel tm) {
+        userManager = tm.getUserManager();
+        presenter = new LogInPresenter(tm);
         br = new BufferedReader(new InputStreamReader(System.in));
     }
 
     public String run() {
         try {
             selectMenu();
-            return email;
+            return username;
         } catch (IOException e) {
             System.out.println("Something bad happened.");
         }
@@ -52,15 +52,15 @@ public class LogInController {
     private void logIn(boolean isAdmin) throws IOException {
         presenter.logIn();
         presenter.nextLine();
-        email = br.readLine();
+        username = br.readLine();
 
         presenter.nextLine();
         password = br.readLine();
 
-        if ((!isAdmin && !userManager.trader_login(email, password)) || (isAdmin && !userManager.admin_login(email, password))) {
+        if ((!isAdmin && !userManager.login(username, password, userTypes.TRADING)) || (isAdmin && !userManager.login(username, password, userTypes.ADMIN))) {
             presenter.invalidAccount();
             presenter.nextLine();
-            logIn(isAdmin);
+            selectMenu();
         }
     }
 
@@ -70,15 +70,15 @@ public class LogInController {
         String name = br.readLine();
 
         presenter.nextLine();
-        email = br.readLine();
+        username = br.readLine();
 
         presenter.nextLine();
         password = br.readLine();
 
-        if (!userManager.createTradingUser(name, email, password)) {
-            presenter.emailTaken(email);
+        if (!userManager.createTradingUser(name, username, password)) {
+            presenter.usernameTaken(username);
             presenter.nextLine();
-            newTradingUser();
+            selectMenu();
         }
     }
 }

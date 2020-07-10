@@ -14,7 +14,7 @@ public class TradeSystem {
         try {
             DataManager dm = new DataManager();
             TradeModel tm = dm.readFromFile(serializedDataManagerInfo);
-            LogInController lic = new LogInController(tm.getUserManager());
+            LogInController lic = new LogInController(tm);
             String email = lic.run();
             dm.saveToFile(serializedDataManagerInfo, tm);
         } catch (IOException | ClassNotFoundException ex) {
