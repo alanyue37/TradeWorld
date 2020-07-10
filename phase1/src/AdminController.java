@@ -4,7 +4,7 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 /**
- * A controller class that sends Admin input to Use Cases.
+ * A controller class that sends Admin input to Use Cases
  */
 public class AdminController {
     private final TradeModel tradeModel;
@@ -12,7 +12,7 @@ public class AdminController {
     private final BufferedReader br;
     private final  AdminNotifyManager anm;
 
-    public AdminController(TradeModel tradeModel, AdminPresenter adminPresenter) {
+    public AdminController(TradeModel tradeModel, AdminPresenter adminPresenter, AdminNotifyManager anm) {
         this.tradeModel = tradeModel;
         this.adminPresenter = adminPresenter;
         this.anm = anm;
@@ -28,44 +28,11 @@ public class AdminController {
     public void startMenu() throws IOException {
         adminPresenter.startMenu();
         String input = br.readLine();
-        switch (input) {
-            case "exit":
-                adminPresenter.end();
-                adminPresenter.startMenu();
-                break;
-            case "1":
-                giveMenuOptions();
-                break;
-            default:
-                adminPresenter.menuTryAgain();
-        }
-    }
-
-    public void giveMenuOptions() throws IOException {
-        adminPresenter.giveMenuOptions();
-        String input = br.readLine();
-        switch (input) {
-            case "1":
-                askAdminForCreateAccountInfo();
-            case "2":
-                askAdminToAddNewAdmin();
-                break;
-            case "3":
-                askAdminToFreezeUsers();
-                break;
-            case "4":
-                askAdminToUnfreezeUsers();
-                break;
-            case "5":
-                askAdminToChangeStatusToAvailable();
-                break;
-            case "6":
-                askAdminToSetLendingThreshold();
-                break;
-            case "exit":
-                startMenu();
-            default:
-                adminPresenter.menuTryAgain();
+        if (input.equals("continue")) {
+            askAdminForCreateAccountInfo();
+        } else if (input.equals("exit")) {
+            adminPresenter.end();
+            adminPresenter.startMenu();
         }
     }
 
@@ -73,7 +40,7 @@ public class AdminController {
      * Asks the AdminUser to type in "continue" or "login."
      * @throws IOException if something goes wrong.
      */
-    private void chooseLoginOptions() throws IOException {
+    public void chooseLoginOptions() throws IOException {
         adminPresenter.chooseCreateAccountOrLogin();
         String choiceInput = br.readLine();
         if (choiceInput.equals("create an account")) {
@@ -118,8 +85,16 @@ public class AdminController {
         String emailInput = br.readLine();
         adminPresenter.accountEnterPassword();
         String passwordInput = br.readLine();
-        userTypes admin = userTypes.ADMIN;
-        tradeModel.getUserManager().login(emailInput, passwordInput, admin);
+        adminLogin(emailInput, passwordInput);
+    }
+
+    /**
+     * A helper function for askAdminLoginInfo().
+     * @param email is the AdminUser email.
+     * @param password is the AdminUser password.
+     */
+    private void adminLogin(String email, String password) {
+        tradeModel.getUserManager().admin_login(email, password);
     }
 
     /**
@@ -131,9 +106,18 @@ public class AdminController {
             adminPresenter.addNewAdminUser(adminUsersToBeAdded);
             String addInput = br.readLine();
             if (addInput.equals("yes")) {
-                tradeModel.getUserManager().addNewAdminUsers(adminUsersToBeAdded, anm.getAdminUsersRequests().get(adminUsersToBeAdded));
+                addNewAdmins(adminUsersToBeAdded, anm.getAdminUsersRequests().get(adminUsersToBeAdded));
             }
         }
+    }
+
+    /**
+     * A helper function for askAdminToAddNewAdmin().
+     * @param newAdminUserEmail is the email of the new admin.
+     * @param newAdminUser is the AdminUser itself.
+     */
+    private void addNewAdmins(String newAdminUserEmail, User newAdminUser){
+        tradeModel.getUserManager().addNewAdminUsers(newAdminUserEmail, newAdminUser);
     }
 
     /**
@@ -141,14 +125,22 @@ public class AdminController {
      * @throws IOException if something goes wrong.
      */
      public void askAdminToFreezeUsers() throws IOException {
-         for (User freeze : tradeModel.getUserManager().getUsersForFreezing()) {
-             adminPresenter.freezeAccounts(freeze.getUsername());
+         for (String freeze : tradeModel.getUserManager().getFreezeAccounts()) {
+             adminPresenter.freezeAccounts(freeze);
              String confirmationInput = br.readLine();
-             if (confirmationInput.equals("1")) {
-                 tradeModel.getUserManager().freeze(freeze.getUsername(), true);
+             if (confirmationInput.equals("confirm")) {
+                 confirmToFreeze(freeze);
              }
          }
      }
+
+    /**
+     * A helper function for askAdminToFreezeUsers().
+     * @param email is the email of the account that is to be frozen by the AdminUser.
+     */
+    private void confirmToFreeze(String email) {
+        tradeModel.getUserManager().freeze(email);
+    }
 
     /**
      * Asks the admin to unfreeze the accounts of the user.
@@ -158,11 +150,19 @@ public class AdminController {
          for (String unfreeze : tradeModel.getUserManager().getUnfreezeRequests()) {
              adminPresenter.unfreezeAccounts(unfreeze);
              String confirmationInput = br.readLine();
-             if (confirmationInput.equals("1")) {
-                 tradeModel.getUserManager().freeze(unfreeze, false);
+             if (confirmationInput.equals("confirm")) {
+                 confirmToUnfreeze(unfreeze);
              }
          }
      }
+
+    /**
+     * A helper function for askAdminToFreezeUsers().
+     * @param  unfreezeRequests the email of the account that is to be unfrozen by the AdminUser.
+     */
+    public void confirmToUnfreeze(String unfreezeRequests) {
+        tradeModel.getUserManager().unfreeze(unfreezeRequests);
+    }
 
     /**
      * Asks the Admin to confirm whether this item should be added to the system or not.
@@ -170,31 +170,47 @@ public class AdminController {
      */
     public void askAdminToChangeStatusToAvailable() throws IOException {
         for (Item pendingForApproval : tradeModel.getItemManager().getPendingItems()) {
-            adminPresenter.addItemToInventory(pendingForApproval.getId());
+            adminPresenter.addItemToInventory(pendingForApproval.toString());
             String addInput = br.readLine();
             if (addInput.equals("yes")) {
-                tradeModel.getItemManager().confirmItem(pendingForApproval.getId());
+                changeAvailability(pendingForApproval);
             }
         }
     }
+
+    /**
+     * A helper function for askAdminToChangeStatusToAvailable().
+     * @param item is the item that has its availability status changed from false to true.
+     */
+     public void changeAvailability(Item item) {
+         anm.changeAvailability(item);
+     }
 
     /**
      * When users request an AdminUser to add an item to their available list of items, the AdminUser must review
      * the item and puts the item in the inventory of the user.
      * @throws IOException if something goes wrong.
      */
-    public void askAdminToAddItemToInventory(String emailInput) throws IOException {
+    public void askAdminToAddItemToInventory() throws IOException {
+        ArrayList<String> str = new ArrayList<>(anm.getRequestItemToBeAdded().keySet());
         int i = 0;
-        for (Item toBeAdded : tradeModel.getItemManager().getPendingItems()) {
-            adminPresenter.addItemToInventory(toBeAdded.getId());
+        for (Item toBeAdded : anm.getRequestItemToBeAdded().values()) {
+            adminPresenter.addItemToInventory(toBeAdded.toString());
             String addInput = br.readLine();
             if (addInput.equals("yes")) {
-                tradeModel.getUserManager().addToSet(emailInput, toBeAdded.getId(), itemSets.INVENTORY);
-                ++i;
-            } else if (addInput.equals("no")) {
-                ++i;
+                addItemToInventory(str.get(i), toBeAdded);
             }
+            ++i;
         }
+    }
+
+    /**
+     * A helper function for askAdminToAddItemToInventory().
+     * @param email is the email of the TradingUser.
+     * @param item is the item that the TradingUser requests to be added to their inventory.
+     */
+    public void addItemToInventory(String email, Item item) {
+        tradeModel.getUserManager().addToInventory(email, item);
     }
 
     /**
@@ -209,8 +225,6 @@ public class AdminController {
         tradeModel.getUserManager().setThreshold(threshold);
     }
 }
-
-
 
 
 

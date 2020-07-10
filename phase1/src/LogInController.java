@@ -18,7 +18,9 @@ public class LogInController {
 
     public String run() {
         try {
-            selectMenu();
+            if (!selectMenu()) {
+                return null;
+            }
             return email;
         } catch (IOException e) {
             System.out.println("Something bad happened.");
@@ -26,7 +28,7 @@ public class LogInController {
         return null;
     }
 
-    private void selectMenu() throws IOException {
+    private boolean selectMenu() throws IOException {
         presenter.startMenu();
         presenter.nextLine();
         String input = br.readLine();
@@ -41,22 +43,35 @@ public class LogInController {
                 newTradingUser();
                 break;
             case "exit":
-                break;
+                return false;
             default:
                 presenter.menuTryAgain();
                 presenter.nextLine();
                 selectMenu();
         }
+        return true;
     }
 
     private void logIn(boolean isAdmin) throws IOException {
         presenter.logIn();
         presenter.nextLine();
         email = br.readLine();
-
+        if (email.equals("exit")) {
+            //do something
+            return;
+        } else if (email.equals("back")) {
+            //do something
+            return;
+        }
         presenter.nextLine();
         password = br.readLine();
-
+        if (password.equals("exit")) {
+            //do something
+            return;
+        } else if (password.equals("back")) {
+            //do something
+            return;
+        }
         if ((!isAdmin && !userManager.trader_login(email, password)) || (isAdmin && !userManager.admin_login(email, password))) {
             presenter.invalidAccount();
             presenter.nextLine();
@@ -68,13 +83,31 @@ public class LogInController {
         presenter.newAccount();
         presenter.nextLine();
         String name = br.readLine();
-
+        if (name.equals("exit")) {
+            //do something
+            return;
+        } else if (name.equals("back")) {
+            //do something
+            return;
+        }
         presenter.nextLine();
         email = br.readLine();
-
+        if (email.equals("exit")) {
+            //do something
+            return;
+        } else if (email.equals("back")) {
+            //do something
+            return;
+        }
         presenter.nextLine();
         password = br.readLine();
-
+        if (password.equals("exit")) {
+            //do something
+            return;
+        } else if (password.equals("back")) {
+            //do something
+            return;
+        }
         if (!userManager.createTradingUser(name, email, password)) {
             presenter.emailTaken(email);
             presenter.nextLine();
