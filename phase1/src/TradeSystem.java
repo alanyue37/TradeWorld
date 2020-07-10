@@ -14,8 +14,8 @@ public class TradeSystem {
         try {
             DataManager dataManager = new DataManager();
             TradeModel tradeModel = dataManager.readFromFile(serializedDataManagerInfo);
-            LogInController logInController = new LogInController(tradeModel);
-            RunnableController mainController = logInController.getNextController();
+            LogInController controller = new LogInController(tradeModel);
+            RunnableController mainController = controller.getNextController();
             mainController.run(); // This could be either UserController or AdminController
             dataManager.saveToFile(serializedDataManagerInfo, tradeModel);
         } catch (IOException | ClassNotFoundException ex) {

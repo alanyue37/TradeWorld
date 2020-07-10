@@ -4,22 +4,25 @@ import java.io.InputStreamReader;
 
 public class LogInController {
 
+    private final TradeModel tradeModel;
     private final UserManager userManager;
     private final LogInPresenter presenter;
     private final BufferedReader br;
     private String username;
     private String password;
+    private RunnableController nextController = null;
 
     public LogInController(TradeModel tm) {
-        userManager = tm.getUserManager();
+        tradeModel = tm;
+        userManager = tradeModel.getUserManager();
         presenter = new LogInPresenter(tm);
         br = new BufferedReader(new InputStreamReader(System.in));
     }
 
-    public String run() {
+    public RunnableController getNextController() {
         try {
             selectMenu();
-            return username;
+            return nextController;
         } catch (IOException e) {
             System.out.println("Something bad happened.");
         }
@@ -62,6 +65,13 @@ public class LogInController {
             presenter.nextLine();
             selectMenu();
         }
+        if (isAdmin && userManager.login(username, password, userTypes.ADMIN)) {
+            // Admin logged in
+            nextController = new AdminController(tradeModel, username);
+        }
+        else if (!isAdmin && userManager.login(username, password, userTypes.TRADING)) {
+            nextController = new UserController(tradeModel, username);
+        }
     }
 
     private void newTradingUser() throws IOException {
@@ -80,5 +90,7 @@ public class LogInController {
             presenter.nextLine();
             selectMenu();
         }
+
+        nextController = new UserController(tradeModel, username);
     }
 }
