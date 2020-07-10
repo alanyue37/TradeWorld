@@ -1,9 +1,10 @@
+import java.util.Set;
 import java.util.HashSet;
 
 public class TradingUser extends User {
 
-    private final HashSet<String> inventory;
-    private final HashSet<String> wishlist;
+    private final Set<String> inventory;
+    private final Set<String> wishlist;
     private boolean frozen;
     private int credit;
 
@@ -15,7 +16,7 @@ public class TradingUser extends User {
         credit = 0;
     }
 
-    public HashSet<String> getInventory(){
+    public Set<String> getInventory(){
         return inventory;
     }
 
@@ -27,7 +28,7 @@ public class TradingUser extends User {
         inventory.remove(itemID);
     }
 
-    public HashSet<String> getWishlist(){
+    public Set<String> getWishlist(){
         return wishlist;
     }
 

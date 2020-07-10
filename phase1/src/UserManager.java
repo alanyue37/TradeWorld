@@ -1,6 +1,9 @@
-import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
+
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.ArrayList;
 
 import java.io.Serializable;
 
@@ -16,10 +19,9 @@ enum itemSets {
 
 public class UserManager implements Serializable {
 
-    private final HashMap<String, TradingUser> tradingUsers;
-    private final HashMap<String, User> adminUsers;
-    private final HashSet<String> unfreezeRequests;
-    private final HashSet<String> freezeAccounts;
+    private final Map<String, TradingUser> tradingUsers;
+    private final Map<String, User> adminUsers;
+    private final Set<String> unfreezeRequests;
     private int threshold;
 
     /**
@@ -29,7 +31,6 @@ public class UserManager implements Serializable {
         tradingUsers = new HashMap<>();
         adminUsers = new HashMap<>();
         unfreezeRequests = new HashSet<>();
-        freezeAccounts = new HashSet<>();
     }
 
     /**
@@ -144,9 +145,9 @@ public class UserManager implements Serializable {
      * @param set      The name of the requested set
      * @return The requested set
      */
-    public HashSet<String> getSetByUsername(String username, itemSets set) {
+    public Set<String> getSetByUsername(String username, itemSets set) {
         TradingUser account = tradingUsers.get(username);
-        HashSet<String> requestedSet = null;
+        Set<String> requestedSet = null;
         switch (set) {
             case INVENTORY:
                 requestedSet = account.getInventory();
@@ -227,7 +228,7 @@ public class UserManager implements Serializable {
      *
      * @return The set of all TradingUsers who have requested to be unfrozen
      */
-    public HashSet<String> getUnfreezeRequests() {
+    public Set<String> getUnfreezeRequests() {
         return unfreezeRequests;
     }
 
