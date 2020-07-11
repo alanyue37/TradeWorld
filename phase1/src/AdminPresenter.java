@@ -17,11 +17,10 @@ public class AdminPresenter {
                 "Enter 1 to add New Admins\n" +
                 "Enter 2 to Freeze User Accounts\n" +
                 "Enter 3 to Unfreeze User Accounts\n" +
-                "Enter 4 to change Availability of items\n" +
-                "Enter 5 to add items to Inventory\n" +
-                "Enter 6 to set a Lending Threshold\n" +
-                "Enter 7 to set a Limit for the Number of Transactions that could be conducted in one week\n" +
-                "Enter 8 to set a Limit for Incomplete Transactions\n" +
+                "Enter 4 to Review items\n" +
+                "Enter 5 to set a Lending Threshold\n" +
+                "Enter 6 to set a Limit for the Number of Transactions that could be conducted in one week\n" +
+                "Enter 7 to set a Limit for Incomplete Transactions\n" +
                 "\n Type \"exit\" at any time to exit.");
     }
 

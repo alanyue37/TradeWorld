@@ -47,20 +47,21 @@ public class AdminController implements RunnableController {
             case "1":
                 askAdminToAddNewAdmin();
             case "2":
-                askAdminToAddNewAdmin();
-                break;
-            case "3":
                 askAdminToFreezeUsers();
                 break;
-            case "4":
+            case "3":
                 askAdminToUnfreezeUsers();
                 break;
-            case "5":
+            case "4":
                 askAdminToReviewItems();
                 break;
-            case "6":
+            case "5":
                 askAdminToSetLendingThreshold();
                 break;
+            case "6":
+                askAdminToSetLimitOfTransactions();
+            case "7":
+                askAdminToSetLimitOfIncompleteTrades();
             case "exit":
                 adminPresenter.end();
                 adminPresenter.startMenu();
