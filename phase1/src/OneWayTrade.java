@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Represents a one way trade, where one user gives an item to another user
@@ -52,22 +54,22 @@ public class OneWayTrade extends Trade {
      * @return list of users in trade
      */
     @Override
-    public ArrayList<String> getUsers() {
-        ArrayList<String> users = new ArrayList<>();
+    public List<String> getUsers() {
+        List<String> users = new ArrayList<>();
         users.add(giverUsername);
         users.add(receiverUsername);
         return users;
     }
 
     @Override
-    public  ArrayList<String> getItems(){
-        ArrayList<String> items = new ArrayList<>();
+    public  List<String> getItems(){
+        List<String> items = new ArrayList<>();
         items.add(this.itemId);
         return items;
     }
 
     @Override
-    public HashMap<String, String> userToItem(){
+    public Map<String, String> userToItem(){
         HashMap<String, String> userToItem = new HashMap<>();
         userToItem.put(giverUsername, itemId);
         userToItem.put(receiverUsername, null);
