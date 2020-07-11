@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -10,7 +8,7 @@ public abstract class Trade {
     private String type;
     private String idOfTrade;
     private boolean IsOpened;
-    private ArrayList<Meeting> meeting;
+    private List<Meeting> meeting;
     private Date creationDate;
 
     private static AtomicInteger counter = new AtomicInteger();
@@ -62,7 +60,7 @@ public abstract class Trade {
      * Gets the array list of meeting(s)
      * @return list of meeting(s)
      */
-    public ArrayList<Meeting> getMeetingList(){
+    public List<Meeting> getMeetingList(){
         return this.meeting;
     }
 
@@ -86,9 +84,9 @@ public abstract class Trade {
      * Gets users involved in the trade
      * @return list of users in trade
      */
-    public abstract ArrayList<String> getUsers();
+    public abstract List<String> getUsers();
 
-    public abstract ArrayList<String> getItems();
+    public abstract List<String> getItems();
 
-    public abstract HashMap<String, String> userToItem();
+    public abstract Map<String, String> userToItem();
 }
