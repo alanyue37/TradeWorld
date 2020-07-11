@@ -2,16 +2,14 @@ import javafx.print.Collation;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 
 public class TradeManager implements Serializable {
     private int limitOfEdits;
-    private HashMap<String, Trade> ongoingTrades;
+    private Map<String, Trade> ongoingTrades;
     private MeetingManager meetingManager;
-    private HashMap<String, Trade> completedTrades;
-    private HashMap<String, ArrayList<String>> userToTrades;
+    private Map<String, Trade> completedTrades;
+    private Map<String, ArrayList<String>> userToTrades;
 
     /**
      * Constructor for TradeManager.
@@ -114,7 +112,7 @@ public class TradeManager implements Serializable {
      * @param tradeId ID of the trade
      * @return hashmap which maps user (of the trade) to their item
      */
-    public HashMap<String, String> getUserAndItem(String tradeId){
+    public Map<String, String> getUserAndItem(String tradeId){
         return getTrade(tradeId).userToItem();
     }
 
@@ -206,9 +204,9 @@ public class TradeManager implements Serializable {
      * Returns arraylist of incomplete trades (trade that contains incomplete meetings)
      * @return arraylist of incomplete trades
      */
-    private ArrayList<Trade> getIncompleteTrade() {
-        ArrayList<Trade> openTrades = new ArrayList<>(this.ongoingTrades.values());
-        ArrayList<Trade> incompleteTrades = new ArrayList<>();
+    private List<Trade> getIncompleteTrade() {
+        List<Trade> openTrades = new ArrayList<>(this.ongoingTrades.values());
+        List<Trade> incompleteTrades = new ArrayList<>();
         for (Trade openTrade : openTrades) {
             if (isIncompleteTrade(openTrade)) {
                 incompleteTrades.add(openTrade);
@@ -223,8 +221,8 @@ public class TradeManager implements Serializable {
      * @param trades list of trades
      * @return a hashmap that maps the username to the number of trades that the user took part of
      */
-    private HashMap<String, Integer> userToNumTradesInvolved(ArrayList<Trade> trades) {
-        HashMap<String, Integer> usernameCount = new HashMap<>();
+    private Map<String, Integer> userToNumTradesInvolved(List<Trade> trades) {
+        Map<String, Integer> usernameCount = new HashMap<>();
         for (Trade trade : trades) {
             for (String user : trade.getUsers()) {
                 if (usernameCount.containsKey(user)) {
@@ -241,10 +239,10 @@ public class TradeManager implements Serializable {
      * before the account is frozen
      * @return arraylist of usernames that passed limit of incomplete trades
      */
-    public ArrayList<String> getExceedIncompleteLimitUser(int limIncomplete) {
-        ArrayList<Trade> incompleteTrades = getIncompleteTrade();
-        HashMap<String, Integer> usernamesMap = userToNumTradesInvolved(incompleteTrades);
-        ArrayList<String> incompleteUsernames = new ArrayList<>();
+    public List<String> getExceedIncompleteLimitUser(int limIncomplete) {
+        List<Trade> incompleteTrades = getIncompleteTrade();
+        Map<String, Integer> usernamesMap = userToNumTradesInvolved(incompleteTrades);
+        List<String> incompleteUsernames = new ArrayList<>();
         for (String user : usernamesMap.keySet()) {
             if (usernamesMap.get(user) > limIncomplete) {
                 incompleteUsernames.add(user);
@@ -277,11 +275,11 @@ public class TradeManager implements Serializable {
      * @param numDays number of days
      * @return arraylist of trades that are completed in the past numDays.
      */
-    private ArrayList<Trade> getTradesPastDays(int numDays) {
+    private List<Trade> getTradesPastDays(int numDays) {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime numDaysBefore = now.minusDays(numDays);
         Date comparisonDate = new Date(numDaysBefore.getYear() - 1900, numDaysBefore.getMonthValue() - 1, numDaysBefore.getDayOfMonth());
-        ArrayList<Trade> tradeInPastDays = new ArrayList<>();
+        List<Trade> tradeInPastDays = new ArrayList<>();
         for (Trade trade : this.completedTrades.values()) {
             if (getLastConfirmedMeetingTime(trade).after(comparisonDate)) {
                     tradeInPastDays.add(trade);
@@ -296,10 +294,10 @@ public class TradeManager implements Serializable {
      * @param numDays past number of days
      * @return arraylist of usernames
      */
-    public ArrayList<String> getExceedLimTrade(int limTrade, int numDays){
-        ArrayList<Trade> pastTrades = getTradesPastDays(numDays);
-        HashMap<String, Integer> usernamesMap = userToNumTradesInvolved(pastTrades);
-        ArrayList<String> exceedLimitOfTradeUsers = new ArrayList<>();
+    public List<String> getExceedLimTrade(int limTrade, int numDays){
+        List<Trade> pastTrades = getTradesPastDays(numDays);
+        Map<String, Integer> usernamesMap = userToNumTradesInvolved(pastTrades);
+        List<String> exceedLimitOfTradeUsers = new ArrayList<>();
         for (String user : usernamesMap.keySet()) {
             if (usernamesMap.get(user) > limTrade) {
                 exceedLimitOfTradeUsers.add(user);
@@ -327,9 +325,9 @@ public class TradeManager implements Serializable {
      * @param username username of the user we want to get all trade
      * @return arraylist of trades of user with username "username"
      */
-    private ArrayList<Trade> getTradeOfUser(String username) {
-        ArrayList<Trade> userTrades = new ArrayList<>();
-        ArrayList<String> tradeIds = this.userToTrades.get(username);
+    private List<Trade> getTradeOfUser(String username) {
+        List<Trade> userTrades = new ArrayList<>();
+        List<String> tradeIds = this.userToTrades.get(username);
         for (String tradeId : tradeIds) {
             userTrades.add(getTrade(tradeId));
         }
@@ -352,9 +350,9 @@ public class TradeManager implements Serializable {
         return false;
     }
 
-    private HashMap<String, Integer> getPartnersMap(String user) {
-        ArrayList<Trade> trades = getTradeOfUser(user);
-        HashMap<String, Integer> partnersMap = new HashMap<>();
+    private Map<String, Integer> getPartnersMap(String user) {
+        List<Trade> trades = getTradeOfUser(user);
+        Map<String, Integer> partnersMap = new HashMap<>();
         for (Trade trade : trades) {
             for (String trader : trade.getUsers()) {
                     if (!(partnersMap.containsKey(trader))) {
@@ -365,8 +363,8 @@ public class TradeManager implements Serializable {
         return partnersMap;
     }
 
-    private ArrayList<String> sortPartnersList(HashMap<String, Integer> partners) {
-        ArrayList<String> sorted = new ArrayList<>();
+    private List<String> sortPartnersList(Map<String, Integer> partners) {
+        List<String> sorted = new ArrayList<>();
         for (String partner : partners.keySet()) {
             if (sorted.size() == 0) {
                 sorted.add(partner);
@@ -387,17 +385,17 @@ public class TradeManager implements Serializable {
      * @return arraylist of usernames that are the most frequent trading partners of user "user." If "num" is greater
      * than the number of trading partners that "user" has, all of their trading partners are returned.
      */
-    public ArrayList<String> getFrequentPartners(int num, String user) {
-        HashMap<String, Integer> partners = getPartnersMap(user);
-        ArrayList<String> frequentPartners = sortPartnersList(partners); // assumes that sort partners give best partner first
+    public List<String> getFrequentPartners(int num, String user) {
+        Map<String, Integer> partners = getPartnersMap(user);
+        List<String> frequentPartners = sortPartnersList(partners); // assumes that sort partners give best partner first
         if (num >= frequentPartners.size()) {
             return frequentPartners;
         }
-        return (ArrayList<String>) frequentPartners.subList(0, num);
+        return (List<String>) frequentPartners.subList(0, num);
     }
 
-    private ArrayList<Trade> sortTradesMeetingDate(ArrayList<Trade> trades) {
-        ArrayList<Trade> sorted = new ArrayList<>();
+    private List<Trade> sortTradesMeetingDate(List<Trade> trades) {
+        List<Trade> sorted = new ArrayList<>();
         sorted.add(trades.get(0));
         for (int i = 1; i < trades.size(); i++) {
             int ii = 0;
@@ -407,9 +405,9 @@ public class TradeManager implements Serializable {
         } return sorted;
     }
 
-    private ArrayList<String> getItemsTraded(String user) {
-        ArrayList<String> items = new ArrayList<>();
-        ArrayList<Trade> trades = new ArrayList<>();
+    private List<String> getItemsTraded(String user) {
+        List<String> items = new ArrayList<>();
+        List<Trade> trades = new ArrayList<>();
         for (String tradeId: this.userToTrades.get(user)){
             if (this.completedTrades.containsKey(tradeId)){
                 trades.add(this.completedTrades.get(tradeId));
@@ -431,9 +429,9 @@ public class TradeManager implements Serializable {
      * @return arraylist of item IDs that were the most recently traded by user "user." If "num" is greater
      * than the number of items that "user" has traded, all of the items traded are returned.
      */
-    public ArrayList<String> getRecentItemsTraded(int num, String user) {
-        ArrayList<String> tradedItems = getItemsTraded(user);
-        ArrayList<String> recentItems = new ArrayList<>();
+    public List<String> getRecentItemsTraded(int num, String user) {
+        List<String> tradedItems = getItemsTraded(user);
+        List<String> recentItems = new ArrayList<>();
         int i = tradedItems.size() - 1;
         while (i >= tradedItems.size() - num && i >= 0) {
             recentItems.add(tradedItems.get(i));

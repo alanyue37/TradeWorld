@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Represents a two way trade, where two users give an item and receive the other's item
@@ -88,24 +90,24 @@ public class TwoWayTrade extends Trade {
      * @return list of users in trade
      */
     @Override
-    public ArrayList<String> getUsers() {
-        ArrayList<String> users = new ArrayList<>();
+    public List<String> getUsers() {
+        List<String> users = new ArrayList<>();
         users.add(user1);
         users.add(user2);
         return users;
     }
 
     @Override
-    public ArrayList<String> getItems(){
-        ArrayList<String> items = new ArrayList<>();
+    public List<String> getItems(){
+        List<String> items = new ArrayList<>();
         items.add(item1);
         items.add(item2);
         return items;
     }
 
     @Override
-    public HashMap<String, String> userToItem(){
-        HashMap<String, String> userToItem = new HashMap<>();
+    public Map<String, String> userToItem(){
+        Map<String, String> userToItem = new HashMap<>();
         userToItem.put(user1, item1);
         userToItem.put(user2, item2);
         return userToItem;
