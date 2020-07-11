@@ -18,19 +18,25 @@ public class AdminController implements RunnableController {
         this.username = username;
     }
 
+    /**
+     * This method overrides run() method in the RunnableController interface. It shows the menu options
+     * to the admin user and might catch an IOException if something goes wrong when showing the menu options.
+     */
     @Override
     public void run() {
         try {
             selectMenu();
         } catch (IOException e) {
-            System.out.println("Something bad happened.");
+            System.out.println("Oops, something bad happened!");
         }
     }
 
     /**
-     * Asks whether the AdminUser wants to continue to see the other menu options or not.
-     * If the AdminUser types in "exit", the screen presents a message and then the AdminUser is brought back to the
-     * startMenu() and presents the same options again until the AdminUser types "continue."
+     * This method prints the menu options to the screen and asks the admin user to enter a corresponding number to
+     * select a menu option. The number determines which method to call in the admin controller. If the admin user
+     * types "exit" at the beginning or any time during the program, the screen prints a message and then the
+     * admin user is brought back to the selectMenu() and this prints the same options again until
+     * the admin user enters a corresponding number.
      * @throws IOException if something goes wrong.
      */
     public void selectMenu() throws IOException {
@@ -38,7 +44,7 @@ public class AdminController implements RunnableController {
         String input = br.readLine();
         switch (input) {
             case "1":
-                askAdminForCreateAccountInfo();
+                askAdminToAddNewAdmin();
             case "2":
                 askAdminToAddNewAdmin();
                 break;
@@ -64,11 +70,13 @@ public class AdminController implements RunnableController {
     }
 
     /**
-     * A helper function for chooseLoginOptions().
-     * Asks the AdminUser to type in their name, email, and password to create an account.
+     * This method allows an admin user to add another, subsequent admin user.
+     * It asks the admin user to type in their name, email, and password to create an account for the subsequent
+     * admin user. After adding the subsequent admin user to admin users in UserManager, the admin is presented with
+     * the same menu options again.
      * @throws IOException if something goes wrong.
      */
-    private void askAdminForCreateAccountInfo() throws IOException {
+    private void askAdminToAddNewAdmin() throws IOException {
         adminPresenter.accountEnterName();
         String nameInput = br.readLine();
         adminPresenter.accountEnterEmail();
@@ -80,21 +88,9 @@ public class AdminController implements RunnableController {
     }
 
     /**
-     * Asks the admin to add subsequent admins to the system.
-     * @throws IOException if something goes wrong.
-     */
-    public void askAdminToAddNewAdmin() throws IOException {
-        for (String adminUsersToBeAdded : anm.getAdminUsersRequests().keySet()) {
-            adminPresenter.addNewAdminUser(adminUsersToBeAdded);
-            String addInput = br.readLine();
-            if (addInput.equals("yes")) {
-                tradeModel.getUserManager().addNewAdminUsers(adminUsersToBeAdded, anm.getAdminUsersRequests().get(adminUsersToBeAdded));
-            }
-        }
-    }
-
-    /**
-     * Asks the admin to freeze the accounts of the user.
+     * This method allows an admin user to freeze accounts of trading users who have reached the limits and thresholds.
+     * It asks the admin user to enter 1 to freeze the account of the user. After freezing the account(s), the admin is
+     * presented with the same menu options again.
      * @throws IOException if something goes wrong.
      */
     public void askAdminToFreezeUsers() throws IOException {
@@ -109,7 +105,9 @@ public class AdminController implements RunnableController {
     }
 
     /**
-     * Asks the admin to unfreeze the accounts of the user.
+     * This method allows an admin user to unfreeze accounts of trading users who have requested to unfreeze.
+     * It asks the admin user to enter 1 to unfreeze the account of the user. After unfreezing the account(s), the
+     * admin is presented with the same menu options again.
      * @throws IOException if something goes wrong.
      */
     public void askAdminToUnfreezeUsers() throws IOException {
@@ -124,14 +122,17 @@ public class AdminController implements RunnableController {
     }
 
     /**
-     * Asks the Admin to confirm whether this item should be added to the system or not.
+     * This method allows an admin user to look at the item and check whether this item should be added to the system
+     * or not. It asks the admin user to enter 1 to confirm this item. After going through the pending list of items,
+     * the admin is presented with the same menu options again. This is a way to prevent the user from selling
+     * items that are possible to sell such as intangible items.
      * @throws IOException if something goes wrong.
      */
     public void askAdminToChangeStatusToAvailable() throws IOException {
         for (String pendingForApproval : tradeModel.getItemManager().getPendingItems()) {
             adminPresenter.addItemToInventory(pendingForApproval);
             String addInput = br.readLine();
-            if (addInput.equals("yes")) {
+            if (addInput.equals("1")) {
                 tradeModel.getItemManager().confirmItem(pendingForApproval);
                 selectMenu();
             } selectMenu();
@@ -139,8 +140,9 @@ public class AdminController implements RunnableController {
     }
 
     /**
-     * When users request an AdminUser to add an item to their available list of items, the AdminUser must review
-     * the item and puts the item in the inventory of the user.
+     * This method allows an admin user to review the items that are to be added to the inventory of the user.
+     * It asks the admin user to enter 1 to add the item to the inventory. After going through the pending list of
+     * items, the admin is presented with the same menu options again.
      * @throws IOException if something goes wrong.
      */
     public void askAdminToAddItemToInventory() throws IOException {
@@ -160,7 +162,7 @@ public class AdminController implements RunnableController {
     }
 
     /**
-     * The admin can change the lending threshold that is, how much does the user have to lend than they have borrowed
+     * This method allows an admin user to change the lending threshold, that is, how much the user lends than borrow
      * in order to make a non-lending transaction.
      * @throws IOException if something goes wrong.
      */
