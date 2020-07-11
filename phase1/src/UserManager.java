@@ -7,16 +7,6 @@ import java.util.ArrayList;
 
 import java.io.Serializable;
 
-enum userTypes {
-    TRADING,
-    ADMIN
-}
-
-enum itemSets {
-    INVENTORY,
-    WISHLIST
-}
-
 public class UserManager implements Serializable {
 
     private final Map<String, TradingUser> tradingUsers;
@@ -59,7 +49,7 @@ public class UserManager implements Serializable {
      * @param password The submitted password.
      * @return Whether or not the username/password combination is valid.
      */
-    public boolean login(String username, String password, userTypes type) {
+    public boolean login(String username, String password, UserTypes type) {
         User account = null;
         switch (type) {
             case TRADING:
@@ -114,7 +104,7 @@ public class UserManager implements Serializable {
      * @param password The intended password
      * @param type     The type of User
      */
-    public void setPasswordByUsername(String username, String password, userTypes type) {
+    public void setPasswordByUsername(String username, String password, UserTypes type) {
         User account = null;
         switch (type) {
             case TRADING:
@@ -149,7 +139,7 @@ public class UserManager implements Serializable {
      * @param set      The name of the requested set
      * @return The requested set
      */
-    public Set<String> getSetByUsername(String username, itemSets set) {
+    public Set<String> getSetByUsername(String username, ItemSets set) {
         TradingUser account = tradingUsers.get(username);
         Set<String> requestedSet = null;
         switch (set) {
@@ -170,7 +160,7 @@ public class UserManager implements Serializable {
      * @param id       The id of the given item
      * @param set      The name of the requested set
      */
-    public void addToSet(String username, String id, itemSets set) {
+    public void addToSet(String username, String id, ItemSets set) {
         TradingUser account = tradingUsers.get(username);
         switch (set) {
             case INVENTORY:
@@ -189,7 +179,7 @@ public class UserManager implements Serializable {
      * @param id       The id of the given item
      * @param set      The name of the requested set
      */
-    public void removeFromSet(String username, String id, itemSets set) {
+    public void removeFromSet(String username, String id, ItemSets set) {
         TradingUser account = tradingUsers.get(username);
         switch (set) {
             case INVENTORY:
@@ -213,15 +203,15 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Gets a list of all TradingUsers who are below the borrowing ratio and are not currently frozen
+     * Get a list of the usernames of TradingUsers who are below the borrowing ratio and are not currently frozen
      *
-     * @return A list of all TradingUsers who are below the borrowing ratio and are not currently frozen
+     * @return A list of the usernames of TradingUsers who are below the borrowing ratio and are not currently frozen
      */
-    public ArrayList<User> getUsersForFreezing() {
-        ArrayList<User> result = new ArrayList<>();
+    public ArrayList<String> getUsersForFreezing() {
+        ArrayList<String> result = new ArrayList<>();
         for (TradingUser trader : tradingUsers.values()) {
             if (trader.getCredit() >= getThreshold() && !trader.isFrozen()) {
-                result.add(trader);
+                result.add(trader.getUsername());
             }
         }
         return result;
