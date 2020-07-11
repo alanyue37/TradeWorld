@@ -66,7 +66,7 @@ public class AdminController implements RunnableController {
                 adminPresenter.startMenu();
                 break;
             default:
-                adminPresenter.menuTryAgain();
+                adminPresenter.invalidInput();
         }
     }
 
@@ -96,11 +96,11 @@ public class AdminController implements RunnableController {
      * @throws IOException if something goes wrong.
      */
     public void askAdminToFreezeUsers() throws IOException {
-        for (User freeze : tradeModel.getUserManager().getUsersForFreezing()) {
-            adminPresenter.freezeAccounts(freeze.getUsername());
+        for (String freeze : tradeModel.getUserManager().getUsersForFreezing()) {
+            adminPresenter.freezeAccounts(freeze);
             String confirmationInput = br.readLine();
             if (confirmationInput.equals("1")) {
-                tradeModel.getUserManager().freeze(freeze.getUsername(), true);
+                tradeModel.getUserManager().freeze(freeze, true);
             }
         }
         selectMenu();
@@ -118,10 +118,8 @@ public class AdminController implements RunnableController {
             String confirmationInput = br.readLine();
             if (confirmationInput.equals("1")) {
                 tradeModel.getUserManager().freeze(unfreeze, false);
-                selectMenu();
             }
-            selectMenu();
-        }
+        }  selectMenu();
     }
 
     /**
@@ -150,10 +148,10 @@ public class AdminController implements RunnableController {
      * @throws IOException if something goes wrong.
      */
     public void askAdminToSetLendingThreshold() throws IOException {
-        adminPresenter.setLendingThreshold();
+        adminPresenter.lendingThreshold();
         String thresholdInput = br.readLine();
-        int threshold = Integer.parseInt(thresholdInput);
-        tradeModel.getUserManager().setThreshold(threshold);
+        int lendingThreshold = Integer.parseInt(thresholdInput);
+        tradeModel.getUserManager().setThreshold(lendingThreshold);
         selectMenu();
     }
 
@@ -162,6 +160,8 @@ public class AdminController implements RunnableController {
      * in one week.
      */
     public void askAdminToSetLimitOfTransactions() throws IOException {
+        adminPresenter.limitOfTransactions();
+        String thresholdInput = br.readLine();
 
     }
 
@@ -170,6 +170,8 @@ public class AdminController implements RunnableController {
      * is frozen.
      */
     public void askAdminToSetLimitOfIncompleteTrades() throws IOException {
+        adminPresenter.limitOfIncompleteTransactions();
+        String thresholdInput = br.readLine();
 
     }
 }

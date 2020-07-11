@@ -52,7 +52,7 @@ public class AdminPresenter {
      */
     public void freezeAccounts(String freeze) {
         System.out.println("This account has reached its limits and has to be frozen. " +
-                "Type 1 to freeze this account. Freeze Account for: " + freeze);
+                "Type 1 to freeze this account.\n Freeze Account for: " + freeze);
     }
 
     /**
@@ -61,7 +61,7 @@ public class AdminPresenter {
      */
     public void unfreezeAccounts(String unfreeze) {
         System.out.println("This user has their account frozen and is requesting to unfreeze." +
-                "Type 1 to unfreeze this account. Unfreeze Account for: " + unfreeze);
+                "Type 1 to unfreeze this account.\n Unfreeze Account for: " + unfreeze);
     }
 
     /**
@@ -75,7 +75,7 @@ public class AdminPresenter {
     /**
      *
      */
-    public void setLendingThreshold() {
+    public void lendingThreshold() {
         System.out.println("How much does the user have to (at least) lend than they have borrowed in order to make " +
                 "a non-lending transaction? Enter a whole number for the Lending Threshold: ");
     }
@@ -101,5 +101,9 @@ public class AdminPresenter {
      */
     public void end() {
         System.out.println("See you soon!");
+    }
+
+    public void invalidInput() {
+        System.out.println("This is an invalid input.\n Please try again!");
     }
 }
