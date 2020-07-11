@@ -9,11 +9,7 @@ public class AdminPresenter { // this shouldn't extend LogInPresenter
     }
 
     public void startMenu() {
-        System.out.println("Welcome! Type \"exit\" to exit and 1 to see more options");
-    }
-
-    public void giveMenuOptions() {
-        System.out.println("Admin Options\n " +
+        System.out.println("Welcome! Admin Options\n " +
                 "Enter 2 to add New Admins\n" +
                 "Enter 3 to Freeze User Accounts\n" +
                 "Enter 4 to Unfreeze User Accounts\n" +

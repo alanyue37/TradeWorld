@@ -3,9 +3,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
- * A controller class that sends Admin input to Use Cases.
+ * A controller class that sends Admin input to Use Cases and calls methods in the Use Case classes.
  */
-public class AdminController {
+public class AdminController implements RunnableController {
     private final TradeModel tradeModel;
     private final AdminPresenter adminPresenter;
     private final BufferedReader br;
@@ -18,15 +18,23 @@ public class AdminController {
         this.username = username;
     }
 
+    @Override
+    public void run() {
+        try {
+            selectMenu();
+        } catch (IOException e) {
+            System.out.println("Something bad happened.");
+        }
+    }
+
     /**
      * Asks whether the AdminUser wants to continue to see the other menu options or not.
      * If the AdminUser types in "exit", the screen presents a message and then the AdminUser is brought back to the
      * startMenu() and presents the same options again until the AdminUser types "continue."
-     *
      * @throws IOException if something goes wrong.
      */
-    public void startMenu() throws IOException {
-        adminPresenter.giveMenuOptions();
+    public void selectMenu() throws IOException {
+        adminPresenter.startMenu();
         String input = br.readLine();
         switch (input) {
             case "1":
@@ -68,6 +76,7 @@ public class AdminController {
         adminPresenter.accountEnterPassword();
         String passwordInput = br.readLine();
         tradeModel.getUserManager().createAdminUser(nameInput, emailInput, passwordInput);
+        selectMenu();
     }
 
     /**
@@ -94,7 +103,8 @@ public class AdminController {
             String confirmationInput = br.readLine();
             if (confirmationInput.equals("1")) {
                 tradeModel.getUserManager().freeze(freeze.getUsername(), true);
-            }
+                selectMenu();
+            } selectMenu();
         }
     }
 
@@ -108,7 +118,8 @@ public class AdminController {
             String confirmationInput = br.readLine();
             if (confirmationInput.equals("1")) {
                 tradeModel.getUserManager().freeze(unfreeze, false);
-            }
+                selectMenu();
+            } selectMenu();
         }
     }
 
@@ -117,12 +128,13 @@ public class AdminController {
      * @throws IOException if something goes wrong.
      */
     public void askAdminToChangeStatusToAvailable() throws IOException {
-        for (Item pendingForApproval : tradeModel.getItemManager().getPendingItems()) {
-            adminPresenter.addItemToInventory(pendingForApproval.getId());
+        for (String pendingForApproval : tradeModel.getItemManager().getPendingItems()) {
+            adminPresenter.addItemToInventory(pendingForApproval);
             String addInput = br.readLine();
             if (addInput.equals("yes")) {
-                tradeModel.getItemManager().confirmItem(pendingForApproval.getId());
-            }
+                tradeModel.getItemManager().confirmItem(pendingForApproval);
+                selectMenu();
+            } selectMenu();
         }
     }
 
@@ -131,17 +143,19 @@ public class AdminController {
      * the item and puts the item in the inventory of the user.
      * @throws IOException if something goes wrong.
      */
-    public void askAdminToAddItemToInventory(String emailInput) throws IOException {
+    public void askAdminToAddItemToInventory() throws IOException {
         int i = 0;
-        for (Item toBeAdded : tradeModel.getItemManager().getPendingItems()) {
-            adminPresenter.addItemToInventory(toBeAdded.getId());
+        for (String toBeAdded : tradeModel.getItemManager().getPendingItems()) {
+            adminPresenter.addItemToInventory(toBeAdded);
             String addInput = br.readLine();
             if (addInput.equals("yes")) {
-                tradeModel.getUserManager().addToSet(emailInput, toBeAdded.getId(), itemSets.INVENTORY);
+                tradeModel.getUserManager().addToSet(username, toBeAdded, itemSets.INVENTORY);
                 ++i;
+                selectMenu();
             } else if (addInput.equals("no")) {
                 ++i;
-            }
+                selectMenu();
+            } selectMenu();
         }
     }
 
@@ -155,5 +169,6 @@ public class AdminController {
         String thresholdInput = br.readLine();
         int threshold = Integer.parseInt(thresholdInput);
         tradeModel.getUserManager().setThreshold(threshold);
+        selectMenu();
     }
 }
