@@ -245,4 +245,13 @@ public class UserManager implements Serializable {
         unfreezeRequests.add(username);
     }
 
+    /**
+     * Returns true when user's account is frozen and false for when it is unfrozen
+     *
+     * @param username The username of the TradingUser checking their status.
+     */
+    public boolean isFrozen(String username) {
+        TradingUser account = tradingUsers.get(username);
+        return account.isFrozen();
+    }
 }
