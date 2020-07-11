@@ -9,16 +9,24 @@ public class UserController implements RunnableController {
     TradeModel tradeModel;
     UserPresenter presenter;
     private String username;
-    private Scanner sc;
+    // private Scanner sc;
 
+    /**
+     * Constructor for UserController.
+     * @param tradeModel Model of the system.
+     * @param username Username associated with the user interacting with the system.
+     */
     public UserController(TradeModel tradeModel, String username){
         br = new BufferedReader(new InputStreamReader(System.in));
+        // Scanner sc = new Scanner(System.in);
         this.tradeModel = tradeModel;
         this.username = username;
         presenter = new UserPresenter(tradeModel);
-        Scanner sc = new Scanner(System.in);
     }
 
+    /**
+     * Main method to run the UserController
+     */
     public void run() {
         try {
             if(!selectMenu()) {
@@ -29,6 +37,10 @@ public class UserController implements RunnableController {
         }
     }
 
+    /**
+     * Main menu to run the UserController
+     * There are two options that are available (viewing and trading)
+     */
     private boolean selectMenu() throws IOException {
         presenter.startMenu();
         String input = br.readLine();
@@ -38,7 +50,7 @@ public class UserController implements RunnableController {
                 viewMenu();
                 break;
             case "2":
-                tradeMenu();
+                tradeOptions();
                 break;
             case "exit":
                 return false;
@@ -48,35 +60,26 @@ public class UserController implements RunnableController {
         return true;
     }
 
+    /**
+     * Menu to run the view options for UserController
+     */
     public void viewMenu() throws IOException {
         presenter.printViewOptions();
         String viewInput = br.readLine();
         // String viewInput = sc.nextLine();
         switch (viewInput){
             case "1":
-                // view inventory
-                presenter.printSystemInventory();
-                presenter.printUserInventoryOptions();
-                String choice = br.readLine();
-                // String choice = sc.nextLine();
-                if (choice.equals("1")){
-                    presenter.printInputItemID();
-                    String itemId = br.readLine();
-                    // String itemId = sc.nextLine();
-                    tradeModel.getUserManager().addToSet(username, itemId, itemSets.WISHLIST);
-                }
+                viewInventory();
                 break;
             case "2":
-                // view wishlist
-                presenter.printUserWishlist(username);
+                viewWishlist();
                 break;
             case "3":
                 // view last transaction
                 // TODO: Get last trade of a user from UserManager
                 break;
             case "4":
-                // view top 3 most frequent trading partners
-                presenter.printViewTopTradingPartner(tradeModel.getTradeManager().getFrequentPartners(3,username););
+                viewTradingPartners();
                 break;
             case "exit":
                 break;
@@ -85,73 +88,128 @@ public class UserController implements RunnableController {
         }
     }
 
-    public void tradeMenu() throws IOException {
+    /**
+     * Options depending on whether the user account is frozen or not
+     */
+    public void tradeOptions() throws IOException {
         if (tradeModel.getUserManager().isFrozen(username)){
-            presenter.printAccountIsFrozenOption();
-            String viewInput = br.readLine();
-            // String viewInput = sc.nextLine();
-            if (viewInput.equals("1")){
-                tradeModel.getUserManager().markUserForUnfreezing(username);
-            }
+            tradeUserAccountIsFrozen();
         }
         else {
-
-
-            presenter.printViewTradeOptions();
-            String viewInput = br.readLine();
-            // String viewInput = sc.nextLine();
-            switch (viewInput) {
-                case "1":
-                    // Lend item
-
-                    // create an item here
-                    presenter.printInputItemName();             // enter name of the item
-                    String itemName = br.readLine();
-                    // String itemName = sc.nextLine();
-                    presenter.printInputItemDescription();      // enter description of the item
-                    String itemDescription = br.readLine();
-                    // String itemDescription = sc.nextLine();
-                    tradeModel.getItemManager().addItem(itemName, username, itemDescription);
-
-                    break;
-                case "2":
-                    // Borrow an item here (temporary)
-
-                    presenter.printUserInventory(username);     // print inventory
-                    presenter.printInputItemID();
-                    String itemIdTemporary = br.readLine();
-                    // String itemId = sc.nextLine();
-                    tradeModel.getTradeManager().addOnewayTrade("temporary", tradeModel.getItemManager().getOwner(itemIdTemporary), username, itemIdTemporary);
-                    presenter.printInputUserEmail();
-                    presenter.printUserWishlist(br.readLine());
-                    // presenter.printUserWishlist(sc.nextLine());
-                    break;
-
-                case "3":
-                    // Borrow an item here (Permanent)
-
-                    presenter.printUserInventory(username);     // print inventory
-                    presenter.printInputItemID();
-                    String itemIdPermanent = br.readLine();
-                    // String itemId = sc.nextLine();
-                    tradeModel.getTradeManager().addOnewayTrade("permanent", tradeModel.getItemManager().getOwner(itemIdPermanent), username, itemIdPermanent);
-                    presenter.printInputUserEmail();
-                    presenter.printUserWishlist(br.readLine());
-                    // presenter.printUserWishlist(sc.nextLine());
-                    break;
-
-                case "4":
-                    // Two way product
-
-                    break;
-                case "exit":
-                    break;
-                default:
-                    System.out.println("Please enter a valid input.");
-
-            }
+            tradeMenu();
         }
     }
 
+    /**
+     * View the Inventory. Gives the user the option of adding items to their wishlist
+     */
+    public void viewInventory() throws IOException{
+        presenter.printSystemInventory();
+        presenter.printUserInventoryOptions();
+        String choice = br.readLine();
+        // String choice = sc.nextLine();
+        if (choice.equals("1")){
+            presenter.printInputItemID();
+            String itemId = br.readLine();
+            // String itemId = sc.nextLine();
+            tradeModel.getUserManager().addToSet(username, itemId, itemSets.WISHLIST);
+        }
+    }
+
+    /**
+     * View user wishlist
+     */
+    public void viewWishlist(){
+        presenter.printUserWishlist(username);
+    }
+
+    /**
+     * View top 3 most frequent trading partners
+     */
+    public void viewTradingPartners(){
+        presenter.printViewTopTradingPartner(tradeModel.getTradeManager().getFrequentPartners(3,username));
+    }
+
+    /**
+     * Tells the user that their account is frozen and shows option for user to unfreeze their account
+     */
+    public void tradeUserAccountIsFrozen() throws IOException{
+        presenter.printAccountIsFrozenOption();
+        String viewInput = br.readLine();
+        // String viewInput = sc.nextLine();
+        if (viewInput.equals("1")){
+            tradeModel.getUserManager().markUserForUnfreezing(username);
+        }
+    }
+
+    /**
+     * Menu to run the trade options for UserController
+     */
+    public void tradeMenu()throws IOException{
+        presenter.printViewTradeOptions();
+        String viewInput = br.readLine();
+        // String viewInput = sc.nextLine();
+        switch (viewInput) {
+            case "1":
+                tradeLendItem();
+                break;
+            case "2":
+                tradeBorrowTemporary();
+                break;
+            case "3":
+                tradeBorrowPermanent();
+                break;
+            case "4":
+                // Two way trade
+                break;
+            case "exit":
+                break;
+            default:
+                System.out.println("Please enter a valid input.");
+
+        }
+
+    }
+
+    /**
+     * Allows user to create an item and lend it
+     */
+    public void tradeLendItem()throws IOException{
+        presenter.printInputItemName();             // enter name of the item
+        String itemName = br.readLine();
+        // String itemName = sc.nextLine();
+        presenter.printInputItemDescription();      // enter description of the item
+        String itemDescription = br.readLine();
+        // String itemDescription = sc.nextLine();
+        tradeModel.getItemManager().addItem(itemName, username, itemDescription);
+    }
+
+    /**
+     * Allows user to temporarily borrow an item
+     */
+    public void tradeBorrowTemporary()throws IOException{
+        presenter.printSystemInventory();
+        presenter.printInputItemID();
+        String itemIdTemporary = br.readLine();
+        // String itemId = sc.nextLine();
+        tradeModel.getTradeManager().addOnewayTrade("temporary", tradeModel.getItemManager().getOwner(itemIdTemporary), username, itemIdTemporary);
+        presenter.printUserWishlist(br.readLine());
+        // presenter.printUserWishlist(sc.nextLine());
+
+    }
+
+    /**
+     * Allows user to permanently borrow an item
+     */
+    public void tradeBorrowPermanent()throws IOException{
+        presenter.printSystemInventory();
+        presenter.printInputItemID();
+        String itemIdPermanent = br.readLine();
+        // String itemId = sc.nextLine();
+        tradeModel.getTradeManager().addOnewayTrade("permanent", tradeModel.getItemManager().getOwner(itemIdPermanent), username, itemIdPermanent);
+        presenter.printUserWishlist(br.readLine());
+        // presenter.printUserWishlist(sc.nextLine());
+
+    }
 
 }
