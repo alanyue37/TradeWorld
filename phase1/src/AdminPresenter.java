@@ -73,7 +73,8 @@ public class AdminPresenter {
     }
 
     /**
-     *
+     * This method prompts the admin user to set a threshold for how much a user has to lend than borrow to make
+     * a non-lending transaction (i.e., just borrow and not lend).
      */
     public void lendingThreshold() {
         System.out.println("How much does the user have to (at least) lend than they have borrowed in order to make " +
@@ -81,7 +82,8 @@ public class AdminPresenter {
     }
 
     /**
-     *
+     * This method prompts the admin user to set a threshold for the number of transaction that a use can make in one
+     * week (i.e., 7 days).
      */
     public void limitOfTransactions() {
         System.out.println("Enter a whole number to set a limit on the number of transactions that the user can " +
@@ -89,7 +91,8 @@ public class AdminPresenter {
     }
 
     /**
-     *
+     * This method prompts the admin user to set a threshold for the number of incomplete transactions a user can have
+     * before the account gets frozen.
      */
     public void limitOfIncompleteTransactions() {
         System.out.println("Enter a whole number to set a limit for the number of incomplete transactions before " +
@@ -103,6 +106,9 @@ public class AdminPresenter {
         System.out.println("See you soon!");
     }
 
+    /**
+     * This method informs the admin user that the input is not accepted by the program.
+     */
     public void invalidInput() {
         System.out.println("This is an invalid input.\n Please try again!");
     }
