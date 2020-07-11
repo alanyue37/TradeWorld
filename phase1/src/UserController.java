@@ -2,30 +2,28 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Scanner;
 
 public class UserController implements RunnableController {
     private final BufferedReader br;
     TradeModel tradeModel;
     UserPresenter presenter;
-//    private String username;
+    private String username;
+    private Scanner sc;
 
-    public UserController(TradeModel tradeModel){
+    public UserController(TradeModel tradeModel, String username){
         br = new BufferedReader(new InputStreamReader(System.in));
-        presenter = new UserPresenter(tradeModel);
         this.tradeModel = tradeModel;
+        this.username = username;
+        presenter = new UserPresenter(tradeModel);
+        Scanner sc = new Scanner(System.in);
     }
-
-//    The new constructor take takes in username as well
-//    public UserController(TradeModel tradeModel, String username){
-//        br = new BufferedReader(new InputStreamReader(System.in));
-//        this.tradeModel = tradeModel;
-//        this.username = username;
-//        presenter = new UserPresenter(tradeModel);
-//    }
 
     public void run() {
         try {
-            selectMenu(); // TODO: I didn't understand why it was returning null before. Are you trying to loop?
+            if(!selectMenu()) {
+                System.out.println("Please enter a valid input.");
+            }
         } catch (IOException e) {
             System.out.println("Something bad happened.");
         }
@@ -34,48 +32,13 @@ public class UserController implements RunnableController {
     private boolean selectMenu() throws IOException {
         presenter.startMenu();
         String input = br.readLine();
+        // String input = sc.nextLine();
         switch(input) {
             case "1":
-                presenter.printInputUserEmail();
-                presenter.printUserInventory(br.readLine());
+                viewMenu();
                 break;
             case "2":
-                presenter.printInputUserEmail();
-                presenter.printUserWishlist(br.readLine());
-                break;
-            case "3":
-                presenter.printAvailableItems();
-                String a = br.readLine();
-
-                break;
-            case "4":
-                presenter.printInputItemName();
-                String name = br.readLine();
-                presenter.printInputUserName();
-                String owner = br.readLine();
-                presenter.printInputItemDescription();
-                String description = br.readLine();
-                tradeModel.getItemManager().addItem(name, owner, description);
-                break;
-            case "5":
-                presenter.printAvailableItems();
-                presenter.printInputItemName();
-                String itemName = br.readLine();
-                tradeModel.getUserManager().addToWishlist(tradeModel.getItemManager().getConfirmedItem(itemName));
-                //I'm not sure which user's wishlist this item is being added to.
-                break;
-            case "6":
-                presenter.printInputUserEmail();
-                String email = br.readLine();
-                tradeModel.getUserManager().freeze(email, true);
-                break;
-            case "7":
-                presenter.printInputUserId();
-                String userId = br.readLine();
-                tradeModel.getUserManager().getLastThreeTrades(userId); //I think this is a method for TradeManager?
-                break;
-            case "8":
-                System.out.println("Request a trade");
+                tradeMenu();
                 break;
             case "exit":
                 return false;
@@ -83,6 +46,111 @@ public class UserController implements RunnableController {
                 System.out.println("Please enter a valid input.");
         }
         return true;
+    }
+
+    public void viewMenu() throws IOException {
+        presenter.printViewOptions();
+        String viewInput = br.readLine();
+        // String viewInput = sc.nextLine();
+        switch (viewInput){
+            case "1":
+                // view inventory
+                presenter.printSystemInventory();
+                presenter.printUserInventoryOptions();
+                String choice = br.readLine();
+                // String choice = sc.nextLine();
+                if (choice.equals("1")){
+                    presenter.printInputItemID();
+                    String itemId = br.readLine();
+                    // String itemId = sc.nextLine();
+                    tradeModel.getUserManager().addToSet(username, itemId, itemSets.WISHLIST);
+                }
+                break;
+            case "2":
+                // view wishlist
+                presenter.printUserWishlist(username);
+                break;
+            case "3":
+                // view last transaction
+                // TODO: Get last trade of a user from UserManager
+                break;
+            case "4":
+                // view top 3 most frequent trading partners
+                presenter.printViewTopTradingPartner(tradeModel.getTradeManager().getFrequentPartners(3,username););
+                break;
+            case "exit":
+                break;
+            default:
+                System.out.println("Please enter a valid input.");
+        }
+    }
+
+    public void tradeMenu() throws IOException {
+        if (tradeModel.getUserManager().isFrozen(username)){
+            presenter.printAccountIsFrozenOption();
+            String viewInput = br.readLine();
+            // String viewInput = sc.nextLine();
+            if (viewInput.equals("1")){
+                tradeModel.getUserManager().markUserForUnfreezing(username);
+            }
+        }
+        else {
+
+
+            presenter.printViewTradeOptions();
+            String viewInput = br.readLine();
+            // String viewInput = sc.nextLine();
+            switch (viewInput) {
+                case "1":
+                    // Lend item
+
+                    // create an item here
+                    presenter.printInputItemName();             // enter name of the item
+                    String itemName = br.readLine();
+                    // String itemName = sc.nextLine();
+                    presenter.printInputItemDescription();      // enter description of the item
+                    String itemDescription = br.readLine();
+                    // String itemDescription = sc.nextLine();
+                    tradeModel.getItemManager().addItem(itemName, username, itemDescription);
+
+                    break;
+                case "2":
+                    // Borrow an item here (temporary)
+
+                    presenter.printUserInventory(username);     // print inventory
+                    presenter.printInputItemID();
+                    String itemIdTemporary = br.readLine();
+                    // String itemId = sc.nextLine();
+                    tradeModel.getTradeManager().addOnewayTrade("temporary", tradeModel.getItemManager().getOwner(itemIdTemporary), username, itemIdTemporary);
+                    presenter.printInputUserEmail();
+                    presenter.printUserWishlist(br.readLine());
+                    // presenter.printUserWishlist(sc.nextLine());
+                    break;
+
+                case "3":
+                    // Borrow an item here (Permanent)
+
+                    presenter.printUserInventory(username);     // print inventory
+                    presenter.printInputItemID();
+                    String itemIdPermanent = br.readLine();
+                    // String itemId = sc.nextLine();
+                    tradeModel.getTradeManager().addOnewayTrade("permanent", tradeModel.getItemManager().getOwner(itemIdPermanent), username, itemIdPermanent);
+                    presenter.printInputUserEmail();
+                    presenter.printUserWishlist(br.readLine());
+                    // presenter.printUserWishlist(sc.nextLine());
+                    break;
+
+                case "4":
+                    // Two way product
+
+                    break;
+                case "exit":
+                    break;
+                default:
+                    System.out.println("Please enter a valid input.");
+
+            }
+        }
     }
 
 
