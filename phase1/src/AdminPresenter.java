@@ -1,67 +1,105 @@
 /**
- * AdminPresenter prompts an AdminUser for inputs
+ * A Presenter class that prompts an admin user for inputs.
  */
-public class AdminPresenter { // this shouldn't extend LogInPresenter
+public class AdminPresenter {
     private UserManager userManager;
 
     public AdminPresenter(TradeModel tm) {
         this.userManager = tm.getUserManager();
     }
 
+    /**
+     * This method prints the menu options to the screen and asks the admin user to enter a corresponding number to
+     * select a menu option. The number determines which method to call in the admin controller.
+     */
     public void startMenu() {
         System.out.println("Welcome! Admin Options\n " +
-                "Enter 2 to add New Admins\n" +
-                "Enter 3 to Freeze User Accounts\n" +
-                "Enter 4 to Unfreeze User Accounts\n" +
-                "Enter 5 to change Availability of items\n" +
+                "Enter 1 to add New Admins\n" +
+                "Enter 2 to Freeze User Accounts\n" +
+                "Enter 3 to Unfreeze User Accounts\n" +
+                "Enter 4 to change Availability of items\n" +
+                "Enter 5 to add items to Inventory\n" +
                 "Enter 6 to set a Lending Threshold\n" +
+                "Enter 7 to set a Limit for the Number of Transactions that could be conducted in one week\n" +
+                "Enter 8 to set a Limit for Incomplete Transactions\n" +
                 "\n Type \"exit\" at any time to exit.");
     }
 
-    public void chooseCreateAccountOrLogin() {
-        System.out.println("Type 'create an account' to create an AdminAccount or 'Login' to login to an AdminAccount: ");
-    }
-
+    /**
+     * This method prompts the admin user to enter the name of another admin user.
+     */
     public void accountEnterName() {
-        System.out.println("Enter your name: ");
+        System.out.println("Enter name: ");
     }
 
-    public void accountEnterEmail() {
-        System.out.println("Enter your email: ");
+    /**
+     * This method prompts the admin user to enter the username of another admin user.
+     */
+    public void accountEnterUsername() {
+        System.out.println("Enter Username: ");
     }
 
+    /**
+     * This method prompts the admin user to enter the password of another admin user.
+     */
     public void accountEnterPassword() {
-        System.out.println("Enter your password: ");
+        System.out.println("Enter password: ");
     }
 
-    public void addNewAdminUser(String adminUsersToBeAdded) {
-        System.out.println("Type '1' to make this user an admin user." + "Add New Admin User: " + adminUsersToBeAdded);
-    }
-
+    /**
+     * This method prompts the admin user to enter 1 to freeze this particular account.
+     * @param freeze  The account that the admin has to freeze.
+     */
     public void freezeAccounts(String freeze) {
-        System.out.println("This account has to be frozen. Type 1 to freeze this account. " +
-                "Freeze Account for: " + freeze);
+        System.out.println("This account has reached its limits and has to be frozen. " +
+                "Type 1 to freeze this account. Freeze Account for: " + freeze);
     }
 
+    /**
+     * This method prompts the admin user to enter 1 to unfreeze this particular account.
+     * @param unfreeze  The account that the admin has to unfreeze.
+     */
     public void unfreezeAccounts(String unfreeze) {
-        System.out.println("This user has their account frozen and is requesting to unfreeze. " +
-                "Type 'confirm' to unfreeze this account. Unfreeze Account for: " + unfreeze);
+        System.out.println("This user has their account frozen and is requesting to unfreeze." +
+                "Type 1 to unfreeze this account. Unfreeze Account for: " + unfreeze);
     }
 
-    public void addItemToInventory(String itemToBeAdded) {
-        System.out.println("The user wants to add an item to their inventory. " +
-                "Type 'yes' to add this item or 'no' to not add this item. Add this item to this User's Inventory?: "
-                + itemToBeAdded);
+    /**
+     * This method prompts the admin user to review the item and decided whether this item should be added
+     * to the system or not.
+     */
+    public void reviewItem(String item) {
+        System.out.println("Type 1 to add this item or 0 to not add this item. Should " + item + "to the system?: ");
     }
 
-
-    public void setThreshold() {
+    /**
+     *
+     */
+    public void setLendingThreshold() {
         System.out.println("How much does the user have to (at least) lend than they have borrowed in order to make " +
                 "a non-lending transaction? Enter a whole number for the Lending Threshold: ");
     }
 
+    /**
+     *
+     */
+    public void limitOfTransactions() {
+        System.out.println("Enter a whole number to set a limit on the number of transactions that the user can " +
+                "conduct in one week: ");
+    }
+
+    /**
+     *
+     */
+    public void limitOfIncompleteTransactions() {
+        System.out.println("Enter a whole number to set a limit for the number of incomplete transactions before " +
+                "the user account is frozen");
+    }
+
+    /**
+     * This method prints to the screen and signals the admin user that the system has successfully ended.
+     */
     public void end() {
         System.out.println("See you soon!");
     }
 }
-

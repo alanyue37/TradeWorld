@@ -124,7 +124,7 @@ public class TradeManager implements Serializable {
      * @param receiver username of the person receiving the object
      * @param itemId id of the item
      */
-    public void addOnewayTrade(String type, String giver, String receiver, String itemId) {
+    public void addOneWayTrade(String type, String giver, String receiver, String itemId) {
         Trade trade = new OneWayTrade(type, giver, receiver, itemId);
         this.ongoingTrades.put(trade.getIdOfTrade(), trade);
         addTradeToUser(trade.getIdOfTrade());
@@ -138,7 +138,7 @@ public class TradeManager implements Serializable {
      * @param item1 item of user1
      * @param item2 item of user2
      */
-    public void addTwowayTrade(String type,String user1,String user2,String item1,String item2){
+    public void addTwoWayTrade(String type,String user1,String user2,String item1,String item2){
         Trade trade = new TwoWayTrade(type, user1, user2, item1, item2);
         this.ongoingTrades.put(trade.getIdOfTrade(), trade);
         addTradeToUser(trade.getIdOfTrade());
