@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.Date;
 
-public class MeetingManager {
+public class MeetingManager implements Serializable {
 
 
     public void changeMeeting(Meeting meeting, String location, Date time) {

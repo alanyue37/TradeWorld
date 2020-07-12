@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Item {
+public class Item implements Serializable {
     private final String id;
     private String name;
     private String owner;

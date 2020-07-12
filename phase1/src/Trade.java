@@ -1,10 +1,11 @@
+import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Represents a trade to exchange item(s)
  */
-public abstract class Trade {
+public abstract class Trade implements Serializable {
     private String type;
     private String idOfTrade;
     private boolean IsOpened;
