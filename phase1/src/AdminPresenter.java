@@ -12,16 +12,16 @@ public class AdminPresenter {
      * This method prints the menu options to the screen and asks the admin user to enter a corresponding number to
      * select a menu option. The number determines which method to call in the admin controller.
      */
-    public void startMenu() {
-        System.out.println("Welcome! Admin Options\n " +
-                "Enter 1 to add New Admins\n" +
-                "Enter 2 to Freeze User Accounts\n" +
-                "Enter 3 to Unfreeze User Accounts\n" +
-                "Enter 4 to Review items\n" +
-                "Enter 5 to set a Lending Threshold\n" +
-                "Enter 6 to set a Limit for the Number of Transactions that could be conducted in one week\n" +
-                "Enter 7 to set a Limit for Incomplete Transactions\n" +
-                "Enter 8 to set a Limit for Edits\n" +
+    public void startMenu(String username) {
+        System.out.println("*** " + username + " Admin Menu***\n" +
+                "- Enter 1 to add new admins\n" +
+                "- Enter 2 to freeze user Accounts\n" +
+                "- Enter 3 to unfreeze user Accounts\n" +
+                "- Enter 4 to review items\n" +
+                "- Enter 5 to set the lending threshold\n" +
+                "- Enter 6 to set the limit for the number of weekly transactions\n" +
+                "- Enter 7 to set the limit for incomplete transactions\n" +
+                "- Enter 8 to set the limit for edits\n" +
                 "\n Type \"exit\" at any time to exit.");
     }
 
@@ -76,35 +76,41 @@ public class AdminPresenter {
      * This method prompts the admin user to set a threshold for how much a user has to lend than borrow to make
      * a non-lending transaction (i.e., just borrow and not lend).
      */
-    public void lendingThreshold() {
-        System.out.println("How much does the user have to (at least) lend than they have borrowed in order to make " +
-                "a non-lending transaction? Enter a whole number for the Lending Threshold: ");
+    public void lendingThreshold(int current) {
+        System.out.println("How many more times (at least) does the user have to lend than they borrow in order to make " +
+                "a non-lending transaction?");
+        System.out.println("The current Lending Threshold is: " + current);
+        System.out.println("Enter a whole number (minimum 0) for the Lending Threshold: ");
     }
 
     /**
      * This method prompts the admin user to set a threshold for the number of transaction that a use can make in one
      * week (i.e., 7 days).
      */
-    public void limitOfTransactions() {
-        System.out.println("Enter a whole number to set a limit on the number of transactions that the user can " +
-                "conduct in one week: ");
+    public void limitOfTransactions(int current) {
+        System.out.println("What is the maximum number of transactions a user can conduct in a week?");
+        System.out.println("The current limit is: " + current);
+        System.out.println("Enter a whole number (minimum 1) for the new limit: ");
     }
 
     /**
      * This method prompts the admin user to set a threshold for the number of incomplete transactions a user can have
      * before the account gets frozen.
      */
-    public void limitOfIncompleteTransactions() {
-        System.out.println("Enter a whole number to set a limit for the number of incomplete transactions before " +
-                "the user account is frozen");
+    public void limitOfIncompleteTransactions(int current) {
+        System.out.println("After how many incomplete transactions should a user be flagged for freezing?");
+        System.out.println("The current threshold is: " + current);
+        System.out.println("Enter a whole number (minimum 1) for the new threshold: ");
     }
 
     /**
      * This method prompts the admin user to set a threshold for the number of edits allowed by the user to change the
      * meeting place and time. The limit of edits should remain 3.
      */
-    public void changeLimitEdits() {
-        System.out.println("Enter 3 for the limit of edits: ");
+    public void limitOfEdits(int current) {
+        System.out.println("What is the maximum number of times the proposed meeting time for a trade can be edited?");
+        System.out.println("The current limit is: " + current);
+        System.out.println("Enter a whole number (minimum 0) for the new limit: ");
     }
 
     /**

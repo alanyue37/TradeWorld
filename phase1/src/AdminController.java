@@ -9,11 +9,13 @@ public class AdminController implements RunnableController {
     private final TradeModel tradeModel;
     private final AdminPresenter adminPresenter;
     private final BufferedReader br;
+    private final String username;
 
-    public AdminController(TradeModel tradeModel) {
+    public AdminController(TradeModel tradeModel, String username) {
         this.tradeModel = tradeModel;
         this.adminPresenter = new AdminPresenter(tradeModel);
         this.br = new BufferedReader(new InputStreamReader(System.in));
+        this.username = username;
     }
 
     /**
@@ -39,7 +41,7 @@ public class AdminController implements RunnableController {
      * @throws IOException   If something goes wrong.
      */
     public void selectMenu() throws IOException {
-        adminPresenter.startMenu();
+        adminPresenter.startMenu(username);
         String input = br.readLine();
         switch (input) {
             case "1":
@@ -67,7 +69,7 @@ public class AdminController implements RunnableController {
                 break;
             case "exit":
                 adminPresenter.end();
-                adminPresenter.startMenu();
+                adminPresenter.startMenu(username);
                 break;
             default:
                 adminPresenter.invalidInput();
@@ -156,7 +158,7 @@ public class AdminController implements RunnableController {
      * @throws IOException   If something goes wrong.
      */
     public void askAdminToSetLendingThreshold() throws IOException {
-        adminPresenter.lendingThreshold();
+        adminPresenter.lendingThreshold(tradeModel.getUserManager().getThreshold());
         String thresholdInput = br.readLine();
         int lendingThreshold = Integer.parseInt(thresholdInput);
         tradeModel.getUserManager().setThreshold(lendingThreshold);
@@ -170,7 +172,7 @@ public class AdminController implements RunnableController {
      * @throws IOException   If something goes wrong.
      */
     public void askAdminToSetLimitOfTransactions() throws IOException {
-        adminPresenter.limitOfTransactions();
+        adminPresenter.limitOfTransactions(tradeModel.getTradeManager().getLimitTransactionPerWeek());
         String thresholdInput = br.readLine();
         int thresholdTransactions = Integer.parseInt(thresholdInput);
         tradeModel.getTradeManager().changeLimitTransactionPerWeek(thresholdTransactions);
@@ -184,10 +186,10 @@ public class AdminController implements RunnableController {
      * @throws IOException   If something goes wrong.
      */
     public void askAdminToSetLimitOfIncompleteTrades() throws IOException {
-        adminPresenter.limitOfIncompleteTransactions();
+        adminPresenter.limitOfIncompleteTransactions(tradeModel.getTradeManager().getLimitIncomplete());
         String thresholdInput = br.readLine();
         int thresholdIncomplete = Integer.parseInt(thresholdInput);
-        tradeModel.getTradeManager().changeLimitTransactionPerWeek(thresholdIncomplete);
+        tradeModel.getTradeManager().changeLimitIncomplete(thresholdIncomplete);
         selectMenu();
 
     }
@@ -199,10 +201,10 @@ public class AdminController implements RunnableController {
      * @throws IOException   If something goes wrong.
      */
     public void askAdminToSetLimitOfEdits() throws IOException {
-        adminPresenter.limitOfIncompleteTransactions();
+        adminPresenter.limitOfEdits(tradeModel.getTradeManager().getLimitEdits());
         String thresholdInput = br.readLine();
         int thresholdEdits = Integer.parseInt(thresholdInput);
-        tradeModel.getTradeManager().changeLimitTransactionPerWeek(thresholdEdits);
+        tradeModel.getTradeManager().changeLimitEdits(thresholdEdits);
         selectMenu();
     }
 }
