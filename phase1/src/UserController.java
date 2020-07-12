@@ -75,8 +75,7 @@ public class UserController implements RunnableController {
                 viewWishlist();
                 break;
             case "3":
-                // view last transaction
-                // TODO: Get last trade of a user from UserManager
+                viewLastThreeTrades();
                 break;
             case "4":
                 viewTradingPartners();
@@ -112,7 +111,7 @@ public class UserController implements RunnableController {
             presenter.printInputItemID();
             String itemId = br.readLine();
             // String itemId = sc.nextLine();
-            tradeModel.getUserManager().addToSet(username, itemId, itemSets.WISHLIST);
+            tradeModel.getUserManager().addToSet(username, itemId, ItemSets.WISHLIST);
         }
     }
 
@@ -129,6 +128,14 @@ public class UserController implements RunnableController {
     public void viewTradingPartners(){
         presenter.printViewTopTradingPartner(tradeModel.getTradeManager().getFrequentPartners(3,username));
     }
+
+    /**
+     * View user's last 3 trades
+     */
+    public void viewLastThreeTrades(){
+        presenter.viewLastThreeTrades(username);
+    }
+
 
     /**
      * Tells the user that their account is frozen and shows option for user to unfreeze their account
@@ -192,7 +199,7 @@ public class UserController implements RunnableController {
         presenter.printInputItemID();
         String itemIdTemporary = br.readLine();
         // String itemId = sc.nextLine();
-        tradeModel.getTradeManager().addOnewayTrade("temporary", tradeModel.getItemManager().getOwner(itemIdTemporary), username, itemIdTemporary);
+        tradeModel.getTradeManager().addOneWayTrade("temporary", tradeModel.getItemManager().getOwner(itemIdTemporary), username, itemIdTemporary);
         presenter.printUserWishlist(br.readLine());
         // presenter.printUserWishlist(sc.nextLine());
 
@@ -206,7 +213,7 @@ public class UserController implements RunnableController {
         presenter.printInputItemID();
         String itemIdPermanent = br.readLine();
         // String itemId = sc.nextLine();
-        tradeModel.getTradeManager().addOnewayTrade("permanent", tradeModel.getItemManager().getOwner(itemIdPermanent), username, itemIdPermanent);
+        tradeModel.getTradeManager().addOneWayTrade("permanent", tradeModel.getItemManager().getOwner(itemIdPermanent), username, itemIdPermanent);
         presenter.printUserWishlist(br.readLine());
         // presenter.printUserWishlist(sc.nextLine());
 
