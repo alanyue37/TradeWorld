@@ -1,5 +1,6 @@
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 public class MeetingManager implements Serializable {
 
@@ -73,5 +74,7 @@ public class MeetingManager implements Serializable {
         return meeting.getNumOfEdits() >= numOfEditThreshold;
     }
 
-
+    public String getMeetingsInfo(Meeting meeting){
+        return meeting.toString();
+    }
 }

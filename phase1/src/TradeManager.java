@@ -480,4 +480,18 @@ public class TradeManager implements Serializable {
         }
     }
     //can only change if meeting is not completed and not confirmed
+
+    public String getTradeMeetingInfo(String tradeId){
+        Trade trade = getTrade(tradeId);
+        StringBuilder meetingDetails = new StringBuilder();
+        for (Meeting meeting: trade.getMeetingList()){
+            meetingDetails.append(meetingManager.getMeetingsInfo(meeting)).append("\n");
+        }
+        return meetingDetails.toString();
+    }
+
+    public String getTradeAllInfo(String tradeId){
+        Trade trade = getTrade(tradeId);
+        return trade.toString() + "\n" + getTradeMeetingInfo(tradeId);
+    }
 }

@@ -87,4 +87,14 @@ public abstract class Trade implements Serializable {
     public abstract List<String> getItems();
 
     public abstract Map<String, String> userToItem();
+
+    public String toString(){
+        String status;
+        if (this.IsOpened){
+            status = "ongoing";
+        } else{
+            status = "completed";
+        }
+        return "Type" + this.type + "\nStatus" + status + "\nNumber of meeting" + this.getMeetingList().size() + "\nCreation Date" + this.creationDate.toString();
+    }
 }
