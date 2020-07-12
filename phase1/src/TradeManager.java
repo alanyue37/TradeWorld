@@ -10,6 +10,8 @@ public class TradeManager implements Serializable {
     private MeetingManager meetingManager;
     private Map<String, Trade> completedTrades;
     private Map<String, ArrayList<String>> userToTrades;
+    private int limitIncomplete;
+    private int limitTransactionPerWeek;
 
     /**
      * Constructor for TradeManager.
@@ -174,6 +176,21 @@ public class TradeManager implements Serializable {
         this.limitOfEdits = newLimit;
     }
 
+    public int getLimitIncomplete(){
+        return this.limitIncomplete;
+    }
+
+    public int getLimitTransactionPerWeek(){
+        return this.limitTransactionPerWeek;
+    }
+
+    public void changeLimitIncomplete(int newIncompleteLimit){
+        this.limitIncomplete = newIncompleteLimit;
+    }
+
+    public void changeLimitTransactionPerWeek(int newLimitPerWeek){
+        this.limitTransactionPerWeek = newLimitPerWeek;
+    }
 
     /**
      * Given an open trade, returns whether an trade is incomplete. A trade is incomplete if it contains an incomplete
@@ -239,12 +256,12 @@ public class TradeManager implements Serializable {
      * before the account is frozen
      * @return arraylist of usernames that passed limit of incomplete trades
      */
-    public List<String> getExceedIncompleteLimitUser(int limIncomplete) {
+    public List<String> getExceedIncompleteLimitUser() {
         List<Trade> incompleteTrades = getIncompleteTrade();
         Map<String, Integer> usernamesMap = userToNumTradesInvolved(incompleteTrades);
         List<String> incompleteUsernames = new ArrayList<>();
         for (String user : usernamesMap.keySet()) {
-            if (usernamesMap.get(user) > limIncomplete) {
+            if (usernamesMap.get(user) > this.limitIncomplete) {
                 incompleteUsernames.add(user);
             }
         }
@@ -290,16 +307,14 @@ public class TradeManager implements Serializable {
 
     /**
      * Get the list of usernames of users who had more then *limTrade* in the past *numDays*.
-     * @param limTrade limit of the number of trades
-     * @param numDays past number of days
      * @return arraylist of usernames
      */
-    public List<String> getExceedLimTrade(int limTrade, int numDays){
-        List<Trade> pastTrades = getTradesPastDays(numDays);
+    public List<String> getExceedPerWeek(){
+        List<Trade> pastTrades = getTradesPastDays(7);
         Map<String, Integer> usernamesMap = userToNumTradesInvolved(pastTrades);
         List<String> exceedLimitOfTradeUsers = new ArrayList<>();
         for (String user : usernamesMap.keySet()) {
-            if (usernamesMap.get(user) > limTrade) {
+            if (usernamesMap.get(user) > this.limitTransactionPerWeek) {
                 exceedLimitOfTradeUsers.add(user);
             }
         }
@@ -307,6 +322,7 @@ public class TradeManager implements Serializable {
     }
     // make it so that they both have to confirm the first meeting before going to the next one?
     // make it so that they have to enter a date for meeting when they create the trade?
+    // add in the number of days
 
     /**
      * Cancels the trade. Removes the trade from the hashmap of trades
