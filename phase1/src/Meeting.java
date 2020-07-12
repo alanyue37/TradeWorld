@@ -61,6 +61,17 @@ public class Meeting {
         this.IsConfirmed = true;
     }
 
+    public String toString(){
+        String status;
+        if (this.IsCompleted) {
+            status = "completed";
+        } else if (this.IsConfirmed){
+            status = "meeting details agreed, waiting to confirm";
+        } else{
+            status = "need to agree on meeting details";
+        }
+        return "Status" + status + "\nLocation" + this.location + "\nTime" + this.meetingTime + "\nNumOfEdits" + this.numOfEdits + "\nnumConfirmation" + this.numConfirmations;
+    }
 
 }
 

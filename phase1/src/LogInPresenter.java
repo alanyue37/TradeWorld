@@ -5,7 +5,7 @@ import java.util.NoSuchElementException;
 
 /**
  * Presenter for logging in.
- * Structure of some methods copied from ReadWriteEx
+ * Structure of some methods copied from ReadWriteEx.
  */
 public class LogInPresenter implements Iterator<String> {
 
@@ -13,12 +13,18 @@ public class LogInPresenter implements Iterator<String> {
     private UserManager userManager;
     private int current = 0;
 
+    /**
+     * Creates a LogInPresenter.
+     *
+     * @param tm the TradeModel containing all the information
+     */
     public LogInPresenter(TradeModel tm) {
         userManager = tm.getUserManager();
     }
 
     /**
      * Checks for subsequent prompts.
+     *
      * @return true if there is prompt that has not yet been returned.
      */
     @Override
@@ -28,6 +34,7 @@ public class LogInPresenter implements Iterator<String> {
 
     /**
      * Returns the next prompt to be printed.
+     *
      * @return the next prompt.
      */
     @Override
@@ -47,10 +54,16 @@ public class LogInPresenter implements Iterator<String> {
         return res;
     }
 
+    /**
+     * Prints the next prompt to the screen.
+     */
     public void nextLine() {
         System.out.println(next());
     }
 
+    /**
+     * Adds the prompt for the start menu.
+     */
     public void startMenu() {
         prompts.add("Welcome to the Trading System!\n" +
                 "- Enter 1 to log in as a trading user\n" + "" +
@@ -59,25 +72,40 @@ public class LogInPresenter implements Iterator<String> {
                 "- Enter \"exit\" to exit");
     }
 
+    /**
+     * Adds the prompt for the trying again in the start menu.
+     */
     public void menuTryAgain() {
         prompts.add("Invalid input\n Please try again");
     }
 
+    /**
+     * Adds the prompts for logging in.
+     */
     public void logIn() {
         prompts.add("Enter your username");
         prompts.add("Enter your password");
     }
 
+    /**
+     * Adds the prompt for an invalid account.
+     */
     public void invalidAccount() {
-        prompts.add("Invalid username or password");
+        prompts.add("Invalid username or password\n Please try again\n");
     }
 
+    /**
+     * Adds the prompts for creating a new account.
+     */
     public void newAccount() {
         prompts.add("Enter your name");
         prompts.add("Enter your username");
         prompts.add("Enter your password");
     }
 
+    /**
+     * Adds the prompt for a taken username.
+     */
     public void usernameTaken(String username) {
         prompts.add("Username " + username + " is taken");
     }

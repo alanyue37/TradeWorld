@@ -18,8 +18,8 @@ public class OneWayTrade extends Trade {
      * @param receiver the user who is receiving the item in this Trade
      * @param itemId the ID of the item being traded
      */
-    public OneWayTrade(String type, String giver, String receiver, String itemId) {
-        super(type);
+    public OneWayTrade(String type, String tradeId, String giver, String receiver, String itemId) {
+        super(type, tradeId);
         this.giverUsername = giver;
         this.receiverUsername = receiver;
         this.itemId = itemId;
