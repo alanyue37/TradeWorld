@@ -72,14 +72,14 @@ public class UserPresenter {
      * Print the users inventory
      */
     public void printUserInventory(String username){
-        System.out.println("Inventory: " + tradeModel.getUserManager().getSetByUsername(username, itemSets.INVENTORY));
+        System.out.println("Inventory: " + tradeModel.getUserManager().getSetByUsername(username, ItemSets.INVENTORY));
     }
 
     /**
      * Print the users wishlist
      */
     public void printUserWishlist(String username){
-        System.out.println("Wishlist: " + tradeModel.getUserManager().getSetByUsername(username, itemSets.WISHLIST));
+        System.out.println("Wishlist: " + tradeModel.getUserManager().getSetByUsername(username, ItemSets.WISHLIST));
     }
 
     /**
@@ -112,4 +112,7 @@ public class UserPresenter {
                 " Enter \"exit\" to exit \n");
     }
 
+    public void viewLastThreeTrades(String username){
+        System.out.println("Your last three trades were: " + tradeModel.getTradeManager().getRecentItemsTraded(3, username));
+    }
 }

@@ -60,16 +60,16 @@ public class LogInController {
         presenter.nextLine();
         password = br.readLine();
 
-        if ((!isAdmin && !userManager.login(username, password, userTypes.TRADING)) || (isAdmin && !userManager.login(username, password, userTypes.ADMIN))) {
+        if ((!isAdmin && !userManager.login(username, password, UserTypes.TRADING)) || (isAdmin && !userManager.login(username, password, UserTypes.ADMIN))) {
             presenter.invalidAccount();
             presenter.nextLine();
             selectMenu();
         }
-        if (isAdmin && userManager.login(username, password, userTypes.ADMIN)) {
+        if (isAdmin && userManager.login(username, password, UserTypes.ADMIN)) {
             // Admin logged in
             nextController = new AdminController(tradeModel, username);
         }
-        else if (!isAdmin && userManager.login(username, password, userTypes.TRADING)) {
+        else if (!isAdmin && userManager.login(username, password, UserTypes.TRADING)) {
             nextController = new UserController(tradeModel, username);
         }
     }
