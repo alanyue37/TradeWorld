@@ -17,6 +17,18 @@ public class ItemManager implements Serializable {
         return confirmedItems.containsKey(itemId) || pendingItems.containsKey(itemId);
     }
 
+    public String getItemInfo(String itemId) {
+        if (!containsItem(itemId)) {
+            return null;
+        }
+        else if (confirmedItems.containsKey(itemId)) {
+            return String.valueOf(confirmedItems.get(itemId));
+        }
+        else {
+            return String.valueOf(pendingItems.get(itemId));
+        }
+    }
+
     public String getConfirmedItem(String itemId) {
         return String.valueOf(confirmedItems.get(itemId));
     }
@@ -36,7 +48,7 @@ public class ItemManager implements Serializable {
     public List<String> getPendingItems() {
         List<String> items = new ArrayList<>();
         for (Item item : pendingItems.values()) {
-            items.add(String.valueOf(item));
+            items.add(item.getId());
         }
         return items;
     }
@@ -45,7 +57,7 @@ public class ItemManager implements Serializable {
         List<String> items = new ArrayList<>();
         for (Item item : confirmedItems.values()) {
             if (item.isAvailable()) {
-                items.add(String.valueOf(item));
+                items.add(item.getId());
             }
         }
         return items;
@@ -84,7 +96,4 @@ public class ItemManager implements Serializable {
         return true;
     }
 
-    public String ToString(Item item) {
-        return item.getName() + ": " + item.getDescription();
-    }
 }

@@ -134,13 +134,16 @@ public class AdminController implements RunnableController {
      * @throws IOException   If something goes wrong.
      */
     public void askAdminToReviewItems() throws IOException {
-        for (String pendingForApproval : tradeModel.getItemManager().getPendingItems()) {
-            adminPresenter.reviewItem(pendingForApproval);
+        for (String itemId : tradeModel.getItemManager().getPendingItems()) {
+            String itemInfo = tradeModel.getItemManager().getItemInfo(itemId);
+            adminPresenter.reviewItem(itemInfo);
             String addInput = br.readLine();
             if (addInput.equals("1")) {
-                tradeModel.getItemManager().confirmItem(pendingForApproval);
+                tradeModel.getItemManager().confirmItem(itemId);
+                String username = tradeModel.itemManager.getOwner(itemId);
+                tradeModel.getUserManager().addToSet(username, itemId, ItemSets.INVENTORY); // Add to user's inventory
             } else if (addInput.equals("0")) {
-                tradeModel.getItemManager().deleteItem(pendingForApproval);
+                tradeModel.getItemManager().deleteItem(itemId);
             }
         }
         selectMenu();

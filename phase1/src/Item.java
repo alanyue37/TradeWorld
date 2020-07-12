@@ -8,7 +8,7 @@ public class Item implements Serializable {
     private String description;
     private boolean available;
 
-    // Static Variables
+    // Static Variables -- // TODO: THIS IS NOT SERIALIZED.
     private static AtomicInteger counter = new AtomicInteger(); // starts at 0
 
     public Item(String name, String owner, String description) {
@@ -56,6 +56,6 @@ public class Item implements Serializable {
     }
 
     public String toString() {
-        return "Name: " + name + "\nOwner: " + owner + "\nDescription: " + description + "\nAvailable: " + available;
+        return "Item ID: " + id + "\nName: " + name + "\nOwner: " + owner + "\nDescription: " + description + "\nAvailable: " + available;
     }
 }

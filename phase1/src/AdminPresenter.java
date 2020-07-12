@@ -69,7 +69,7 @@ public class AdminPresenter {
      * to the system or not.
      */
     public void reviewItem(String item) {
-        System.out.println("Type 1 to add this item or 0 to not add this item. Should " + item + "to the system?: ");
+        System.out.println("Type 1 to add this item or 0 to not add the following item: \n" + item);
     }
 
     /**

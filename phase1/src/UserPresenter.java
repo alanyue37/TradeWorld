@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class UserPresenter {
@@ -73,7 +74,8 @@ public class UserPresenter {
      * Print the users inventory
      */
     public void printUserInventory(String username){
-        System.out.println("Inventory: " + tradeModel.getUserManager().getSetByUsername(username, ItemSets.INVENTORY));
+        System.out.println("Your Inventory: ");
+        printInfoForItemIds(tradeModel.getUserManager().getSetByUsername(username, ItemSets.INVENTORY));
     }
 
     /**
@@ -87,7 +89,8 @@ public class UserPresenter {
      * Print the systems inventory
      */
     public void printSystemInventory(){
-        System.out.println("System Inventory: " + tradeModel.getItemManager().getAvailableItems());
+        System.out.println("System Inventory: ");
+        printInfoForItemIds(tradeModel.getItemManager().getAvailableItems());
     }
 
     /**
@@ -123,6 +126,13 @@ public class UserPresenter {
 
     public void printEnterTradeDate(){
         System.out.println("Enter the date and time of the meeting (dd/mm/yyyy hh:mm): ");
+    }
+
+    private void printInfoForItemIds(Collection<String> itemIds){
+        for (String itemId : itemIds) {
+            String itemInfo = tradeModel.getItemManager().getItemInfo(itemId);
+            System.out.println(itemInfo);
+        }
     }
 
 }

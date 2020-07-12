@@ -108,6 +108,7 @@ public class UserController implements RunnableController {
      */
     public void viewInventory() throws IOException{
         presenter.printSystemInventory();
+        presenter.printUserInventory(username);
         presenter.printUserInventoryOptions();
         String choice = br.readLine();
         // String choice = sc.nextLine();
