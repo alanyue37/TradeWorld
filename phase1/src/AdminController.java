@@ -68,6 +68,7 @@ public class AdminController implements RunnableController {
                 break;
             default:
                 adminPresenter.invalidInput();
+                selectMenu();
         }
     }
 
