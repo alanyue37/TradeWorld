@@ -2,6 +2,7 @@ import java.io.*;
 
 /**
  * Manages the saving and loading of TradeModel.
+ * Structure of some methods copied from logging.
  */
 public class DataManager {
 
