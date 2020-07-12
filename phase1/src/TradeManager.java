@@ -78,12 +78,13 @@ public class TradeManager implements Serializable {
      * @param tradeId ID of the trade
      * @return trade with the ID "tradeId"
      */
-    private Trade getTrade(String tradeId){
+    public Trade getTrade(String tradeId){
         if (this.ongoingTrades.containsKey(tradeId)){
             return ongoingTrades.get(tradeId);
         }
         return completedTrades.get(tradeId);
     }
+    // TODO: change back to private
 
     /**
      * Given the tradeId, returns whether this trade can be closed or not
@@ -126,10 +127,11 @@ public class TradeManager implements Serializable {
      * @param receiver username of the person receiving the object
      * @param itemId id of the item
      */
-    public void addOneWayTrade(String type, String giver, String receiver, String itemId) {
+    public String addOneWayTrade(String type, String giver, String receiver, String itemId) {
         Trade trade = new OneWayTrade(type, giver, receiver, itemId);
         this.ongoingTrades.put(trade.getIdOfTrade(), trade);
         addTradeToUser(trade.getIdOfTrade());
+        return trade.getIdOfTrade();
     }
 
     /**
@@ -140,10 +142,12 @@ public class TradeManager implements Serializable {
      * @param item1 item of user1
      * @param item2 item of user2
      */
-    public void addTwoWayTrade(String type,String user1,String user2,String item1,String item2){
+    public String addTwoWayTrade(String type,String user1,String user2,String item1,String item2){
         Trade trade = new TwoWayTrade(type, user1, user2, item1, item2);
         this.ongoingTrades.put(trade.getIdOfTrade(), trade);
         addTradeToUser(trade.getIdOfTrade());
+        return trade.getIdOfTrade();
+
     }
 
 
