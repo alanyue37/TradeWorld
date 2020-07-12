@@ -67,7 +67,7 @@ public class LogInController {
         }
         if (isAdmin && userManager.login(username, password, UserTypes.ADMIN)) {
             // Admin logged in
-            nextController = new AdminController(tradeModel, username);
+            nextController = new AdminController(tradeModel);
         }
         else if (!isAdmin && userManager.login(username, password, UserTypes.TRADING)) {
             nextController = new UserController(tradeModel, username);
