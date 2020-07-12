@@ -58,10 +58,13 @@ public class AdminController implements RunnableController {
                 break;
             case "6":
                 askAdminToSetLimitOfTransactions();
+                break;
             case "7":
                 askAdminToSetLimitOfIncompleteTrades();
+                break;
             case "8":
                 askAdminToSetLimitOfEdits();
+                break;
             case "exit":
                 adminPresenter.end();
                 adminPresenter.startMenu();
