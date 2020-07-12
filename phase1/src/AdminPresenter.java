@@ -21,6 +21,7 @@ public class AdminPresenter {
                 "Enter 5 to set a Lending Threshold\n" +
                 "Enter 6 to set a Limit for the Number of Transactions that could be conducted in one week\n" +
                 "Enter 7 to set a Limit for Incomplete Transactions\n" +
+                "Enter 8 to set a Limit for Edits\n" +
                 "\n Type \"exit\" at any time to exit.");
     }
 
@@ -96,6 +97,14 @@ public class AdminPresenter {
     public void limitOfIncompleteTransactions() {
         System.out.println("Enter a whole number to set a limit for the number of incomplete transactions before " +
                 "the user account is frozen");
+    }
+
+    /**
+     * This method prompts the admin user to set a threshold for the number of edits allowed by the user to change the
+     * meeting place and time. The limit of edits should remain 3.
+     */
+    public void changeLimitEdits() {
+        System.out.println("Enter 3 for the limit of edits: ");
     }
 
     /**

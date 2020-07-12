@@ -9,13 +9,11 @@ public class AdminController implements RunnableController {
     private final TradeModel tradeModel;
     private final AdminPresenter adminPresenter;
     private final BufferedReader br;
-    private final String username;
 
-    public AdminController(TradeModel tradeModel, AdminPresenter adminPresenter, String username) {
+    public AdminController(TradeModel tradeModel, AdminPresenter adminPresenter) {
         this.tradeModel = tradeModel;
         this.adminPresenter = adminPresenter;
         this.br = new BufferedReader(new InputStreamReader(System.in));
-        this.username = username;
     }
 
     /**
@@ -38,7 +36,7 @@ public class AdminController implements RunnableController {
      * admin user is brought back to selectMenu() and prints the same options again until the admin user enters
      * a corresponding number.
      *
-     * @throws IOException if something goes wrong.
+     * @throws IOException   If something goes wrong.
      */
     public void selectMenu() throws IOException {
         adminPresenter.startMenu();
@@ -62,6 +60,8 @@ public class AdminController implements RunnableController {
                 askAdminToSetLimitOfTransactions();
             case "7":
                 askAdminToSetLimitOfIncompleteTrades();
+            case "8":
+                askAdminToSetLimitOfEdits();
             case "exit":
                 adminPresenter.end();
                 adminPresenter.startMenu();
@@ -78,7 +78,7 @@ public class AdminController implements RunnableController {
      * admin user. After adding the subsequent admin user to admin users in UserManager, the admin is presented with
      * the same menu options again.
      *
-     * @throws IOException if something goes wrong.
+     * @throws IOException   If something goes wrong.
      */
     private void askAdminToAddNewAdmin() throws IOException {
         adminPresenter.accountEnterName();
@@ -95,7 +95,7 @@ public class AdminController implements RunnableController {
      * This method allows an admin user to freeze accounts of trading users who have reached the limits and thresholds.
      * After freezing the account(s), the admin is presented with the same menu options again.
      *
-     * @throws IOException if something goes wrong.
+     * @throws IOException   If something goes wrong.
      */
     public void askAdminToFreezeUsers() throws IOException {
         for (String freeze : tradeModel.getUserManager().getUsersForFreezing()) {
@@ -128,7 +128,7 @@ public class AdminController implements RunnableController {
      * This method allows an admin user to look at the item and check whether this item should be added to the system
      * or not. This is a way to prevent the user from selling items that are possible to sell such as intangible items.
      *
-     * @throws IOException if something goes wrong.
+     * @throws IOException   If something goes wrong.
      */
     public void askAdminToReviewItems() throws IOException {
         for (String pendingForApproval : tradeModel.getItemManager().getPendingItems()) {
@@ -139,15 +139,14 @@ public class AdminController implements RunnableController {
             } else if (addInput.equals("0")) {
                 tradeModel.getItemManager().deleteItem(pendingForApproval);
             }
-        }
-        selectMenu();
+        } selectMenu();
     }
 
     /**
      * This method allows an admin user to change the lending threshold, that is, how much the user lends than borrow
      * in order to make a non-lending transaction.
      *
-     * @throws IOException if something goes wrong.
+     * @throws IOException   If something goes wrong.
      */
     public void askAdminToSetLendingThreshold() throws IOException {
         adminPresenter.lendingThreshold();
@@ -160,20 +159,41 @@ public class AdminController implements RunnableController {
     /**
      * This method allows an admin user to set a limit for the number of transactions that a user can conduct
      * in one week.
+     *
+     * @throws IOException   If something goes wrong.
      */
     public void askAdminToSetLimitOfTransactions() throws IOException {
         adminPresenter.limitOfTransactions();
         String thresholdInput = br.readLine();
-
+        int transactions = Integer.parseInt(thresholdInput);
+        tradeModel.getTradeManager().changeLimitTransactionPerWeek(transactions);
+        selectMenu();
     }
 
     /**
      * This method allows an admin user to set a limit on how many transactions remain incomplete before the account
      * is frozen.
+     *
+     * @throws IOException   If something goes wrong.
      */
     public void askAdminToSetLimitOfIncompleteTrades() throws IOException {
         adminPresenter.limitOfIncompleteTransactions();
         String thresholdInput = br.readLine();
+        int incompleteTransactions = Integer.parseInt(thresholdInput);
+        tradeModel.getTradeManager().changeLimitIncomplete(incompleteTransactions);
+        selectMenu();
+    }
 
+    /**
+     * This method allows an admin user to change the limit of edits that users can make for meeting place and time.
+     *
+     * @throws IOException   If something goes wrong.
+     */
+    public void askAdminToSetLimitOfEdits() throws IOException {
+        adminPresenter.changeLimitEdits();
+        String thresholdInput = br.readLine();
+        int edits = Integer.parseInt(thresholdInput);
+        tradeModel.getTradeManager().changeLimitEdits(edits);
+        selectMenu();
     }
 }
