@@ -30,9 +30,10 @@ public class UserPresenter {
     public void printViewOptions() {
         System.out.println("View Options\n" +
                 " Enter 1 to view inventory\n" +
-                " Enter 2 to view wishlist\n " +
-                " Enter 3 to view last transaction \n " +
-                " Enter 4 to view top 3 most frequent trading partners: \n" +
+                " Enter 2 to view your wishlist\n " +
+                " Enter 3 to view your inventory\n " +
+                " Enter 4 to view last transaction \n " +
+                " Enter 5 to view top 3 most frequent trading partners: \n" +
                 "\n Type \"exit\" at any time to exit.");
     }
 

@@ -492,4 +492,16 @@ public class TradeManager implements Serializable {
         Trade trade = getTrade(tradeId);
         return trade.toString() + "\n" + getTradeMeetingInfo(tradeId);
     }
+
+    public List<String> getOngoingTradesForUser(String username){
+        List<String> ongoingUserTrades = new ArrayList<>();
+        for (Map.Entry<String, Trade> entry : ongoingTrades.entrySet()){
+            if (entry.getValue().getUsers().contains(username)){
+                if (!ongoingUserTrades.contains(entry.getKey())){
+                    ongoingUserTrades.add(entry.getKey());
+                }
+            }
+        }
+        return ongoingUserTrades;
+    }
 }

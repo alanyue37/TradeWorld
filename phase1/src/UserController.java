@@ -4,6 +4,7 @@ import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.Date;
 import java.text.SimpleDateFormat;
@@ -81,9 +82,12 @@ public class UserController implements RunnableController {
                 viewWishlist();
                 break;
             case "3":
-                viewLastThreeTrades();
+                viewUserInventory();
                 break;
             case "4":
+                viewLastThreeTrades();
+                break;
+            case "5":
                 viewTradingPartners();
                 break;
             case "exit":
@@ -110,7 +114,6 @@ public class UserController implements RunnableController {
      */
     public void viewInventory() throws IOException{
         presenter.printSystemInventory();
-        presenter.printUserInventory(username);
         presenter.printUserInventoryOptions();
         String choice = br.readLine();
         // String choice = sc.nextLine();
@@ -127,6 +130,13 @@ public class UserController implements RunnableController {
      */
     public void viewWishlist(){
         presenter.printUserWishlist(username);
+    }
+
+    /**
+     * View user inventory
+     */
+    public void viewUserInventory() throws IOException{
+        presenter.printUserInventory(username);
     }
 
     /**
@@ -159,6 +169,7 @@ public class UserController implements RunnableController {
      * Menu to run the trade options for UserController
      */
     public void tradeMenu()throws IOException{
+        // TODO: Add limit checks
         presenter.printViewTradeOptions();
         String viewInput = br.readLine();
         // String viewInput = sc.nextLine();
@@ -178,13 +189,16 @@ public class UserController implements RunnableController {
             case "5":
                 tradeTwoWayPermanent();
                 break;
+            case "6":
+                // confirm trades
+                confirmTrades();
+                break;
             case "exit":
                 break;
             default:
                 System.out.println("Please enter a valid input.");
 
         }
-
     }
 
     /**
@@ -230,6 +244,9 @@ public class UserController implements RunnableController {
                 System.out.println("Enter a valid date and time!");
             }
             tradeModel.getTradeManager().addMeetingToTrade(tradeId, location, convertedDate);
+
+            Map<String, String> userAndItem = tradeModel.getTradeManager().getUserAndItem(tradeId);
+
         }
     }
 
@@ -333,5 +350,88 @@ public class UserController implements RunnableController {
         tradeModel.getTradeManager().addMeetingToTrade(tradeId, location, convertedDate);
 
     }
+
+    public void confirmTrades() throws IOException{
+        // Confirm trades
+        System.out.println("Confirm options for a User: \n" +
+                " Enter 1 to confirm that the meeting happened in real life\n" +
+                " Enter 2 to view suggested meetings\n" +
+                "\n Type \"exit\" at any time to exit.");
+        String choice = br.readLine();
+        // String choice = sc.nextLine();
+        switch (choice) {
+            case "1":
+                confirmMeetingHappened();
+                break;
+            case "2":
+                viewSuggestedMeetings();
+                break;
+            case "exit":
+                break;
+            default:
+                System.out.println("Please enter a valid input.");
+        }
+    }
+
+    public void confirmMeetingHappened()throws IOException{
+        List<String> trades = tradeModel.getTradeManager().getOngoingTradesForUser(username);
+
+        for (String tradeId: trades){
+            System.out.println("Confirm meeting happened in real life for trade with tradeId: " + tradeId +
+                    "\n Press (Y) to confirm : \n");
+            String input = br.readLine();
+            // String input = sc.nextLine();
+            if (input.equals("Y") || input.equals("y")){
+                tradeModel.getTradeManager().confirmMeetingHappened(tradeId);
+            }
+        }
+    }
+
+    public void viewSuggestedMeetings() throws IOException{
+        List<String> trades = tradeModel.getTradeManager().getOngoingTradesForUser(username);
+        for (String tradeId: trades){
+//            Trade trade = tradeModel.getTradeManager().getTrade(tradeId);
+            System.out.println("Trade Details: " + tradeModel.getTradeManager().getTradeAllInfo(tradeId));
+
+            System.out.println(" Enter 1 if you want to confirm a meeting\n" +
+                    " Enter 2 if you want to make changes to a meeting\n" +
+                    " Enter 3 if you want to cancel the meeting\n");
+            String input = br.readLine();
+            switch (input){
+                case "1":
+                    tradeModel.getTradeManager().agreeMeeting(tradeId);
+                    break;
+                case "2":
+                    if (tradeModel.getTradeManager().needCancelTrade(tradeId)){
+                        tradeModel.getTradeManager().cancelTrade(tradeId);
+                    }
+                    else {
+                        System.out.println("Enter changed location of the meeting: ");
+                        String location = br.readLine();
+                        System.out.println("Enter changed date and time of the meeting: ");
+                        String dateString = br.readLine();
+                        Date date = null;
+
+                        DateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm aaa");
+                        try {
+                            date = format.parse(dateString);
+                        } catch (ParseException e) {
+                            System.out.println("Enter a valid date and time!");
+                        }
+                        tradeModel.getTradeManager().changeMeetingOfTrade(tradeId, location, date);
+                    }
+                    break;
+                case "3":
+                    tradeModel.getTradeManager().cancelTrade(tradeId);
+                    break;
+                case "exit":
+                    break;
+                default:
+                    System.out.println("Please enter a valid input.");
+            }
+
+        }
+    }
+
 
 }
