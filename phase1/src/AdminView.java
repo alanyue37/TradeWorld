@@ -1,12 +1,17 @@
 /**
- * class AdminView is the text UI
+ * A class that prints the prompts from AdminPresenter. It is the text UI.
  */
 public class AdminView {
-    private AdminPresenter s;
+    AdminPresenter s;
+
+    public AdminView(AdminPresenter s) {
+       this.s = s;
+    }
+
     /**
-     * @param s that the AdminPresenter sends
+     * This method prints the prompts to the screen.
      */
-    public void print(String s) {
+    public void print() {
         System.out.println(s);
     }
 }
