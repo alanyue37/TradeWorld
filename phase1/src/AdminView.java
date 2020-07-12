@@ -2,7 +2,7 @@
  * A class that prints the prompts from AdminPresenter. It is the text UI.
  */
 public class AdminView {
-    AdminPresenter s;
+    public AdminPresenter s;
 
     public AdminView(AdminPresenter s) {
        this.s = s;

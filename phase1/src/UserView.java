@@ -1,12 +1,17 @@
 /**
- * class UserView is the text UI
+ * A class that prints the prompts from UserPresenter. It is the text UI.
  */
 public class UserView {
-    private UserPresenter s;
+    public UserPresenter s;
+
+    public UserView(UserPresenter s) {
+        this.s = s;
+    }
+
     /**
-     * @param s that the UserPresenter sends
+     * This method prints the prompts to the screen.
      */
-    public void print(String s) {
+    public void print() {
         System.out.println(s);
     }
 }
