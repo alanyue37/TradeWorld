@@ -9,13 +9,11 @@ public class AdminController implements RunnableController {
     private final TradeModel tradeModel;
     private final AdminPresenter adminPresenter;
     private final BufferedReader br;
-    private final String username;
 
-    public AdminController(TradeModel tradeModel, AdminPresenter adminPresenter, String username) {
+    public AdminController(TradeModel tradeModel) {
         this.tradeModel = tradeModel;
-        this.adminPresenter = adminPresenter;
+        this.adminPresenter = new AdminPresenter(tradeModel);
         this.br = new BufferedReader(new InputStreamReader(System.in));
-        this.username = username;
     }
 
     /**
