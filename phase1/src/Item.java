@@ -8,11 +8,8 @@ public class Item implements Serializable {
     private String description;
     private boolean available;
 
-    // Static Variables -- // TODO: THIS IS NOT SERIALIZED.
-    private static AtomicInteger counter = new AtomicInteger(); // starts at 0
-
-    public Item(String name, String owner, String description) {
-        this.id = String.valueOf(counter.getAndIncrement());
+    public Item(String id, String name, String owner, String description) {
+        this.id = id;
         this.name = name;
         this.owner = owner;
         this.description = description;

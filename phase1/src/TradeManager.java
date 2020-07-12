@@ -1,6 +1,8 @@
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+
 
 public class TradeManager implements Serializable {
     private int limitOfEdits;
@@ -11,6 +13,8 @@ public class TradeManager implements Serializable {
     private Map<String, Trade> completedTrades;
     private Map<String, ArrayList<String>> userToTrades;
     private final int defaultLimitOfEdits = 3;
+    private final AtomicInteger counter = new AtomicInteger();
+
 
     /**
      * Constructor for TradeManager.
@@ -126,7 +130,8 @@ public class TradeManager implements Serializable {
      * @param itemId id of the item
      */
     public String addOneWayTrade(String type, String giver, String receiver, String itemId) {
-        Trade trade = new OneWayTrade(type, giver, receiver, itemId);
+        String id = String.valueOf(counter.getAndIncrement());
+        Trade trade = new OneWayTrade(type, id, giver, receiver, itemId);
         this.ongoingTrades.put(trade.getIdOfTrade(), trade);
         addTradeToUser(trade.getIdOfTrade());
         return trade.getIdOfTrade();
@@ -141,7 +146,8 @@ public class TradeManager implements Serializable {
      * @param item2 item of user2
      */
     public String addTwoWayTrade(String type,String user1,String user2,String item1,String item2){
-        Trade trade = new TwoWayTrade(type, user1, user2, item1, item2);
+        String id = String.valueOf(counter.getAndIncrement());
+        Trade trade = new TwoWayTrade(type, id, user1, user2, item1, item2);
         this.ongoingTrades.put(trade.getIdOfTrade(), trade);
         addTradeToUser(trade.getIdOfTrade());
         return trade.getIdOfTrade();
@@ -472,4 +478,18 @@ public class TradeManager implements Serializable {
         }
     }
     //can only change if meeting is not completed and not confirmed
+
+    public String getTradeMeetingInfo(String tradeId){
+        Trade trade = getTrade(tradeId);
+        StringBuilder meetingDetails = new StringBuilder();
+        for (Meeting meeting: trade.getMeetingList()){
+            meetingDetails.append(meetingManager.getMeetingsInfo(meeting)).append("\n");
+        }
+        return meetingDetails.toString();
+    }
+
+    public String getTradeAllInfo(String tradeId){
+        Trade trade = getTrade(tradeId);
+        return trade.toString() + "\n" + getTradeMeetingInfo(tradeId);
+    }
 }

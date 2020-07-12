@@ -1,6 +1,5 @@
 import java.io.Serializable;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Represents a trade to exchange item(s)
@@ -12,14 +11,12 @@ public abstract class Trade implements Serializable {
     private List<Meeting> meeting;
     private Date creationDate;
 
-    private static AtomicInteger counter = new AtomicInteger();
-
     /** Constructs trade given the type (temporary or permanent)
      * @param type temporary or permanent trade
      */
-    public Trade(String type) {
+    public Trade(String type, String id) {
         this.type = type;
-        this.idOfTrade = String.valueOf(counter.getAndIncrement());
+        this.idOfTrade = id;
         this.IsOpened = true;
         this.meeting = new ArrayList<>();
         this.creationDate = new Date();
@@ -90,4 +87,14 @@ public abstract class Trade implements Serializable {
     public abstract List<String> getItems();
 
     public abstract Map<String, String> userToItem();
+
+    public String toString(){
+        String status;
+        if (this.IsOpened){
+            status = "ongoing";
+        } else{
+            status = "completed";
+        }
+        return "Type" + this.type + "\nStatus" + status + "\nNumber of meeting" + this.getMeetingList().size() + "\nCreation Date" + this.creationDate.toString();
+    }
 }

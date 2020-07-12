@@ -2,6 +2,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+/**
+ * The controller class that allows users to log in to the system.
+ */
 public class LogInController {
 
     private final TradeModel tradeModel;
@@ -12,6 +15,11 @@ public class LogInController {
     private String password;
     private RunnableController nextController = null;
 
+
+    /**
+     * Creates a LogInController.
+     * @param tm the TradeModel containing all the information
+     */
     public LogInController(TradeModel tm) {
         tradeModel = tm;
         userManager = tradeModel.getUserManager();
@@ -19,6 +27,10 @@ public class LogInController {
         br = new BufferedReader(new InputStreamReader(System.in));
     }
 
+    /**
+     * Method to get the next controller to run.
+     * @return the next controller that will be run
+     */
     public RunnableController getNextController() {
         try {
             selectMenu();
@@ -29,6 +41,7 @@ public class LogInController {
         return null;
     }
 
+//    The main menu
     private void selectMenu() throws IOException {
         presenter.startMenu();
         presenter.nextLine();
@@ -52,6 +65,7 @@ public class LogInController {
         }
     }
 
+//    Logging in
     private void logIn(boolean isAdmin) throws IOException {
         presenter.logIn();
         presenter.nextLine();
@@ -74,6 +88,7 @@ public class LogInController {
         }
     }
 
+//    Create new account
     private void newTradingUser() throws IOException {
         presenter.newAccount();
         presenter.nextLine();

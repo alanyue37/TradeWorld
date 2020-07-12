@@ -3,10 +3,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ItemManager implements Serializable {
     private final Map<String, Item> confirmedItems;
     private final Map<String, Item> pendingItems;
+    private final AtomicInteger counter = new AtomicInteger();
 
     public ItemManager() {
         confirmedItems = new HashMap<>();
@@ -72,7 +74,8 @@ public class ItemManager implements Serializable {
     }
 
     public void addItem(String name, String owner, String description) {
-        Item item = new Item(name, owner, description);
+        String id = String.valueOf(counter.getAndIncrement());
+        Item item = new Item(id, name, owner, description);
         pendingItems.put(item.getId(), item);
     }
 
