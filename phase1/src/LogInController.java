@@ -15,7 +15,6 @@ public class LogInController {
     private String password;
     private RunnableController nextController = null;
 
-
     /**
      * Creates a LogInController.
      * @param tm the TradeModel containing all the information
@@ -41,7 +40,7 @@ public class LogInController {
         return null;
     }
 
-//    The main menu
+    // The main menu
     private void selectMenu() throws IOException {
         presenter.startMenu();
         presenter.nextLine();
@@ -65,7 +64,7 @@ public class LogInController {
         }
     }
 
-//    Logging in
+    // Logging in
     private void logIn(boolean isAdmin) throws IOException {
         presenter.logIn();
         presenter.nextLine();
@@ -84,11 +83,12 @@ public class LogInController {
             nextController = new AdminController(tradeModel, username);
         }
         else if (!isAdmin && userManager.login(username, password, UserTypes.TRADING)) {
+            // User logged in
             nextController = new UserController(tradeModel, username);
         }
     }
 
-//    Create new account
+    // Create new account
     private void newTradingUser() throws IOException {
         presenter.newAccount();
         presenter.nextLine();
