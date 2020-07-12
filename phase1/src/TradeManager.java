@@ -6,19 +6,19 @@ import java.util.*;
 
 public class TradeManager implements Serializable {
     private int limitOfEdits;
+    private int limitIncomplete;
+    private int limitTransactionPerWeek;
     private Map<String, Trade> ongoingTrades;
     private MeetingManager meetingManager;
     private Map<String, Trade> completedTrades;
     private Map<String, ArrayList<String>> userToTrades;
-    private int limitIncomplete;
-    private int limitTransactionPerWeek;
+    private final int defaultLimitOfEdits = 3;
 
     /**
      * Constructor for TradeManager.
-     * @param limitOfEdits limit of edits
      */
-    public TradeManager(int limitOfEdits) {
-        this.limitOfEdits = limitOfEdits;
+    public TradeManager() {
+        this.limitOfEdits = defaultLimitOfEdits;
         this.ongoingTrades = new HashMap<>();
         this.meetingManager = new MeetingManager();
         this.completedTrades = new HashMap<>();

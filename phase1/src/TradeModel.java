@@ -22,6 +22,12 @@ public class TradeModel implements Serializable {
         tradeManager = tm;
     }
 
+    public TradeModel() {
+        userManager = new UserManager();
+        itemManager = new ItemManager();
+        tradeManager = new TradeManager();
+    }
+
     public void setUserManager(UserManager userManager) { this.userManager = userManager; }
 
     public UserManager getUserManager() {
