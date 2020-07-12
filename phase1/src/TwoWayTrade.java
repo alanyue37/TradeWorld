@@ -19,8 +19,8 @@ public class TwoWayTrade extends Trade {
      * @param item1 the ID of the item that user1 will be trading
      * @param item2 the ID of the item that user2 will be trading
      */
-    public TwoWayTrade(String type, String user1, String user2, String item1, String item2) {
-        super(type);
+    public TwoWayTrade(String type, String tradeId, String user1, String user2, String item1, String item2) {
+        super(type, tradeId);
         this.user1 = user1;
         this.user2 = user2;
         this.item1 = item1;
