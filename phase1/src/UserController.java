@@ -34,7 +34,7 @@ public class UserController implements RunnableController {
      */
     public void run() {
         try {
-            UserPresenter.startMenu(); // should this run function have more than 1 while loop (i.e., one for viewing and the other for trade)?
+            UserPresenter.startMenu(); // should this run method have more than 1 while loop (i.e., one for viewing and the other for trade)?
             String input = br.readLine();
             while (!input.equals("exit")) {
                 selectMenu();
