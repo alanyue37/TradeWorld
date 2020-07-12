@@ -43,7 +43,8 @@ public class UserPresenter {
                 " Enter 1 to lend items\n" +
                 " Enter 2 to temporarily borrow items\n " +
                 " Enter 3 to permanently borrow items\n " +
-                " Enter 4 to trade items \n " +
+                " Enter 4 to temporarily trade items\n " +
+                " Enter 5 to permanently trade items\n " +
                 "\n Type \"exit\" at any time to exit.");
     }
 
@@ -115,4 +116,13 @@ public class UserPresenter {
     public void viewLastThreeTrades(String username){
         System.out.println("Your last three trades were: " + tradeModel.getTradeManager().getRecentItemsTraded(3, username));
     }
+
+    public void printEnterTradeLocation(){
+        System.out.println("Enter the location of the meeting: ");
+    }
+
+    public void printEnterTradeDate(){
+        System.out.println("Enter the date and time of the meeting (dd/mm/yyyy hh:mm): ");
+    }
+
 }
