@@ -5,7 +5,7 @@ import java.io.IOException;
  */
 public class TradeSystem {
 
-    String serializedDataManagerInfo = "src/serializedobjects.ser";
+    String serializedDataManagerInfo = "serializedobjects.ser";
 
     /**
      * Run the trading system.
