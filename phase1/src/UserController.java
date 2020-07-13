@@ -10,9 +10,9 @@ import java.text.SimpleDateFormat;
 
 public class UserController implements RunnableController {
     private final BufferedReader br;
-    TradeModel tradeModel;
-    UserPresenter presenter;
-    private String username;
+    private final TradeModel tradeModel;
+    private final UserPresenter presenter;
+    private final String username;
     // private Scanner sc;
 
     /**
@@ -33,10 +33,8 @@ public class UserController implements RunnableController {
      */
     public void run() {
         try {
-            UserPresenter.startMenu(); // should this run method have more than 1 while loop (i.e., one for viewing and the other for trade)?
-            String input = br.readLine();
-            while (!input.equals("exit")) {
-                selectMenu();
+            if(!selectMenu()) {
+                System.out.println("Please enter a valid input.");
             }
         } catch (IOException e) {
             System.out.println("Something bad happened.");
@@ -58,12 +56,23 @@ public class UserController implements RunnableController {
             case "2":
                 tradeOptions();
                 break;
+            case "3":
+                initiateTrade();
+                break;
             case "exit":
                 return false;
             default:
                 System.out.println("Please enter a valid input.");
         }
         return true;
+    }
+
+    /**
+     * Run UserInitiateTradeController to initiate trade
+     */
+    private void initiateTrade() {
+        RunnableController controller = new UserInitiateTradeController(tradeModel, username);
+        controller.run();
     }
 
     /**
@@ -134,7 +143,7 @@ public class UserController implements RunnableController {
     /**
      * View user inventory
      */
-    public void viewUserInventory() throws IOException{
+    public void viewUserInventory() {
         presenter.printUserInventory(username);
     }
 
@@ -242,7 +251,7 @@ public class UserController implements RunnableController {
             } catch (ParseException e) {
                 System.out.println("Enter a valid date and time!");
             }
-            tradeModel.getTradeManager().addMeetingToTrade(tradeId, location, convertedDate);
+            tradeModel.getTradeManager().addMeetingToTrade(tradeId, location, convertedDate, username);
 
             Map<String, String> userAndItem = tradeModel.getTradeManager().getUserAndItem(tradeId);
 
@@ -280,7 +289,7 @@ public class UserController implements RunnableController {
             } catch (ParseException e) {
                 System.out.println("Enter a valid date and time!");
             }
-            tradeModel.getTradeManager().addMeetingToTrade(tradeId, location, convertedDate);
+            tradeModel.getTradeManager().addMeetingToTrade(tradeId, location, convertedDate, username);
         }
     }
 
@@ -313,7 +322,7 @@ public class UserController implements RunnableController {
         } catch (ParseException e) {
             System.out.println("Enter a valid date and time!");
         }
-        tradeModel.getTradeManager().addMeetingToTrade(tradeId, location, convertedDate);
+        tradeModel.getTradeManager().addMeetingToTrade(tradeId, location, convertedDate, username);
 
     }
 
@@ -346,7 +355,7 @@ public class UserController implements RunnableController {
         } catch (ParseException e) {
             System.out.println("Enter a valid date and time!");
         }
-        tradeModel.getTradeManager().addMeetingToTrade(tradeId, location, convertedDate);
+        tradeModel.getTradeManager().addMeetingToTrade(tradeId, location, convertedDate, username);
 
     }
 
@@ -381,7 +390,7 @@ public class UserController implements RunnableController {
             String input = br.readLine();
             // String input = sc.nextLine();
             if (input.equals("Y") || input.equals("y")){
-                tradeModel.getTradeManager().confirmMeetingHappened(tradeId);
+                tradeModel.getTradeManager().confirmMeetingHappened(tradeId, username);
             }
         }
     }
@@ -417,7 +426,7 @@ public class UserController implements RunnableController {
                         } catch (ParseException e) {
                             System.out.println("Enter a valid date and time!");
                         }
-                        tradeModel.getTradeManager().changeMeetingOfTrade(tradeId, location, date);
+                        tradeModel.getTradeManager().changeMeetingOfTrade(tradeId, location, date, username);
                     }
                     break;
                 case "3":

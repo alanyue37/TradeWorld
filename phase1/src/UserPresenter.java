@@ -20,7 +20,8 @@ public class UserPresenter {
     public void startMenu() {
         System.out.println("User Options\n" +
                 " Enter 1 to view \n" +
-                " Enter 2 to trade \n " +
+                " Enter 2 to trade \n" +
+                " Enter 3 to initiate a trade \n" +
                 "\n Type \"exit\" at any time to exit.");
     }
 

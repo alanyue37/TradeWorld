@@ -25,11 +25,7 @@ public class AdminController implements RunnableController {
     @Override
     public void run() {
         try {
-            adminPresenter.startMenu(username);
-            String input = br.readLine();
-            while (!input.equals("exit")) {
-                selectMenu();
-            }
+            selectMenu();
         } catch (IOException e) {
             System.out.println("Oops, something bad happened!");
         }
