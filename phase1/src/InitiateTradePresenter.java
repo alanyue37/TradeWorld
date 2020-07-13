@@ -1,14 +1,14 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class InitiateTradePresenter {
+public class InitiateTradePresenter extends TextPresenter {
 
     /**
      * This method prints the items available to trade for or borrow.
      */
     public void availableItemsMenu(List<String> items) {
         System.out.println("The following items are available for trade:");
-        printList(items, false);
+        printList(items, false, true);
         System.out.println("Please enter the ID of the item you would like to choose: ");
     }
 
@@ -19,7 +19,7 @@ public class InitiateTradePresenter {
         else {
             System.out.println("You do not have any items from the other user's wishlist. Choose an item from your inventory to suggest:");
         }
-        printList(items, false);
+        printList(items, false, true);
     }
 
     public void noItemsToOffer() {
@@ -36,10 +36,6 @@ public class InitiateTradePresenter {
 
     public void askMeetingDate() {
         System.out.println("Enter the date and time of the meeting (dd/mm/yyyy hh:mm): ");
-    }
-
-    public void tryAgain() {
-        System.out.println("Invalid input. Please enter again:");
     }
 
     public void frozenAccount() {
@@ -61,22 +57,8 @@ public class InitiateTradePresenter {
         tradeTypes.add("One way permanent");
         tradeTypes.add("Two way temporary");
         tradeTypes.add("Two way permanent");
-        printList(tradeTypes, true);
+        printList(tradeTypes, true, false);
         System.out.println("Please enter the # of your choice of trade: ");
-    }
-
-    private void printList(List<String> options, boolean numbered) {
-        if (numbered) {
-            int i = 1;
-            for (String s : options) {
-                System.out.println(i + ". " + s + "\n");
-                i++;
-            }
-        } else {
-            for (String s : options) {
-                System.out.println(s + "\n");
-            }
-        }
     }
 
 }

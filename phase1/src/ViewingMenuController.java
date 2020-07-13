@@ -1,42 +1,43 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 
 public class ViewingMenuController implements RunnableController {
     private final BufferedReader br;
-    TradeModel tradeModel;
-    ViewingMenuPresenter presenter;
-    private String username;
+    private final TradeModel tradeModel;
+    private final ViewingMenuPresenter presenter;
+    private final String username;
+    private final int numTradingPartners;
+    private final int numLastTrades;
 
     public ViewingMenuController(TradeModel tradeModel, String username) {
         br = new BufferedReader(new InputStreamReader(System.in));
         this.tradeModel = tradeModel;
         this.username = username;
         presenter = new ViewingMenuPresenter();
+        numTradingPartners = 3;
+        numLastTrades = 3;
     }
 
     @Override
     public void run() {
         try {
-            presenter.startMenu();
-            String input = br.readLine();
-            while (!input.equals("exit")) {
-                browseViewOptions();
-            }
+            browseViewOptions();
         } catch (IOException e) {
             System.out.println("Something bad happened.");
         }
     }
 
     private void browseViewOptions() throws IOException {
-
         presenter.showViewingOptions();
+        List<String> vaildOptions = Arrays.asList(new String[] {"1", "2", "3", "4", "5", "exit"});
         String input = br.readLine();
+        while (!vaildOptions.contains(input)) {
+            System.out.println("Invalid input. Please try again:");
+            input = br.readLine();
+        }
         switch (input) {
             case "1": // view inventory
                 viewInventory();
@@ -48,16 +49,15 @@ public class ViewingMenuController implements RunnableController {
                 viewUserInventory();
                 break;
             case "4": // view last transaction
-                viewLastThreeTrades();
+                viewRecentTrades();
                 break;
             case "5": // view top 3 most frequent trading partners
                 viewTradingPartners();
                 break;
             case "exit":
-                presenter.end();
-                presenter.startMenu();
+                return;
             default:
-                presenter.invalidInput();
+                presenter.tryAgain();
         }
     }
 
@@ -79,21 +79,32 @@ public class ViewingMenuController implements RunnableController {
      * View user inventory
      */
     public void viewUserInventory() {
-        presenter.printUserInventory(tradeModel, username);
+        List<String> items = getItemsInfo(tradeModel.getUserManager().getSetByUsername(username, ItemSets.INVENTORY));
+        presenter.printUserInventory(items);
     }
 
     /**
-     * View top 3 most frequent trading partners
+     * View top numTradingPartners most frequent trading partners
      */
     public void viewTradingPartners(){
-        presenter.printViewTopTradingPartner(tradeModel.getTradeManager().getFrequentPartners(3,username));
+        List<String> tradingPartners = tradeModel.getTradeManager().getFrequentPartners(numTradingPartners, username);
+        presenter.printViewTopTradingPartners(numTradingPartners, tradingPartners);
     }
 
     /**
-     * View user's last 3 trades
+     * View user's last numLastTrades trades
      */
-    public void viewLastThreeTrades(){
-        presenter.viewLastThreeTrades(tradeModel, username);
+    public void viewRecentTrades(){
+        List<String> lastTrades = tradeModel.getTradeManager().getRecentItemsTraded(numLastTrades, username);
+        presenter.printRecentTrades(numLastTrades, lastTrades);
+    }
+
+    private List<String> getItemsInfo(Collection<String> itemIds) {
+        List <String> itemsInfo = new ArrayList<>();
+        for (String itemId : itemIds) {
+            itemsInfo.add(tradeModel.getItemManager().getItemInfo(itemId));
+        }
+        return itemsInfo;
     }
 
 

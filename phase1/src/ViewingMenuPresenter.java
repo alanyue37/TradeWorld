@@ -1,22 +1,9 @@
 import java.util.Collection;
 import java.util.List;
 
-public class ViewingMenuPresenter {
+public class ViewingMenuPresenter extends TextPresenter {
 
     public ViewingMenuPresenter() {
-    }
-
-    public void startMenu() {
-        System.out.println("Welcome to the viewing menu!\n" +
-                "Enter 1 to continue");
-    }
-
-    public void invalidInput() {
-        System.out.println("Please enter a valid input.");
-    }
-
-    public void end() {
-        System.out.println("Exiting...");
     }
 
     public void showViewingOptions() {
@@ -31,20 +18,27 @@ public class ViewingMenuPresenter {
 
 
     /**
-     * Print the top trading partners of a user
+     * Print the top trading partners of a user (if any)
      */
-    public void printViewTopTradingPartner(List<String> partners){
-        System.out.println("Your top 3 trading partners are: " + partners);
+    public void printViewTopTradingPartners(int num, List<String> partners){
+        if (partners.size() > 0) {
+            System.out.println("Your top trading partners are (up to " + num + "): ");
+            printList(partners, true, false);
+        } else {
+            System.out.println("You do not have any trading history.");
+        }
     }
 
     /**
      * Print the users inventory
      */
-    public void printUserInventory(TradeModel tradeModel, String username){
-        System.out.println("Your Inventory: ");
-        System.out.println(tradeModel.getUserManager().getSetByUsername(username, ItemSets.INVENTORY));
-        printInfoForItemIds(tradeModel, tradeModel.getItemManager().getAvailableItems());
-        printInfoForItemIds(tradeModel, tradeModel.getUserManager().getSetByUsername(username, ItemSets.INVENTORY));
+    public void printUserInventory(List<String> items){
+        if (items.size() > 0) {
+            System.out.println("Your Inventory: ");
+            printList(items, false, true);
+        } else {
+            System.out.println("Your inventory is empty.");
+        }
     }
 
     /**
@@ -54,8 +48,13 @@ public class ViewingMenuPresenter {
         System.out.println("Wishlist: " + tradeModel.getUserManager().getSetByUsername(username, ItemSets.WISHLIST));
     }
 
-    public void viewLastThreeTrades(TradeModel tradeModel, String username){
-        System.out.println("Your last three trades were: " + tradeModel.getTradeManager().getRecentItemsTraded(3, username));
+    public void printRecentTrades(int num, List<String> trades){
+        if (trades.size() > 0) {
+            System.out.println("Your last (up to) " + num + "trades were:");
+            printList(trades, true, false);
+        } else {
+            System.out.println("You do not have any trading history.");
+        }
     }
 
     private void printInfoForItemIds(TradeModel tradeModel, Collection<String> itemIds){
@@ -80,7 +79,6 @@ public class ViewingMenuPresenter {
         List<String> availableItems = tradeModel.getItemManager().getAvailableItems();
         printInfoForItemIds(tradeModel, availableItems);
     }
-
 
 
 }
