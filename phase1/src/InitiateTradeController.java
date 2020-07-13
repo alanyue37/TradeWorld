@@ -1,5 +1,4 @@
 import java.io.BufferedReader;
-import java.io.IOError;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.DateFormat;
@@ -7,15 +6,15 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class UserInitiateTradeController implements RunnableController {
+public class InitiateTradeController implements RunnableController {
     private final TradeModel tradeModel;
-    private final UserInitiateTradePresenter presenter;
+    private final InitiateTradePresenter presenter;
     private final BufferedReader br;
     private final String username;
 
-    public UserInitiateTradeController(TradeModel tradeModel, String username) {
+    public InitiateTradeController(TradeModel tradeModel, String username) {
         this.tradeModel = tradeModel;
-        this.presenter = new UserInitiateTradePresenter();
+        this.presenter = new InitiateTradePresenter();
         this.br = new BufferedReader(new InputStreamReader(System.in));
         this.username = username;
     }
@@ -30,12 +29,16 @@ public class UserInitiateTradeController implements RunnableController {
     }
 
     private boolean initiateTrade() throws IOException {
+        boolean success = false;
         if (tradeModel.getUserManager().isFrozen(username)) {
             presenter.frozenAccount();
-            return false;
+            return success;
         }
         String itemId = getItemIdChoice();
-        boolean success = createTrade(itemId);
+        if (itemId == null) {
+            return success;
+        }
+        success = createTrade(itemId);
         presenter.successful(success);
         return success;
     }
@@ -182,10 +185,15 @@ public class UserInitiateTradeController implements RunnableController {
         // Show items available not owned by user
         List<String> itemsAvailable = tradeModel.getItemManager().getAvailableItems();
         List <String> itemsToShow = new ArrayList<>();
+
         for (String itemId : itemsAvailable) {
             if (!tradeModel.getItemManager().getOwner(itemId).equals(username)) {
                 itemsToShow.add(tradeModel.getItemManager().getItemInfo(itemId));
             }
+        }
+        if (itemsToShow.size() == 0) {
+            presenter.noItemsToTrade();
+            return null;
         }
         presenter.availableItemsMenu(itemsToShow);
         String itemId = br.readLine();

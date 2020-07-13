@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserInitiateTradePresenter {
+public class InitiateTradePresenter {
 
     /**
      * This method prints the items available to trade for or borrow.
@@ -24,6 +24,10 @@ public class UserInitiateTradePresenter {
 
     public void noItemsToOffer() {
         System.out.println("Trade not possible: You do not have any available items in your inventory to offer in return.");
+    }
+
+    public void noItemsToTrade() {
+        System.out.println("Trade not possible: There are no available items.");
     }
 
     public void askMeetingLocation() {
