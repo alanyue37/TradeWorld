@@ -3,51 +3,25 @@ import java.util.Collection;
 import java.util.List;
 
 public class UserPresenter {
-    TradeModel tradeModel;
 
     /**
      * Constructor for UserController.
-     * @param tradeModel Model of the system.
      */
-    public UserPresenter(TradeModel tradeModel){
-        this.tradeModel = tradeModel;
+    public UserPresenter(){
     }
 
     /**
      * Print main menu to run the UserController
-     * There are two options that are available (viewing and trading)
      */
     public void startMenu() {
         System.out.println("User Options\n" +
-                " Enter 1 to view \n" +
-                " Enter 2 to trade \n " +
-                "\n Type \"exit\" at any time to exit.");
-    }
-
-    /**
-     * Print menu to run the view options for UserController
-     */
-    public void printViewOptions() {
-        System.out.println("View Options\n" +
-                " Enter 1 to view inventory\n" +
-                " Enter 2 to view your wishlist\n " +
-                " Enter 3 to view your inventory\n " +
-                " Enter 4 to view last transaction \n " +
-                " Enter 5 to view top 3 most frequent trading partners: \n" +
-                "\n Type \"exit\" at any time to exit.");
-    }
-
-    /**
-     * Print menu to run the trade options for UserController
-     */
-    public void printViewTradeOptions() {
-        System.out.println("Trade Options\n" +
-                " Enter 1 to lend items\n" +
-                " Enter 2 to temporarily borrow items\n " +
-                " Enter 3 to permanently borrow items\n " +
-                " Enter 4 to temporarily trade items\n " +
-                " Enter 5 to permanently trade items\n " +
-                "\n Type \"exit\" at any time to exit.");
+                "Enter 1 to add items to inventory\n" +
+                "Enter 2 to add items to wishlist\n" +
+                "Enter 3 to view inventory, wishlist and trading history\n" +
+                "Enter 4 to initiate a trade\n" +
+                "Enter 5 to manage proposed trades\n" +
+                "Enter 6 to confirm a trade\n" +
+                "\nType \"exit\" at any time to exit.");
     }
 
     /**
@@ -74,24 +48,24 @@ public class UserPresenter {
     /**
      * Print the users inventory
      */
-    public void printUserInventory(String username){
+    public void printUserInventory(TradeModel tradeModel, String username){
         System.out.println("Your Inventory: ");
-        printInfoForItemIds(tradeModel.getUserManager().getSetByUsername(username, ItemSets.INVENTORY));
+        printInfoForItemIds(tradeModel, tradeModel.getUserManager().getSetByUsername(username, ItemSets.INVENTORY));
     }
 
     /**
      * Print the users wishlist
      */
-    public void printUserWishlist(String username){
+    public void printUserWishlist(TradeModel tradeModel, String username){
         System.out.println("Wishlist: " + tradeModel.getUserManager().getSetByUsername(username, ItemSets.WISHLIST));
     }
 
     /**
      * Print the systems inventory
      */
-    public void printSystemInventory(){
+    public void printSystemInventory(TradeModel tradeModel){
         System.out.println("System Inventory: ");
-        printInfoForItemIds(tradeModel.getItemManager().getAvailableItems());
+        printInfoForItemIds(tradeModel, tradeModel.getItemManager().getAvailableItems());
     }
 
     /**
@@ -117,7 +91,7 @@ public class UserPresenter {
                 " Enter \"exit\" to exit \n");
     }
 
-    public void viewLastThreeTrades(String username){
+    public void viewLastThreeTrades(TradeModel tradeModel, String username){
         System.out.println("Your last three trades were: " + tradeModel.getTradeManager().getRecentItemsTraded(3, username));
     }
 
@@ -129,11 +103,20 @@ public class UserPresenter {
         System.out.println("Enter the date and time of the meeting (dd/mm/yyyy hh:mm): ");
     }
 
-    private void printInfoForItemIds(Collection<String> itemIds){
+    private void printInfoForItemIds(TradeModel tradeModel, Collection<String> itemIds){
         for (String itemId : itemIds) {
             String itemInfo = tradeModel.getItemManager().getItemInfo(itemId);
             System.out.println(itemInfo);
         }
+    }
+
+    public void printInventory(TradeModel tradeModel, String username){
+        System.out.println("System Inventory: ");
+        List<String> availableItems = tradeModel.getItemManager().getAvailableItems();
+        for (String item: tradeModel.getUserManager().getSetByUsername(username, ItemSets.INVENTORY)){
+            availableItems.remove(item);
+        }
+        printInfoForItemIds(tradeModel, availableItems);
     }
 
 }

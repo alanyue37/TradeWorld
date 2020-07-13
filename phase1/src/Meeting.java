@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.Date;
 
-public class Meeting {
+public class Meeting implements Serializable {
     private String location;
     private Date meetingTime;    //ask later if string or time
     private int numOfEdits;

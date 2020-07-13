@@ -1,7 +1,5 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Array;
+import java.util.*;
 
 /**
  * Represents a two way trade, where two users give an item and receive the other's item
@@ -106,10 +104,12 @@ public class TwoWayTrade extends Trade {
     }
 
     @Override
-    public Map<String, String> userToItem(){
-        Map<String, String> userToItem = new HashMap<>();
-        userToItem.put(user1, item1);
-        userToItem.put(user2, item2);
+    public Map<String, List<String>> itemToTrader(){
+        Map<String, List<String>> userToItem = new HashMap<>();
+        List<String> item1user = Arrays.asList(user1, user2);
+        List<String> item2user = Arrays.asList(user2, user1);
+        userToItem.put(item1, item1user);
+        userToItem.put(item2, item2user);
         return userToItem;
     }
 }

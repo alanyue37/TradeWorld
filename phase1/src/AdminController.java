@@ -25,11 +25,7 @@ public class AdminController implements RunnableController {
     @Override
     public void run() {
         try {
-            adminPresenter.startMenu(username);
-            String input = br.readLine();
-            while (!input.equals("exit")) {
-                selectMenu();
-            }
+            selectMenu();
         } catch (IOException e) {
             System.out.println("Oops, something bad happened!");
         }
@@ -107,6 +103,20 @@ public class AdminController implements RunnableController {
      * @throws IOException   If something goes wrong.
      */
     public void askAdminToFreezeUsers() throws IOException {
+        for (String freeze : tradeModel.getTradeManager().getExceedIncompleteLimitUser()) {
+            adminPresenter.freezeAccounts(freeze);
+            String confirmationInput = br.readLine();
+            if (confirmationInput.equals("1")) {
+                tradeModel.getUserManager().freeze(freeze, true);
+            }
+        }
+        for (String freeze : tradeModel.getTradeManager().getExceedPerWeek()) {
+            adminPresenter.freezeAccounts(freeze);
+            String confirmationInput = br.readLine();
+            if (confirmationInput.equals("1")) {
+                tradeModel.getUserManager().freeze(freeze, true);
+            }
+        }
         for (String freeze : tradeModel.getUserManager().getUsersForFreezing()) {
             adminPresenter.freezeAccounts(freeze);
             String confirmationInput = br.readLine();
