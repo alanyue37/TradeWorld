@@ -508,7 +508,11 @@ public class TradeManager implements Serializable {
 
     public boolean canChangeMeeting(String tradeId, String username){
         Trade trade = getTrade(tradeId);
-        Meeting meeting = trade.getMeetingList().get(-1);
-        return !meeting.getLastEditUser().equals(username);
+        if (trade.getMeetingList().size() == 0){
+            return false;
+        } else{
+            Meeting meeting = trade.getMeetingList().get(trade.getMeetingList().size() - 1);
+            return !meeting.getLastEditUser().equals(username);
+        }
     }
 }
