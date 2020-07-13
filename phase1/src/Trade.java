@@ -86,7 +86,7 @@ public abstract class Trade implements Serializable {
 
     public abstract List<String> getItems();
 
-    public abstract Map<String, String> userToItem();
+    public abstract Map<String, List<String>> itemToTrader();
 
     public String toString(){
         String status;
@@ -96,5 +96,9 @@ public abstract class Trade implements Serializable {
             status = "completed";
         }
         return "Type" + this.type + "\nStatus" + status + "\nNumber of meeting" + this.getMeetingList().size() + "\nCreation Date" + this.creationDate.toString();
+    }
+
+    public boolean containItem(String itemId){
+        return getItems().contains(itemId);
     }
 }
