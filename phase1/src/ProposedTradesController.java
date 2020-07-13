@@ -23,13 +23,17 @@ public class ProposedTradesController implements RunnableController {
     @Override
     public void run() {
         try {
-            browseMeetings();
+            presenter.startMenu();
+            String input = br.readLine();
+            while (!input.equals("exit")) {
+                browseMeetings();
+            }
         } catch (IOException e) {
             System.out.println("Something bad happened.");
         }
     }
 
-    private boolean browseMeetings() throws IOException {
+    private void browseMeetings() throws IOException {
         Map<String, String> trades = tradeModel.getTradeManager().getProposedTrades(username);
 
         for (String tradeId : trades.keySet()) {
@@ -42,12 +46,12 @@ public class ProposedTradesController implements RunnableController {
                 case "2": // edit meeting time
                     editMeetingTime(tradeId);
                 case "exit":
-                    return false;
+                    presenter.end();
+                    presenter.startMenu();
                 default:
                     presenter.invalidInput();
             }
         }
-        return true;
     }
 
 

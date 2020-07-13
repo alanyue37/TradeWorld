@@ -7,6 +7,10 @@ public class ProposedTradesPresenter {
         this.tradeModel = tradeModel;
     }
 
+    public void startMenu() {
+        System.out.println("Enter 1 to see trades proposed to you: ");
+    }
+
     public void invalidInput() {
         System.out.println("Please enter a valid input.");
     }
@@ -41,6 +45,10 @@ public class ProposedTradesPresenter {
 
     public void canceledTrade() {
         System.out.println("The trade was cancelled.");
+    }
+
+    public void end() {
+        System.out.println("Exiting...");
     }
 
 }
