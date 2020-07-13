@@ -296,6 +296,10 @@ public class TradeManager implements Serializable {
         return meetingManager.getConfirmedMeetingTime(trade.getMeetingList().get(0));
     }
 
+    public Date getLastConfirmedTime(String tradeId){
+        return getLastConfirmedMeetingTime(getTrade(tradeId));
+    }
+
     /**
      * Given the number of days, returns a list of trades that have had trades completed in the past numOfDays
      * @param numDays number of days
@@ -500,7 +504,7 @@ public class TradeManager implements Serializable {
             return false;
         } else{
             Meeting meeting = trade.getMeetingList().get(trade.getMeetingList().size() - 1);
-            return !meeting.getLastEditUser().equals(username);
+            return meetingManager.getLastUser(meeting).equals(username);
         }
     }
 
@@ -557,6 +561,19 @@ public class TradeManager implements Serializable {
                 this.ongoingTrades.remove(trade.getIdOfTrade());
             }
         }
+    }
+
+    public String getTradeLastMeetingLocation(String tradeId){
+        Trade trade = getTrade(tradeId);
+        if (trade.getMeetingList().isEmpty()){
+            return null;
+        }
+        for (int i = trade.getMeetingList().size() - 1; i >= 0; i --){
+            if (meetingManager.getLastLocation(trade.getMeetingList().get(i)) != null){
+                return meetingManager.getLastLocation(trade.getMeetingList().get(i));
+            }
+        }
+        return meetingManager.getLastLocation(trade.getMeetingList().get(0));
     }
 
     // completed

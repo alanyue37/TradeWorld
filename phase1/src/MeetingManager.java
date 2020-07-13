@@ -82,4 +82,9 @@ public class MeetingManager implements Serializable {
     public String getLastUser(Meeting meeting){
         return meeting.getLastEditUser();
     }
+
+    public String getLastLocation(Meeting meeting){
+        return meeting.getLocation();
+    }
+
 }
