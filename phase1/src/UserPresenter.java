@@ -15,13 +15,13 @@ public class UserPresenter {
      */
     public void startMenu() {
         System.out.println("User Options\n" +
-                " Enter 1 to add items to inventory\n" +
-                " Enter 2 to add items to wishlist\n" +
-                " Enter 3 to view menu\n" +
-                " Enter 4 to initiate a trade\n" +
-                " Enter 5 to propose a trade\n" +
-                " Enter 6 to confirm a trade\n" +
-                "\n Type \"exit\" at any time to exit.");
+                "Enter 1 to add items to inventory\n" +
+                "Enter 2 to add items to wishlist\n" +
+                "Enter 3 to view inventory, wishlist and trading history\n" +
+                "Enter 4 to initiate a trade\n" +
+                "Enter 5 to manage proposed trades\n" +
+                "Enter 6 to confirm a trade\n" +
+                "\nType \"exit\" at any time to exit.");
     }
 
     /**

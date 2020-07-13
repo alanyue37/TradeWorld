@@ -1,19 +1,15 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PushbackReader;
-import java.text.DateFormat;
-import java.text.ParseException;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.Date;
-import java.text.SimpleDateFormat;
+
 
 public class UserController implements RunnableController {
     private final BufferedReader br;
-    TradeModel tradeModel;
-    UserPresenter presenter;
-    private String username;
+    private final TradeModel tradeModel;
+    private final UserPresenter presenter;
+    private final String username;
 
     /**
      * Constructor for UserController.
@@ -32,11 +28,7 @@ public class UserController implements RunnableController {
      */
     public void run() {
         try {
-            presenter.startMenu(); // should this run method have more than 1 while loop (i.e., one for viewing and the other for trade)?
-            String input = br.readLine();
-            while (!input.equals("exit")) {
-                selectMenu();
-            }
+            selectMenu();
         } catch (IOException e) {
             System.out.println("Something bad happened.");
         }
@@ -44,21 +36,15 @@ public class UserController implements RunnableController {
 
     /**
      * Main menu to run the UserController
-     * There are two options that are available (viewing and trading)
      */
     private boolean selectMenu() throws IOException {
-        // public void startMenu() {
-        //        System.out.println("User Options\n" +
-        //                " Enter 1 to add items to inventory\n" +
-        //                " Enter 2 to add items to inventory\n" +
-        //                " Enter 3 to view menu\n" +
-        //                " Enter 4 to initiate a trade\n" +
-        //                " Enter 5 to propose a trade\n" +
-        //                " Enter 6 to confirm a trade\n" +
-        //                "\n Type \"exit\" at any time to exit.");
-        //    }
+        List<String> vaildOptions = Arrays.asList(new String[] {"1", "2", "3", "4", "5", "6", "exit"});
         presenter.startMenu();
         String input = br.readLine();
+        while (!vaildOptions.contains(input)) {
+            System.out.println("Invalid input. Please try again:");
+            input = br.readLine();
+        }
         switch(input) {
             case "1": // add items to inventory
                 createItem();
@@ -66,19 +52,20 @@ public class UserController implements RunnableController {
             case "2": // add items to wishlist
                 viewInventory();
                 break;
-            case "3": // view menu
-                ViewingMenuController vmc = new ViewingMenuController(tradeModel, username);
+            case "3": // view inventory, wishlist, and trading history
+                RunnableController vmc = new ViewingMenuController(tradeModel, username);
                 vmc.run();
                 break;
             case "4": // initiate a trade
-                // tradeOptions();
+                RunnableController controller = new InitiateTradeController(tradeModel, username);
+                controller.run();
                 break;
-            case "5": // propose a trade
-                ProposedTradesController ptc = new ProposedTradesController(tradeModel, username);
+            case "5": // manage proposed trades
+                RunnableController ptc = new ProposedTradesController(tradeModel, username);
                 ptc.run();
                 break;
-            case "6": //confirm a trade
-                ConfirmTradesController ctc = new ConfirmTradesController(tradeModel, username);
+            case "6": // confirm a trade
+                RunnableController ctc = new ConfirmTradesController(tradeModel, username);
                 ctc.run();
                 break;
             case "exit":
