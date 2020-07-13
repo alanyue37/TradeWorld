@@ -452,6 +452,7 @@ public class TradeManager implements Serializable {
 
     private List<Trade> sortTradesMeetingDate(List<Trade> trades) {
         List<Trade> sorted = new ArrayList<>();
+        if (trades.size() == 0) { return sorted; }
         sorted.add(trades.get(0));
         for (int i = 1; i < trades.size(); i++) {
             int ii = 0;
