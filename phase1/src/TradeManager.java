@@ -119,8 +119,8 @@ public class TradeManager implements Serializable {
      * @param tradeId ID of the trade
      * @return hashmap which maps user (of the trade) to their item
      */
-    public Map<String, String> getUserAndItem(String tradeId){
-        return getTrade(tradeId).userToItem();
+    public Map<String, List<String>> itemToUsers(String tradeId){
+        return getTrade(tradeId).itemToTrader();
     }
 
 
@@ -294,6 +294,10 @@ public class TradeManager implements Serializable {
             }
         }
         return meetingManager.getConfirmedMeetingTime(trade.getMeetingList().get(0));
+    }
+
+    public Date getLastConfirmedTime(String tradeId){
+        return getLastConfirmedMeetingTime(getTrade(tradeId));
     }
 
     /**
@@ -494,25 +498,86 @@ public class TradeManager implements Serializable {
         return trade.toString() + "\n" + getTradeMeetingInfo(tradeId);
     }
 
-    public List<String> getOngoingTradesForUser(String username){
-        List<String> ongoingUserTrades = new ArrayList<>();
-        for (Map.Entry<String, Trade> entry : ongoingTrades.entrySet()){
-            if (entry.getValue().getUsers().contains(username)){
-                if (!ongoingUserTrades.contains(entry.getKey())){
-                    ongoingUserTrades.add(entry.getKey());
-                }
-            }
-        }
-        return ongoingUserTrades;
-    }
-
     public boolean canChangeMeeting(String tradeId, String username){
         Trade trade = getTrade(tradeId);
         if (trade.getMeetingList().size() == 0){
             return false;
         } else{
             Meeting meeting = trade.getMeetingList().get(trade.getMeetingList().size() - 1);
-            return !meeting.getLastEditUser().equals(username);
+            return meetingManager.getLastUser(meeting).equals(username);
         }
     }
+
+    private List<Trade> getUserOngoingTrades(String username){
+        List<String> userTrade = this.userToTrades.get(username);
+        List<Trade> userOngoingTrade = new ArrayList<>();
+        for (String id: userTrade){
+            if (this.ongoingTrades.containsKey(id)){
+                userOngoingTrade.add(this.ongoingTrades.get(id));
+            }
+        }
+        return userOngoingTrade;
+    }
+
+    private Meeting getLastMeeting(Trade trade){
+        if (trade.getMeetingList().size() == 0) {
+            return null;
+        } else {
+            return trade.getMeetingList().get(trade.getMeetingList().size() - 1);
+        }
+    }
+
+    public Map<String, String> getProposedTrades(String username){
+        List<Trade> userOngoingTrade = getUserOngoingTrades(username);
+        Map<String, String> proposedTrades = new HashMap<>();
+        for (Trade trade: userOngoingTrade){
+            Meeting meeting = getLastMeeting(trade);
+            assert meeting != null;
+            if (!(meetingManager.getExchangeConfirmed(meeting))){
+                proposedTrades.put(trade.getIdOfTrade(), trade.getTradeType());
+            }
+        }
+        return proposedTrades;
+    }
+
+    private List<Trade> getProposedTrades(){
+        List<Trade> OngoingTrade = new ArrayList<>(this.ongoingTrades.values());
+        List<Trade> proposedTrade = new ArrayList<>();
+        for (Trade trade: OngoingTrade) {
+            Meeting meeting = getLastMeeting(trade);
+            assert meeting != null;
+            if (!(meetingManager.getExchangeConfirmed(meeting))) {
+                proposedTrade.add(trade);
+            }
+        }
+        return proposedTrade;
+    }
+
+    public void deleteCommonItemTrades(String itemId, String tradeId){
+        List<Trade> proposedTrade = getProposedTrades();
+        proposedTrade.remove(getTrade(tradeId));
+        for (Trade trade: proposedTrade){
+            if (trade.containItem(itemId)){
+                this.ongoingTrades.remove(trade.getIdOfTrade());
+            }
+        }
+    }
+
+    public String getTradeLastMeetingLocation(String tradeId){
+        Trade trade = getTrade(tradeId);
+        if (trade.getMeetingList().isEmpty()){
+            return null;
+        }
+        for (int i = trade.getMeetingList().size() - 1; i >= 0; i --){
+            if (meetingManager.getLastLocation(trade.getMeetingList().get(i)) != null){
+                return meetingManager.getLastLocation(trade.getMeetingList().get(i));
+            }
+        }
+        return meetingManager.getLastLocation(trade.getMeetingList().get(0));
+    }
+
+    // completed
+    // incomplete
+    //  proposed: waiting to set up meeting time
+    //  or confirmed: waiting to confirm real life
 }

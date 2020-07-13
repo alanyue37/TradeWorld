@@ -69,13 +69,14 @@ public class OneWayTrade extends Trade {
     }
 
     @Override
-    public Map<String, String> userToItem(){
-        HashMap<String, String> userToItem = new HashMap<>();
-        userToItem.put(giverUsername, itemId);
-        userToItem.put(receiverUsername, null);
+    public Map<String, List<String>> itemToTrader(){
+        Map<String, List<String>> userToItem = new HashMap<>();
+        List<String> users = new ArrayList<>();
+        users.add(giverUsername);
+        users.add(receiverUsername);
+        userToItem.put(this.itemId, users);
         return userToItem;
     }
-
 }
 
 // do we need setters for the item, giver, and receiver?
