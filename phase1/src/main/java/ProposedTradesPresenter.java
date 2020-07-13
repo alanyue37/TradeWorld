@@ -7,10 +7,6 @@ public class ProposedTradesPresenter {
         this.tradeModel = tradeModel;
     }
 
-    public void startMenu() {
-        System.out.println("Enter 1 to see trades proposed to you: ");
-    }
-
     public void invalidInput() {
         System.out.println("Please enter a valid input.");
     }
@@ -22,6 +18,16 @@ public class ProposedTradesPresenter {
                 " Enter 2 to edit the meeting time\n" +
                 "\n Type \"exit\" at any time to exit.");
     }
+
+    public void editedMeeting() {
+        System.out.println("Meeting time edited. Please wait for the other user.");
+    }
+
+
+    public void confirmedMeeting() {
+        System.out.println("Meeting time confirmed.");
+    }
+
 
     public void declineConfirmMeeting() {
         System.out.println("User must wait for the other party to confirm the meeting.");
@@ -51,4 +57,5 @@ public class ProposedTradesPresenter {
         System.out.println("Exiting...");
     }
 
+    public void endMeetings() { System.out.println("End of proposed trades."); }
 }

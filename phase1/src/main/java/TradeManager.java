@@ -538,7 +538,7 @@ public class TradeManager implements Serializable {
             return false;
         } else {
             Meeting meeting = trade.getMeetingList().get(trade.getMeetingList().size() - 1);
-            return meetingManager.getLastUser(meeting).equals(username);
+            return !(meetingManager.getLastUser(meeting).equals(username));
         }
     }
 
