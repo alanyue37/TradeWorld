@@ -244,18 +244,4 @@ public class UserManager implements Serializable {
         TradingUser account = tradingUsers.get(username);
         return account.isFrozen();
     }
-
-    public Map<String, TradingUser> getTradingUsers() {
-        return this.tradingUsers;
-    }
-
-    public int currTransactionsOfUser(String username, int num) {
-        TradingUser account = tradingUsers.get(username);
-        return num;
-    }
-
-    public int currIncompleteTransactionsOfUser(String username, int num) {
-        TradingUser account = tradingUsers.get(username);
-        return num;
-    }
 }
