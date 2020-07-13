@@ -32,11 +32,7 @@ public class ConfirmTradesPresenter {
         System.out.println("Already confirmed. Wait for the other user.");
     }
 
-
-
-
-
-
-
-
+    public void displayNewDate(String date){
+        System.out.println("The next meeting is on " + date + ", 30 days after the first meeting time");
+    }
 }
