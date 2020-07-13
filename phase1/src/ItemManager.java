@@ -99,4 +99,12 @@ public class ItemManager implements Serializable {
         return true;
     }
 
+    public boolean setConfirmedItemAvailable(String itemID, boolean available) {
+        if (!confirmedItems.containsKey(itemID)) {
+            return false;
+        }
+        confirmedItems.get(itemID).setAvailable(available);
+        return true;
+    }
+
 }
