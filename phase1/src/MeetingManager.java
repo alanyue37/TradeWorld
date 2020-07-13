@@ -78,4 +78,8 @@ public class MeetingManager implements Serializable {
     public String getMeetingsInfo(Meeting meeting){
         return meeting.toString();
     }
+
+    public String getLastUser(Meeting meeting){
+        return meeting.getLastEditUser();
+    }
 }
