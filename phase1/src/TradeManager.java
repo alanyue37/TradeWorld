@@ -3,7 +3,9 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-
+/**
+ * Manages the creation and handling of trades.
+ */
 public class TradeManager implements Serializable {
     private int limitOfEdits;
     private int limitIncomplete;
@@ -12,7 +14,6 @@ public class TradeManager implements Serializable {
     private MeetingManager meetingManager;
     private Map<String, Trade> completedTrades;
     private Map<String, ArrayList<String>> userToTrades;
-    private final int defaultLimitOfEdits = 3;
     private final AtomicInteger counter = new AtomicInteger();
 
 
@@ -20,7 +21,7 @@ public class TradeManager implements Serializable {
      * Constructor for TradeManager.
      */
     public TradeManager() {
-        this.limitOfEdits = defaultLimitOfEdits;
+        this.limitOfEdits = 3;
         this.ongoingTrades = new HashMap<>();
         this.meetingManager = new MeetingManager();
         this.completedTrades = new HashMap<>();
@@ -43,12 +44,13 @@ public class TradeManager implements Serializable {
     /**
      * Confirms that the meeting in real life happened
      * @param tradeId ID of the trade of which we want to confirm the meeting
+     * @param username username of the user who confirms the meeting happened
      */
-    public void confirmMeetingHappened(String tradeId){
+    public void confirmMeetingHappened(String tradeId, String username) {
         Trade trade = this.ongoingTrades.get(tradeId);
         Meeting meeting = getLastConfirmedMeeting(tradeId);
         assert meeting != null; // not really necessary? since the user can only confirm meeting happened after they set up a time for the meeting?
-        meetingManager.meetingHappened(meeting);
+        meetingManager.meetingHappened(meeting, username);
         if (meetingManager.getMeetingCompleted(meeting)){
             if (canClose(tradeId)){
                 this.ongoingTrades.get(tradeId).changeIsOpened();
@@ -145,13 +147,12 @@ public class TradeManager implements Serializable {
      * @param item1 item of user1
      * @param item2 item of user2
      */
-    public String addTwoWayTrade(String type,String user1,String user2,String item1,String item2){
+    public String addTwoWayTrade(String type, String user1, String user2, String item1, String item2) {
         String id = String.valueOf(counter.getAndIncrement());
         Trade trade = new TwoWayTrade(type, id, user1, user2, item1, item2);
         this.ongoingTrades.put(trade.getIdOfTrade(), trade);
         addTradeToUser(trade.getIdOfTrade());
         return trade.getIdOfTrade();
-
     }
 
 
@@ -464,16 +465,16 @@ public class TradeManager implements Serializable {
     }
     // what if its temporary, and the returning meeting exceeds the limit?
 
-    public void addMeetingToTrade(String tradeId, String location, Date time){
-        Meeting meeting = meetingManager.createMeeting(location, time);
+    public void addMeetingToTrade(String tradeId, String location, Date time, String username){
+        Meeting meeting = meetingManager.createMeeting(location, time, username);
         getTrade(tradeId).getMeetingList().add(meeting);
     }
 
-    public void changeMeetingOfTrade(String tradeId, String location, Date time){
+    public void changeMeetingOfTrade(String tradeId, String location, Date time, String username){
         Trade trade = getTrade(tradeId);
         for (Meeting meeting: trade.getMeetingList()){
             if (!meetingManager.getMeetingCompleted(meeting) && (!meetingManager.getExchangeConfirmed(meeting))){
-                meetingManager.changeMeeting(meeting, location, time);
+                meetingManager.changeMeeting(meeting, location, time, username);
             }
         }
     }
@@ -503,5 +504,15 @@ public class TradeManager implements Serializable {
             }
         }
         return ongoingUserTrades;
+    }
+
+    public boolean canChangeMeeting(String tradeId, String username){
+        Trade trade = getTrade(tradeId);
+        if (trade.getMeetingList().size() == 0){
+            return false;
+        } else{
+            Meeting meeting = trade.getMeetingList().get(trade.getMeetingList().size() - 1);
+            return !meeting.getLastEditUser().equals(username);
+        }
     }
 }
