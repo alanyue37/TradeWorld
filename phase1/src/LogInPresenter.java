@@ -62,7 +62,11 @@ public class LogInPresenter implements Iterator<String> {
      * Adds the prompt for the start menu.
      */
     public void startMenu() {
-        prompts.add("Welcome to the Trading System!\n Enter 1 to log in as a trading user\n Enter 2 to log in as an admin\n Enter 3 to create a new account\n Enter \"exit\" to exit");
+        prompts.add("Welcome to the Trading System!\n" +
+                "- Enter 1 to log in as a trading user\n" + "" +
+                "- Enter 2 to log in as an admin\n" +
+                "- Enter 3 to create a new account\n" +
+                "- Enter \"exit\" to exit");
     }
 
     /**

@@ -4,15 +4,16 @@ import java.util.Date;
 public class MeetingManager implements Serializable {
 
 
-    public void changeMeeting(Meeting meeting, String location, Date time) {
+    public void changeMeeting(Meeting meeting, String location, Date time, String username) {
         meeting.setLocation(location);
         meeting.setTime(time);
         meeting.incrementNumOfEdits();
+        meeting.setLastEditUser(username);
     }
     // come back to this
 
-    public Meeting createMeeting(String location, Date time){
-        return new Meeting(location, time);
+    public Meeting createMeeting(String location, Date time, String username){
+        return new Meeting(location, time, username);
     }
 
     /**
@@ -22,15 +23,16 @@ public class MeetingManager implements Serializable {
      */
     public void confirmAgreement(Meeting meeting) {
         meeting.changeIsConfirmed();
+        meeting.setLastEditUser(null);
     }
 
     /**
      * confirm that meeting happened in real life.
      * @param meeting meeting that happened in real life
      */
-    public void meetingHappened(Meeting meeting) {
+    public void meetingHappened(Meeting meeting, String username) {
         meeting.incrementNumConfirmations();
-
+        meeting.setLastEditUser(username);
         if (meeting.getNumConfirmations() == 2) {
             meeting.changeIsCompleted();
         }
@@ -73,5 +75,11 @@ public class MeetingManager implements Serializable {
         return meeting.getNumOfEdits() >= numOfEditThreshold;
     }
 
+    public String getMeetingsInfo(Meeting meeting){
+        return meeting.toString();
+    }
 
+    public String getLastUser(Meeting meeting){
+        return meeting.getLastEditUser();
+    }
 }
