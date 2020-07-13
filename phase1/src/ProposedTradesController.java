@@ -23,42 +23,40 @@ public class ProposedTradesController implements RunnableController {
     @Override
     public void run() {
         try {
-            presenter.startMenu();
-            String input = br.readLine();
-            while (!input.equals("exit")) {
-                browseMeetings();
-            }
+            browseMeetings();
         } catch (IOException e) {
             System.out.println("Something bad happened.");
         }
     }
 
-    private void browseMeetings() throws IOException {
+    private boolean browseMeetings() throws IOException {
         Map<String, String> trades = tradeModel.getTradeManager().getProposedTrades(username);
 
         for (String tradeId : trades.keySet()) {
             presenter.showMeeting(tradeId);
             String input = br.readLine();
-            switch (input) {
+            switch(input) {
                 case "1": // confirm meeting times
                     confirmMeetingTime(tradeId, trades.get(tradeId));
                     break;
                 case "2": // edit meeting time
                     editMeetingTime(tradeId);
+                    break;
                 case "exit":
                     presenter.end();
-                    presenter.startMenu();
+                    return false;
                 default:
                     presenter.invalidInput();
             }
-        }
+        } presenter.endMeetings();
+        return true;
     }
-
 
     private void confirmMeetingTime(String tradeId, String type) {
         if (tradeModel.getTradeManager().canChangeMeeting(tradeId, username)) {
             tradeModel.getTradeManager().agreeMeeting(tradeId);
             changeItems(tradeId, type);
+            presenter.confirmedMeeting();
         } else {
             presenter.declineConfirmMeeting();
         }
@@ -93,13 +91,15 @@ public class ProposedTradesController implements RunnableController {
                 String dateString = br.readLine();
 
                 Date convertedDate = null;
-                DateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm aaa");
+                DateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm");
                 try {
                     convertedDate = format.parse(dateString);
                 } catch (ParseException e) {
                     presenter.invalidDateTime();
+                    editMeetingTime(tradeId);
                 }
                 tradeModel.getTradeManager().changeMeetingOfTrade(tradeId, location, convertedDate, username);
+                presenter.editedMeeting();
             } else {
                 presenter.declineEditMeeting();
             }

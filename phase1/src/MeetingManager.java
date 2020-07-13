@@ -23,7 +23,7 @@ public class MeetingManager implements Serializable {
      */
     public void confirmAgreement(Meeting meeting) {
         meeting.changeIsConfirmed();
-        meeting.setLastEditUser(null);
+        meeting.setLastEditUser("null");
     }
 
     /**
