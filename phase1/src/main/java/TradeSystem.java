@@ -5,7 +5,7 @@ import java.io.IOException;
  */
 public class TradeSystem {
 
-    private final String tradeModelFile = "serializedobjects.ser";
+    private final String tradeModelFile = "serializedobjectstha.ser";
 
     /**
      * Run the trading system.
