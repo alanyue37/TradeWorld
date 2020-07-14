@@ -40,6 +40,7 @@ public class InitiateTradePresenter extends TextPresenter {
 
     public void frozenAccount() {
         System.out.println("Your account is frozen. You cannot initiate a trade until it's unfrozen by an admin.");
+        System.out.println("Enter 1 to request to have your account unfrozen by an admin. Otherwise enter 0.");
     }
 
     public void successful(boolean success){

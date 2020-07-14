@@ -1,11 +1,12 @@
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * A Presenter class that prompts an admin user for inputs.
  */
-public class AdminPresenter {
-    private UserManager userManager;
+public class AdminPresenter extends TextPresenter {
 
-    public AdminPresenter(TradeModel tm) {
-        this.userManager = tm.getUserManager();
+    public AdminPresenter() {
     }
 
     /**
@@ -13,16 +14,19 @@ public class AdminPresenter {
      * select a menu option. The number determines which method to call in the admin controller.
      */
     public void startMenu(String username) {
-        System.out.println("*** " + username + " Admin Menu***\n" +
-                "- Enter 1 to add new admins\n" +
-                "- Enter 2 to freeze user Accounts\n" +
-                "- Enter 3 to unfreeze user Accounts\n" +
-                "- Enter 4 to review items\n" +
-                "- Enter 5 to set the lending threshold\n" +
-                "- Enter 6 to set the limit for the number of weekly transactions\n" +
-                "- Enter 7 to set the limit for incomplete transactions\n" +
-                "- Enter 8 to set the limit for edits\n" +
-                "\n Type \"exit\" at any time to exit.");
+        System.out.println("\n*** " + username + " Admin Menu***\n");
+        List<String> options = new ArrayList<>();
+        options.add("Add new admins");
+        options.add("Freeze user accounts");
+        options.add("Unfreeze user accounts");
+        options.add("Review newly added items");
+        options.add("Set the lending threshold");
+        options.add("Set the limit of number of weekly transactions");
+        options.add("Set the limit of number of incomplete transactions");
+        options.add("Set the limit of number of edits to a meeting");
+        printList(options, true, false);
+
+        System.out.println("\nPlease enter the # of your choice or \"exit\" to exit: ");
     }
 
     /**
@@ -47,12 +51,49 @@ public class AdminPresenter {
     }
 
     /**
-     * This method prompts the admin user to enter 1 to freeze this particular account.
-     * @param freeze  The account that the admin has to freeze.
+     * Prints message that the admin new account has been successfully created.
+     * @param username username inputted
      */
-    public void freezeAccounts(String freeze) {
-        System.out.println("This account has reached its limits and has to be frozen. " +
-                "Type 1 to freeze this account.\n Freeze Account for: " + freeze);
+    public void newAccountCreated(String username) {
+        System.out.println("New admin account " + username + " created.\n");
+    }
+
+    /**
+     * Prints message that the inputted username for new account has been taken.
+     * @param username username inputted
+     */
+    public void usernameTaken(String username) {
+        System.out.println("Username " + username + " is taken. Please try again.\n");
+    }
+
+    /**
+     * Prints relevant heading for freeze account view.
+     * Prints no accounts to be frozen if empty is true. Otherwise prints instructions.
+     * @param empty true iff no accounts have been flagged for freezing
+     */
+    public void freezeAccountsHeading(boolean empty) {
+        if (empty) {
+            System.out.println("No accounts have been flagged.\n");
+        }
+        else {
+            System.out.println("The following accounts have exceeded one or more of the system thresholds.\n" +
+                            "For each account enter 1 to freeze or 0 to skip.\n");
+        }
+    }
+
+    /**
+     * Prints relevant heading for unfreeze account view.
+     * Prints no accounts to be unfrozen if empty is true. Otherwise prints instructions.
+     * @param empty true iff no accounts have requested to be unfrozen
+     */
+    public void unfreezeAccountsHeading(boolean empty) {
+        if (empty) {
+            System.out.println("No users have requested to have their accounts unfrozen.\n");
+        }
+        else {
+            System.out.println("The following accounts have requested to be unfrozen.\n" +
+                    "For each account enter 1 to unfreeze or 0 to skip.\n");
+        }
     }
 
     /**
@@ -65,11 +106,26 @@ public class AdminPresenter {
     }
 
     /**
+     * Prints relevant heading for reviewing added items view.
+     * Prints no items to be reviewed if empty is true. Otherwise prints instructions.
+     * @param empty true iff no items to be reviewed
+     */
+    public void reviewItemsHeading(boolean empty) {
+        if (empty) {
+            System.out.println("No items to be reviewed.\n");
+        }
+        else {
+            System.out.println("The following items have been recently added and need to be reviewed.\n" +
+                    "For each item enter 1 to confirm or 0 to delete.\n");
+        }
+    }
+
+    /**
      * This method prompts the admin user to review the item and decided whether this item should be added
      * to the system or not.
      */
     public void reviewItem(String item) {
-        System.out.println("Type 1 to add this item or 0 to not add the following item: \n" + item);
+        System.out.println("Enter 1 to add this item or 0 to not add the following item: \n" + item);
     }
 
     /**
@@ -114,16 +170,10 @@ public class AdminPresenter {
     }
 
     /**
-     * This method prints to the screen and signals the admin user that the system has successfully ended.
-     */
-    public void end() {
-        System.out.println("See you soon!");
-    }
-
-    /**
      * This method informs the admin user that the input is not accepted by the program.
      */
     public void invalidInput() {
         System.out.println("This is an invalid input.\n Please try again!");
     }
+
 }
