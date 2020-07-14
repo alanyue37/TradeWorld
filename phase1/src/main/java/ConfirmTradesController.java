@@ -43,7 +43,7 @@ public class ConfirmTradesController implements RunnableController {
                     presenter.end();
                     return false;
                 default:
-                    presenter.invalidInput();
+                    presenter.tryAgain();
             }
         } presenter.endTrades();
         return true;
