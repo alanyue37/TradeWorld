@@ -32,47 +32,44 @@ public class ViewingMenuController implements RunnableController {
 
     private void browseViewOptions() throws IOException {
         presenter.showViewingOptions();
-        List<String> vaildOptions = Arrays.asList(new String[] {"1", "2", "3", "4", "5", "exit"});
-        String input = br.readLine();
-        while (!vaildOptions.contains(input)) {
-            System.out.println("Invalid input. Please try again:");
-            input = br.readLine();
-        }
-        switch (input) {
-            case "1": // view inventory
-                viewInventory();
-                break;
-            case "2": // view your wishlist
-                viewWishlist();
-                break;
-            case "3": // view your inventory
-                viewUserInventory();
-                break;
-            case "4": // view last transaction
-                viewRecentTrades();
-                break;
-            case "5": // view top 3 most frequent trading partners
-                viewTradingPartners();
-                break;
-            case "exit":
-                return;
-            default:
-                presenter.tryAgain();
-        }
+        boolean validInput = false;
+        do {
+            String input = br.readLine();
+            switch (input) {
+                case "1": // view all confirmed items in system
+                    viewSystemInventory();
+                    validInput = true;
+                    break;
+                case "2": // view your inventory
+                    viewUserInventory();
+                    validInput = true;
+                    break;
+                case "3": // view your wishlist
+                    viewWishlist();
+                    validInput = true;
+                    break;
+                case "4": // view last transaction
+                    viewRecentTrades();
+                    validInput = true;
+                    break;
+                case "5": // view top 3 most frequent trading partners
+                    viewTradingPartners();
+                    validInput = true;
+                    break;
+                case "exit":
+                    return;
+                default:
+                    presenter.tryAgain();
+            }
+        } while (!validInput);
     }
 
     /**
-     * View the Inventory (all items in the system except the ones owned by the user)
+     * View the system inventory (all confirmed items -- available and unavailable -- in the system)
      */
-    public void viewInventory(){
-        presenter.printSystemInventory(tradeModel);
-    }
-
-    /**
-     * View user wishlist
-     */
-    public void viewWishlist(){
-        presenter.printUserWishlist(tradeModel, username);
+    public void viewSystemInventory(){
+        List<String> confirmedItems = getItemsInfo(tradeModel.getItemManager().getConfirmedItems());
+        presenter.printSystemInventory(confirmedItems);
     }
 
     /**
@@ -84,11 +81,11 @@ public class ViewingMenuController implements RunnableController {
     }
 
     /**
-     * View top numTradingPartners most frequent trading partners
+     * View user wishlist
      */
-    public void viewTradingPartners(){
-        List<String> tradingPartners = tradeModel.getTradeManager().getFrequentPartners(numTradingPartners, username);
-        presenter.printViewTopTradingPartners(numTradingPartners, tradingPartners);
+    public void viewWishlist(){
+        List<String> items =  getItemsInfo(tradeModel.getUserManager().getSetByUsername(username, ItemSets.WISHLIST));
+        presenter.printUserWishlist(items);
     }
 
     /**
@@ -97,6 +94,14 @@ public class ViewingMenuController implements RunnableController {
     public void viewRecentTrades(){
         List<String> lastTrades = tradeModel.getTradeManager().getRecentItemsTraded(numLastTrades, username);
         presenter.printRecentTrades(numLastTrades, lastTrades);
+    }
+
+    /**
+     * View top numTradingPartners most frequent trading partners
+     */
+    public void viewTradingPartners(){
+        List<String> tradingPartners = tradeModel.getTradeManager().getFrequentPartners(numTradingPartners, username);
+        presenter.printViewTopTradingPartners(numTradingPartners, tradingPartners);
     }
 
     private List<String> getItemsInfo(Collection<String> itemIds) {
