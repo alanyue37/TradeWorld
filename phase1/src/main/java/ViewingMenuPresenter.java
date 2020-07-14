@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -7,13 +8,61 @@ public class ViewingMenuPresenter extends TextPresenter {
     }
 
     public void showViewingOptions() {
-        System.out.println("View Options\n" +
-                " Enter 1 to view inventory\n" +
-                " Enter 2 to view your wishlist\n" +
-                " Enter 3 to view your inventory\n" +
-                " Enter 4 to view last transaction\n" +
-                " Enter 5 to view top 3 most frequent trading partners\n" +
-                "\n Type \"exit\" at any time to exit.");
+        List<String> options = new ArrayList<>();
+        options.add("View system inventory");
+        options.add("View your inventory");
+        options.add("View your wishlist");
+        options.add("View recent transactions");
+        options.add("View most frequent trading partners");
+        printList(options, true, false);
+
+        System.out.println("\nPlease enter the # of your choice or \"back\" to go back: ");
+
+    }
+
+    /**
+     * Print the system inventory (all confirmed items)
+     */
+    public void printSystemInventory(List<String> items){
+        if (items.size() > 0) {
+            System.out.println("System Inventory: \n");
+            printList(items, false, true);
+        } else {
+            System.out.println("System inventory is empty.");
+        }
+    }
+
+    /**
+     * Print the users inventory
+     */
+    public void printUserInventory(List<String> items){
+        if (items.size() > 0) {
+            System.out.println("Your Inventory: \n");
+            printList(items, false, true);
+        } else {
+            System.out.println("Your inventory is empty.");
+        }
+    }
+
+    /**
+     * Print the users wishlist
+     */
+    public void printUserWishlist(List<String> items){
+        if (items.size() > 0) {
+            System.out.println("Your Wishlist: \n");
+            printList(items, false, true);
+        } else {
+            System.out.println("Your wishlist is empty.");
+        }
+    }
+
+    public void printRecentTrades(int num, List<String> trades){
+        if (trades.size() > 0) {
+            System.out.println("Your last (up to) " + num + "trades were:");
+            printList(trades, true, false);
+        } else {
+            System.out.println("You do not have any trading history.");
+        }
     }
 
 
@@ -28,57 +77,5 @@ public class ViewingMenuPresenter extends TextPresenter {
             System.out.println("You do not have any trading history.");
         }
     }
-
-    /**
-     * Print the users inventory
-     */
-    public void printUserInventory(List<String> items){
-        if (items.size() > 0) {
-            System.out.println("Your Inventory: ");
-            printList(items, false, true);
-        } else {
-            System.out.println("Your inventory is empty.");
-        }
-    }
-
-    /**
-     * Print the users wishlist
-     */
-    public void printUserWishlist(TradeModel tradeModel, String username){
-        System.out.println("Wishlist: " + tradeModel.getUserManager().getSetByUsername(username, ItemSets.WISHLIST));
-    }
-
-    public void printRecentTrades(int num, List<String> trades){
-        if (trades.size() > 0) {
-            System.out.println("Your last (up to) " + num + "trades were:");
-            printList(trades, true, false);
-        } else {
-            System.out.println("You do not have any trading history.");
-        }
-    }
-
-    private void printInfoForItemIds(TradeModel tradeModel, Collection<String> itemIds){
-        for (String itemId : itemIds) {
-            String itemInfo = tradeModel.getItemManager().getItemInfo(itemId);
-            System.out.println(itemInfo);
-            System.out.println(itemInfo);
-        }
-    }
-
-    public void printInventory(TradeModel tradeModel, String username){
-        System.out.println("Inventory: ");
-        List<String> availableItems = tradeModel.getItemManager().getAvailableItems();
-        for (String item: tradeModel.getUserManager().getSetByUsername(username, ItemSets.INVENTORY)){
-            availableItems.remove(item);
-        }
-        printInfoForItemIds(tradeModel, availableItems);
-    }
-
-    public void printSystemInventory(TradeModel tradeModel){
-        System.out.println("System Inventory: ");
-        List<String> availableItems = tradeModel.getItemManager().getAvailableItems();
-        printInfoForItemIds(tradeModel, availableItems);
-    }
-
 
 }

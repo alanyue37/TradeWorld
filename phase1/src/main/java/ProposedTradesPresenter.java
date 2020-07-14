@@ -1,14 +1,10 @@
 import java.io.BufferedReader;
 
-public class ProposedTradesPresenter {
+public class ProposedTradesPresenter extends TextPresenter {
     TradeModel tradeModel;
 
     public ProposedTradesPresenter(TradeModel tradeModel) {
         this.tradeModel = tradeModel;
-    }
-
-    public void invalidInput() {
-        System.out.println("Please enter a valid input.");
     }
 
     public void showMeeting(String tradeId) {

@@ -46,7 +46,7 @@ public class ProposedTradesController implements RunnableController {
                     presenter.end();
                     return false;
                 default:
-                    presenter.invalidInput();
+                    presenter.tryAgain();
             }
         } presenter.endMeetings();
         return true;
@@ -70,12 +70,13 @@ public class ProposedTradesController implements RunnableController {
                 tradeModel.getUserManager().removeFromSet(itemToUsers.get(item).get(0), item, ItemSets.INVENTORY);
                 tradeModel.getUserManager().addToSet(itemToUsers.get(item).get(1), item, ItemSets.INVENTORY);
                 tradeModel.getTradeManager().deleteCommonItemTrades(item, tradeId);
+                tradeModel.getItemManager().setOwner(item, itemToUsers.get(item).get(1));
             }
         } else {
             for (String item : itemToUsers.keySet()) {
                 tradeModel.getUserManager().removeFromSet(itemToUsers.get(item).get(1), item, ItemSets.WISHLIST);
                 tradeModel.getItemManager().setConfirmedItemAvailable(item, false);
-            }
+            } //itemToUsers(tradeId) -> map<itemId, List<String giver, String receiver>
         }
     }
 

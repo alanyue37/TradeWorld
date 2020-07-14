@@ -1,8 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 
 public class UserController implements RunnableController {
@@ -28,7 +27,10 @@ public class UserController implements RunnableController {
      */
     public void run() {
         try {
-            selectMenu();
+            boolean active = selectMenu();
+            while (active) {
+                active = selectMenu();
+            }
         } catch (IOException e) {
             System.out.println("Something bad happened.");
         }
@@ -38,48 +40,52 @@ public class UserController implements RunnableController {
      * Main menu to run the UserController
      */
     private boolean selectMenu() throws IOException {
-        List<String> vaildOptions = Arrays.asList(new String[] {"1", "2", "3", "4", "5", "6", "exit"});
-        presenter.startMenu();
-        String input = br.readLine();
-        while (!vaildOptions.contains(input)) {
-            System.out.println("Invalid input. Please try again:");
-            input = br.readLine();
-        }
-        switch(input) {
-            case "1": // add items to inventory
-                createItem();
-                break;
-            case "2": // add items to wishlist
-                viewInventory();
-                break;
-            case "3": // view inventory, wishlist, and trading history
-                RunnableController vmc = new ViewingMenuController(tradeModel, username);
-                vmc.run();
-                break;
-            case "4": // initiate a trade
-                RunnableController controller = new InitiateTradeController(tradeModel, username);
-                controller.run();
-                break;
-            case "5": // manage proposed trades
-                RunnableController ptc = new ProposedTradesController(tradeModel, username);
-                ptc.run();
-                break;
-            case "6": // confirm a trade
-                RunnableController ctc = new ConfirmTradesController(tradeModel, username);
-                ctc.run();
-                break;
-            case "exit":
-                return false;
-            default:
-                System.out.println("Please enter a valid input.");
-        }
+        presenter.startMenu(username);
+        boolean validInput = false;
+        do {
+            String input = br.readLine();
+            switch (input) {
+                case "1": // add items to inventory
+                    createItem();
+                    validInput = true;
+                    break;
+                case "2": // add items to wishlist
+                    viewItemsToAddToWishlist();
+                    validInput = true;
+                    break;
+                case "3": // view inventory, wishlist, and trading history
+                    RunnableController vmc = new ViewingMenuController(tradeModel, username);
+                    vmc.run();
+                    validInput = true;
+                    break;
+                case "4": // initiate a trade
+                    RunnableController controller = new InitiateTradeController(tradeModel, username);
+                    controller.run();
+                    validInput = true;
+                    break;
+                case "5": // manage proposed trades
+                    RunnableController ptc = new ProposedTradesController(tradeModel, username);
+                    ptc.run();
+                    validInput = true;
+                    break;
+                case "6": // confirm a trade
+                    RunnableController ctc = new ConfirmTradesController(tradeModel, username);
+                    ctc.run();
+                    validInput = true;
+                    break;
+                case "exit":
+                    return false;
+                default:
+                    presenter.tryAgain();
+            }
+        } while (!validInput);
         return true;
     }
 
     /**
      * Allows user to create an item
      */
-    private void createItem()throws IOException{
+    private void createItem() throws IOException{
         presenter.printInputItemName();             // enter name of the item
         String itemName = br.readLine();
         presenter.printInputItemDescription();      // enter description of the item
@@ -88,16 +94,31 @@ public class UserController implements RunnableController {
     }
 
     /**
-     * View the Inventory. Gives the user the option of adding items to their wishlist
+     * View system inventory (except items in current user's inventory or wishlist). Gives the user the option of adding items to their wishlist.
      */
-    public void viewInventory() throws IOException{
-        presenter.printInventory(tradeModel, username);
-        presenter.printUserInventoryOptions();
-        String choice = br.readLine();
-        if (choice.equals("1")){
-            presenter.printInputItemID();
-            String itemId = br.readLine();
-            tradeModel.getUserManager().addToSet(username, itemId, ItemSets.WISHLIST);
+    public void viewItemsToAddToWishlist() throws IOException{
+        List<String> items = tradeModel.getItemManager().getConfirmedItems();
+        Set<String> filterItems = tradeModel.getUserManager().getSetByUsername(username, ItemSets.INVENTORY);
+        filterItems.addAll(tradeModel.getUserManager().getSetByUsername(username, ItemSets.WISHLIST));
+        for (String itemId : filterItems) {
+            items.remove(itemId);
         }
+        presenter.printItemsToAddToWishlist(getItemsInfo(items));
+        String choice = br.readLine();
+        while (!items.contains(choice) && !choice.equals("back")) {
+            presenter.tryAgain();
+            choice = br.readLine();
+        }
+        if (items.contains(choice)) {
+            tradeModel.getUserManager().addToSet(username, choice, ItemSets.WISHLIST);
+        }
+    }
+
+    private List<String> getItemsInfo(Collection<String> itemIds) {
+        List <String> itemsInfo = new ArrayList<>();
+        for (String itemId : itemIds) {
+            itemsInfo.add(tradeModel.getItemManager().getItemInfo(itemId));
+        }
+        return itemsInfo;
     }
 }

@@ -612,9 +612,9 @@ public class TradeManager implements Serializable {
 
     public boolean needToAddMeeting(String tradeId){
         Trade trade = getTrade(tradeId);
-        if (trade.getTradeType() == "permanent"){
+        if (trade.getTradeType().equals("permanent")){
             return trade.getMeetingList().size() < 1;
-        } else{
+        } else {
             return trade.getMeetingList().size() < 2;
         }
     }

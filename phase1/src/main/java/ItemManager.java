@@ -38,7 +38,7 @@ public class ItemManager implements Serializable {
     public List<String> getConfirmedItems() {
         List<String> items = new ArrayList<>();
         for (Item item : confirmedItems.values()) {
-            items.add(String.valueOf(item));
+            items.add(item.getId());
         }
         return items;
     }
@@ -71,6 +71,14 @@ public class ItemManager implements Serializable {
             return null;
         }
         return item.getOwner();
+    }
+
+    public void setOwner(String itemId, String username) {
+        Item item = confirmedItems.get(itemId);
+        if (item != null) {
+            item.setOwner(username);
+        }
+
     }
 
     public String addItem(String name, String owner, String description) {
