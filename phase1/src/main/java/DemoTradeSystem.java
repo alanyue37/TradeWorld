@@ -1,5 +1,7 @@
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * DEMO trading system with pre-inserted users, items, etc. solely for internal testing
@@ -46,24 +48,16 @@ public class DemoTradeSystem {
             String u4_3 = tradeModel.getItemManager().addItem("yellow ball", "u4", "One yellow ball");
 
             // Confirm all of u1 items (apples)
-            tradeModel.getItemManager().confirmItem(u1_1);
-            tradeModel.getItemManager().confirmItem(u1_2);
-            tradeModel.getItemManager().confirmItem(u1_3);
-
             // Confirm all of u2 items (cars)
-            tradeModel.getItemManager().confirmItem(u2_1);
-            tradeModel.getItemManager().confirmItem(u2_2);
-            tradeModel.getItemManager().confirmItem(u2_3);
-
             // Confirm ONLY first two of u3 items (red and green books)
-            tradeModel.getItemManager().confirmItem(u3_1);
-            tradeModel.getItemManager().confirmItem(u3_2);
-
             // Confirm ONLY first two of u4 items (red and green balls)
-            tradeModel.getItemManager().confirmItem(u4_1);
-            tradeModel.getItemManager().confirmItem(u4_2);
-
-            // DEMO  --- START
+            String[] items = new String[] {u1_1, u1_2, u1_3, u2_1, u2_2, u2_3, u3_1, u3_2, u4_1, u4_2};
+            for (String itemId : items) {
+                tradeModel.getItemManager().confirmItem(itemId);
+                String username = tradeModel.getItemManager().getOwner(itemId);
+                tradeModel.getUserManager().addToSet(username, itemId, ItemSets.INVENTORY);
+            }
+            // DEMO  --- END
 
 
             LogInController controller = new LogInController(tradeModel);
