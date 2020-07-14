@@ -1,12 +1,10 @@
 public class ConfirmTradesPresenter extends TextPresenter {
-    TradeModel tradeModel;
 
-    public ConfirmTradesPresenter(TradeModel tradeModel) {
-        this.tradeModel = tradeModel;
+    public ConfirmTradesPresenter() {
     }
 
-    public void showTrade(String tradeId){
-        System.out.println(tradeModel.getTradeManager().getTradeAllInfo(tradeId));
+    public void showTrade(String tradeId, String tradeInfo){
+        System.out.println(tradeInfo);
         System.out.println("Options for a user: \n" +
                 " Enter 1 to confirm the real life trade happened\n" +
                 " Enter 2 to skip and confirm later\n" +
