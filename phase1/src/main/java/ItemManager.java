@@ -73,10 +73,11 @@ public class ItemManager implements Serializable {
         return item.getOwner();
     }
 
-    public void addItem(String name, String owner, String description) {
+    public String addItem(String name, String owner, String description) {
         String id = String.valueOf(counter.getAndIncrement());
         Item item = new Item(id, name, owner, description);
         pendingItems.put(item.getId(), item);
+        return item.getId();
     }
 
     public boolean confirmItem(String itemId) {
