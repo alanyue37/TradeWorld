@@ -10,16 +10,18 @@ public class UserManager implements Serializable {
     private int threshold;
 
     /**
-     * Instantiate a UserManager
+     * Instantiates a UserManager
      */
     public UserManager() {
         tradingUsers = new HashMap<>();
         adminUsers = new HashMap<>();
         unfreezeRequests = new HashSet<>();
+        User initialAdmin = new User("Initial Admin", "ia", "initialize");
+        adminUsers.put("a", initialAdmin);
     }
 
     /**
-     * Return the allowed threshold for a TradingUser to continue trading
+     * Returns the allowed threshold for a TradingUser to continue trading
      *
      * @return An int that represents the number of items a TradingUser must have lent more than they have borrowed
      */
@@ -28,7 +30,7 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Set the allowed threshold for a TradingUser to continue trading
+     * Sets the allowed threshold for a TradingUser to continue trading
      *
      * @param threshold An int that represents the number of items a TradingUser must have lent more than they have
      *                  borrowed
@@ -38,7 +40,7 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Check a User's username and password on login.
+     * Checks a User's username and password on login.
      *
      * @param username The submitted username.
      * @param password The submitted password.
@@ -55,13 +57,13 @@ public class UserManager implements Serializable {
                 break;
         }
         if (account == null){
-            return false;
+            return false; // account username not found
         }
         return password.equals(account.getPassword());
     }
 
     /**
-     * Create a TradingUser and add it to the set of TradingUsers if the username is unique
+     * Creates a TradingUser and adds it to the set of TradingUsers if the username is unique
      *
      * @param name     The name of the TradingUser
      * @param username The username of the TradingUser
@@ -77,7 +79,7 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Create an administrative user and add it to the set of administrative users if the username is unique
+     * Creates an administrative user and adds it to the set of administrative users if the username is unique
      *
      * @param name     The name of the administrative user
      * @param username The username of the administrative user
@@ -93,7 +95,7 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Set the password of a particular User
+     * Sets the password of a particular User
      *
      * @param username The username of the chosen User. Must be a valid username for an existing User.
      * @param password The intended password
@@ -128,7 +130,7 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Get a particular set of item ids stored in a TradingUser
+     * Gets a particular set of item ids stored in a TradingUser
      *
      * @param username The username of the chosen TradingUser
      * @param set      The name of the requested set
@@ -149,7 +151,7 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Add the id of a particular item to one of the sets stored in a TradingUser
+     * Adds the id of a particular item to one of the sets stored in a TradingUser
      *
      * @param username The username of the chosen TradingUser. Must be a valid username for an existing TradingUser.
      * @param id       The id of the given item
@@ -168,7 +170,7 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Remove the id of a particular item from one of the sets stored in a TradingUser
+     * Removes the id of a particular item from one of the sets stored in a TradingUser
      *
      * @param username The username of the chosen TradingUser. Must be a valid username for an existing TradingUser.
      * @param id       The id of the given item
@@ -187,7 +189,8 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Freeze or unfreeze the account of a particular TradingUser
+     * Freezes or unfreezes the account of a particular TradingUser and removes them from the set of TradingUsers who've
+     * requested to be unfrozen if it's the latter
      *
      * @param username The username of the TradingUser involved. Must be a valid username for an existing TradingUser.
      * @param frozen   Whether or not the intended account should be frozen or unfrozen
@@ -201,9 +204,9 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Get a list of the usernames of TradingUsers who are below the borrowing ratio and are not currently frozen
+     * Gets a set of the usernames of TradingUsers who are below the borrowing ratio and are not currently frozen
      *
-     * @return A list of the usernames of TradingUsers who are below the borrowing ratio and are not currently frozen
+     * @return A set of the usernames of TradingUsers who are below the borrowing ratio and are not currently frozen
      */
     public Set<String> getUsersForFreezing() {
         Set<String> result = new HashSet<>();
@@ -216,7 +219,7 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Get the set of all TradingUsers who have requested to be unfrozen
+     * Gets the set of all TradingUsers who have requested to be unfrozen
      *
      * @return The set of all TradingUsers who have requested to be unfrozen
      */
@@ -227,16 +230,19 @@ public class UserManager implements Serializable {
     /**
      * Adds a TradingUser to the unfreeze request queue.
      *
-     * @param username The username of the TradingUser requesting an unfreeze. Must be a valid username for an existing TradingUser.
+     * @param username The username of the TradingUser requesting an unfreeze. Must be a valid username for an existing
+     *                 TradingUser.
      */
     public void markUserForUnfreezing(String username) {
         unfreezeRequests.add(username);
     }
 
     /**
-     * Returns true when user's account is frozen and false for when it is unfrozen
+     * Returns whether a particular TradingUser is currently frozen
      *
-     * @param username The username of the TradingUser checking their status.
+     * @param username The username of the TradingUser checking their status. Must be a valid username for an existing
+     *                 TradingUser.
+     * @return Whether the TradingUser is currently frozen
      */
     public boolean isFrozen(String username) {
         TradingUser account = tradingUsers.get(username);
