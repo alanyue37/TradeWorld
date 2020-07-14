@@ -96,7 +96,7 @@ public abstract class Trade implements Serializable {
             status = "completed";
         }
         return "Type: " + this.type + "\nStatus: " + status + "\nNumber of meetings: " + this.getMeetingList().size() +
-                "\nCreation Date: " + this.creationDate.toString();
+                "\nCreation Date: " + this.creationDate.toString() + "\nUsers involved" + getUsers() + "\nItems involved" + getItems();
     }
 
     public boolean containItem(String itemId){

@@ -49,7 +49,7 @@ public class Meeting implements Serializable {
     }
 
     public void incrementNumOfEdits(){
-        this.numOfEdits ++;
+        this.numOfEdits += 1;
     }
 
     public int getNumConfirmations(){
@@ -57,7 +57,7 @@ public class Meeting implements Serializable {
     }
 
     public void incrementNumConfirmations(){
-        this.numConfirmations ++;
+        this.numConfirmations += 1;
     }
 
     public boolean getIsCompleted(){
@@ -81,7 +81,7 @@ public class Meeting implements Serializable {
         if (this.IsCompleted) {
             status = "completed";
         } else if (this.IsConfirmed){
-            status = "meeting details agreed, waiting to confirm";
+            status = "meeting details agreed, waiting for meeting to happen";
         } else{
             status = "need to agree on meeting details";
         }
@@ -89,7 +89,6 @@ public class Meeting implements Serializable {
                 + "\nNumber of Edits: " + this.numOfEdits + "\nNumber of Confirmations: " + this.numConfirmations
                 + "\nLast user who modified the meeting: " + this.lastEditUser;
     }
-
 }
 
 

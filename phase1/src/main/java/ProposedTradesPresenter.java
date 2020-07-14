@@ -8,7 +8,7 @@ public class ProposedTradesPresenter extends TextPresenter {
     }
 
     public void showMeeting(String tradeId) {
-        System.out.println(tradeModel.getTradeManager().getTradeMeetingInfo(tradeId));
+        System.out.println(tradeModel.getTradeManager().getTradeAllInfo(tradeId));
         System.out.println("Options for a User: \n" +
                 " Enter 1 to confirm the meeting time\n" +
                 " Enter 2 to edit the meeting time\n" +

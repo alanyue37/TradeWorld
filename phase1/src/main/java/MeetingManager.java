@@ -10,26 +10,17 @@ public class MeetingManager implements Serializable {
         meeting.incrementNumOfEdits();
         meeting.setLastEditUser(username);
     }
-    // come back to this
 
     public Meeting createMeeting(String location, Date time, String username){
         return new Meeting(location, time, username);
     }
 
-    /**
-     * agree with the meeting time, place that the other user suggested (only need one user to confirm since we can
-     * assume that the one suggesting the meeting details agrees.
-     * @param meeting the meeting that the user is agreeing with the time and location.
-     */
+
     public void confirmAgreement(Meeting meeting) {
         meeting.changeIsConfirmed();
-        meeting.setLastEditUser("null");
+        meeting.setLastEditUser("");
     }
 
-    /**
-     * confirm that meeting happened in real life.
-     * @param meeting meeting that happened in real life
-     */
     public void meetingHappened(Meeting meeting, String username) {
         meeting.incrementNumConfirmations();
         meeting.setLastEditUser(username);
@@ -85,6 +76,23 @@ public class MeetingManager implements Serializable {
 
     public String getLastLocation(Meeting meeting){
         return meeting.getLocation();
+    }
+
+
+    // replace getLastUser
+    public boolean canEditMeeting(Meeting meeting, String username){
+        return (!meeting.getLastEditUser().equals(username));
+    }
+
+    // replace getMeetingCompleted and getExchangedConfirmed
+    public int getMeetingStatus(Meeting meeting){
+        if (meeting.getIsCompleted()){
+            return 2;
+        } else if (meeting.getIsConfirmed()){
+            return 1;
+        } else{
+            return 0;
+        }
     }
 
 }

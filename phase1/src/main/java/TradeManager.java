@@ -1,5 +1,4 @@
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -13,7 +12,7 @@ public class TradeManager implements Serializable {
     private Map<String, Trade> ongoingTrades;
     private MeetingManager meetingManager;
     private Map<String, Trade> completedTrades;
-    private Map<String, ArrayList<String>> userToTrades;
+    private Map<String, List<String>> userToTrades;
     private final AtomicInteger counter = new AtomicInteger();
 
 
@@ -22,6 +21,8 @@ public class TradeManager implements Serializable {
      */
     public TradeManager() {
         this.limitOfEdits = 3;
+        this.limitIncomplete = 5; //or null?
+        this.limitTransactionPerWeek = 10; //or null?
         this.ongoingTrades = new HashMap<>();
         this.meetingManager = new MeetingManager();
         this.completedTrades = new HashMap<>();
@@ -33,17 +34,17 @@ public class TradeManager implements Serializable {
      *
      * @param tradeId ID of the trade
      */
-    public void agreeMeeting(String tradeId) {
+    public void agreeMeetingDetails(String tradeId) {
         Trade trade = ongoingTrades.get(tradeId);
         int i = 0;
-        while (meetingManager.getExchangeConfirmed(trade.getMeetingList().get(i))) {
+        while (meetingManager.getMeetingStatus(trade.getMeetingList().get(i)) != 0) {
             i += 1;
         }
         meetingManager.confirmAgreement(trade.getMeetingList().get(i));
     }
 
     /**
-     * Confirms that the meeting in real life happened
+     * Confirms that the meeting in real life happened.
      *
      * @param tradeId  ID of the trade of which we want to confirm the meeting
      * @param username username of the user who confirms the meeting happened
@@ -54,7 +55,7 @@ public class TradeManager implements Serializable {
         assert meeting != null; // not really necessary? since the user can only confirm meeting happened after they set up a time for the meeting?
         meetingManager.meetingHappened(meeting, username);
         if (meetingManager.getMeetingCompleted(meeting)) {
-            if (canClose(tradeId)) {
+            if (canClose(trade)) {
                 this.ongoingTrades.get(tradeId).changeIsOpened();
                 this.completedTrades.put(tradeId, trade);
                 this.ongoingTrades.remove(tradeId);
@@ -86,24 +87,22 @@ public class TradeManager implements Serializable {
      * @param tradeId ID of the trade
      * @return trade with the ID "tradeId"
      */
-    public Trade getTrade(String tradeId) {
+    private Trade getTrade(String tradeId) {
         if (this.ongoingTrades.containsKey(tradeId)) {
             return ongoingTrades.get(tradeId);
         }
         return completedTrades.get(tradeId);
     }
-    // TODO: change back to private
 
     /**
      * Given the tradeId, returns whether this trade can be closed or not
      *
-     * @param tradeId ID of the trade
+     * @param trade ID of the trade
      * @return true iff all meetings of the trade are completed (both user have confirmed the meeting happened in real
      * life). If the trade is permanent, one meeting should be completed. If the trade is temporary, both meeting are
      * completed.
      */
-    private boolean canClose(String tradeId) {
-        Trade trade = this.ongoingTrades.get(tradeId);
+    private boolean canClose(Trade trade) {
         for (int i = 0; i < trade.getMeetingList().size(); i++) {
             if (!trade.getMeetingList().get(i).getIsCompleted()) {
                 return false;
@@ -170,7 +169,7 @@ public class TradeManager implements Serializable {
             if (userToTrades.containsKey(user)) {
                 userToTrades.get(user).add(tradeId);
             } else {
-                ArrayList<String> tradeIds = new ArrayList<>();
+                List<String> tradeIds = new ArrayList<>();
                 tradeIds.add(tradeId);
                 userToTrades.put(user, tradeIds);
             }
@@ -211,31 +210,6 @@ public class TradeManager implements Serializable {
         this.limitTransactionPerWeek = newLimitPerWeek;
     }
 
-    /**
-     * Given an open trade, returns whether an trade is incomplete. A trade is incomplete if it contains an incomplete
-     * meeting (meeting that the user agreed on meeting details, the meeting time has passed but at least one did not
-     * confirm that it happened in real life)
-     *
-     * @param openTrade open trade input
-     * @return true if the trade is open and has incomplete meeting, return false if the trade does not contain
-     * any incomplete meetings
-     */
-    private boolean isIncompleteTrade(Trade openTrade) {
-        if (openTrade.getTradeType().equals("permanent")) {
-            if (meetingManager.isIncompleteMeeting(openTrade.getMeetingList().get(0))) {
-                return true;
-            }
-        }
-        if (openTrade.getTradeType().equals("temporary")) {
-            if (meetingManager.isIncompleteMeeting(openTrade.getMeetingList().get(0))) {
-                return true;
-            }
-            if (openTrade.getMeetingList().get(0).getIsCompleted()) {
-                return meetingManager.isIncompleteMeeting(openTrade.getMeetingList().get(1));
-            }
-        }
-        return false;
-    }
 
     /**
      * Returns arraylist of incomplete trades (trade that contains incomplete meetings)
@@ -246,11 +220,20 @@ public class TradeManager implements Serializable {
         List<Trade> openTrades = new ArrayList<>(this.ongoingTrades.values());
         List<Trade> incompleteTrades = new ArrayList<>();
         for (Trade openTrade : openTrades) {
-            if (isIncompleteTrade(openTrade)) {
+            Meeting meeting = getLastMeeting(openTrade);
+            if (meetingManager.isIncompleteMeeting(meeting)){
                 incompleteTrades.add(openTrade);
             }
         }
         return incompleteTrades;
+    }
+
+    public boolean isIncompleteTrade(String tradeId){
+        if (this.ongoingTrades.containsKey(tradeId)){
+            Meeting meeting = getLastMeeting(getTrade(tradeId));
+            return meetingManager.isIncompleteMeeting(meeting);
+        }
+        return false;
     }
 
     /**
@@ -323,12 +306,12 @@ public class TradeManager implements Serializable {
      * @return arraylist of trades that are completed in the past numDays.
      */
     private List<Trade> getTradesPastDays(int numDays) {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime numDaysBefore = now.minusDays(numDays);
-        Date comparisonDate = new Date(numDaysBefore.getYear() - 1900, numDaysBefore.getMonthValue() - 1, numDaysBefore.getDayOfMonth());
+        Calendar compare = Calendar.getInstance();
+        compare.add(Calendar.DATE, -7);
+        Date comparisonDate = compare.getTime();
         List<Trade> tradeInPastDays = new ArrayList<>();
         for (Trade trade : this.completedTrades.values()) {
-            if (getLastConfirmedMeetingTime(trade).after(comparisonDate)) {
+            if (getLastMeeting(trade).getTime().after(comparisonDate)) {
                 tradeInPastDays.add(trade);
             }
         }
@@ -351,9 +334,6 @@ public class TradeManager implements Serializable {
         }
         return exceedLimitOfTradeUsers;
     }
-    // make it so that they both have to confirm the first meeting before going to the next one?
-    // make it so that they have to enter a date for meeting when they create the trade?
-    // add in the number of days
 
     /**
      * Cancels the trade. Removes the trade from the hashmap of trades
@@ -374,16 +354,15 @@ public class TradeManager implements Serializable {
      * @param username username of the user we want to get all trade
      * @return arraylist of trades of user with username "username"
      */
-    private List<Trade> getTradeOfUser(String username) {
-        List<Trade> userTrades = new ArrayList<>();
-        List<String> tradeIds = this.userToTrades.get(username);
-        if (tradeIds == null) {
-            return userTrades;
+    private List<Trade> getCompletedTradeOfUser(String username) {
+        List<String> userTrades = new ArrayList<>(this.userToTrades.get(username));
+        List<Trade> completed = new ArrayList<>();
+        for (String id: userTrades){
+            if (this.completedTrades.containsKey(id)){
+                completed.add(getTrade(id));
+            }
         }
-        for (String tradeId : tradeIds) {
-            userTrades.add(getTrade(tradeId));
-        }
-        return userTrades;
+        return completed;
     }
 
     /**
@@ -397,27 +376,12 @@ public class TradeManager implements Serializable {
      */
     public boolean needCancelTrade(String tradeId) {
         Meeting meeting = this.ongoingTrades.get(tradeId).getMeetingList().get(0);
-        if (!(meetingManager.getExchangeConfirmed(meeting))) {
+        if ((!meetingManager.getMeetingCompleted(meeting)) &&(!meetingManager.getExchangeConfirmed(meeting))) {
             return meetingManager.attainedThresholdEdits(meeting, this.limitOfEdits * 2);
         }
         return false;
     }
-
-    private Map<String, Integer> getPartnersMap(String user) {
-        List<Trade> trades = getTradeOfUser(user);
-        Map<String, Integer> partnersMap = new HashMap<>();
-        for (Trade trade : trades) {
-            for (String trader : trade.getUsers()) {
-                if (!(partnersMap.containsKey(trader))) {
-                    partnersMap.put(trader, 1);
-                } else {
-                    partnersMap.replace(trader, partnersMap.get(trader) + 1);
-                }
-            }
-        }
-        partnersMap.remove(user);
-        return partnersMap;
-    }
+    // only looks at the first meeting
 
     private List<String> sortPartnersList(Map<String, Integer> partners) {
         List<String> sorted = new ArrayList<>();
@@ -445,13 +409,17 @@ public class TradeManager implements Serializable {
      * than the number of trading partners that "user" has, all of their trading partners are returned.
      */
     public List<String> getFrequentPartners(int num, String user) {
-        Map<String, Integer> partners = getPartnersMap(user);
+        List<Trade> completed = getCompletedTradeOfUser(user);
+        Map<String, Integer> partners = userToNumTradesInvolved(completed);
+        partners.remove(user);
         List<String> frequentPartners = sortPartnersList(partners); // assumes that sort partners give best partner first
         if (num >= frequentPartners.size()) {
             return frequentPartners;
         }
-        return (List<String>) frequentPartners.subList(0, num);
+        return frequentPartners.subList(0, num);
     }
+    // only looks at completed trades
+
 
     private List<Trade> sortTradesMeetingDate(List<Trade> trades) {
         List<Trade> sorted = new ArrayList<>();
@@ -511,31 +479,26 @@ public class TradeManager implements Serializable {
 
     public void addMeetingToTrade(String tradeId, String location, Date time, String username) {
         Meeting meeting = meetingManager.createMeeting(location, time, username);
-        getTrade(tradeId).getMeetingList().add(meeting);
+        getTrade(tradeId).incrementMeetingList(meeting);
     }
 
     public void changeMeetingOfTrade(String tradeId, String location, Date time, String username) {
         Trade trade = getTrade(tradeId);
         for (Meeting meeting : trade.getMeetingList()) {
-            if (!meetingManager.getMeetingCompleted(meeting) && (!meetingManager.getExchangeConfirmed(meeting))) {
+            if (meetingManager.getMeetingStatus(meeting) == 0) {
                 meetingManager.changeMeeting(meeting, location, time, username);
             }
         }
     }
     //can only change if meeting is not completed and not confirmed
 
-    public String getTradeMeetingInfo(String tradeId) {
-        Trade trade = getTrade(tradeId);
-        StringBuilder meetingDetails = new StringBuilder();
-        for (Meeting meeting : trade.getMeetingList()) {
-            meetingDetails.append(meetingManager.getMeetingsInfo(meeting)).append("\n");
-        }
-        return meetingDetails.toString();
-    }
-
     public String getTradeAllInfo(String tradeId) {
         Trade trade = getTrade(tradeId);
-        return trade.toString() + "\n" + getTradeMeetingInfo(tradeId);
+        StringBuilder meetingDetails = new StringBuilder();
+        for (Meeting meeting: trade.getMeetingList()){
+            meetingDetails.append("Meeting: \n").append(meetingManager.getMeetingsInfo(meeting)).append("\n");
+        }
+        return trade.toString() + "\n" + meetingDetails;
     }
 
     public boolean canChangeMeeting(String tradeId, String username) {
@@ -543,8 +506,8 @@ public class TradeManager implements Serializable {
         if (trade.getMeetingList().size() == 0) {
             return false;
         } else {
-            Meeting meeting = trade.getMeetingList().get(trade.getMeetingList().size() - 1);
-            return !(meetingManager.getLastUser(meeting).equals(username));
+            Meeting lastMeeting = getLastMeeting(trade);
+            return meetingManager.canEditMeeting(lastMeeting, username);
         }
     }
 
@@ -563,11 +526,7 @@ public class TradeManager implements Serializable {
     }
 
     private Meeting getLastMeeting(Trade trade) {
-        if (trade.getMeetingList().size() == 0) {
-            return null;
-        } else {
-            return trade.getMeetingList().get(trade.getMeetingList().size() - 1);
-        }
+        return trade.getMeetingList().get(trade.getMeetingList().size() - 1);
     }
 
     public Map<String, String> getProposedTrades(String username) {
@@ -602,6 +561,10 @@ public class TradeManager implements Serializable {
         for (Trade trade : proposedTrade) {
             if (trade.containItem(itemId)) {
                 this.ongoingTrades.remove(trade.getIdOfTrade());
+                for (String user: trade.getUsers()){
+                    this.userToTrades.get(user).remove(tradeId);
+                }
+
             }
         }
     }
@@ -656,6 +619,11 @@ public class TradeManager implements Serializable {
         return tobeConfirmed;
     }
 
+
+
+    public boolean tradeCompleted(String tradeId){
+        return this.completedTrades.containsKey(tradeId);
+    }
 
     //  or confirmed: waiting to confirm real life
 }

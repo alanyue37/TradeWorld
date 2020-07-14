@@ -54,7 +54,7 @@ public class ProposedTradesController implements RunnableController {
 
     private void confirmMeetingTime(String tradeId, String type) {
         if (tradeModel.getTradeManager().canChangeMeeting(tradeId, username)) {
-            tradeModel.getTradeManager().agreeMeeting(tradeId);
+            tradeModel.getTradeManager().agreeMeetingDetails(tradeId);
             changeItems(tradeId, type);
             presenter.confirmedMeeting();
         } else {
@@ -71,11 +71,13 @@ public class ProposedTradesController implements RunnableController {
                 tradeModel.getUserManager().addToSet(itemToUsers.get(item).get(1), item, ItemSets.INVENTORY);
                 tradeModel.getTradeManager().deleteCommonItemTrades(item, tradeId);
                 tradeModel.getItemManager().setOwner(item, itemToUsers.get(item).get(1));
+                tradeModel.getItemManager().setConfirmedItemAvailable(item, false); // please check this!
             }
         } else {
             for (String item : itemToUsers.keySet()) {
                 tradeModel.getUserManager().removeFromSet(itemToUsers.get(item).get(1), item, ItemSets.WISHLIST);
                 tradeModel.getItemManager().setConfirmedItemAvailable(item, false);
+                tradeModel.getTradeManager().deleteCommonItemTrades(item, tradeId); // please check this!
             } //itemToUsers(tradeId) -> map<itemId, List<String giver, String receiver>
         }
     }
