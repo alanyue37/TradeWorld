@@ -1,9 +1,4 @@
-import java.util.Map;
-import java.util.Set;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.ArrayList;
+import java.util.*;
 
 import java.io.Serializable;
 
@@ -197,9 +192,12 @@ public class UserManager implements Serializable {
      * @param username The username of the TradingUser involved. Must be a valid username for an existing TradingUser.
      * @param frozen   Whether or not the intended account should be frozen or unfrozen
      */
-    public void freeze(String username, boolean frozen) {
+    public void setFrozen(String username, boolean frozen) {
         TradingUser account = tradingUsers.get(username);
         account.setFrozen(frozen);
+        if (!frozen) {
+            unfreezeRequests.remove(username);
+        }
     }
 
     /**
@@ -207,8 +205,8 @@ public class UserManager implements Serializable {
      *
      * @return A list of the usernames of TradingUsers who are below the borrowing ratio and are not currently frozen
      */
-    public ArrayList<String> getUsersForFreezing() {
-        ArrayList<String> result = new ArrayList<>();
+    public Set<String> getUsersForFreezing() {
+        Set<String> result = new HashSet<>();
         for (TradingUser trader : tradingUsers.values()) {
             if (trader.getCredit() > getThreshold() && !trader.isFrozen()) {
                 result.add(trader.getUsername());
