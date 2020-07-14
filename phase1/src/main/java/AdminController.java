@@ -156,7 +156,7 @@ public class AdminController implements RunnableController {
             String addInput = br.readLine();
             if (addInput.equals("1")) {
                 tradeModel.getItemManager().confirmItem(itemId);
-                String username = tradeModel.itemManager.getOwner(itemId);
+                String username = tradeModel.getItemManager().getOwner(itemId);
                 tradeModel.getUserManager().addToSet(username, itemId, ItemSets.INVENTORY); // Add to user's inventory
             } else if (addInput.equals("0")) {
                 tradeModel.getItemManager().deleteItem(itemId);

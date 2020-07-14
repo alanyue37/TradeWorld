@@ -15,7 +15,6 @@ public class LogInPresenter implements Iterator<String> {
 
     /**
      * Creates a LogInPresenter.
-     *
      * @param tm the TradeModel containing all the information
      */
     public LogInPresenter(TradeModel tm) {
@@ -24,7 +23,6 @@ public class LogInPresenter implements Iterator<String> {
 
     /**
      * Checks for subsequent prompts.
-     *
      * @return true if there is prompt that has not yet been returned.
      */
     @Override
@@ -34,7 +32,6 @@ public class LogInPresenter implements Iterator<String> {
 
     /**
      * Returns the next prompt to be printed.
-     *
      * @return the next prompt.
      */
     @Override
