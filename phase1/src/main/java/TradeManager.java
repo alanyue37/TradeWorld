@@ -377,6 +377,9 @@ public class TradeManager implements Serializable {
     private List<Trade> getTradeOfUser(String username) {
         List<Trade> userTrades = new ArrayList<>();
         List<String> tradeIds = this.userToTrades.get(username);
+        if (tradeIds == null) {
+            return userTrades;
+        }
         for (String tradeId : tradeIds) {
             userTrades.add(getTrade(tradeId));
         }
@@ -467,6 +470,9 @@ public class TradeManager implements Serializable {
     private List<String> getItemsTraded(String user) {
         List<String> items = new ArrayList<>();
         List<Trade> trades = new ArrayList<>();
+        if (this.userToTrades.get(user) == null) {
+            return items;
+        }
         for (String tradeId : this.userToTrades.get(user)) {
             if (this.completedTrades.containsKey(tradeId)) {
                 trades.add(this.completedTrades.get(tradeId));
@@ -545,6 +551,9 @@ public class TradeManager implements Serializable {
     private List<Trade> getUserOngoingTrades(String username) {
         List<String> userTrade = this.userToTrades.get(username);
         List<Trade> userOngoingTrade = new ArrayList<>();
+        if (userTrade == null) {
+            return userOngoingTrade;
+        }
         for (String id : userTrade) {
             if (this.ongoingTrades.containsKey(id)) {
                 userOngoingTrade.add(this.ongoingTrades.get(id));
@@ -624,15 +633,25 @@ public class TradeManager implements Serializable {
         List<String> tobeConfirmed = new ArrayList<>();
         for (Trade trade : userOngoingTrade) {
             Meeting meeting = getLastMeeting(trade);
-            if (meetingManager.getExchangeConfirmed(meeting)){
-                Calendar cal = Calendar.getInstance();
-                Date newDate = cal.getTime();
-                if (meetingManager.getConfirmedMeetingTime(meeting).before(newDate)){
+            if (trade.getTradeType().equals("permanent")) {
+                if (meetingManager.getExchangeConfirmed(meeting)) {
+                    Calendar cal = Calendar.getInstance();
+                    Date newDate = cal.getTime();
+                    if (meetingManager.getConfirmedMeetingTime(meeting).before(newDate)) {
+                        tobeConfirmed.add(trade.getIdOfTrade());
+                    }
+                }
+            } else { // trade is temporary
+                if (meetingManager.getExchangeConfirmed(meeting)) {
+                    Calendar cal = Calendar.getInstance();
+                    Date newDate = cal.getTime();
+                    if (meetingManager.getConfirmedMeetingTime(meeting).before(newDate)) {
+                        tobeConfirmed.add(trade.getIdOfTrade());
+                    }
+                } else if (trade.getMeetingList().size() == 2 && !(meeting.getIsCompleted())) {
                     tobeConfirmed.add(trade.getIdOfTrade());
                 }
-
             }
-
         }
         return tobeConfirmed;
     }
