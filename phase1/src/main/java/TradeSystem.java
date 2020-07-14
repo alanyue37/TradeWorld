@@ -5,7 +5,7 @@ import java.io.IOException;
  */
 public class TradeSystem {
 
-    private final String tradeModelFile = "serializedobjects.ser";
+    private final String tradeModelFile = "serializedobjectstha.ser";
 
     /**
      * Run the trading system.
@@ -16,7 +16,9 @@ public class TradeSystem {
             TradeModel tradeModel = dataManager.readFromFile();
             LogInController controller = new LogInController(tradeModel);
             RunnableController mainController = controller.getNextController();
-            mainController.run(); // This could be either UserController or AdminController
+            if (mainController != null) {
+                mainController.run(); // This could be either UserController or AdminController
+            }
             dataManager.saveToFile(tradeModel);
         } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();

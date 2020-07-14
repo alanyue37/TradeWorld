@@ -13,7 +13,7 @@ public class LogInController {
     private final BufferedReader br;
     private String username;
     private String password;
-    private RunnableController nextController = null;
+    private RunnableController nextController;
 
     /**
      * Creates a LogInController.
@@ -22,7 +22,7 @@ public class LogInController {
     public LogInController(TradeModel tm) {
         tradeModel = tm;
         userManager = tradeModel.getUserManager();
-        presenter = new LogInPresenter(tm);
+        presenter = new LogInPresenter();
         br = new BufferedReader(new InputStreamReader(System.in));
     }
 
@@ -33,6 +33,10 @@ public class LogInController {
     public RunnableController getNextController() {
         try {
             selectMenu();
+            if (nextController != null) {
+                presenter.welcome(username);
+                presenter.nextLine();
+            }
             return nextController;
         } catch (IOException e) {
             System.out.println("Something bad happened.");

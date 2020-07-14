@@ -21,16 +21,15 @@ public class DataManager {
     private String getFilePath(String fileName) throws IOException {
         ClassLoader loader = Main.class.getClassLoader();
         String filePath = String.valueOf(loader.getResource("Main.class"));
-        System.out.println(filePath);
+//        System.out.println(filePath);
         String decodedPath = URLDecoder.decode(filePath, "UTF-8"); // support for spaces in file path
-        System.out.println(decodedPath);
+//        System.out.println(decodedPath);
         String[] tokens = decodedPath.split("/");
         StringBuilder sb = new StringBuilder();
         sb.append("/");
         for (int i = 1; i < tokens.length-4; i++) {
             sb.append(tokens[i]).append("/");
         }
-//        sb.setLength(sb.length() - 1);
         sb.append("src/main/resources/");
         sb.append(fileName);
         return sb.toString();

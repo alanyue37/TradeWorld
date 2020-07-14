@@ -9,17 +9,13 @@ import java.util.NoSuchElementException;
  */
 public class LogInPresenter implements Iterator<String> {
 
-    private List<String> prompts = new ArrayList<>();
-    private UserManager userManager;
+    private final List<String> prompts = new ArrayList<>();
     private int current = 0;
 
     /**
      * Creates a LogInPresenter.
-     * @param tm the TradeModel containing all the information
      */
-    public LogInPresenter(TradeModel tm) {
-        userManager = tm.getUserManager();
-    }
+    public LogInPresenter() {}
 
     /**
      * Checks for subsequent prompts.
@@ -73,7 +69,8 @@ public class LogInPresenter implements Iterator<String> {
      * Adds the prompt for the trying again in the start menu.
      */
     public void menuTryAgain() {
-        prompts.add("Invalid input\n Please try again");
+        prompts.add("Invalid input\n" + "" +
+                "Please try again\n");
     }
 
     /**
@@ -88,7 +85,8 @@ public class LogInPresenter implements Iterator<String> {
      * Adds the prompt for an invalid account.
      */
     public void invalidAccount() {
-        prompts.add("Invalid username or password\n Please try again\n");
+        prompts.add("Invalid username or password\n" +
+                "Please try again\n");
     }
 
     /**
@@ -104,7 +102,15 @@ public class LogInPresenter implements Iterator<String> {
      * Adds the prompt for a taken username.
      */
     public void usernameTaken(String username) {
-        prompts.add("Username " + username + " is taken");
+        prompts.add("Username " + username + " is taken\n" +
+                "Please try again\n");
+    }
+
+    /**
+     * Adds the welcome prompt after successful login
+     */
+    public void welcome(String username) {
+        prompts.add("Welcome " + username + ".\n");
     }
 
 }
