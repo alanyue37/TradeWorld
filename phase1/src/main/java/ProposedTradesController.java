@@ -17,7 +17,7 @@ public class ProposedTradesController implements RunnableController {
         br = new BufferedReader(new InputStreamReader(System.in));
         this.tradeModel = tradeModel;
         this.username = username;
-        presenter = new ProposedTradesPresenter(tradeModel);
+        presenter = new ProposedTradesPresenter();
     }
 
     @Override
@@ -33,7 +33,7 @@ public class ProposedTradesController implements RunnableController {
         Map<String, String> trades = tradeModel.getTradeManager().getProposedTrades(username);
 
         for (String tradeId : trades.keySet()) {
-            presenter.showMeeting(tradeId);
+            presenter.showMeeting(tradeId, tradeModel.getTradeManager().getTradeAllInfo(tradeId));
             String input = br.readLine();
             switch(input) {
                 case "1": // confirm meeting times
@@ -71,7 +71,7 @@ public class ProposedTradesController implements RunnableController {
                 tradeModel.getUserManager().addToSet(itemToUsers.get(item).get(1), item, ItemSets.INVENTORY);
                 tradeModel.getTradeManager().deleteCommonItemTrades(item, tradeId);
                 tradeModel.getItemManager().setOwner(item, itemToUsers.get(item).get(1));
-                tradeModel.getItemManager().setConfirmedItemAvailable(item, false); // please check this!
+                tradeModel.getItemManager().setConfirmedItemAvailable(item, false);
             }
         } else {
             for (String item : itemToUsers.keySet()) {
