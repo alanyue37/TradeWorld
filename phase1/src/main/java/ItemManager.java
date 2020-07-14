@@ -73,6 +73,14 @@ public class ItemManager implements Serializable {
         return item.getOwner();
     }
 
+    public void setOwner(String itemId, String username) {
+        Item item = confirmedItems.get(itemId);
+        if (item != null) {
+            item.setOwner(username);
+        }
+
+    }
+
     public String addItem(String name, String owner, String description) {
         String id = String.valueOf(counter.getAndIncrement());
         Item item = new Item(id, name, owner, description);
