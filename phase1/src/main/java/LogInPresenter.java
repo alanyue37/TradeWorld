@@ -15,7 +15,7 @@ public class LogInPresenter implements Iterator<String> {
     /**
      * Creates a LogInPresenter.
      */
-    public LogInPresenter(TradeModel tm) {
+    public LogInPresenter() {
     }
 
     /**
@@ -101,6 +101,13 @@ public class LogInPresenter implements Iterator<String> {
      */
     public void usernameTaken(String username) {
         prompts.add("Username " + username + " is taken. Please try again.\n");
+    }
+
+    /**
+     * Adds the welcome prompt after successful login
+     */
+    public void welcome(String username) {
+        prompts.add("Welcome " + username + ".\n");
     }
 
 }

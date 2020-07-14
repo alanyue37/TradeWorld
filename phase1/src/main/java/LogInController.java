@@ -20,7 +20,7 @@ public class LogInController {
      */
     public LogInController(TradeModel tradeModel) {
         this.tradeModel = tradeModel;
-        presenter = new LogInPresenter(tradeModel);
+        presenter = new LogInPresenter();
         br = new BufferedReader(new InputStreamReader(System.in));
     }
 
@@ -31,6 +31,10 @@ public class LogInController {
     public RunnableController getNextController() {
         try {
             selectMenu();
+            if (nextController != null) {
+                presenter.welcome(username);
+                presenter.nextLine();
+            }
             return nextController;
         } catch (IOException e) {
             System.out.println("Something bad happened.");
