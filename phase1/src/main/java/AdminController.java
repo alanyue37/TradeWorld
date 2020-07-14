@@ -1,19 +1,24 @@
+import org.omg.CORBA.WStringSeqHelper;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * A controller class that sends admin input to Use Cases and calls methods in the Use Case classes.
  */
 public class AdminController implements RunnableController {
     private final TradeModel tradeModel;
-    private final AdminPresenter adminPresenter;
+    private final AdminPresenter presenter;
     private final BufferedReader br;
     private final String username;
 
     public AdminController(TradeModel tradeModel, String username) {
         this.tradeModel = tradeModel;
-        this.adminPresenter = new AdminPresenter(tradeModel);
+        this.presenter = new AdminPresenter();
         this.br = new BufferedReader(new InputStreamReader(System.in));
         this.username = username;
     }
@@ -25,7 +30,10 @@ public class AdminController implements RunnableController {
     @Override
     public void run() {
         try {
-            selectMenu();
+            boolean active = selectMenu();
+            while (active) {
+                active = selectMenu();
+            }
         } catch (IOException e) {
             System.out.println("Oops, something bad happened!");
         }
@@ -40,41 +48,51 @@ public class AdminController implements RunnableController {
      *
      * @throws IOException   If something goes wrong.
      */
-    public void selectMenu() throws IOException {
-        adminPresenter.startMenu(username);
-        String input = br.readLine();
-        switch (input) {
-            case "1":
-                askAdminToAddNewAdmin();
-            case "2":
-                askAdminToFreezeUsers();
-                break;
-            case "3":
-                askAdminToUnfreezeUsers();
-                break;
-            case "4":
-                askAdminToReviewItems();
-                break;
-            case "5":
-                askAdminToSetLendingThreshold();
-                break;
-            case "6":
-                askAdminToSetLimitOfTransactions();
-                break;
-            case "7":
-                askAdminToSetLimitOfIncompleteTrades();
-                break;
-            case "8":
-                askAdminToSetLimitOfEdits();
-                break;
-            case "exit":
-                adminPresenter.end();
-                adminPresenter.startMenu(username);
-                break;
-            default:
-                adminPresenter.invalidInput();
-                selectMenu();
-        }
+    public boolean selectMenu() throws IOException {
+        presenter.startMenu(username);
+        boolean validInput = false;
+        do {
+            String input = br.readLine();
+            switch (input) {
+                case "1":
+                    askAdminToAddNewAdmin();
+                    validInput = true;
+                case "2":
+                    askAdminToFreezeUsers();
+                    validInput = true;
+                    break;
+                case "3":
+                    askAdminToUnfreezeUsers();
+                    validInput = true;
+                    break;
+                case "4":
+                    askAdminToReviewItems();
+                    validInput = true;
+                    break;
+                case "5":
+                    askAdminToSetLendingThreshold();
+                    validInput = true;
+                    break;
+                case "6":
+                    askAdminToSetLimitOfTransactions();
+                    validInput = true;
+                    break;
+                case "7":
+                    askAdminToSetLimitOfIncompleteTrades();
+                    validInput = true;
+                    break;
+                case "8":
+                    askAdminToSetLimitOfEdits();
+                    validInput = true;
+                    break;
+                case "exit":
+                    presenter.end();
+                    return false;
+                default:
+                    presenter.tryAgain();
+            }
+        } while (!validInput);
+        return true;
     }
 
     /**
@@ -86,14 +104,18 @@ public class AdminController implements RunnableController {
      * @throws IOException   If something goes wrong.
      */
     private void askAdminToAddNewAdmin() throws IOException {
-        adminPresenter.accountEnterName();
+        presenter.accountEnterName();
         String nameInput = br.readLine();
-        adminPresenter.accountEnterUsername();
+        presenter.accountEnterUsername();
         String usernameInput = br.readLine();
-        adminPresenter.accountEnterPassword();
+        presenter.accountEnterPassword();
         String passwordInput = br.readLine();
-        tradeModel.getUserManager().createAdminUser(nameInput, usernameInput, passwordInput);
-        selectMenu();
+        boolean success = tradeModel.getUserManager().createAdminUser(nameInput, usernameInput, passwordInput);
+        if (success) {
+            presenter.newAccountCreated(usernameInput);
+        } else {
+            presenter.usernameTaken(usernameInput);
+        }
     }
 
     /**
@@ -103,28 +125,24 @@ public class AdminController implements RunnableController {
      * @throws IOException   If something goes wrong.
      */
     public void askAdminToFreezeUsers() throws IOException {
-        for (String freeze : tradeModel.getTradeManager().getExceedIncompleteLimitUser()) {
-            adminPresenter.freezeAccounts(freeze);
+        Set<String> flaggedAccounts = new HashSet<>();
+        flaggedAccounts.addAll(tradeModel.getTradeManager().getExceedIncompleteLimitUser());
+        flaggedAccounts.addAll(tradeModel.getTradeManager().getExceedPerWeek());
+        flaggedAccounts.addAll(tradeModel.getUserManager().getUsersForFreezing());
+        boolean empty = flaggedAccounts.isEmpty();
+        presenter.freezeAccountsHeading(empty);
+
+        for (String user : flaggedAccounts) {
+            presenter.listItem(user);
             String confirmationInput = br.readLine();
+            while (!confirmationInput.equals("0") && !confirmationInput.equals("1")){
+                presenter.tryAgain();
+                confirmationInput = br.readLine();
+            }
             if (confirmationInput.equals("1")) {
-                tradeModel.getUserManager().freeze(freeze, true);
+                tradeModel.getUserManager().setFrozen(user, true);
             }
         }
-        for (String freeze : tradeModel.getTradeManager().getExceedPerWeek()) {
-            adminPresenter.freezeAccounts(freeze);
-            String confirmationInput = br.readLine();
-            if (confirmationInput.equals("1")) {
-                tradeModel.getUserManager().freeze(freeze, true);
-            }
-        }
-        for (String freeze : tradeModel.getUserManager().getUsersForFreezing()) {
-            adminPresenter.freezeAccounts(freeze);
-            String confirmationInput = br.readLine();
-            if (confirmationInput.equals("1")) {
-                tradeModel.getUserManager().freeze(freeze, true);
-            }
-        }
-        selectMenu();
     }
 
     /**
@@ -134,13 +152,21 @@ public class AdminController implements RunnableController {
      * @throws IOException   If something goes wrong.
      */
     public void askAdminToUnfreezeUsers() throws IOException {
-        for (String unfreeze : tradeModel.getUserManager().getUnfreezeRequests()) {
-            adminPresenter.unfreezeAccounts(unfreeze);
+        Set<String> accounts = tradeModel.getUserManager().getUnfreezeRequests();
+        boolean empty = accounts.isEmpty();
+        presenter.unfreezeAccountsHeading(empty);
+
+        for (String user : accounts) {
+            presenter.listItem(user);
             String confirmationInput = br.readLine();
-            if (confirmationInput.equals("1")) {
-                tradeModel.getUserManager().freeze(unfreeze, false);
+            while (!confirmationInput.equals("0") && !confirmationInput.equals("1")){
+                presenter.tryAgain();
+                confirmationInput = br.readLine();
             }
-        }  selectMenu();
+            if (confirmationInput.equals("1")) {
+                tradeModel.getUserManager().setFrozen(user, false);
+            }
+        }
     }
 
     /**
@@ -150,19 +176,26 @@ public class AdminController implements RunnableController {
      * @throws IOException   If something goes wrong.
      */
     public void askAdminToReviewItems() throws IOException {
-        for (String itemId : tradeModel.getItemManager().getPendingItems()) {
+        List<String> items = tradeModel.getItemManager().getPendingItems();
+        boolean empty = items.isEmpty();
+        presenter.reviewItemsHeading(empty);
+
+        for (String itemId : items) {
             String itemInfo = tradeModel.getItemManager().getItemInfo(itemId);
-            adminPresenter.reviewItem(itemInfo);
-            String addInput = br.readLine();
-            if (addInput.equals("1")) {
+            presenter.listItem(itemInfo);
+            String input = br.readLine();
+            while (!input.equals("0") && !input.equals("1")){
+                presenter.tryAgain();
+                input = br.readLine();
+            }
+            if (input.equals("1")) {
                 tradeModel.getItemManager().confirmItem(itemId);
                 String username = tradeModel.getItemManager().getOwner(itemId);
                 tradeModel.getUserManager().addToSet(username, itemId, ItemSets.INVENTORY); // Add to user's inventory
-            } else if (addInput.equals("0")) {
+            } else {
                 tradeModel.getItemManager().deleteItem(itemId);
             }
         }
-        selectMenu();
     }
 
     /**
@@ -172,7 +205,7 @@ public class AdminController implements RunnableController {
      * @throws IOException   If something goes wrong.
      */
     public void askAdminToSetLendingThreshold() throws IOException {
-        adminPresenter.lendingThreshold(tradeModel.getUserManager().getThreshold());
+        presenter.lendingThreshold(tradeModel.getUserManager().getThreshold());
         String thresholdInput = br.readLine();
         int lendingThreshold = Integer.parseInt(thresholdInput);
         tradeModel.getUserManager().setThreshold(lendingThreshold);
@@ -186,7 +219,7 @@ public class AdminController implements RunnableController {
      * @throws IOException   If something goes wrong.
      */
     public void askAdminToSetLimitOfTransactions() throws IOException {
-        adminPresenter.limitOfTransactions(tradeModel.getTradeManager().getLimitTransactionPerWeek());
+        presenter.limitOfTransactions(tradeModel.getTradeManager().getLimitTransactionPerWeek());
         String thresholdInput = br.readLine();
         int thresholdTransactions = Integer.parseInt(thresholdInput);
         tradeModel.getTradeManager().changeLimitTransactionPerWeek(thresholdTransactions);
@@ -200,7 +233,7 @@ public class AdminController implements RunnableController {
      * @throws IOException   If something goes wrong.
      */
     public void askAdminToSetLimitOfIncompleteTrades() throws IOException {
-        adminPresenter.limitOfIncompleteTransactions(tradeModel.getTradeManager().getLimitIncomplete());
+        presenter.limitOfIncompleteTransactions(tradeModel.getTradeManager().getLimitIncomplete());
         String thresholdInput = br.readLine();
         int thresholdIncomplete = Integer.parseInt(thresholdInput);
         tradeModel.getTradeManager().changeLimitIncomplete(thresholdIncomplete);
@@ -215,7 +248,7 @@ public class AdminController implements RunnableController {
      * @throws IOException   If something goes wrong.
      */
     public void askAdminToSetLimitOfEdits() throws IOException {
-        adminPresenter.limitOfEdits(tradeModel.getTradeManager().getLimitEdits());
+        presenter.limitOfEdits(tradeModel.getTradeManager().getLimitEdits());
         String thresholdInput = br.readLine();
         int thresholdEdits = Integer.parseInt(thresholdInput);
         tradeModel.getTradeManager().changeLimitEdits(thresholdEdits);

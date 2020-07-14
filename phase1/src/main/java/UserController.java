@@ -74,6 +74,7 @@ public class UserController implements RunnableController {
                     validInput = true;
                     break;
                 case "exit":
+                    presenter.end();
                     return false;
                 default:
                     presenter.tryAgain();

@@ -31,7 +31,7 @@ public class InitiateTradeController implements RunnableController {
     private boolean initiateTrade() throws IOException {
         boolean success = false;
         if (tradeModel.getUserManager().isFrozen(username)) {
-            presenter.frozenAccount();
+            unfreezeRequest();
             return success;
         }
         String itemId = getItemIdChoice();
@@ -208,6 +208,18 @@ public class InitiateTradeController implements RunnableController {
             itemId = null;
         }
         return itemId;
+    }
+
+    private void unfreezeRequest() throws IOException {
+        presenter.frozenAccount();
+        String input = br.readLine();
+        while (!input.equals("0") && !input.equals("1")){
+            presenter.tryAgain();
+            input = br.readLine();
+        }
+        if (input.equals("1")) {
+            tradeModel.getUserManager().markUserForUnfreezing(username);
+        }
     }
 
     private List<String> getItemsInfo(List<String> itemIds) {
