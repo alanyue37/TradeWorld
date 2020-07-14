@@ -123,6 +123,7 @@ public class AdminPresenter extends TextPresenter {
     /**
      * This method prompts the admin user to review the item and decided whether this item should be added
      * to the system or not.
+     * @param item
      */
     public void reviewItem(String item) {
         System.out.println("Enter 1 to add this item or 0 to not add the following item: \n" + item);
@@ -131,6 +132,7 @@ public class AdminPresenter extends TextPresenter {
     /**
      * This method prompts the admin user to set a threshold for how much a user has to lend than borrow to make
      * a non-lending transaction (i.e., just borrow and not lend).
+     * @param current
      */
     public void lendingThreshold(int current) {
         System.out.println("How many more times (at least) does the user have to lend than they borrow in order to make " +
@@ -142,6 +144,7 @@ public class AdminPresenter extends TextPresenter {
     /**
      * This method prompts the admin user to set a threshold for the number of transaction that a use can make in one
      * week (i.e., 7 days).
+     * @param current
      */
     public void limitOfTransactions(int current) {
         System.out.println("What is the maximum number of transactions a user can conduct in a week?");
@@ -152,6 +155,7 @@ public class AdminPresenter extends TextPresenter {
     /**
      * This method prompts the admin user to set a threshold for the number of incomplete transactions a user can have
      * before the account gets frozen.
+     * @param current
      */
     public void limitOfIncompleteTransactions(int current) {
         System.out.println("After how many incomplete transactions should a user be flagged for freezing?");
@@ -162,6 +166,7 @@ public class AdminPresenter extends TextPresenter {
     /**
      * This method prompts the admin user to set a threshold for the number of edits allowed by the user to change the
      * meeting place and time. The limit of edits should remain 3.
+     * @param current
      */
     public void limitOfEdits(int current) {
         System.out.println("What is the maximum number of times the proposed meeting time for a trade can be edited?");
