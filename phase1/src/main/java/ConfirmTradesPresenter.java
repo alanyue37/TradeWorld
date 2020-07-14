@@ -1,4 +1,4 @@
-public class ConfirmTradesPresenter {
+public class ConfirmTradesPresenter extends TextPresenter {
     TradeModel tradeModel;
 
     public ConfirmTradesPresenter(TradeModel tradeModel) {
@@ -15,10 +15,6 @@ public class ConfirmTradesPresenter {
 
     public void end() {
         System.out.println("Exiting...");
-    }
-
-    public void invalidInput() {
-        System.out.println("Please enter a valid input.");
     }
 
     public void declineConfirm(){
