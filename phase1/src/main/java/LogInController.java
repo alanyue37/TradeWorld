@@ -8,7 +8,6 @@ import java.io.InputStreamReader;
 public class LogInController {
 
     private final TradeModel tradeModel;
-    private final UserManager userManager;
     private final LogInPresenter presenter;
     private final BufferedReader br;
     private String username;
@@ -17,12 +16,11 @@ public class LogInController {
 
     /**
      * Creates a LogInController.
-     * @param tm the TradeModel containing all the information
+     * @param tradeModel the TradeModel containing all the information
      */
-    public LogInController(TradeModel tm) {
-        tradeModel = tm;
-        userManager = tradeModel.getUserManager();
-        presenter = new LogInPresenter(tm);
+    public LogInController(TradeModel tradeModel) {
+        this.tradeModel = tradeModel;
+        presenter = new LogInPresenter(tradeModel);
         br = new BufferedReader(new InputStreamReader(System.in));
     }
 
@@ -42,30 +40,34 @@ public class LogInController {
 
     // The main menu
     private void selectMenu() throws IOException {
-        presenter.startMenu();
-        presenter.nextLine();
-        String input = br.readLine();
-        switch(input) {
-            case "1":
-                logIn(false);
-                break;
-            case "2":
-                logIn(true);
-                break;
-            case "3":
-                newTradingUser();
-                break;
-            case "exit":
-                break;
-            default:
-                presenter.menuTryAgain();
-                presenter.nextLine();
-                selectMenu();
-        }
+        boolean validInput = false;
+        do {
+            presenter.startMenu();
+            presenter.nextLine();
+            String input = br.readLine();
+            switch (input) {
+                case "1":
+                    validInput = logIn(false);
+                    break;
+                case "2":
+                    validInput = logIn(true);
+                    break;
+                case "3":
+                    validInput = newTradingUser();
+                    break;
+                case "exit":
+                    validInput = true;
+                    break;
+                default:
+                    presenter.menuTryAgain();
+                    presenter.nextLine();
+            }
+        } while (!validInput);
+
     }
 
     // Logging in
-    private void logIn(boolean isAdmin) throws IOException {
+    private boolean logIn(boolean isAdmin) throws IOException {
         presenter.logIn();
         presenter.nextLine();
         username = br.readLine();
@@ -73,23 +75,24 @@ public class LogInController {
         presenter.nextLine();
         password = br.readLine();
 
-        if ((!isAdmin && !userManager.login(username, password, UserTypes.TRADING)) || (isAdmin && !userManager.login(username, password, UserTypes.ADMIN))) {
+        if ((!isAdmin && !tradeModel.getUserManager().login(username, password, UserTypes.TRADING)) || (isAdmin && !tradeModel.getUserManager().login(username, password, UserTypes.ADMIN))) {
             presenter.invalidAccount();
             presenter.nextLine();
-            selectMenu();
+            return false;
         }
-        if (isAdmin && userManager.login(username, password, UserTypes.ADMIN)) {
+        if (isAdmin && tradeModel.getUserManager().login(username, password, UserTypes.ADMIN)) {
             // Admin logged in
             nextController = new AdminController(tradeModel, username);
         }
-        else if (!isAdmin && userManager.login(username, password, UserTypes.TRADING)) {
+        else if (!isAdmin && tradeModel.getUserManager().login(username, password, UserTypes.TRADING)) {
             // User logged in
             nextController = new UserController(tradeModel, username);
         }
+        return true;
     }
 
     // Create new account
-    private void newTradingUser() throws IOException {
+    private boolean newTradingUser() throws IOException {
         presenter.newAccount();
         presenter.nextLine();
         String name = br.readLine();
@@ -100,12 +103,13 @@ public class LogInController {
         presenter.nextLine();
         password = br.readLine();
 
-        if (!userManager.createTradingUser(name, username, password)) {
+        if (!tradeModel.getUserManager().createTradingUser(name, username, password)) {
             presenter.usernameTaken(username);
             presenter.nextLine();
-            selectMenu();
+            return false;
         }
 
         nextController = new UserController(tradeModel, username);
+        return true;
     }
 }

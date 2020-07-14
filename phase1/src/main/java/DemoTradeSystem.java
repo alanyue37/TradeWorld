@@ -25,7 +25,9 @@ public class DemoTradeSystem {
 
             LogInController controller = new LogInController(tradeModel);
             RunnableController mainController = controller.getNextController();
-            mainController.run(); // This could be either UserController or AdminController
+            if (mainController != null) {
+                mainController.run(); // This could be either UserController or AdminController
+            }
             dataManager.saveToFile(tradeModel);
         } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
