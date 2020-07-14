@@ -17,7 +17,7 @@ public class UserManager implements Serializable {
         adminUsers = new HashMap<>();
         unfreezeRequests = new HashSet<>();
         User initialAdmin = new User("Initial Admin", "ia", "initialize");
-        adminUsers.put("a", initialAdmin);
+        adminUsers.put("ia", initialAdmin);
     }
 
     /**
