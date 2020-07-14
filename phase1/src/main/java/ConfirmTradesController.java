@@ -49,32 +49,6 @@ public class ConfirmTradesController implements RunnableController {
         return true;
     }
 
-//    private void confirmTradeHappened(String tradeId) {
-//        if (tradeModel.getTradeManager().canChangeMeeting(tradeId, username)) {
-//            tradeModel.getTradeManager().confirmMeetingHappened(tradeId, username);
-//            presenter.confirmedTrade();
-//
-//            if (tradeModel.getTradeManager().needToAddMeeting(tradeId)) {
-//                Calendar cal = Calendar.getInstance();
-//                cal.setTime(tradeModel.getTradeManager().getLastConfirmedTime(tradeId));
-//                cal.add(Calendar.DATE, 30);
-//                Date newDate = cal.getTime();
-//                tradeModel.getTradeManager().addMeetingToTrade(tradeId,
-//                        tradeModel.getTradeManager().getTradeLastMeetingLocation(tradeId), newDate, username);
-//                presenter.displayNewDate(newDate.toString());
-//            }
-//
-//            Map<String, List<String>> itemToUsers = tradeModel.getTradeManager().itemToUsers(tradeId);
-//
-//            if (itemToUsers.size() == 1) {
-//                for (String item : itemToUsers.keySet()) {
-//                    tradeModel.getUserManager().updateCreditByUsername(itemToUsers.get(item).get(0), true);
-//                    tradeModel.getUserManager().updateCreditByUsername(itemToUsers.get(item).get(1), false);
-//                }
-//            }
-//        } else { presenter.declineConfirm(); }
-//    }
-
     private void confirmTradeHappened(String tradeId) {
         if (tradeModel.getTradeManager().canChangeMeeting(tradeId, username)){
             tradeModel.getTradeManager().confirmMeetingHappened(tradeId, username);
@@ -100,6 +74,7 @@ public class ConfirmTradesController implements RunnableController {
         tradeModel.getTradeManager().addMeetingToTrade(tradeId,
                 tradeModel.getTradeManager().getTradeLastMeetingLocation(tradeId), newDate, username);
         tradeModel.getTradeManager().agreeMeetingDetails(tradeId);
+        presenter.displayNewDate(newDate.toString());
     }
 
     private void completedTradeChanges(String tradeId){
