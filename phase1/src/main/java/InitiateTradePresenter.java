@@ -9,7 +9,7 @@ public class InitiateTradePresenter extends TextPresenter {
     public void availableItemsMenu(List<String> items) {
         System.out.println("The following items are available for trade:");
         printList(items, false, true);
-        System.out.println("Please enter the ID of the item you would like to choose: ");
+        System.out.println("Please enter the ID of the item you would like to choose or \"back\" to go back: ");
     }
 
     public void itemsToOffer(List<String> items, boolean wishlist) {
@@ -58,7 +58,7 @@ public class InitiateTradePresenter extends TextPresenter {
         tradeTypes.add("Two way temporary");
         tradeTypes.add("Two way permanent");
         printList(tradeTypes, true, false);
-        System.out.println("Please enter the # of your choice of trade: ");
+        System.out.println("Please enter the # of your choice of trade or \"back\" to go back: ");
     }
 
 }

@@ -76,6 +76,8 @@ public class InitiateTradeController implements RunnableController {
                     twoWay = true;
                     validTradeType = true;
                     break;
+                case "back":
+                    return false;
                 default:
                     presenter.tryAgain();
             }
@@ -90,7 +92,7 @@ public class InitiateTradeController implements RunnableController {
             tradeId = tradeModel.getTradeManager().addTwoWayTrade(permanentOrTemporary, username, otherUsername, thisUserItemId, itemId);
         }
         else {
-            tradeId = tradeModel.getTradeManager().addOneWayTrade("temporary", otherUsername, username, itemId);
+            tradeId = tradeModel.getTradeManager().addOneWayTrade(permanentOrTemporary, otherUsername, username, itemId);
         }
 
         List<String> meetingDetails = getMeetingDetails();
@@ -197,10 +199,13 @@ public class InitiateTradeController implements RunnableController {
         }
         presenter.availableItemsMenu(itemsToShow);
         String itemId = br.readLine();
-        while (!itemsAvailable.contains(itemId)) {
+        while (!itemsAvailable.contains(itemId) && !itemId.equals("back")) {
             // Validate input
             presenter.tryAgain();
             itemId = br.readLine();
+        }
+        if (itemId.equals("back")) {
+            itemId = null;
         }
         return itemId;
     }
