@@ -1,4 +1,5 @@
 import java.io.*;
+import java.net.URLDecoder;
 
 /**
  * Manages the saving and loading of TradeModel.
@@ -12,15 +13,18 @@ public class DataManager {
      * Creates a new DataManager.
      * @param fileName the name of the file containing the serialized objects
      */
-    public DataManager(String fileName) {
+    public DataManager(String fileName) throws IOException {
         filePath = getFilePath(fileName);
     }
 
     // get the file path inside the resources folder
-    private String getFilePath(String fileName) {
+    private String getFilePath(String fileName) throws IOException {
         ClassLoader loader = Main.class.getClassLoader();
         String filePath = String.valueOf(loader.getResource("Main.class"));
-        String[] tokens = filePath.split("/");
+//        System.out.println(filePath);
+        String decodedPath = URLDecoder.decode(filePath, "UTF-8"); // support for spaces in file path
+//        System.out.println(decodedPath);
+        String[] tokens = decodedPath.split("/");
         StringBuilder sb = new StringBuilder();
         for (int i = 1; i < tokens.length-4; i++) {
             sb.append(tokens[i]).append("/");
