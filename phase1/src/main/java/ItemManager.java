@@ -38,7 +38,7 @@ public class ItemManager implements Serializable {
     public List<String> getConfirmedItems() {
         List<String> items = new ArrayList<>();
         for (Item item : confirmedItems.values()) {
-            items.add(String.valueOf(item));
+            items.add(item.getId());
         }
         return items;
     }
