@@ -1,14 +1,11 @@
 import java.io.BufferedReader;
 
 public class ProposedTradesPresenter extends TextPresenter {
-    TradeModel tradeModel;
 
-    public ProposedTradesPresenter(TradeModel tradeModel) {
-        this.tradeModel = tradeModel;
-    }
+    public ProposedTradesPresenter() { }
 
-    public void showMeeting(String tradeId) {
-        System.out.println(tradeModel.getTradeManager().getTradeAllInfo(tradeId));
+    public void showMeeting(String tradeId, String meetingInfo) {
+        System.out.println(meetingInfo);
         System.out.println("Options for a User: \n" +
                 " Enter 1 to confirm the meeting time\n" +
                 " Enter 2 to edit the meeting time\n" +
