@@ -1,5 +1,3 @@
-import org.omg.CORBA.WStringSeqHelper;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -136,7 +134,7 @@ public class AdminController implements RunnableController {
             presenter.listItem(user);
             String confirmationInput = br.readLine();
             while (!confirmationInput.equals("0") && !confirmationInput.equals("1")){
-                presenter.tryAgain();
+                presenter.invalidInput();
                 confirmationInput = br.readLine();
             }
             if (confirmationInput.equals("1")) {
@@ -157,10 +155,10 @@ public class AdminController implements RunnableController {
         presenter.unfreezeAccountsHeading(empty);
 
         for (String user : accounts) {
-            presenter.listItem(user);
+            presenter.unfreezeAccounts(user);
             String confirmationInput = br.readLine();
             while (!confirmationInput.equals("0") && !confirmationInput.equals("1")){
-                presenter.tryAgain();
+                presenter.invalidInput();
                 confirmationInput = br.readLine();
             }
             if (confirmationInput.equals("1")) {
@@ -182,10 +180,10 @@ public class AdminController implements RunnableController {
 
         for (String itemId : items) {
             String itemInfo = tradeModel.getItemManager().getItemInfo(itemId);
-            presenter.listItem(itemInfo);
+            presenter.reviewItem(itemInfo);
             String input = br.readLine();
             while (!input.equals("0") && !input.equals("1")){
-                presenter.tryAgain();
+                presenter.invalidInput();
                 input = br.readLine();
             }
             if (input.equals("1")) {

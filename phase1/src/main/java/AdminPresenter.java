@@ -116,14 +116,14 @@ public class AdminPresenter extends TextPresenter {
         }
         else {
             System.out.println("The following items have been recently added and need to be reviewed.\n" +
-                    "For each item enter 1 to confirm or 0 to delete.\n");
+                    "For each item enter 1 to add the item or 0 to not add the item.\n");
         }
     }
 
     /**
      * This method prompts the admin user to review the item and decided whether this item should be added
      * to the system or not.
-     * @param item
+     * @param item  The item to be added to the system.
      */
     public void reviewItem(String item) {
         System.out.println("Enter 1 to add this item or 0 to not add the following item: \n" + item);
@@ -132,7 +132,8 @@ public class AdminPresenter extends TextPresenter {
     /**
      * This method prompts the admin user to set a threshold for how much a user has to lend than borrow to make
      * a non-lending transaction (i.e., just borrow and not lend).
-     * @param current
+     * @param current   The current threshold set for how much the user has to lend than borrow to make a non-lending
+     *                  transaction.
      */
     public void lendingThreshold(int current) {
         System.out.println("How many more times (at least) does the user have to lend than they borrow in order to make " +
@@ -144,7 +145,7 @@ public class AdminPresenter extends TextPresenter {
     /**
      * This method prompts the admin user to set a threshold for the number of transaction that a use can make in one
      * week (i.e., 7 days).
-     * @param current
+     * @param current   The current threshold set for the number of transactions a user can conduct in a week.
      */
     public void limitOfTransactions(int current) {
         System.out.println("What is the maximum number of transactions a user can conduct in a week?");
@@ -155,7 +156,7 @@ public class AdminPresenter extends TextPresenter {
     /**
      * This method prompts the admin user to set a threshold for the number of incomplete transactions a user can have
      * before the account gets frozen.
-     * @param current
+     * @param current   The current threshold set for incomplete transactions.
      */
     public void limitOfIncompleteTransactions(int current) {
         System.out.println("After how many incomplete transactions should a user be flagged for freezing?");
@@ -166,7 +167,7 @@ public class AdminPresenter extends TextPresenter {
     /**
      * This method prompts the admin user to set a threshold for the number of edits allowed by the user to change the
      * meeting place and time. The limit of edits should remain 3.
-     * @param current
+     * @param current   The current threshold set for the number of edits allowed by the user
      */
     public void limitOfEdits(int current) {
         System.out.println("What is the maximum number of times the proposed meeting time for a trade can be edited?");
@@ -179,6 +180,13 @@ public class AdminPresenter extends TextPresenter {
      */
     public void invalidInput() {
         System.out.println("This is an invalid input.\n Please try again!");
+    }
+
+    /**
+     * This method prints to the screen and signals to the user that the system has successfully ended.
+     */
+    public void end() {
+        System.out.println("See you soon!");
     }
 
 }
