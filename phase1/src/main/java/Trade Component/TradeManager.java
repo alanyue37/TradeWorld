@@ -630,5 +630,24 @@ public class TradeManager implements Serializable {
         return this.completedTrades.containsKey(tradeId);
     }
 
+    public List<String> getTradesOfUser(String username, String type) {
+        List<String> userTrades = this.userToTrades.get(username);
+        List<String > returnList = new ArrayList<>();
+        if (userTrades == null) {
+            return returnList;
+        }
+        for (String id : userTrades) {
+            if (type.equals("ongoing")) {
+                if (this.ongoingTrades.containsKey(id)) {
+                    returnList.add(id);
+                }
+            } else {
+                if (this.completedTrades.containsKey(id)) {
+                    returnList.add(id);
+                }
+            }
+        } return returnList;
+    }
+
     //  or confirmed: waiting to confirm real life // hello hello hello
 }

@@ -9,16 +9,12 @@ public class ViewingMenuController implements RunnableController {
     private final TradeModel tradeModel;
     private final ViewingMenuPresenter presenter;
     private final String username;
-    private final int numTradingPartners;
-    private final int numLastTrades;
 
     public ViewingMenuController(TradeModel tradeModel, String username) {
         br = new BufferedReader(new InputStreamReader(System.in));
         this.tradeModel = tradeModel;
         this.username = username;
         presenter = new ViewingMenuPresenter();
-        numTradingPartners = 3;
-        numLastTrades = 3;
     }
 
     @Override
@@ -46,14 +42,6 @@ public class ViewingMenuController implements RunnableController {
                     break;
                 case "3": // view your wishlist
                     viewWishlist();
-                    validInput = true;
-                    break;
-                case "4": // view last transaction
-                    viewRecentTrades();
-                    validInput = true;
-                    break;
-                case "5": // view top 3 most frequent trading partners
-                    viewTradingPartners();
                     validInput = true;
                     break;
                 case "exit":
@@ -86,22 +74,6 @@ public class ViewingMenuController implements RunnableController {
     public void viewWishlist(){
         List<String> items =  getItemsInfo(tradeModel.getUserManager().getSetByUsername(username, ItemSets.WISHLIST));
         presenter.printUserWishlist(items);
-    }
-
-    /**
-     * View user's last numLastTrades trades
-     */
-    public void viewRecentTrades(){
-        List<String> lastTrades = tradeModel.getTradeManager().getRecentItemsTraded(numLastTrades, username);
-        presenter.printRecentTrades(numLastTrades, lastTrades);
-    }
-
-    /**
-     * View top numTradingPartners most frequent trading partners
-     */
-    public void viewTradingPartners(){
-        List<String> tradingPartners = tradeModel.getTradeManager().getFrequentPartners(numTradingPartners, username);
-        presenter.printViewTopTradingPartners(numTradingPartners, tradingPartners);
     }
 
     private List<String> getItemsInfo(Collection<String> itemIds) {
