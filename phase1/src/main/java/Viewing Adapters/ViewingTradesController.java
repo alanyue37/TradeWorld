@@ -72,10 +72,10 @@ public class ViewingTradesController implements RunnableController {
     private void viewTradeStatus() throws IOException{
         presenter.printEnterTradeId();
         String tradeId = br.readLine();
-        if (tradeModel.getTradeManager().tradeCompleted(tradeId)){
+        if (tradeModel.getTradeManager().getTradesOfUser(username, "completed").contains(tradeId)) {
             presenter.printTradeCompleted();
         }
-        else if(tradeModel.getTradeManager().isIncompleteTrade(tradeId)){
+        else if(tradeModel.getTradeManager().getIncompleteTrade().contains(tradeId)){
             presenter.printTradeIncomplete();
         }
     }

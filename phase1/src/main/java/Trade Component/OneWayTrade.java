@@ -61,6 +61,10 @@ class OneWayTrade extends Trade {
         return users;
     }
 
+    /**
+     * Gets items involved in the trade
+     * @return list of items in trade
+     */
     @Override
     protected List<String> getItems(){
         List<String> items = new ArrayList<>();
@@ -68,6 +72,10 @@ class OneWayTrade extends Trade {
         return items;
     }
 
+    /**
+     * Returns a map of item ID mapped to a list of usernames of users who gave the item and who received the item
+     * @return map of item ID mapped to a list of the giver and receiver
+     */
     @Override
     protected Map<String, List<String>> itemToTrader(){
         Map<String, List<String>> userToItem = new HashMap<>();
@@ -78,5 +86,3 @@ class OneWayTrade extends Trade {
         return userToItem;
     }
 }
-
-// do we need setters for the item, giver, and receiver?

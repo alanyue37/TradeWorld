@@ -1,6 +1,9 @@
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * Manages the creation and editing of meetings of trades.
+ */
 public class MeetingManager implements Serializable {
 
     /**
@@ -73,24 +76,6 @@ public class MeetingManager implements Serializable {
     }
 
     /**
-     * Returns true iff the meeting is completed, false if the meeting has not been completed yet
-     * @param meeting The meeting which includes the location, time, and the username of the User
-     * @return  Whether the meeting is completed or not
-     */
-    public boolean getMeetingCompleted(Meeting meeting){
-        return meeting.getIsCompleted();
-    }
-
-    /**
-     * Returns true iff the meeting is confirmed, false if the meeting has not been confirmed yet
-     * @param meeting   The meeting which includes the location, time, and the username of the User
-     * @return  Whether the meeting is confirmed or not
-     */
-    public boolean getExchangeConfirmed(Meeting meeting){
-        return meeting.getIsConfirmed();
-    }
-
-    /**
      * Returns the meeting time if the meeting has been confirmed, null otherwise
      * @param meeting    The meeting which includes the location, time, and the username of the User
      * @return  The meeting time if the meeting has been confirmed
@@ -128,18 +113,9 @@ public class MeetingManager implements Serializable {
     }
 
     /**
-     * Returns the User that last edited
-     * @param meeting   The meeting which includes the location, time, and the username of the User
-     * @return  The string of the username of the User that last edited
-     */
-    public String getLastUser(Meeting meeting){
-        return meeting.getLastEditUser();
-    }
-
-    /**
      * Returns a string of the meeting location
      * @param meeting The meeting which includes the location, time, and the username of the User
-     * @return The string representing the location of the meeting
+     * @return a string representing the location of the meeting
      */
     public String getLastLocation(Meeting meeting){
         return meeting.getLocation();
@@ -152,18 +128,16 @@ public class MeetingManager implements Serializable {
      * @param username  The username of the User
      * @return True iff the last User is not the same and can make the edit to the meeting, false otherwise
      */
-    // replace getLastUser
     public boolean canEditMeeting(Meeting meeting, String username){
         return (!meeting.getLastEditUser().equals(username));
     }
 
     /**
-     * Returns 1 if the meeting is confirmed but has not been completed yet, and 0 otherwise
+     * Returns the status of the meeting
      * @param meeting   The meeting which includes the location, time, and the username of the User
      * @return  2 if the meeting is completed, 1 if the meeting is confirmed but has not been completed yet, and
-     * 0 otherwise
+     * 0 otherwise (meeting time has not been agreed upon)
      */
-    // replace getMeetingCompleted and getExchangedConfirmed
     public int getMeetingStatus(Meeting meeting){
         if (meeting.getIsCompleted()){
             return 2;

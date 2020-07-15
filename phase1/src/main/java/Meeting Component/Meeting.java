@@ -1,20 +1,23 @@
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * Represents a meeting to exchange item(s) in a trade
+ */
 class Meeting implements Serializable {
     private String location;
-    private Date meetingTime;    //ask later if string or time
+    private Date meetingTime;
     private int numOfEdits;
-    private int numConfirmations; //seen other in real life (0, 1 or 2)
-    private boolean IsCompleted; //real life meeting is completed
-    private boolean IsConfirmed; //time/place is confirmed by the other user
+    private int numConfirmations; // seen other in real life (0, 1 or 2)
+    private boolean IsCompleted; // real life meeting is completed
+    private boolean IsConfirmed; // time/place is confirmed by the other user
     private String lastEditUser;
 
     /**
      * Initiates a new meeting
      * @param location  The location of the meeting
      * @param time  The time of the meeting
-     * @param username  The username of the User
+     * @param username  The username of the User who suggested the meeting
      */
     protected Meeting(String location, Date time, String username){
         this.location = location;
@@ -135,10 +138,10 @@ class Meeting implements Serializable {
     }
 
     /**
-     * Returns a string which includes, the status of the meeting (i.e., whether it has been complete or its pending
-     * for confirmation or still need to arrange), the location, the time, the number of edits made,
-     * the number of confirmations, and the User who last edited
-     * @return  Tells the status of the meeting
+     * Returns a string representation of the meeting which includes: the status of the meeting
+     * (i.e., whether it has been complete or is pending for confirmation or still need to arrange),
+     * the location, the time, the number of edits made, the number of confirmations, and the User who last edited
+     * @return  String representation of the meeting
      */
     public String toString(){
         String status;

@@ -57,10 +57,10 @@ public class ConfirmTradesController implements RunnableController {
             tradeModel.getTradeManager().confirmMeetingHappened(tradeId, username);
             presenter.confirmedTrade();
 
-            if (tradeModel.getTradeManager().tradeCompleted(tradeId)){
+            if (tradeModel.getTradeManager().getTradesOfUser(username, "completed").contains(tradeId)) {
                 completedTradeChanges(tradeId);
             } else {
-                if (!tradeModel.getTradeManager().isIncompleteTrade(tradeId)) {
+                if (!tradeModel.getTradeManager().getIncompleteTrade().contains(tradeId)) {
                     if (tradeModel.getTradeManager().needToAddMeeting(tradeId)){
                         createMandatoryReturnMeeting(tradeId);
                     }
@@ -74,8 +74,8 @@ public class ConfirmTradesController implements RunnableController {
         cal.setTime(tradeModel.getTradeManager().getLastConfirmedMeetingTime(tradeId));
         cal.add(Calendar.DATE, 30);
         Date newDate = cal.getTime();
-        tradeModel.getTradeManager().addMeetingToTrade(tradeId,
-                tradeModel.getTradeManager().getLastConfirmedMeetingLocation(tradeId), newDate, username);
+        tradeModel.getTradeManager().editMeetingOfTrade(tradeId,
+                tradeModel.getTradeManager().getLastConfirmedMeetingLocation(tradeId), newDate, username, "add");
         tradeModel.getTradeManager().agreeMeetingDetails(tradeId);
         presenter.displayNewDate(newDate.toString());
     }

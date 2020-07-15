@@ -13,6 +13,7 @@ abstract class Trade implements Serializable {
 
     /** Constructs trade given the type (temporary or permanent)
      * @param type temporary or permanent trade
+     * @param id the ID of the trade
      */
     protected Trade(String type, String id) {
         this.type = type;
@@ -24,7 +25,7 @@ abstract class Trade implements Serializable {
 
     /**
      * Gets the type of the trade (permanent or temporary)
-     * @return type of the trade: temporary or permanent
+     * @return type of the trade: permanent or temporary
      */
     protected String getTradeType() {
         return this.type;
@@ -40,22 +41,22 @@ abstract class Trade implements Serializable {
 
     /**
      * Gets status of the trade: whether the trade is opened or closed
-     * @return for permanent trade, false if the meeting has occurred (and is confirmed); for temporary trade, false if
-     * both meetings have occurred (and is confirmed)
+     * @return for permanent trade, false if the meeting has occurred and been confirmed; for temporary trade, false if
+     * both meetings have occurred and been confirmed
      */
     protected boolean getIsOpened() {
         return this.IsOpened;
     }
 
     /**
-     * Changes IsOpened to false (close the trade)
+     * Changes IsOpened to false (the trade is closed)
      */
     protected void changeIsOpened() {
         this.IsOpened = false;
     }
 
     /**
-     * Gets the array list of meeting(s)
+     * Gets a list of meeting(s)
      * @return list of meeting(s)
      */
     protected List<Meeting> getMeetingList(){
@@ -63,7 +64,7 @@ abstract class Trade implements Serializable {
     }
 
     /**
-     * Adds another meeting to the list of meeting (if temporary trade)
+     * Adds another meeting to the list of meetings (if temporary trade)
      * @param newMeeting second meeting to return items (for temporary trade)
      */
     protected void incrementMeetingList(Meeting newMeeting){
@@ -84,10 +85,24 @@ abstract class Trade implements Serializable {
      */
     protected abstract List<String> getUsers();
 
+    /**
+     * Gets items involved in the trade
+     * @return list of items in trade
+     */
     protected abstract List<String> getItems();
 
+    /**
+     * Returns a map of item ID mapped to a list of usernames of users who gave the item and who received the item
+     * @return map of item ID mapped to a list of the giver and receiver
+     */
     protected abstract Map<String, List<String>> itemToTrader();
 
+    /**
+     * Returns a String representation of the trade which includes: the type of the trade, the status of the trade
+     * (i.e., ongoing or completed), the number of meetings that have happened and/or been planned, the creation date,
+     * and the users and items involved
+     * @return String representation of the trade
+     */
     public String toString(){
         String status;
         if (this.IsOpened){
@@ -99,6 +114,10 @@ abstract class Trade implements Serializable {
                 "\nCreation Date: " + this.creationDate.toString() + "\nUsers involved: " + getUsers() + "\nItems involved: " + getItems();
     }
 
+    /**
+     * Returns if the given item is part of the trade
+     * @return true if the item with the ID "itemId" is part of the trade, false if not
+     */
     protected boolean containItem(String itemId){
         return getItems().contains(itemId);
     }

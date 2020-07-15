@@ -117,7 +117,7 @@ public class ProposedTradesController implements RunnableController {
             try {
                 DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                 Date time = format.parse(details.get(1));
-                tradeModel.getTradeManager().changeMeetingOfTrade(tradeId, details.get(0), time, username);
+                tradeModel.getTradeManager().editMeetingOfTrade(tradeId, details.get(0), time, username, "edit");
                 presenter.editedMeeting();
             } catch (ParseException e) {
                 System.out.println("Invalid date and time!");
