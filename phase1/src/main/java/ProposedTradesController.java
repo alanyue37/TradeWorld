@@ -99,10 +99,6 @@ public class ProposedTradesController implements RunnableController {
                 dateString = br.readLine();
                 DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                 date = format.parse(dateString); // check formatting is valid
-                if (!(date.getTime() == date.getTime())) {
-                    date = null;
-                    presenter.invalidDateTime();
-                }
             }
             catch (ParseException e) {
                 presenter.tryAgain();
