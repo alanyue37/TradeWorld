@@ -52,7 +52,7 @@ public class AdminPresenter extends TextPresenter {
 
     /**
      * Prints message that the admin new account has been successfully created.
-     * @param username username inputted
+     * @param username  The username of the Admin User inputs.
      */
     public void newAccountCreated(String username) {
         System.out.println("New admin account " + username + " created.\n");
@@ -60,7 +60,7 @@ public class AdminPresenter extends TextPresenter {
 
     /**
      * Prints message that the inputted username for new account has been taken.
-     * @param username username inputted
+     * @param username  The username of the Admin User inputs.
      */
     public void usernameTaken(String username) {
         System.out.println("Username " + username + " is taken. Please try again.\n");

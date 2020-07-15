@@ -4,7 +4,7 @@ import java.util.List;
 
 public class ViewingMenuPresenter extends TextPresenter {
 
-    public ViewingMenuPresenter() {
+    public ViewingMenuPresenter() {  // Java creates a default constructor. Unnecessary?
     }
 
     public void showViewingOptions() {
@@ -20,6 +20,7 @@ public class ViewingMenuPresenter extends TextPresenter {
 
     /**
      * Print the system inventory (all confirmed items)
+     * @param items A list of strings that represent the itemID
      */
     public void printSystemInventory(List<String> items){
         if (items.size() > 0) {
@@ -32,6 +33,7 @@ public class ViewingMenuPresenter extends TextPresenter {
 
     /**
      * Print the users inventory
+     * @param items A list of strings that represent the items in the inventory of the User
      */
     public void printUserInventory(List<String> items){
         if (items.size() > 0) {
@@ -44,6 +46,7 @@ public class ViewingMenuPresenter extends TextPresenter {
 
     /**
      * Print the users wishlist
+     * @param items A list of strings that represent the items in the wishlist of the User
      */
     public void printUserWishlist(List<String> items){
         if (items.size() > 0) {
