@@ -16,7 +16,7 @@ public class ConfirmTradesController implements RunnableController {
         br = new BufferedReader(new InputStreamReader(System.in));
         this.tradeModel = tradeModel;
         this.username = username;
-        presenter = new ConfirmTradesPresenter(tradeModel);
+        presenter = new ConfirmTradesPresenter();
     }
 
     @Override
@@ -31,7 +31,7 @@ public class ConfirmTradesController implements RunnableController {
     private boolean confirmTrades() throws IOException {
         List<String> trades = tradeModel.getTradeManager().getToBeConfirmedTrades(username);
         for (String tradeId : trades) {
-            presenter.showTrade(tradeId);
+            presenter.showTrade(tradeId, tradeModel.getTradeManager().getTradeAllInfo(tradeId));
             String input = br.readLine();
             switch(input) {
                 case "1":
@@ -56,7 +56,7 @@ public class ConfirmTradesController implements RunnableController {
 
             if (tradeModel.getTradeManager().tradeCompleted(tradeId)){
                 completedTradeChanges(tradeId);
-            } else{
+            } else {
                 if (!tradeModel.getTradeManager().isIncompleteTrade(tradeId)) {
                     if (tradeModel.getTradeManager().needToAddMeeting(tradeId)){
                         createMandatoryReturnMeeting(tradeId);
@@ -68,11 +68,11 @@ public class ConfirmTradesController implements RunnableController {
 
     private void createMandatoryReturnMeeting(String tradeId){
         Calendar cal = Calendar.getInstance();
-        cal.setTime(tradeModel.getTradeManager().getLastConfirmedTime(tradeId));
+        cal.setTime(tradeModel.getTradeManager().getLastConfirmedMeetingTime(tradeId));
         cal.add(Calendar.DATE, 30);
         Date newDate = cal.getTime();
         tradeModel.getTradeManager().addMeetingToTrade(tradeId,
-                tradeModel.getTradeManager().getTradeLastMeetingLocation(tradeId), newDate, username);
+                tradeModel.getTradeManager().getLastConfirmedMeetingLocation(tradeId), newDate, username);
         tradeModel.getTradeManager().agreeMeetingDetails(tradeId);
         presenter.displayNewDate(newDate.toString());
     }
