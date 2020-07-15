@@ -256,6 +256,7 @@ public class AdminController implements RunnableController {
         presenter.limitOfEdits(tradeModel.getTradeManager().getLimitEdits());
         String thresholdInput = br.readLine();
         while (notAnInteger(thresholdInput)) {
+            presenter.notAnInteger();
             presenter.limitOfEdits(tradeModel.getTradeManager().getLimitEdits());
             thresholdInput = br.readLine();
         }
@@ -266,21 +267,15 @@ public class AdminController implements RunnableController {
 
     /**
      * A helper method that returns true iff the input is not an integer or the input is a negative number
-     * to prompt the user to re-enter a valid input and returns false when the input is valid.
+     * to prompt the Admin user to re-enter a valid input and returns false when the input is valid.
      * @param adminInput    The input of the Admin user.
      * @return  True iff the input is not an integer or the input is a negative number.
      */
-    private boolean notAnInteger(String adminInput) {
+    public boolean notAnInteger(String adminInput) {
         try {
             int isInt = Integer.parseInt(adminInput);
-            if (isInt >= 0) {
-                return false;
-            } else {
-                presenter.notAnInteger();
-                return true;
-            }
+            return isInt < 0;
         } catch (NumberFormatException e) {
-            presenter.notAnInteger();
             return true;
         }
     }
