@@ -131,7 +131,7 @@ public class AdminController implements RunnableController {
         presenter.freezeAccountsHeading(empty);
 
         for (String user : flaggedAccounts) {
-            presenter.listItem(user);
+            presenter.freezeAccounts(user);
             String confirmationInput = br.readLine();
             while (!confirmationInput.equals("0") && !confirmationInput.equals("1")){
                 presenter.invalidInput();

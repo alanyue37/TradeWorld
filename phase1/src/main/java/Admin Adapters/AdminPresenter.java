@@ -69,7 +69,7 @@ public class AdminPresenter extends TextPresenter {
     /**
      * Prints relevant heading for freeze account view.
      * Prints no accounts to be frozen if empty is true. Otherwise prints instructions.
-     * @param empty true iff no accounts have been flagged for freezing
+     * @param empty True iff no accounts have been flagged for freezing.
      */
     public void freezeAccountsHeading(boolean empty) {
         if (empty) {
@@ -80,11 +80,19 @@ public class AdminPresenter extends TextPresenter {
                             "For each account enter 1 to freeze or 0 to skip.\n");
         }
     }
+    /**
+     * This method prompts the admin user to enter 1 to freeze this particular account or 0 to skip.
+     * @param user  The account that the admin can freeze.
+     */
+    public void freezeAccounts(String user) {
+        System.out.println("This account has reached the limits. Enter 1 to freeze this account or 0 to skip. " +
+                "\n Freeze Account for:" + user);
+    }
 
     /**
      * Prints relevant heading for unfreeze account view.
      * Prints no accounts to be unfrozen if empty is true. Otherwise prints instructions.
-     * @param empty true iff no accounts have requested to be unfrozen
+     * @param empty True iff no accounts have requested to be unfrozen.
      */
     public void unfreezeAccountsHeading(boolean empty) {
         if (empty) {
@@ -97,18 +105,18 @@ public class AdminPresenter extends TextPresenter {
     }
 
     /**
-     * This method prompts the admin user to enter 1 to unfreeze this particular account.
-     * @param unfreeze  The account that the admin has to unfreeze.
+     * This method prompts the admin user to enter 1 to unfreeze this particular account or 0 to skip.
+     * @param user  The account that the admin can unfreeze.
      */
-    public void unfreezeAccounts(String unfreeze) {
-        System.out.println("This user has their account frozen and is requesting to unfreeze." +
-                "Type 1 to unfreeze this account.\n Unfreeze Account for: " + unfreeze);
+    public void unfreezeAccounts(String user) {
+        System.out.println("This user has their account frozen and is requesting to unfreeze. " +
+                "Enter 1 to unfreeze this account or 0 to skip.\n Unfreeze Account for: " + user);
     }
 
     /**
      * Prints relevant heading for reviewing added items view.
      * Prints no items to be reviewed if empty is true. Otherwise prints instructions.
-     * @param empty true iff no items to be reviewed
+     * @param empty True iff no items to be reviewed.
      */
     public void reviewItemsHeading(boolean empty) {
         if (empty) {
@@ -126,7 +134,7 @@ public class AdminPresenter extends TextPresenter {
      * @param item  The item to be added to the system.
      */
     public void reviewItem(String item) {
-        System.out.println("Enter 1 to add this item or 0 to not add the following item: \n" + item);
+        System.out.println("Enter 1 to add the following item or 0 to not add the following item: \n" + item);
     }
 
     /**
