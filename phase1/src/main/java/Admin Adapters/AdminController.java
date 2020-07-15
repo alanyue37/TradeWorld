@@ -259,8 +259,8 @@ public class AdminController implements RunnableController {
             presenter.limitOfEdits(tradeModel.getTradeManager().getLimitEdits());
             thresholdInput = br.readLine();
         }
-        int adminInput = Integer.parseInt(thresholdInput);
-        tradeModel.getTradeManager().changeLimitEdits(adminInput);
+        int thresholdEdits = Integer.parseInt(thresholdInput);
+        tradeModel.getTradeManager().changeLimitEdits(thresholdEdits);
         selectMenu();
     }
 
@@ -268,14 +268,14 @@ public class AdminController implements RunnableController {
         try {
             int isInt = Integer.parseInt(adminInput);
             if (isInt >= 0) {
-                return true;
+                return false;
             } else {
                 presenter.notAnInteger();
-                return false;
+                return true;
             }
         } catch (NumberFormatException e) {
             presenter.notAnInteger();
-            return false;
+            return true;
         }
     }
 }
