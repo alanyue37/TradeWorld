@@ -181,7 +181,7 @@ public class TradeManager implements Serializable {
     /**
      * Gets the limit of edits that users can suggest before the trade is cancelled
      *
-     * @return the limit of edits to the meeting time/place
+     * @return The limit of edits to the meeting time/place
      */
     public int getLimitEdits() {
         return this.limitOfEdits;
