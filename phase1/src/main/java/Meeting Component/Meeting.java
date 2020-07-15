@@ -1,7 +1,7 @@
 import java.io.Serializable;
 import java.util.Date;
 
-public class Meeting implements Serializable {
+class Meeting implements Serializable {
     private String location;
     private Date meetingTime;    //ask later if string or time
     private int numOfEdits;
@@ -10,7 +10,7 @@ public class Meeting implements Serializable {
     private boolean IsConfirmed; //time/place is confirmed by the other user
     private String lastEditUser;
 
-    public Meeting(String location, Date time, String username){
+    protected Meeting(String location, Date time, String username){
         this.location = location;
         this.meetingTime = time;
         this.numOfEdits = 0;
@@ -20,59 +20,59 @@ public class Meeting implements Serializable {
         this.lastEditUser = username;
     }
 
-    public String getLocation(){
+    protected String getLocation(){
         return this.location;
     }
 
-    public String getLastEditUser(){
+    protected String getLastEditUser(){
         return this.lastEditUser;
     }
 
-    public void setLastEditUser(String username){
+    protected void setLastEditUser(String username){
         this.lastEditUser = username;
     }
 
-    public void setLocation(String newLocation){
+    protected void setLocation(String newLocation){
         this.location = newLocation;
     }
 
-    public Date getTime(){
+    protected Date getTime(){
         return this.meetingTime;
     }
 
-    public void setTime(Date newTime){
+    protected void setTime(Date newTime){
         this.meetingTime = newTime;
     }
 
-    public int getNumOfEdits(){
+    protected int getNumOfEdits(){
         return numOfEdits;
     }
 
-    public void incrementNumOfEdits(){
+    protected void incrementNumOfEdits(){
         this.numOfEdits += 1;
     }
 
-    public int getNumConfirmations(){
+    protected int getNumConfirmations(){
         return this.numConfirmations;
     }
 
-    public void incrementNumConfirmations(){
+    protected void incrementNumConfirmations(){
         this.numConfirmations += 1;
     }
 
-    public boolean getIsCompleted(){
+    protected boolean getIsCompleted(){
         return this.IsCompleted;
     }
 
-    public void changeIsCompleted(){
+    protected void changeIsCompleted(){
         this.IsCompleted = true;
     }
 
-    public boolean getIsConfirmed(){
+    protected boolean getIsConfirmed(){
         return this.IsConfirmed;
     }
 
-    public void changeIsConfirmed(){
+    protected void changeIsConfirmed(){
         this.IsConfirmed = true;
     }
 

@@ -5,7 +5,7 @@ import java.net.URLDecoder;
  * Manages the saving and loading of TradeModel.
  * Structure of some methods copied from logging.
  */
-public class DataManager {
+class DataManager {
 
     private final String filePath;
 
@@ -13,7 +13,7 @@ public class DataManager {
      * Creates a new DataManager.
      * @param fileName the name of the file containing the serialized objects
      */
-    public DataManager(String fileName) throws IOException {
+    DataManager(String fileName) throws IOException {
         filePath = getFilePath(fileName);
     }
 
@@ -43,7 +43,7 @@ public class DataManager {
      * @throws IOException if IOException occurs
      * @throws ClassNotFoundException if ClassNotFoundException occurs
      */
-    public TradeModel readFromFile() throws IOException, ClassNotFoundException {
+    TradeModel readFromFile() throws IOException, ClassNotFoundException {
         File file = new File(filePath);
         TradeModel tradeModel;
         if (file.createNewFile()) {
@@ -66,7 +66,7 @@ public class DataManager {
      * @param tm the TradeModel to save.
      * @throws IOException if IOException occurs.
      */
-    public void saveToFile(TradeModel tm) throws IOException {
+    void saveToFile(TradeModel tm) throws IOException {
         OutputStream fileStream = new FileOutputStream(filePath);
         OutputStream buffer = new BufferedOutputStream(fileStream);
         ObjectOutput output = new ObjectOutputStream(buffer);

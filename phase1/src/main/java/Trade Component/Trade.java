@@ -4,7 +4,7 @@ import java.util.*;
 /**
  * Represents a trade to exchange item(s)
  */
-public abstract class Trade implements Serializable {
+abstract class Trade implements Serializable {
     private String type;
     private String idOfTrade;
     private boolean IsOpened;
@@ -14,7 +14,7 @@ public abstract class Trade implements Serializable {
     /** Constructs trade given the type (temporary or permanent)
      * @param type temporary or permanent trade
      */
-    public Trade(String type, String id) {
+    protected Trade(String type, String id) {
         this.type = type;
         this.idOfTrade = id;
         this.IsOpened = true;
@@ -26,7 +26,7 @@ public abstract class Trade implements Serializable {
      * Gets the type of the trade (permanent or temporary)
      * @return type of the trade: temporary or permanent
      */
-    public String getTradeType() {
+    protected String getTradeType() {
         return this.type;
     }
 
@@ -34,7 +34,7 @@ public abstract class Trade implements Serializable {
      * Gets the ID of the trade
      * @return the ID of the trade
      */
-    public String getIdOfTrade() {
+    protected String getIdOfTrade() {
         return this.idOfTrade;
     }
 
@@ -43,14 +43,14 @@ public abstract class Trade implements Serializable {
      * @return for permanent trade, false if the meeting has occurred (and is confirmed); for temporary trade, false if
      * both meetings have occurred (and is confirmed)
      */
-    public boolean getIsOpened() {
+    protected boolean getIsOpened() {
         return this.IsOpened;
     }
 
     /**
      * Changes IsOpened to false (close the trade)
      */
-    public void changeIsOpened() {
+    protected void changeIsOpened() {
         this.IsOpened = false;
     }
 
@@ -58,7 +58,7 @@ public abstract class Trade implements Serializable {
      * Gets the array list of meeting(s)
      * @return list of meeting(s)
      */
-    public List<Meeting> getMeetingList(){
+    protected List<Meeting> getMeetingList(){
         return this.meeting;
     }
 
@@ -66,7 +66,7 @@ public abstract class Trade implements Serializable {
      * Adds another meeting to the list of meeting (if temporary trade)
      * @param newMeeting second meeting to return items (for temporary trade)
      */
-    public void incrementMeetingList(Meeting newMeeting){
+    protected void incrementMeetingList(Meeting newMeeting){
         this.meeting.add(newMeeting);
     }
 
@@ -74,7 +74,7 @@ public abstract class Trade implements Serializable {
      * Gets the date of creation of the trade
      * @return creationDate (date the trade was created)
      */
-    public Date getCreationDate(){
+    protected Date getCreationDate(){
         return this.creationDate;
     }
 
@@ -82,11 +82,11 @@ public abstract class Trade implements Serializable {
      * Gets users involved in the trade
      * @return list of users in trade
      */
-    public abstract List<String> getUsers();
+    protected abstract List<String> getUsers();
 
-    public abstract List<String> getItems();
+    protected abstract List<String> getItems();
 
-    public abstract Map<String, List<String>> itemToTrader();
+    protected abstract Map<String, List<String>> itemToTrader();
 
     public String toString(){
         String status;
@@ -99,7 +99,7 @@ public abstract class Trade implements Serializable {
                 "\nCreation Date: " + this.creationDate.toString() + "\nUsers involved: " + getUsers() + "\nItems involved: " + getItems();
     }
 
-    public boolean containItem(String itemId){
+    protected boolean containItem(String itemId){
         return getItems().contains(itemId);
     }
 }

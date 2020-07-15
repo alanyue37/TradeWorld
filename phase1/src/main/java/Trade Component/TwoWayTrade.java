@@ -4,7 +4,7 @@ import java.util.*;
 /**
  * Represents a two way trade, where two users give an item and receive the other's item
  */
-public class TwoWayTrade extends Trade {
+class TwoWayTrade extends Trade {
     private String user1;
     private String user2;
     private String item1;
@@ -17,7 +17,7 @@ public class TwoWayTrade extends Trade {
      * @param item1 the ID of the item that user1 will be trading
      * @param item2 the ID of the item that user2 will be trading
      */
-    public TwoWayTrade(String type, String tradeId, String user1, String user2, String item1, String item2) {
+    protected TwoWayTrade(String type, String tradeId, String user1, String user2, String item1, String item2) {
         super(type, tradeId);
         this.user1 = user1;
         this.user2 = user2;
@@ -29,7 +29,7 @@ public class TwoWayTrade extends Trade {
      * Gets the username of the first user in the trade
      * @return username of first user
      */
-    public String getUser1() {
+    protected String getUser1() {
         return this.user1;
     }
 
@@ -37,7 +37,7 @@ public class TwoWayTrade extends Trade {
      * Gets the username of the second user in the trade
      * @return username of second user
      */
-    public String getUser2() {
+    protected String getUser2() {
         return this.user2;
     }
 
@@ -45,7 +45,7 @@ public class TwoWayTrade extends Trade {
      * Gets the item ID of the item being traded by user1
      * @return item ID of item being traded by user1
      */
-    public String getItem1() {
+    protected String getItem1() {
         return item1;
     }
 
@@ -53,7 +53,7 @@ public class TwoWayTrade extends Trade {
      * Gets the item ID of the item being traded by user2
      * @return item ID of item being traded by user2
      */
-    public String getItem2() {
+    protected String getItem2() {
         return item2;
     }
 
@@ -62,7 +62,7 @@ public class TwoWayTrade extends Trade {
      * @param user the user who is trading an item
      * @return the item ID that the given user is trading
      */
-    public String getItemOfUser(String user) {
+    protected String getItemOfUser(String user) {
         if (user.equals(this.user1)) {
             return this.item1;
         } else {
@@ -75,7 +75,7 @@ public class TwoWayTrade extends Trade {
      * @param item the ID of the item being traded
      * @return user that is trading the given item
      */
-    public String getUserofItem(String item) {
+    protected String getUserofItem(String item) {
         if (item.equals(this.item1)) {
             return this.item1;
         } else {
@@ -88,7 +88,7 @@ public class TwoWayTrade extends Trade {
      * @return list of users in trade
      */
     @Override
-    public List<String> getUsers() {
+    protected List<String> getUsers() {
         List<String> users = new ArrayList<>();
         users.add(user1);
         users.add(user2);
@@ -96,7 +96,7 @@ public class TwoWayTrade extends Trade {
     }
 
     @Override
-    public List<String> getItems(){
+    protected List<String> getItems(){
         List<String> items = new ArrayList<>();
         items.add(item1);
         items.add(item2);
@@ -104,7 +104,7 @@ public class TwoWayTrade extends Trade {
     }
 
     @Override
-    public Map<String, List<String>> itemToTrader(){
+    protected Map<String, List<String>> itemToTrader(){
         Map<String, List<String>> userToItem = new HashMap<>();
         List<String> item1user = Arrays.asList(user1, user2);
         List<String> item2user = Arrays.asList(user2, user1);

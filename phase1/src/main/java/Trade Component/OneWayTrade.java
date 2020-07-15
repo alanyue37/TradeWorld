@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * Represents a one way trade, where one user gives an item to another user
  */
-public class OneWayTrade extends Trade {
+class OneWayTrade extends Trade {
     private String itemId;
     private String giverUsername;
     private String receiverUsername;
@@ -18,7 +18,7 @@ public class OneWayTrade extends Trade {
      * @param receiver the user who is receiving the item in this Trade
      * @param itemId the ID of the item being traded
      */
-    public OneWayTrade(String type, String tradeId, String giver, String receiver, String itemId) {
+    protected OneWayTrade(String type, String tradeId, String giver, String receiver, String itemId) {
         super(type, tradeId);
         this.giverUsername = giver;
         this.receiverUsername = receiver;
@@ -29,7 +29,7 @@ public class OneWayTrade extends Trade {
      * Gets the item ID of the item being traded
      * @return item ID of item being traded
      */
-    public String getItemId() {
+    protected String getItemId() {
         return this.itemId;
     }
 
@@ -37,7 +37,7 @@ public class OneWayTrade extends Trade {
      * Gets the username of the user giving the item
      * @return username of the giver
      */
-    public String getGiverUsername(){
+    protected String getGiverUsername(){
         return this.giverUsername;
     }
 
@@ -45,7 +45,7 @@ public class OneWayTrade extends Trade {
      * Gets the username of the user receiving the item
      * @return username of the receiver
      */
-    public String getReceiverUsername(){
+    protected String getReceiverUsername(){
         return this.receiverUsername;
     }
 
@@ -54,7 +54,7 @@ public class OneWayTrade extends Trade {
      * @return list of users in trade
      */
     @Override
-    public List<String> getUsers() {
+    protected List<String> getUsers() {
         List<String> users = new ArrayList<>();
         users.add(giverUsername);
         users.add(receiverUsername);
@@ -62,14 +62,14 @@ public class OneWayTrade extends Trade {
     }
 
     @Override
-    public  List<String> getItems(){
+    protected List<String> getItems(){
         List<String> items = new ArrayList<>();
         items.add(this.itemId);
         return items;
     }
 
     @Override
-    public Map<String, List<String>> itemToTrader(){
+    protected Map<String, List<String>> itemToTrader(){
         Map<String, List<String>> userToItem = new HashMap<>();
         List<String> users = new ArrayList<>();
         users.add(giverUsername);

@@ -1,7 +1,7 @@
 import java.io.Serializable;
 
 
-public class Item implements Serializable {
+class Item implements Serializable {
     private final String id;
     private String name;
     private String owner;
@@ -15,7 +15,7 @@ public class Item implements Serializable {
      * @param owner The owner of the item
      * @param description   The description of the item
      */
-    public Item(String id, String name, String owner, String description) {
+    protected Item(String id, String name, String owner, String description) {
         this.id = id;
         this.name = name;
         this.owner = owner;
@@ -27,7 +27,7 @@ public class Item implements Serializable {
      * Returns the id of the item
      * @return  The id of the item
      */
-    public String getId() {
+    protected String getId() {
         return id;
     }
 
@@ -35,7 +35,7 @@ public class Item implements Serializable {
      * Returns the name of the item
      * @return  The name of the item
      */
-    public String getName() {
+    protected String getName() {
         return name;
     }
 
@@ -43,7 +43,7 @@ public class Item implements Serializable {
      * Returns the owner of the item
      * @return  The owner of the item
      */
-    public String getOwner() {
+    protected String getOwner() {
         return owner;
     }
 
@@ -51,7 +51,7 @@ public class Item implements Serializable {
      * Returns the description of the item
      * @return  The description of the item
      */
-    public String getDescription() {
+    protected String getDescription() {
         return description;
     }
 
@@ -59,7 +59,7 @@ public class Item implements Serializable {
      * Returns true if the item is available or false if the item is not available
      * @return  Whether is item is available or not
      */
-    public boolean isAvailable() {
+    protected boolean isAvailable() {
         return available;
     }
 
@@ -67,7 +67,7 @@ public class Item implements Serializable {
      * Sets the name of the item
      * @param name  The new name of the item
      */
-    public void setName(String name) {
+    protected void setName(String name) {
         this.name = name;
     }
 
@@ -75,7 +75,7 @@ public class Item implements Serializable {
      * Sets the owner for the item
      * @param owner The new owner of the item
      */
-    public void setOwner(String owner) {
+    protected void setOwner(String owner) {
         this.owner = owner;
     }
 
@@ -83,7 +83,7 @@ public class Item implements Serializable {
      * Sets a description of the item
      * @param description   The new description of the item
      */
-    public void setDescription(String description) {
+    protected void setDescription(String description) {
         this.description = description;
     }
 
@@ -91,7 +91,7 @@ public class Item implements Serializable {
      * Changes the availability of the item, setting it as either true or false
      * @param available Change the availability of the item
      */
-    public void setAvailable(boolean available) {
+    protected void setAvailable(boolean available) {
         this.available = available;
     }
 

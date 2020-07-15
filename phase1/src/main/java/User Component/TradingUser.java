@@ -1,7 +1,7 @@
 import java.util.Set;
 import java.util.HashSet;
 
-public class TradingUser extends User {
+class TradingUser extends User {
 
     private final Set<String> inventory;
     private final Set<String> wishlist;
@@ -11,7 +11,7 @@ public class TradingUser extends User {
     /**
      * Instantiates a new TradingUser
      */
-    public TradingUser(String name, String username, String password) {
+    protected TradingUser(String name, String username, String password) {
         super(name, username, password);
         inventory = new HashSet<>();
         wishlist = new HashSet<>();
@@ -24,7 +24,7 @@ public class TradingUser extends User {
      *
      * @return The inventory of this TradingUser
      */
-    public Set<String> getInventory(){
+    protected Set<String> getInventory(){
         return inventory;
     }
 
@@ -33,7 +33,7 @@ public class TradingUser extends User {
      *
      * @param itemID The id of the item to be added
      */
-    public void addToInventory(String itemID){
+    protected void addToInventory(String itemID){
         inventory.add(itemID);
     }
 
@@ -42,7 +42,7 @@ public class TradingUser extends User {
      *
      * @param itemID The id of the item to be removed
      */
-    public void removeFromInventory(String itemID){
+    protected void removeFromInventory(String itemID){
         inventory.remove(itemID);
     }
 
@@ -51,7 +51,7 @@ public class TradingUser extends User {
      *
      * @return The wishlist of this TradingUser
      */
-    public Set<String> getWishlist(){
+    protected Set<String> getWishlist(){
         return wishlist;
     }
 
@@ -60,7 +60,7 @@ public class TradingUser extends User {
      *
      * @param itemID The id of the item to be added
      */
-    public void addToWishlist(String itemID){
+    protected void addToWishlist(String itemID){
         wishlist.add(itemID);
     }
 
@@ -69,7 +69,7 @@ public class TradingUser extends User {
      *
      * @param itemID The id of the item to be removed
      */
-    public void removeFromWishlist(String itemID){
+    protected void removeFromWishlist(String itemID){
         wishlist.remove(itemID);
     }
 
@@ -78,7 +78,7 @@ public class TradingUser extends User {
      *
      * @return Whether this TradingUser is currently frozen
      */
-    public boolean isFrozen(){
+    protected boolean isFrozen(){
         return frozen;
     }
 
@@ -87,7 +87,7 @@ public class TradingUser extends User {
      *
      * @param frozen Whether or not this TradingUser should be frozen
      */
-    public void setFrozen(boolean frozen){
+    protected void setFrozen(boolean frozen){
         this.frozen = frozen;
     }
 
@@ -96,26 +96,26 @@ public class TradingUser extends User {
      *
      * @return The current credit standing of this TradingUser
      */
-    public int getCredit(){
+    protected int getCredit(){
         return credit;
     }
 
     /**
      * Increments the current credit standing of this TradingUser by 1
      */
-    public void incrementCredit(){
+    protected void incrementCredit(){
         credit++;
     }
 
     /**
      * Decrements the current credit standing of this TradingUser by 1
      */
-    public void decrementCredit(){
+    protected void decrementCredit(){
         credit--;
     }
 
     @Override
-    public boolean isAdmin() {
+    protected boolean isAdmin() {
         return false;
     }
 

@@ -1,6 +1,6 @@
 import java.io.Serializable;
 
-public class User implements Serializable {
+class User implements Serializable {
 
     private String name;
     private String username;
@@ -9,7 +9,7 @@ public class User implements Serializable {
     /**
      * Instantiates a new User
      */
-    public User(String name, String username, String password) {
+    protected User(String name, String username, String password) {
         this.name = name;
         this.username = username;
         this.password = password;
@@ -21,7 +21,7 @@ public class User implements Serializable {
      *
      * @return The name of this User
      */
-    public String getName(){
+    protected String getName(){
         return name;
     }
 
@@ -30,7 +30,7 @@ public class User implements Serializable {
      *
      * @param name The new name of this User
      */
-    public void setName(String name){
+    protected void setName(String name){
         this.name = name;
     }
 
@@ -39,7 +39,7 @@ public class User implements Serializable {
      *
      * @return The username of this User
      */
-    public String getUsername(){
+    protected String getUsername(){
         return username;
     }
 
@@ -48,7 +48,7 @@ public class User implements Serializable {
      *
      * @param username The new username of this User
      */
-    public void setUsername(String username){
+    protected void setUsername(String username){
         this.username = username;
     }
 
@@ -57,7 +57,7 @@ public class User implements Serializable {
      *
      * @return The password of this User
      */
-    public String getPassword(){
+    protected String getPassword(){
         return password;
     }
 
@@ -66,7 +66,7 @@ public class User implements Serializable {
      *
      * @param password The new password of this User
      */
-    public void setPassword(String password){
+    protected void setPassword(String password){
         this.password = password;
     }
 
@@ -75,7 +75,7 @@ public class User implements Serializable {
      *
      * @return Whether the User is an admin
      */
-    public boolean isAdmin() {
+    protected boolean isAdmin() {
         return true;
     }
 
