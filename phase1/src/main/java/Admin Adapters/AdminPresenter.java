@@ -52,7 +52,7 @@ public class AdminPresenter extends TextPresenter {
 
     /**
      * Prints message that the admin new account has been successfully created.
-     * @param username username inputted
+     * @param username  The username of the Admin User inputs.
      */
     public void newAccountCreated(String username) {
         System.out.println("New admin account " + username + " created.\n");
@@ -60,7 +60,7 @@ public class AdminPresenter extends TextPresenter {
 
     /**
      * Prints message that the inputted username for new account has been taken.
-     * @param username username inputted
+     * @param username  The username of the Admin User inputs.
      */
     public void usernameTaken(String username) {
         System.out.println("Username " + username + " is taken. Please try again.\n");
@@ -69,7 +69,7 @@ public class AdminPresenter extends TextPresenter {
     /**
      * Prints relevant heading for freeze account view.
      * Prints no accounts to be frozen if empty is true. Otherwise prints instructions.
-     * @param empty true iff no accounts have been flagged for freezing
+     * @param empty True iff no accounts have been flagged for freezing.
      */
     public void freezeAccountsHeading(boolean empty) {
         if (empty) {
@@ -80,11 +80,19 @@ public class AdminPresenter extends TextPresenter {
                             "For each account enter 1 to freeze or 0 to skip.\n");
         }
     }
+    /**
+     * This method prompts the admin user to enter 1 to freeze this particular account or 0 to skip.
+     * @param user  The account that the admin can freeze.
+     */
+    public void freezeAccounts(String user) {
+        System.out.println("This account has reached the limits. Enter 1 to freeze this account or 0 to skip. " +
+                "\n Freeze Account for:" + user);
+    }
 
     /**
      * Prints relevant heading for unfreeze account view.
      * Prints no accounts to be unfrozen if empty is true. Otherwise prints instructions.
-     * @param empty true iff no accounts have requested to be unfrozen
+     * @param empty True iff no accounts have requested to be unfrozen.
      */
     public void unfreezeAccountsHeading(boolean empty) {
         if (empty) {
@@ -97,18 +105,18 @@ public class AdminPresenter extends TextPresenter {
     }
 
     /**
-     * This method prompts the admin user to enter 1 to unfreeze this particular account.
-     * @param unfreeze  The account that the admin has to unfreeze.
+     * This method prompts the admin user to enter 1 to unfreeze this particular account or 0 to skip.
+     * @param user  The account that the admin can unfreeze.
      */
-    public void unfreezeAccounts(String unfreeze) {
-        System.out.println("This user has their account frozen and is requesting to unfreeze." +
-                "Type 1 to unfreeze this account.\n Unfreeze Account for: " + unfreeze);
+    public void unfreezeAccounts(String user) {
+        System.out.println("This user has their account frozen and is requesting to unfreeze. " +
+                "Enter 1 to unfreeze this account or 0 to skip.\n Unfreeze Account for: " + user);
     }
 
     /**
      * Prints relevant heading for reviewing added items view.
      * Prints no items to be reviewed if empty is true. Otherwise prints instructions.
-     * @param empty true iff no items to be reviewed
+     * @param empty True iff no items to be reviewed.
      */
     public void reviewItemsHeading(boolean empty) {
         if (empty) {
@@ -123,10 +131,10 @@ public class AdminPresenter extends TextPresenter {
     /**
      * This method prompts the admin user to review the item and decided whether this item should be added
      * to the system or not.
-     * @param item  The item to be added to the system.
+     * @param item  The item could be added to the system.
      */
     public void reviewItem(String item) {
-        System.out.println("Enter 1 to add this item or 0 to not add the following item: \n" + item);
+        System.out.println("Enter 1 to add the following item or 0 to not add the following item: \n" + item);
     }
 
     /**
@@ -180,6 +188,15 @@ public class AdminPresenter extends TextPresenter {
      */
     public void invalidInput() {
         System.out.println("This is an invalid input.\n Please try again!");
+    }
+
+    /**
+     * This method informs the admin user that the input is not an integer or the number entered is not
+     * accepted by the program.
+     */
+    public void notAnInteger() {
+        System.out.println("This is not an integer or it is a number less than the minimum number.\n " +
+                "Please try again!");
     }
 
     /**

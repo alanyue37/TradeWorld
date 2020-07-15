@@ -44,7 +44,7 @@ public class AdminController implements RunnableController {
      * admin user is brought back to selectMenu() and prints the same options again until the admin user enters
      * a corresponding number.
      *
-     * @throws IOException   If something goes wrong.
+     * @throws IOException If something goes wrong.
      */
     public boolean selectMenu() throws IOException {
         presenter.startMenu(username);
@@ -99,7 +99,7 @@ public class AdminController implements RunnableController {
      * admin user. After adding the subsequent admin user to admin users in UserManager, the admin is presented with
      * the same menu options again.
      *
-     * @throws IOException   If something goes wrong.
+     * @throws IOException If something goes wrong.
      */
     private void askAdminToAddNewAdmin() throws IOException {
         presenter.accountEnterName();
@@ -120,7 +120,7 @@ public class AdminController implements RunnableController {
      * This method allows an admin user to freeze accounts of trading users who have reached the limits and thresholds.
      * After freezing the account(s), the admin is presented with the same menu options again.
      *
-     * @throws IOException   If something goes wrong.
+     * @throws IOException If something goes wrong.
      */
     public void askAdminToFreezeUsers() throws IOException {
         Set<String> flaggedAccounts = new HashSet<>();
@@ -131,9 +131,9 @@ public class AdminController implements RunnableController {
         presenter.freezeAccountsHeading(empty);
 
         for (String user : flaggedAccounts) {
-            presenter.listItem(user);
+            presenter.freezeAccounts(user);
             String confirmationInput = br.readLine();
-            while (!confirmationInput.equals("0") && !confirmationInput.equals("1")){
+            while (!confirmationInput.equals("0") && !confirmationInput.equals("1")) {
                 presenter.invalidInput();
                 confirmationInput = br.readLine();
             }
@@ -147,7 +147,7 @@ public class AdminController implements RunnableController {
      * This method allows an admin user to unfreeze accounts of trading users who have requested to unfreeze.
      * After unfreezing the account(s), the admin is presented with the same menu options again.
      *
-     * @throws IOException   If something goes wrong.
+     * @throws IOException If something goes wrong.
      */
     public void askAdminToUnfreezeUsers() throws IOException {
         Set<String> accounts = tradeModel.getUserManager().getUnfreezeRequests();
@@ -157,7 +157,7 @@ public class AdminController implements RunnableController {
         for (String user : accounts) {
             presenter.unfreezeAccounts(user);
             String confirmationInput = br.readLine();
-            while (!confirmationInput.equals("0") && !confirmationInput.equals("1")){
+            while (!confirmationInput.equals("0") && !confirmationInput.equals("1")) {
                 presenter.invalidInput();
                 confirmationInput = br.readLine();
             }
@@ -171,7 +171,7 @@ public class AdminController implements RunnableController {
      * This method allows an admin user to look at the item and check whether this item should be added to the system
      * or not. This is a way to prevent the user from selling items that are possible to sell such as intangible items.
      *
-     * @throws IOException   If something goes wrong.
+     * @throws IOException If something goes wrong.
      */
     public void askAdminToReviewItems() throws IOException {
         List<String> items = tradeModel.getItemManager().getPendingItems();
@@ -182,7 +182,7 @@ public class AdminController implements RunnableController {
             String itemInfo = tradeModel.getItemManager().getItemInfo(itemId);
             presenter.reviewItem(itemInfo);
             String input = br.readLine();
-            while (!input.equals("0") && !input.equals("1")){
+            while (!input.equals("0") && !input.equals("1")) {
                 presenter.invalidInput();
                 input = br.readLine();
             }
@@ -198,13 +198,19 @@ public class AdminController implements RunnableController {
 
     /**
      * This method allows an admin user to change the lending threshold, that is, how much the user lends than borrow
-     * in order to make a non-lending transaction.
+     * in order to make a non-lending transaction. It prompts the Admin user to enter a number that is an integer
+     * greater than or equal to zero.
      *
-     * @throws IOException   If something goes wrong.
+     * @throws IOException If something goes wrong.
      */
     public void askAdminToSetLendingThreshold() throws IOException {
         presenter.lendingThreshold(tradeModel.getUserManager().getThreshold());
         String thresholdInput = br.readLine();
+        while (notAnIntegerOrNotZero(thresholdInput)) {
+            presenter.notAnInteger();
+            presenter.lendingThreshold(tradeModel.getUserManager().getThreshold());
+            thresholdInput = br.readLine();
+        }
         int lendingThreshold = Integer.parseInt(thresholdInput);
         tradeModel.getUserManager().setThreshold(lendingThreshold);
         selectMenu();
@@ -212,13 +218,19 @@ public class AdminController implements RunnableController {
 
     /**
      * This method allows an admin user to set a limit for the number of transactions that a user can conduct
-     * in one week.
+     * in one week. It prompts the Admin user to enter a number that is an integer greater than
+     * or equal to one.
      *
-     * @throws IOException   If something goes wrong.
+     * @throws IOException If something goes wrong.
      */
     public void askAdminToSetLimitOfTransactions() throws IOException {
         presenter.limitOfTransactions(tradeModel.getTradeManager().getLimitTransactionPerWeek());
         String thresholdInput = br.readLine();
+        while (notAnIntegerOrNotOne(thresholdInput)) {
+            presenter.notAnInteger();
+            presenter.limitOfTransactions(tradeModel.getTradeManager().getLimitTransactionPerWeek());
+            thresholdInput = br.readLine();
+        }
         int thresholdTransactions = Integer.parseInt(thresholdInput);
         tradeModel.getTradeManager().changeLimitTransactionPerWeek(thresholdTransactions);
         selectMenu();
@@ -226,30 +238,70 @@ public class AdminController implements RunnableController {
 
     /**
      * This method allows an admin user to set a limit on how many transactions remain incomplete before the account
-     * is frozen.
+     * is frozen. It prompts the Admin user to enter a number that is an integer greater than or equal to one.
      *
-     * @throws IOException   If something goes wrong.
+     * @throws IOException If something goes wrong.
      */
     public void askAdminToSetLimitOfIncompleteTrades() throws IOException {
         presenter.limitOfIncompleteTransactions(tradeModel.getTradeManager().getLimitIncomplete());
         String thresholdInput = br.readLine();
+        while (notAnIntegerOrNotOne(thresholdInput)) {
+            presenter.notAnInteger();
+            presenter.limitOfIncompleteTransactions(tradeModel.getTradeManager().getLimitIncomplete());
+            thresholdInput = br.readLine();
+        }
         int thresholdIncomplete = Integer.parseInt(thresholdInput);
         tradeModel.getTradeManager().changeLimitIncomplete(thresholdIncomplete);
         selectMenu();
-
     }
 
     /**
      * This method allows an admin user to set a limit on edits that the user can make to change the
-     * meeting place and time.
+     * meeting place and time. It prompts the Admin user to enter a number that is an integer greater than
+     * or equal to zero.
      *
-     * @throws IOException   If something goes wrong.
+     * @throws IOException If something goes wrong.
      */
     public void askAdminToSetLimitOfEdits() throws IOException {
         presenter.limitOfEdits(tradeModel.getTradeManager().getLimitEdits());
         String thresholdInput = br.readLine();
+        while (notAnIntegerOrNotZero(thresholdInput)) {
+            presenter.notAnInteger();
+            presenter.limitOfEdits(tradeModel.getTradeManager().getLimitEdits());
+            thresholdInput = br.readLine();
+        }
         int thresholdEdits = Integer.parseInt(thresholdInput);
         tradeModel.getTradeManager().changeLimitEdits(thresholdEdits);
         selectMenu();
+    }
+
+    /**
+     * A helper method that returns true iff the input is not an integer or the input is a negative number
+     * to prompt the Admin user to re-enter a valid input. Returns false when the input is valid.
+     * @param adminInput    The input from the Admin user.
+     * @return  True iff the input is not an integer or the input is less than 0.
+     */
+    private boolean notAnIntegerOrNotZero(String adminInput) {
+        try {
+            int isInt = Integer.parseInt(adminInput);
+            return isInt < 0;
+        } catch (NumberFormatException e) {
+            return true;
+        }
+    }
+
+    /**
+     * A helper method that returns true iff the input is not an integer or the input is less than 1 to prompt the Admin
+     * user to re-enter a valid input. Returns false when the input is valid.
+     * @param adminInput    The input from the Admin user.
+     * @return  True iff the input is not an integer or the input is less than 1.
+     */
+    private boolean notAnIntegerOrNotOne(String adminInput) {
+        try {
+            int isInt = Integer.parseInt(adminInput);
+            return isInt < 1;
+        } catch (NumberFormatException e) {
+            return true;
+        }
     }
 }
