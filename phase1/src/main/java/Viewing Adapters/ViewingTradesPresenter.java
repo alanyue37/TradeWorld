@@ -9,7 +9,7 @@ public class ViewingTradesPresenter extends TextPresenter{
         List<String> options = new ArrayList<>();
         options.add("View your ongoing trades");
         options.add("View trade status");
-        options.add("View recent transactions");
+        options.add("View recent transaction items");
         options.add("View most frequent trading partners");
         printList(options, true, false);
         System.out.println("\nPlease enter the # of your choice or \"back\" to go back: ");
@@ -43,15 +43,19 @@ public class ViewingTradesPresenter extends TextPresenter{
         System.out.println("Trade Incomplete");
     }
 
-    public void printRecentTrades(int num, List<String> trades){
-        if (trades.size() > 0) {
-            System.out.println("Your last (up to) " + num + "trades were:");
-            printList(trades, true, false);
+    public void printRecentItems(int num, List<String> items){
+        printList(items, false, true);
+        if (items.size() > 0) {
+            System.out.println("Your last (up to) " + num + " items were:");
+            printList(items, true, false);
         } else {
             System.out.println("You do not have any trading history.");
         }
     }
 
+    public void printEnterNumTrades(){
+        System.out.println("Enter <number> to view the most recent <number> of items that you have traded: ");
+    }
 
     /**
      * Print the top trading partners of a user (if any)

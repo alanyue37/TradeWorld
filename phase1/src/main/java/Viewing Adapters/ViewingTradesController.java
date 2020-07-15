@@ -11,7 +11,6 @@ public class ViewingTradesController implements RunnableController {
     private final ViewingTradesPresenter presenter;
     private final String username;
     private final int numTradingPartners;
-    private final int numLastTrades;
 
     public ViewingTradesController(TradeModel tradeModel, String username) {
         br = new BufferedReader(new InputStreamReader(System.in));
@@ -19,7 +18,6 @@ public class ViewingTradesController implements RunnableController {
         this.username = username;
         presenter = new ViewingTradesPresenter();
         numTradingPartners = 3;
-        numLastTrades = 3;
     }
 
     @Override
@@ -45,8 +43,8 @@ public class ViewingTradesController implements RunnableController {
                     viewTradeStatus();
                     validInput = true;
                     break;
-                case "3": // view last transaction
-                    viewRecentTrades();
+                case "3": // view recent transaction items
+                    viewRecentItems();
                     validInput = true;
                     break;
                 case "4": // view top 3 most frequent trading partners
@@ -60,7 +58,6 @@ public class ViewingTradesController implements RunnableController {
             }
         } while (!validInput);
     }
-
 
     private void viewOngoingTrades(){
         List<String> trades = tradeModel.getTradeManager().getTradesOfUser(username, "ongoing");
@@ -80,14 +77,17 @@ public class ViewingTradesController implements RunnableController {
         }
     }
 
-
     /**
-     * View user's last numLastTrades trades
+     * View user's last numLastTrades items
      */
-    private void viewRecentTrades(){
-        List<String> lastTrades = tradeModel.getTradeManager().getRecentItemsTraded(numLastTrades, username);
-        presenter.printRecentTrades(numLastTrades, lastTrades);
+    private void viewRecentItems() throws IOException{
+        presenter.printEnterNumTrades();
+        String lastTrades = br.readLine();
+        int numLastTrades = Integer.parseInt(lastTrades);
+        List<String> itemsTraded = tradeModel.getTradeManager().getRecentItemsTraded(numLastTrades, username);
+        presenter.printRecentItems(numLastTrades, getItemsInfo(itemsTraded));
     }
+
 
     /**
      * View top numTradingPartners most frequent trading partners
@@ -104,6 +104,4 @@ public class ViewingTradesController implements RunnableController {
         }
         return itemsInfo;
     }
-
-
 }

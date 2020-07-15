@@ -48,15 +48,16 @@ public class UserController implements RunnableController {
                     viewItemsToAddToWishlist();
                     validInput = true;
                     break;
-                case "3": // view inventory, wishlist, and trading history
+                case "3": // view inventory, wishlist
                     RunnableController vmc = new ViewingMenuController(tradeModel, username);
                     vmc.run();
                     validInput = true;
                     break;
-                case "4": // view trades
+                case "4": // view frequent trades, trading history, trade status
                     RunnableController vtc = new ViewingTradesController(tradeModel, username);
                     vtc.run();
                     validInput = true;
+                    break;
                 case "5": // initiate a trade
                     RunnableController controller = new InitiateTradeController(tradeModel, username);
                     controller.run();

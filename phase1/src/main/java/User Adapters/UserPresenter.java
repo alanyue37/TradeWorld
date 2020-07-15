@@ -45,7 +45,7 @@ public class UserPresenter extends TextPresenter {
      * Print all confirmed items that may be added to inventory
      */
     public void printItemsToAddToWishlist(List<String> items){
-        System.out.println("The following items may be added to your wishlist:");
+        System.out.println("The following items may be added to your wishlist: ");
         printList(items, false, true);
         System.out.println("Please enter the ID of the item you would like to add or \"back\" to go back: ");
     }
