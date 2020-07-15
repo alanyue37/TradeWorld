@@ -131,7 +131,7 @@ public class AdminPresenter extends TextPresenter {
     /**
      * This method prompts the admin user to review the item and decided whether this item should be added
      * to the system or not.
-     * @param item  The item to be added to the system.
+     * @param item  The item could be added to the system.
      */
     public void reviewItem(String item) {
         System.out.println("Enter 1 to add the following item or 0 to not add the following item: \n" + item);
@@ -188,6 +188,14 @@ public class AdminPresenter extends TextPresenter {
      */
     public void invalidInput() {
         System.out.println("This is an invalid input.\n Please try again!");
+    }
+
+    /**
+     * This method informs the admin user that the input is not an integer or the number entered is negative.
+     * and is not accepted by the program.
+     */
+    public void notAnInteger() {
+        System.out.println("This is not an integer or it is a negative number.\n Please try again!");
     }
 
     /**
