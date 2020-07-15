@@ -1,7 +1,7 @@
 import java.io.Serializable;
 import java.util.Date;
 
-public class Meeting implements Serializable {
+class Meeting implements Serializable {
     private String location;
     private Date meetingTime;    //ask later if string or time
     private int numOfEdits;
@@ -16,7 +16,7 @@ public class Meeting implements Serializable {
      * @param time  The time of the meeting
      * @param username  The username of the User
      */
-    public Meeting(String location, Date time, String username){
+    protected Meeting(String location, Date time, String username){
         this.location = location;
         this.meetingTime = time;
         this.numOfEdits = 0;
@@ -30,7 +30,7 @@ public class Meeting implements Serializable {
      * Returns the location of the meeting
      * @return The location of the meeting
      */
-    public String getLocation(){
+    protected String getLocation(){
         return this.location;
     }
 
@@ -38,7 +38,7 @@ public class Meeting implements Serializable {
      * Returns the User who last edited and made changes
      * @return The User who last edited and made changes
      */
-    public String getLastEditUser(){
+    protected String getLastEditUser(){
         return this.lastEditUser;
     }
 
@@ -46,7 +46,7 @@ public class Meeting implements Serializable {
      * Sets the User who last edited
      * @param username  The username of the User
      */
-    public void setLastEditUser(String username){
+    protected void setLastEditUser(String username){
         this.lastEditUser = username;
     }
 
@@ -54,7 +54,7 @@ public class Meeting implements Serializable {
      * Sets a new location for the meeting
      * @param newLocation   The new location of the meeting
      */
-    public void setLocation(String newLocation){
+    protected void setLocation(String newLocation){
         this.location = newLocation;
     }
 
@@ -62,7 +62,7 @@ public class Meeting implements Serializable {
      * Gets the meeting time
      * @return  The meeting time
      */
-    public Date getTime(){
+    protected Date getTime(){
         return this.meetingTime;
     }
 
@@ -70,7 +70,7 @@ public class Meeting implements Serializable {
      * Sets the new meeting time
      * @param newTime   The new meeting time
      */
-    public void setTime(Date newTime){
+    protected void setTime(Date newTime){
         this.meetingTime = newTime;
     }
 
@@ -78,14 +78,14 @@ public class Meeting implements Serializable {
      * Returns the number of edits made so far
      * @return  The number of edits made so far
      */
-    public int getNumOfEdits(){
+    protected int getNumOfEdits(){
         return numOfEdits;
     }
 
     /**
      * Increments the number of edits when a User makes an edit to change the meeting by 1
      */
-    public void incrementNumOfEdits(){
+    protected void incrementNumOfEdits(){
         this.numOfEdits += 1;
     }
 
@@ -93,14 +93,14 @@ public class Meeting implements Serializable {
      * Returns the number of confirmations for the meeting
      * @return  The number of confirmations
      */
-    public int getNumConfirmations(){
+    protected int getNumConfirmations(){
         return this.numConfirmations;
     }
 
     /**
      * Increments the number of confirmations by 1
      */
-    public void incrementNumConfirmations(){
+    protected void incrementNumConfirmations(){
         this.numConfirmations += 1;
     }
 
@@ -108,14 +108,14 @@ public class Meeting implements Serializable {
      * Returns true iff the meeting is completed, false otherwise
      * @return  True iff the meeting is completed, false otherwise
      */
-    public boolean getIsCompleted(){
+    protected boolean getIsCompleted(){
         return this.IsCompleted;
     }
 
     /**
      * Sets the isComplete to true when the meeting is complete
      */
-    public void changeIsCompleted(){
+    protected void changeIsCompleted(){
         this.IsCompleted = true;
     }
 
@@ -123,14 +123,14 @@ public class Meeting implements Serializable {
      * Returns true iff the meeting has been confirmed, false otherwise
      * @return Whether the meeting has been confirmed
      */
-    public boolean getIsConfirmed(){
+    protected boolean getIsConfirmed(){
         return this.IsConfirmed;
     }
 
     /**
      * Sets isConfirmed to true when the meeting is confirmed
      */
-    public void changeIsConfirmed(){
+    protected void changeIsConfirmed(){
         this.IsConfirmed = true;
     }
 
