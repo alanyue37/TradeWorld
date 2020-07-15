@@ -190,24 +190,40 @@ public class TradeManager implements Serializable {
     /**
      * Change the limit of edit that users can suggest before the trade is cancelled
      *
-     * @param newLimit new value to limit of edits
+     * @param newLimit  New limit for the edits allowed
      */
     public void changeLimitEdits(int newLimit) {
         this.limitOfEdits = newLimit;
     }
 
+    /**
+     * Gets the current limit for having incomplete transactions before the account is frozen
+     * @return  The current limit of incomplete transactions
+     */
     public int getLimitIncomplete() {
         return this.limitIncomplete;
     }
 
+    /**
+     * Gets the current limit of transactions per week before the account is frozen
+     * @return  The current limit of transactions per week
+     */
     public int getLimitTransactionPerWeek() {
         return this.limitTransactionPerWeek;
     }
 
+    /**
+     * Change the limit for incomplete transactions
+     * @param newIncompleteLimit    New value of incomplete transactions
+     */
     public void changeLimitIncomplete(int newIncompleteLimit) {
         this.limitIncomplete = newIncompleteLimit;
     }
 
+    /**
+     * Change the limit for transactions in one week
+     * @param newLimitPerWeek   New value of transactions in one week
+     */
     public void changeLimitTransactionPerWeek(int newLimitPerWeek) {
         this.limitTransactionPerWeek = newLimitPerWeek;
     }
