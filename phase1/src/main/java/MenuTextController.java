@@ -9,7 +9,12 @@ public abstract class MenuTextController extends TextController {
     private Map<Integer, String> menuOptions;
     private MenuTextPresenter presenter;
 
-
+    /**
+     * Initiates a new meeting
+     * @param tradeModel    The tradeModel
+     * @param username      The username of the User
+     * @param presenter     The present
+     */
     public MenuTextController(TradeModel tradeModel, String username, MenuTextPresenter presenter) {
         super(tradeModel, username);
         nextControllers = new HashMap<>();

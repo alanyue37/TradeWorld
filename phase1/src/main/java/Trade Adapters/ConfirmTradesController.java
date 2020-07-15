@@ -12,6 +12,9 @@ public class ConfirmTradesController implements RunnableController {
     ConfirmTradesPresenter presenter;
     private String username;
 
+    /**
+     * Initiates ConfirmTradesController
+     */
     public ConfirmTradesController(TradeModel tradeModel, String username) {
         br = new BufferedReader(new InputStreamReader(System.in));
         this.tradeModel = tradeModel;

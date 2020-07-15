@@ -1,7 +1,7 @@
 /**
  * A class that prints the prompts from UserPresenter. It is the text UI.
  */
-public class UserView {
+public class UserView {         // should this class be deleted since we have an interface already?
     public UserPresenter s;
 
     public UserView(UserPresenter s) {
