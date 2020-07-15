@@ -40,7 +40,10 @@ public class ProposedTradesController implements RunnableController {
                     confirmMeetingTime(tradeId, trades.get(tradeId));
                     break;
                 case "2": // edit meeting time
-                    editMeetingTime(tradeId);
+                    if (tradeModel.getTradeManager().canChangeMeeting(tradeId, username)) {
+                        List<String> details = getMeetingDetails();
+                        editMeetingTime(tradeId, details);
+                    } else { presenter.declineEditMeeting(); }
                     break;
                 case "exit":
                     presenter.end();
@@ -77,34 +80,51 @@ public class ProposedTradesController implements RunnableController {
             for (String item : itemToUsers.keySet()) {
                 tradeModel.getUserManager().removeFromSet(itemToUsers.get(item).get(1), item, ItemSets.WISHLIST);
                 tradeModel.getItemManager().setConfirmedItemAvailable(item, false);
-                tradeModel.getTradeManager().deleteCommonItemTrades(item, tradeId); // please check this!
-            } //itemToUsers(tradeId) -> map<itemId, List<String giver, String receiver>
+                tradeModel.getTradeManager().deleteCommonItemTrades(item, tradeId);
+            }
         }
     }
 
-    private void editMeetingTime(String tradeId) throws IOException {
+    private List<String> getMeetingDetails() throws IOException {
+        List<String> details = new ArrayList<>();
+        presenter.enterLocation();
+        String location = br.readLine();
+        details.add(location);
+
+        String dateString = null;
+        Date date = null;
+        do {
+            try {
+                presenter.enterDateTime();
+                dateString = br.readLine();
+                DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                date = format.parse(dateString); // check formatting is valid
+                if (!(date.getTime() == date.getTime())) {
+                    date = null;
+                    presenter.invalidDateTime();
+                }
+            }
+            catch (ParseException e) {
+                presenter.tryAgain();
+            }
+        } while (date == null);
+        details.add(dateString);
+        return details;
+    }
+
+
+    private void editMeetingTime(String tradeId, List<String> details) {
         if (tradeModel.getTradeManager().needCancelTrade(tradeId)) {
             tradeModel.getTradeManager().cancelTrade(tradeId);
             presenter.canceledTrade();
         } else {
-            if (tradeModel.getTradeManager().canChangeMeeting(tradeId, username)) {
-                presenter.enterLocation();
-                String location = br.readLine();
-                presenter.enterDateTime();
-                String dateString = br.readLine();
-
-                Date convertedDate = null;
-                DateFormat format = new SimpleDateFormat("dd/MM/yyyy hh:mm");
-                try {
-                    convertedDate = format.parse(dateString);
-                } catch (ParseException e) {
-                    presenter.invalidDateTime();
-                    editMeetingTime(tradeId);
-                }
-                tradeModel.getTradeManager().changeMeetingOfTrade(tradeId, location, convertedDate, username);
+            try {
+                DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                Date time = format.parse(details.get(1));
+                tradeModel.getTradeManager().changeMeetingOfTrade(tradeId, details.get(0), time, username);
                 presenter.editedMeeting();
-            } else {
-                presenter.declineEditMeeting();
+            } catch (ParseException e) {
+                System.out.println("Invalid date and time!");
             }
         }
     }
