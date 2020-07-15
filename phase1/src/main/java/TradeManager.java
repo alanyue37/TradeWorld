@@ -614,5 +614,5 @@ public class TradeManager implements Serializable {
         return this.completedTrades.containsKey(tradeId);
     }
 
-    //  or confirmed: waiting to confirm real life // hello
+    //  or confirmed: waiting to confirm real life // hello hello hello
 }
