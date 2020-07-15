@@ -9,7 +9,7 @@ public class Item implements Serializable {
     private boolean available;
 
     /**
-     * Initiates an item
+     * Initiates a new item
      * @param id    The id of the item
      * @param name  The name of the item
      * @param owner The owner of the item
