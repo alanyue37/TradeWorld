@@ -159,9 +159,10 @@ public class ItemManager implements Serializable {
     }
 
     /**
-     *
+     * Returns false if the item is not in pendingItems or in confirmedItems
+     * Returns true when the item is deleted from confirmedItems and pendingItems
      * @param itemId    The id of the item
-     * @return
+     * @return  True if the item exists and is deleted, false otherwise
      */
     public boolean deleteItem(String itemId) {
         if (!containsItem(itemId)) {
@@ -172,6 +173,13 @@ public class ItemManager implements Serializable {
         return true;
     }
 
+    /**
+     * Returns true iff the item exists in confirmedItems and the availability is set to available
+     * Returns false if the item is not in confirmedItems
+     * @param itemID    The id of the item
+     * @param available     The availability of the item
+     * @return  True iff the item already exists in confirmedItems, false otherwise
+     */
     public boolean setConfirmedItemAvailable(String itemID, boolean available) {
         if (!confirmedItems.containsKey(itemID)) {
             return false;
