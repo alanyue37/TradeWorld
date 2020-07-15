@@ -1,6 +1,6 @@
 public class ConfirmTradesPresenter extends TextPresenter {
 
-    public ConfirmTradesPresenter() {
+    public ConfirmTradesPresenter() { // Java already has a default constructor
     }
 
     public void showTrade(String tradeId, String tradeInfo){
