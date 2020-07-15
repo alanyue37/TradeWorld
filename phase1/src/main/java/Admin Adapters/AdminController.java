@@ -264,6 +264,12 @@ public class AdminController implements RunnableController {
         selectMenu();
     }
 
+    /**
+     * A helper method that returns true iff the input is not an integer or the input is a negative number
+     * to prompt the user to re-enter a valid input and returns false when the input is valid.
+     * @param adminInput    The input of the Admin user.
+     * @return  True iff the input is not an integer or the input is a negative number.
+     */
     private boolean notAnInteger(String adminInput) {
         try {
             int isInt = Integer.parseInt(adminInput);
