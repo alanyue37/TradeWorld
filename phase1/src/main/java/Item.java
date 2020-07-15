@@ -8,6 +8,13 @@ public class Item implements Serializable {
     private String description;
     private boolean available;
 
+    /**
+     * Initiates an item
+     * @param id    The id of the item
+     * @param name  The name of the item
+     * @param owner The owner of the item
+     * @param description   The description of the item
+     */
     public Item(String id, String name, String owner, String description) {
         this.id = id;
         this.name = name;
@@ -17,7 +24,7 @@ public class Item implements Serializable {
     }
 
     /**
-     *
+     * Returns the id of the item
      * @return  The id of the item
      */
     public String getId() {
@@ -25,7 +32,7 @@ public class Item implements Serializable {
     }
 
     /**
-     *
+     * Returns the name of the item
      * @return  The name of the item
      */
     public String getName() {
@@ -33,7 +40,7 @@ public class Item implements Serializable {
     }
 
     /**
-     *
+     * Returns the owner of the item
      * @return  The owner of the item
      */
     public String getOwner() {
@@ -41,7 +48,7 @@ public class Item implements Serializable {
     }
 
     /**
-     *
+     * Returns the description of the item
      * @return  The description of the item
      */
     public String getDescription() {
@@ -49,15 +56,15 @@ public class Item implements Serializable {
     }
 
     /**
-     *
-     * @return  Whether is item is avaiable or not
+     * Returns true if the item is available or false if the item is not available
+     * @return  Whether is item is available or not
      */
     public boolean isAvailable() {
         return available;
     }
 
     /**
-     *
+     * Sets the name of the item
      * @param name  The new name of the item
      */
     public void setName(String name) {
@@ -65,7 +72,7 @@ public class Item implements Serializable {
     }
 
     /**
-     *
+     * Sets the owner for the item
      * @param owner The new owner of the item
      */
     public void setOwner(String owner) {
@@ -73,7 +80,7 @@ public class Item implements Serializable {
     }
 
     /**
-     *
+     * Sets a description of the item
      * @param description   The new description of the item
      */
     public void setDescription(String description) {
@@ -81,7 +88,7 @@ public class Item implements Serializable {
     }
 
     /**
-     *
+     * Changes the availability of the item, setting it as either true or false
      * @param available Change the availability of the item
      */
     public void setAvailable(boolean available) {
@@ -89,8 +96,8 @@ public class Item implements Serializable {
     }
 
     /**
-     *
-     * @return  The string in identifying the itemId, name, description, and its availability.
+     * Returns a string which includes the itemId, name, description, and its availability
+     * @return  The string in identifying the itemId, name, description, and its availability
      */
     public String toString() {
         return "Item ID: " + id + "\nName: " + name + "\nOwner: " + owner + "\nDescription: " + description + "\nAvailable: " + available;
