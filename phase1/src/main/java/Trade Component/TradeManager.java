@@ -21,8 +21,8 @@ public class TradeManager implements Serializable {
      */
     public TradeManager() {
         this.limitOfEdits = 3;
-        this.limitIncomplete = 5; //or null?
-        this.limitTransactionPerWeek = 10; //or null?
+        this.limitIncomplete = 3; //or null?
+        this.limitTransactionPerWeek = 3; //or null?
         this.ongoingTrades = new HashMap<>();
         this.meetingManager = new MeetingManager();
         this.completedTrades = new HashMap<>();
@@ -31,7 +31,6 @@ public class TradeManager implements Serializable {
 
     /**
      * Agrees to meeting details (time, location) of the trade with ID "tradeId"
-     *
      * @param tradeId ID of the trade
      */
     public void agreeMeetingDetails(String tradeId) {
@@ -45,8 +44,7 @@ public class TradeManager implements Serializable {
 
     /**
      * Confirms that the meeting in real life happened.
-     *
-     * @param tradeId  ID of the trade of which we want to confirm the meeting
+     * @param tradeId  ID of the trade
      * @param username username of the user who confirms the meeting happened
      */
     public void confirmMeetingHappened(String tradeId, String username) {
@@ -66,7 +64,6 @@ public class TradeManager implements Serializable {
     /**
      * Return the meeting in trade with trade ID "tradeId" that was last confirmed. If the trade does not have any
      * confirmed meeting (time, location), then it returns null.
-     *
      * @param tradeId ID of the trade
      * @return meeting of trade that the meeting time and place was last confirmed. If no meeting's time/place has been
      * confirmed for the trade, returns null.
@@ -90,8 +87,7 @@ public class TradeManager implements Serializable {
     }
 
     /**
-     * Given tradeId, return the trade
-     *
+     * Given tradeId, return the trade.
      * @param tradeId ID of the trade
      * @return trade with the ID "tradeId"
      */
@@ -103,8 +99,7 @@ public class TradeManager implements Serializable {
     }
 
     /**
-     * Given the tradeId, returns whether this trade can be closed or not
-     *
+     * Given the tradeId, returns whether this trade can be closed or not.
      * @param trade ID of the trade
      * @return true iff all meetings of the trade are completed (both user have confirmed the meeting happened in real
      * life). If the trade is permanent, one meeting should be completed. If the trade is temporary, both meeting are
@@ -126,11 +121,11 @@ public class TradeManager implements Serializable {
     }
 
     /**
-     * Given the tradeId, returns a hashmap that maps the user's Username to the item they own. If it is a one-way
-     * trade, then one user will map to null, indicating they are not giving any item.
-     *
+     * Given the tradeId, returns a map of item to list of username, where the first is the giver and the second
+     * the receiver.
      * @param tradeId ID of the trade
-     * @return hashmap which maps user (of the trade) to their item
+     * @return map of item to list of users, where the first user is the giver and second user is the receiver of the
+     * item
      */
     public Map<String, List<String>> itemToUsers(String tradeId) {
         return getTrade(tradeId).itemToTrader();
@@ -138,8 +133,7 @@ public class TradeManager implements Serializable {
 
 
     /**
-     * Adds a one way trade to the hashmap of trades in TradeManager.
-     *
+     * Adds a one way trade to the map of trades in TradeManager.
      * @param type     permanent or temporary
      * @param giver    username of the person giving the object
      * @param receiver username of the person receiving the object
@@ -163,7 +157,6 @@ public class TradeManager implements Serializable {
 
     /**
      * Adds a two way trade to the hashmap of trades in TradeManager.
-     *
      * @param type  permanent or temporary
      * @param user1 username of user1 involved in trade
      * @param user2 username of the other user
@@ -188,7 +181,6 @@ public class TradeManager implements Serializable {
 
     /**
      * Gets the limit of edits that users can suggest before the trade is cancelled
-     *
      * @return The limit of edits to the meeting time/place
      */
     public int getLimitEdits() {
@@ -197,7 +189,6 @@ public class TradeManager implements Serializable {
 
     /**
      * Change the limit of edit that users can suggest before the trade is cancelled
-     *
      * @param newLimit  New limit for the edits allowed
      */
     public void changeLimitEdits(int newLimit) {
@@ -238,9 +229,8 @@ public class TradeManager implements Serializable {
 
 
     /**
-     * Returns arraylist of incomplete trades (trade that contains incomplete meetings)
-     *
-     * @return arraylist of incomplete trades
+     * Returns list of incomplete trades (trade that contains incomplete meetings)
+     * @return list of incomplete trades
      */
     private List<Trade> getIncompleteTrade() {
         List<Trade> openTrades = new ArrayList<>(this.ongoingTrades.values());
@@ -254,6 +244,11 @@ public class TradeManager implements Serializable {
         return incompleteTrades;
     }
 
+    /**
+     * Return whether the trade is incomplete. A trade is incomplete if it contains any incomplet meetings.
+     * @param tradeId id of the trade
+     * @return true iif trade is incomplete. otherwise, return false.
+     */
     public boolean isIncompleteTrade(String tradeId){
         if (this.ongoingTrades.containsKey(tradeId)){
             Meeting meeting = getTrade(tradeId).getMeetingList().get(getTrade(tradeId).getMeetingList().size() - 1);
@@ -263,11 +258,10 @@ public class TradeManager implements Serializable {
     }
 
     /**
-     * Given a list of trades, returns a hashmap which maps all the users (who took part of at least one trade in the
-     * list of trades) to the number of trade they took part in.
-     *
+     * Given a list of trades, returns a map of all the users who took part of at least one trade in the
+     * list of trades to the number of trade they took part in.
      * @param trades list of trades
-     * @return a hashmap that maps the username to the number of trades that the user took part of
+     * @return a map of username to the number of trades that the user took part of
      */
     private Map<String, Integer> userToNumTradesInvolved(List<Trade> trades) {
         Map<String, Integer> usernameCount = new HashMap<>();
@@ -284,10 +278,9 @@ public class TradeManager implements Serializable {
     }
 
     /**
-     * Returns arraylist of usernames that have surpassed the limit of incomplete trades allowed
+     * Returns list of usernames that have surpassed the limit of incomplete trades allowed
      * before the account is frozen
-     *
-     * @return arraylist of usernames that passed limit of incomplete trades
+     * @return list of usernames that passed limit of incomplete trades
      */
     public List<String> getExceedIncompleteLimitUser() {
         List<Trade> incompleteTrades = getIncompleteTrade();
@@ -302,10 +295,9 @@ public class TradeManager implements Serializable {
     }
 
     /**
-     * Given the trade, returns the date of the last confirmed meeting (time, location is confirmed) if there is any
-     * confirmed meeting. If none of the meeting of the trade is confirmed yet, then returns null.
-     *
-     * @param tradeId trade ID to get the date of the last confirmed meeting from
+     * Given the trade id, returns the date of the last confirmed meeting if there is any confirmed meeting. If none of
+     * the meeting of the trade is confirmed yet, then returns null.
+     * @param tradeId id of trade
      * @return the date of the last confirmed meeting. If none of the meeting(s) inside trade have been confirmed
      * (time, location) yet, return null.
      */
@@ -318,6 +310,13 @@ public class TradeManager implements Serializable {
         }
     }
 
+    /**
+     * Given the id of the trade, returns the location of the last confirmed meeting. If there are no confirmed meeting,
+     * returns null.
+     * @param tradeId id of the trade
+     * @return location of the last confirmed meeting. If none of the meeting(s) inside trade have been confirmed,
+     * return null
+     */
     public String getLastConfirmedMeetingLocation(String tradeId) {
         Trade trade = getTrade(tradeId);
         if (trade.getMeetingList().isEmpty() || getLastConfirmedMeeting(tradeId) == null) {
@@ -329,9 +328,8 @@ public class TradeManager implements Serializable {
 
     /**
      * Given the number of days, returns a list of trades that have had trades completed in the past numOfDays
-     *
      * @param numDays number of days
-     * @return arraylist of trades that are completed in the past numDays.
+     * @return list of trades that are completed in the past numDays.
      */
     private List<Trade> getTradesPastDays(int numDays) {
         Calendar compare = Calendar.getInstance();
@@ -348,8 +346,7 @@ public class TradeManager implements Serializable {
 
     /**
      * Get the list of usernames of users who had more then *limTrade* in the past *numDays*.
-     *
-     * @return arraylist of usernames
+     * @return list of usernames
      */
     public List<String> getExceedPerWeek() {
         List<Trade> pastTrades = getTradesPastDays(7);
@@ -364,9 +361,8 @@ public class TradeManager implements Serializable {
     }
 
     /**
-     * Cancels the trade. Removes the trade from the hashmap of trades
-     *
-     * @param tradeId ID of the trade to be removed from hashmap of trade
+     * Cancels the trade. Removes the trade from the map of trades.
+     * @param tradeId id of the trade
      */
     public void cancelTrade(String tradeId) {
         Trade trade = getTrade(tradeId);
@@ -377,10 +373,9 @@ public class TradeManager implements Serializable {
     }
 
     /**
-     * Given an username, return all trades of this user
-     *
+     * Given an username, return all trades of status *type* of this user.
      * @param username username of the user we want to get all trade
-     * @return arraylist of trades of user with username "username"
+     * @return list of trades of the user with username "username" of type *type*
      */
 
     private List<Trade> getUserTrades(String username, String type) {
@@ -407,7 +402,6 @@ public class TradeManager implements Serializable {
      * they are still in disagreement with the meeting details and have attained the limit of edits allowed. For a
      * temporary trade, a trade is cancelled only if they cannot agree on the first meeting and have reached the limit
      * of edits.
-     *
      * @param tradeId id of trade
      * @return true if the trade need to be cancelled, false otherwise.
      */
@@ -438,11 +432,10 @@ public class TradeManager implements Serializable {
     // better sorting way? interface?
 
     /**
-     * Returns arraylist of the top "num" most frequent trading partners of user "user"
-     *
+     * Returns list of the top "num" most frequent trading partners of user "user"
      * @param num  the number of most frequent trading partners wanted
      * @param user the username of the user to get their most frequent trading partners
-     * @return arraylist of usernames that are the most frequent trading partners of user "user." If "num" is greater
+     * @return list of usernames that are the most frequent trading partners of user "user." If "num" is greater
      * than the number of trading partners that "user" has, all of their trading partners are returned.
      */
     public List<String> getFrequentPartners(int num, String user) {
@@ -495,8 +488,7 @@ public class TradeManager implements Serializable {
     // only looks at completed trades
 
     /**
-     * Returns arraylist of the top "num" most recently traded item IDs of user "user"
-     *
+     * Returns list of the top "num" most recently traded item IDs of user "user"
      * @param num  the number of most recently traded item IDs wanted
      * @param user the username of the user to get most recently traded item IDs
      * @return arraylist of item IDs that were the most recently traded by user "user." If "num" is greater
@@ -514,11 +506,25 @@ public class TradeManager implements Serializable {
     }
     // what if its temporary, and the returning meeting exceeds the limit?
 
+    /**
+     * Adds a meeting to trade with *tradeId*
+     * @param tradeId id of the trade to add the meeting
+     * @param location meeting location
+     * @param time meeting time
+     * @param username username of user who added the meeting.
+     */
     public void addMeetingToTrade(String tradeId, String location, Date time, String username) {
         Meeting meeting = meetingManager.createMeeting(location, time, username);
         getTrade(tradeId).incrementMeetingList(meeting);
     }
 
+    /**
+     * Changes the meeting details of a trade.
+     * @param tradeId id of the trade
+     * @param location new location
+     * @param time new meeting time
+     * @param username username of user who edited meeting details
+     */
     public void changeMeetingOfTrade(String tradeId, String location, Date time, String username) {
         Trade trade = getTrade(tradeId);
         for (Meeting meeting : trade.getMeetingList()) {
@@ -529,6 +535,12 @@ public class TradeManager implements Serializable {
     }
     //can only change if meeting is not completed and not confirmed
 
+    /**
+     * Return a string with all the information about the trade (type, status, number of meetings, creation date, items
+     * and users involved) and the meeting details of all meetings of the trade.
+     * @param tradeId id of the trade
+     * @return string with trade information
+     */
     public String getTradeAllInfo(String tradeId) {
         Trade trade = getTrade(tradeId);
         StringBuilder meetingDetails = new StringBuilder();
@@ -538,6 +550,12 @@ public class TradeManager implements Serializable {
         return trade.toString() + "\n" + meetingDetails;
     }
 
+    /**
+     * Checks whether a user can change the meeting details of the trade with *tradeId*
+     * @param tradeId id of the trade
+     * @param username username
+     * @return true iff user with *username* can edit the meeting location/time of the trade
+     */
     public boolean canChangeMeeting(String tradeId, String username) {
         Trade trade = getTrade(tradeId);
         if (trade.getMeetingList().size() == 0) {
@@ -548,7 +566,12 @@ public class TradeManager implements Serializable {
         }
     }
 
-
+    /**
+     * Return ids of all proposed trades of this user. A proposed trade is any trade where the users have not agreed on the
+     * first meeting's details.
+     * @param username username of user
+     * @return map of proposed trade ids to their type (permanent/temporary)
+     */
     public Map<String, String> getProposedTrades(String username) {
         List<Trade> userOngoingTrade = getUserTrades(username, "ongoing");
         Map<String, String> proposedTrades = new HashMap<>();
@@ -575,6 +598,11 @@ public class TradeManager implements Serializable {
         return proposedTrade;
     }
 
+    /**
+     * Deletes all the trades involving the item with *itemId* except the trade with *tradeID*
+     * @param itemId id of the item
+     * @param tradeId id of the trade
+     */
     public void deleteCommonItemTrades(String itemId, String tradeId) {
         List<Trade> proposedTrade = getProposedTrades();
         proposedTrade.remove(getTrade(tradeId));
@@ -588,7 +616,11 @@ public class TradeManager implements Serializable {
         }
     }
 
-
+    /**
+     * Return whether the trade requires new meeting to be added.
+     * @param tradeId id of the trade
+     * @return true iff the trade with *tradeId* requires new meeting to be added.
+     */
     public boolean needToAddMeeting(String tradeId){
         Trade trade = getTrade(tradeId);
         if (trade.getTradeType().equals("permanent")){
@@ -626,6 +658,12 @@ public class TradeManager implements Serializable {
         return tobeConfirmed;
     }
 
+    /**
+     * Return whether the trade is completed.A permanent trade is completed when both users confirm the real life
+     * meeting. A temporary trade is completed when both users confirm real life meeting of both meetings.
+     * @param tradeId id of the trade
+     * @return true iff the trade is completed.
+     */
     public boolean tradeCompleted(String tradeId){
         return this.completedTrades.containsKey(tradeId);
     }
@@ -648,6 +686,4 @@ public class TradeManager implements Serializable {
             }
         } return returnList;
     }
-
-    //  or confirmed: waiting to confirm real life // hello hello hello
 }
