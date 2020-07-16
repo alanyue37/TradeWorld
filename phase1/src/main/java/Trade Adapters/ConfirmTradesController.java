@@ -14,6 +14,8 @@ public class ConfirmTradesController implements RunnableController {
 
     /**
      * Initiates ConfirmTradesController
+     * @param tradeModel tradeModel
+     * @param username *username* of the user
      */
     public ConfirmTradesController(TradeModel tradeModel, String username) {
         br = new BufferedReader(new InputStreamReader(System.in));
@@ -22,6 +24,9 @@ public class ConfirmTradesController implements RunnableController {
         presenter = new ConfirmTradesPresenter();
     }
 
+    /**
+     * Overrides run() method in the RunnableController interface.
+     */
     @Override
     public void run() {
         try {
@@ -52,6 +57,10 @@ public class ConfirmTradesController implements RunnableController {
         return true;
     }
 
+    /**
+     * Allow the user to confirm that the real life meeting happened.
+     * @param tradeId id of the trade
+     */
     private void confirmTradeHappened(String tradeId) {
         if (tradeModel.getTradeManager().canChangeMeeting(tradeId, username)){
             tradeModel.getTradeManager().confirmMeetingHappened(tradeId, username);
@@ -69,6 +78,10 @@ public class ConfirmTradesController implements RunnableController {
         } else{ presenter.declineConfirm(); }
     }
 
+    /**
+     * Creates the mandatory return meeting, 30 days after the first meeting time at the same location
+     * @param tradeId id of the trade
+     */
     private void createMandatoryReturnMeeting(String tradeId){
         Calendar cal = Calendar.getInstance();
         cal.setTime(tradeModel.getTradeManager().getLastConfirmedMeetingTime(tradeId));
@@ -80,6 +93,10 @@ public class ConfirmTradesController implements RunnableController {
         presenter.displayNewDate(newDate.toString());
     }
 
+    /**
+     * Make the necessary changes of the item and user status once a trade is completed.
+     * @param tradeId id of the trade
+     */
     private void completedTradeChanges(String tradeId){
         Map<String, List<String>> itemToUsers = tradeModel.getTradeManager().itemToUsers(tradeId);
         for (String item: itemToUsers.keySet()){

@@ -13,6 +13,11 @@ public class ProposedTradesController implements RunnableController {
     ProposedTradesPresenter presenter;
     private String username;
 
+    /**
+     * Initiates the ProposedTradesController.
+     * @param tradeModel tradeModel
+     * @param username *username* of user
+     */
     public ProposedTradesController(TradeModel tradeModel, String username) {
         br = new BufferedReader(new InputStreamReader(System.in));
         this.tradeModel = tradeModel;
@@ -20,6 +25,9 @@ public class ProposedTradesController implements RunnableController {
         presenter = new ProposedTradesPresenter();
     }
 
+    /**
+     * Overrides run() method in the RunnableController interface.
+     */
     @Override
     public void run() {
         try {
@@ -55,6 +63,11 @@ public class ProposedTradesController implements RunnableController {
         return true;
     }
 
+    /**
+     * Allows user to confirm with the suggested meeting details (time, place)
+     * @param tradeId id of the trade
+     * @param type type of the trade (permanent/temporary)
+     */
     private void confirmMeetingTime(String tradeId, String type) {
         if (tradeModel.getTradeManager().canChangeMeeting(tradeId, username)) {
             tradeModel.getTradeManager().agreeMeetingDetails(tradeId);
@@ -65,6 +78,12 @@ public class ProposedTradesController implements RunnableController {
         }
     }
 
+    /**
+     * Make the changes that are necessary for the inventory and wishlist of the users when the trade
+     * meeting time/place is confirmed.
+     * @param tradeId id of the trade
+     * @param type type of trade (permanent/temporary)
+     */
     private void changeItems(String tradeId, String type) {
         Map<String, List<String>> itemToUsers = tradeModel.getTradeManager().itemToUsers(tradeId);
         if (type.equals("permanent")) {
@@ -107,7 +126,6 @@ public class ProposedTradesController implements RunnableController {
         details.add(dateString);
         return details;
     }
-
 
     private void editMeetingTime(String tradeId, List<String> details) {
         if (tradeModel.getTradeManager().needCancelTrade(tradeId)) {
