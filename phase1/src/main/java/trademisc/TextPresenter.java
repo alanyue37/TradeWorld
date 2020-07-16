@@ -28,6 +28,7 @@ public class TextPresenter {
 
     /**
      * Print message asking user to try again when input is invalid
+     * @param items The list of item IDs to be printed
      * @param numbered Number each item starting with 1 iff true
      * @param blankLines Insert a blank line after each item iff true
      */

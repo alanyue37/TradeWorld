@@ -9,6 +9,8 @@ public class InitiateTradePresenter extends TextPresenter {
 
     /**
      * This method prints the items available to trade for or borrow.
+     *
+     * @param items The list of item IDs to be printed
      */
     public void availableItemsMenu(List<String> items) {
         System.out.println("The following items are available for trade:");
