@@ -5,7 +5,9 @@ import trademisc.TextPresenter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
+/**
+ * A presenter class for trades and printing text to the screen.
+ */
 public class ViewingTradesPresenter extends TextPresenter {
 
     public void showViewingOptions() {

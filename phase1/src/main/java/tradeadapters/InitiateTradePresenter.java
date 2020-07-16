@@ -87,7 +87,7 @@ public class InitiateTradePresenter extends TextPresenter {
 
     /**
      * These are the menu options prompting the User to enter a number corresponding to the menu options
-     * or type back to go back in the menu.
+     * or type back to go back to the menu.
      */
     public void tradeTypesMenu() {
         List<String> tradeTypes = new ArrayList<>();

@@ -5,6 +5,9 @@ import trademisc.TextPresenter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A presenter class for the menu options and printing text to the screen.
+ */
 public class ViewingMenuPresenter extends TextPresenter {
 
     public void showViewingOptions() {
