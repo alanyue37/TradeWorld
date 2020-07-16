@@ -214,7 +214,7 @@ public class UserManager implements Serializable {
     public Set<String> getUsersForFreezing() {
         Set<String> result = new HashSet<>();
         for (TradingUser trader : tradingUsers.values()) {
-            if (trader.getCredit() > getThreshold() && !trader.isFrozen()) {
+            if (trader.getCredit() < getThreshold() && !trader.isFrozen()) {
                 result.add(trader.getUsername());
             }
         }
