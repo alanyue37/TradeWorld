@@ -9,6 +9,8 @@ public class UserPresenter extends TextPresenter {
 
     /**
      * Print main menu to run the UserController
+     *
+     * @param username The username of the currently logged in TradingUser
      */
     public void startMenu(String username) {
         System.out.println("\n*** " + username + " User Menu***");
@@ -41,6 +43,8 @@ public class UserPresenter extends TextPresenter {
 
     /**
      * Print all confirmed items that may be added to inventory
+     *
+     * @param items The list of item IDs to print
      */
     public void printItemsToAddToWishlist(List<String> items){
         System.out.println("The following items may be added to your wishlist: ");
