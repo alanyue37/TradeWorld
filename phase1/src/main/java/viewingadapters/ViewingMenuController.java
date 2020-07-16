@@ -9,7 +9,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
-
+/**
+ * A controller class using the RunnableController interface for viewing the menu options.
+ */
 public class ViewingMenuController implements RunnableController {
     private final BufferedReader br;
     private final TradeModel tradeModel;

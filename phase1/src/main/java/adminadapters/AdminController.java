@@ -62,6 +62,7 @@ public class AdminController implements RunnableController {
                 case "1":
                     askAdminToAddNewAdmin();
                     validInput = true;
+                    break;
                 case "2":
                     askAdminToFreezeUsers();
                     validInput = true;
@@ -213,8 +214,8 @@ public class AdminController implements RunnableController {
     public void askAdminToSetLendingThreshold() throws IOException {
         presenter.lendingThreshold(tradeModel.getUserManager().getThreshold());
         String thresholdInput = br.readLine();
-        while (notAnIntegerOrNotZero(thresholdInput)) {
-            presenter.notAnInteger();
+        while (notAnIntegerOrZero(thresholdInput)) {
+            presenter.notAnIntegerOrMin();
             presenter.lendingThreshold(tradeModel.getUserManager().getThreshold());
             thresholdInput = br.readLine();
         }
@@ -233,8 +234,8 @@ public class AdminController implements RunnableController {
     public void askAdminToSetLimitOfTransactions() throws IOException {
         presenter.limitOfTransactions(tradeModel.getTradeManager().getLimitTransactionPerWeek());
         String thresholdInput = br.readLine();
-        while (notAnIntegerOrNotOne(thresholdInput)) {
-            presenter.notAnInteger();
+        while (notAnIntegerOrOne(thresholdInput)) {
+            presenter.notAnIntegerOrMin();
             presenter.limitOfTransactions(tradeModel.getTradeManager().getLimitTransactionPerWeek());
             thresholdInput = br.readLine();
         }
@@ -252,8 +253,8 @@ public class AdminController implements RunnableController {
     public void askAdminToSetLimitOfIncompleteTrades() throws IOException {
         presenter.limitOfIncompleteTransactions(tradeModel.getTradeManager().getLimitIncomplete());
         String thresholdInput = br.readLine();
-        while (notAnIntegerOrNotOne(thresholdInput)) {
-            presenter.notAnInteger();
+        while (notAnIntegerOrOne(thresholdInput)) {
+            presenter.notAnIntegerOrMin();
             presenter.limitOfIncompleteTransactions(tradeModel.getTradeManager().getLimitIncomplete());
             thresholdInput = br.readLine();
         }
@@ -272,8 +273,8 @@ public class AdminController implements RunnableController {
     public void askAdminToSetLimitOfEdits() throws IOException {
         presenter.limitOfEdits(tradeModel.getTradeManager().getLimitEdits());
         String thresholdInput = br.readLine();
-        while (notAnIntegerOrNotZero(thresholdInput)) {
-            presenter.notAnInteger();
+        while (notAnIntegerOrZero(thresholdInput)) {
+            presenter.notAnIntegerOrMin();
             presenter.limitOfEdits(tradeModel.getTradeManager().getLimitEdits());
             thresholdInput = br.readLine();
         }
@@ -288,7 +289,7 @@ public class AdminController implements RunnableController {
      * @param adminInput    The input from the Admin user.
      * @return  True iff the input is not an integer or the input is less than 0.
      */
-    private boolean notAnIntegerOrNotZero(String adminInput) {
+    private boolean notAnIntegerOrZero(String adminInput) {
         try {
             int isInt = Integer.parseInt(adminInput);
             return isInt < 0;
@@ -303,7 +304,7 @@ public class AdminController implements RunnableController {
      * @param adminInput    The input from the Admin user.
      * @return  True iff the input is not an integer or the input is less than 1.
      */
-    private boolean notAnIntegerOrNotOne(String adminInput) {
+    private boolean notAnIntegerOrOne(String adminInput) {
         try {
             int isInt = Integer.parseInt(adminInput);
             return isInt < 1;
