@@ -3,7 +3,7 @@ import java.util.List;
 public class TextPresenter {
 
     /**
-     * Print message asking user to try again when input is invalid
+     * Prints message asking user to try again when input is invalid.
      */
     public void tryAgain() {
         System.out.println("Invalid input. Please enter again:");

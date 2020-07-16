@@ -57,7 +57,7 @@ class Item implements Serializable {
 
     /**
      * Returns true if the item is available or false if the item is not available
-     * @return  Whether is item is available or not
+     * @return  Whether the item is available or not
      */
     protected boolean isAvailable() {
         return available;
@@ -89,7 +89,7 @@ class Item implements Serializable {
 
     /**
      * Changes the availability of the item, setting it as either true or false
-     * @param available Change the availability of the item
+     * @param available The new availability status of the item
      */
     protected void setAvailable(boolean available) {
         this.available = available;
