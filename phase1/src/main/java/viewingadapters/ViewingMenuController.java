@@ -50,7 +50,7 @@ public class ViewingMenuController implements RunnableController {
                     viewWishlist();
                     validInput = true;
                     break;
-                case "exit":
+                case "back":
                     return;
                 default:
                     presenter.tryAgain();

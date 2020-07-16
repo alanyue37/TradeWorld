@@ -15,7 +15,7 @@ public class ViewingTradesPresenter extends TextPresenter {
         options.add("View recent transaction items");
         options.add("View most frequent trading partners");
         printList(options, true, false);
-        System.out.println("\nPlease enter the # of your choice or \"exit\" to exit: ");
+        System.out.println("\nPlease enter the # of your choice or \"back\" to go back: ");
     }
 
     /**
