@@ -11,7 +11,7 @@ public class ItemManager implements Serializable {
     private final AtomicInteger counter = new AtomicInteger();
 
     /**
-     * Instantiates a ItemManager
+     * Instantiates an ItemManager
      */
     public ItemManager() {
         confirmedItems = new HashMap<>();
@@ -19,7 +19,7 @@ public class ItemManager implements Serializable {
     }
 
     /**
-     * Returns true if the item already exists in confirmedItems or pendingItem, false otherwise
+     * Returns true if the item already exists in the system (confirmed or pending), false otherwise
      * @param itemId    The id of the item
      * @return  Whether this item exists already
      */
@@ -28,7 +28,8 @@ public class ItemManager implements Serializable {
     }
 
     /**
-     * Returns the information of the item including its itemID, name, description, and its availability
+     * Returns the information of the item including its itemID, name, description, and its availability.
+     * Returns null if the item doesn't exist.
      * @param itemId    The id of the item
      * @return  The information of the item in a string format
      */
@@ -45,17 +46,8 @@ public class ItemManager implements Serializable {
     }
 
     /**
-     * Returns the item which exists in the confirmedItems
-     * @param itemId    The id of the item
-     * @return  The item in a string format
-     */
-    public String getConfirmedItem(String itemId) {
-        return String.valueOf(confirmedItems.get(itemId));
-    }
-
-    /**
-     * Returns a list of strings consisting of all the ids of items that are in confirmedItems
-     * @return A list of string consisting of all of itemIds in the confirmedItems
+     * Returns a list of strings consisting of all the ids of items that have been confirmed by admin.
+     * @return A list of string consisting of all of itemIds that have been confirmed by admin
      */
     public List<String> getConfirmedItems() {
         List<String> items = new ArrayList<>();
@@ -66,18 +58,8 @@ public class ItemManager implements Serializable {
     }
 
     /**
-     * Returns the information of the item including its itemID, name, description, and its availability in the
-     * pendingItems
-     * @param itemId    The id of the item
-     * @return  The information of the item in a string format
-     */
-    public String getPendingItem(String itemId) {
-        return String.valueOf(pendingItems.get(itemId));
-    }
-
-    /**
-     * Returns a list of strings consisting of all the ids of items that are in pendingItems
-     * @return A list of string consisting of all of itemIds in the pendingItems
+     * Returns a list of strings consisting of all the ids of items that are pending confirmation by admin.
+     * @return A list of string consisting of all of itemIds that are pending confirmation by admin
      */
     public List<String> getPendingItems() {
         List<String> items = new ArrayList<>();
@@ -88,7 +70,8 @@ public class ItemManager implements Serializable {
     }
 
     /**
-     * Returns a list of strings of itemIds from the confirmItems that are available
+     * Returns a list of strings of itemIds of confirmed items that are available. Note that all pending items are
+     * unavailable by default.
      * @return  A list of strings of itemIds that are available
      */
     public List<String> getAvailableItems() {
@@ -102,9 +85,9 @@ public class ItemManager implements Serializable {
     }
 
     /**
-     * Returns the owner of the item if the item is in confirmedItems, null otherwise
+     * Returns the owner of the item if the item exists and has been confirmed, null otherwise.
      * @param itemId    The id of the item
-     * @return  The owner of the item if the item is in confirmedItems
+     * @return  The owner of the item if the item exists and has been confirmed
      */
     public String getOwner(String itemId) {
         Item item = confirmedItems.get(itemId);
@@ -115,7 +98,7 @@ public class ItemManager implements Serializable {
     }
 
     /**
-     * Sets the owner for the item if the item exists in confirmedItems
+     * Sets the owner for the item if the item exists and has been confirmed.
      * @param itemId    The id of the item
      * @param username  The name of the owner
      */
@@ -128,7 +111,7 @@ public class ItemManager implements Serializable {
     }
 
     /**
-     * Adds the item to the list of pendingItems to get the item approved by a Admin user
+     * Adds the item to the list of items pending confirmation by an admin
      * @param name  The name of the item
      * @param owner The owner of the item
      * @param description   The description of the item
@@ -142,10 +125,11 @@ public class ItemManager implements Serializable {
     }
 
     /**
-     * Returns true iff the item is deleted from the pendingItems and was placed in the confirmedItems
-     * Returns false when the item is not found in the pendingItems
+     * Marks an item as confirmed if it exists and is pending confirmation by admin and returns true.
+     * Otherwise returns false.
      * @param itemId    The id of the item
-     * @return  True iff the item is deleted from the pendingItems and was placed in the confirmedItems
+     * @return  True iff the item is deleted from the list of items pending confirmation by admin and was moved to the
+     * list of confirmed items
      */
     public boolean confirmItem(String itemId) {
         Item item = pendingItems.get(itemId);
@@ -159,8 +143,7 @@ public class ItemManager implements Serializable {
     }
 
     /**
-     * Returns false if the item is not in pendingItems or in confirmedItems
-     * Returns true when the item is deleted from confirmedItems and pendingItems
+     * Deletes the item from the system if it exists and returns true. Otherwise returns false.
      * @param itemId    The id of the item
      * @return  True if the item exists and is deleted, false otherwise
      */
@@ -174,11 +157,12 @@ public class ItemManager implements Serializable {
     }
 
     /**
-     * Returns true iff the item exists in confirmedItems and the availability is set to available
-     * Returns false if the item is not in confirmedItems
+     * Sets the availability of an item that exists and has been confirmed and returns true. It cannot change the
+     * availability of items pending confirmation by admin.
+     * Returns false for pending items and items which do not exist.
      * @param itemID    The id of the item
      * @param available     The availability of the item
-     * @return  True iff the item already exists in confirmedItems, false otherwise
+     * @return  True iff the confirmed item was found and its availability was set to available.
      */
     public boolean setConfirmedItemAvailable(String itemID, boolean available) {
         if (!confirmedItems.containsKey(itemID)) {

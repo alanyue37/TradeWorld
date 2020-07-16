@@ -5,12 +5,6 @@ import java.util.List;
 public class UserPresenter extends TextPresenter {
 
     /**
-     * Constructor for UserController.
-     */
-    public UserPresenter(){
-    }
-
-    /**
      * Print main menu to run the UserController
      */
     public void startMenu(String username) {

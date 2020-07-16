@@ -13,12 +13,6 @@ public class LogInPresenter implements Iterator<String> {
     private int current = 0;
 
     /**
-     * Creates a LogInPresenter.
-     */
-    public LogInPresenter() {
-    }
-
-    /**
      * Checks for subsequent prompts.
      * @return true if there is prompt that has not yet been returned.
      */

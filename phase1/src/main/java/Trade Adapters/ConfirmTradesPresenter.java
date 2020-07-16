@@ -3,9 +3,6 @@
  */
 public class ConfirmTradesPresenter extends TextPresenter {
 
-    public ConfirmTradesPresenter() { // Java already has a default constructor
-    }
-
     /**
      * Prints the options available for the user and asks the user to enter a corresponding number
      * to select an option: confirm real life meeting, skip to next one or exit.

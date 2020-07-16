@@ -3,8 +3,6 @@ import java.util.List;
 import java.util.Map;
 
 public class ViewingTradesPresenter extends TextPresenter{
-    public ViewingTradesPresenter(){
-    }
 
     public void showViewingOptions() {
         List<String> options = new ArrayList<>();

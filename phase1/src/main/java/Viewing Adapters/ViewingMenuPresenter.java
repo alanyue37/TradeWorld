@@ -4,9 +4,6 @@ import java.util.List;
 
 public class ViewingMenuPresenter extends TextPresenter {
 
-    public ViewingMenuPresenter() {  // Java creates a default constructor. Unnecessary?
-    }
-
     public void showViewingOptions() {
         List<String> options = new ArrayList<>();
         options.add("View system inventory");

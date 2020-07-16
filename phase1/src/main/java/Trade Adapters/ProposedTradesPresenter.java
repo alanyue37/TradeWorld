@@ -5,8 +5,6 @@ import java.io.BufferedReader;
  */
 public class ProposedTradesPresenter extends TextPresenter {
 
-    public ProposedTradesPresenter() { }
-
     /**
      * Prints the options available for the user and asks the user to enter a corresponding number
      * to select an option: confirm the meeting details, edit the meeting details or exit.
