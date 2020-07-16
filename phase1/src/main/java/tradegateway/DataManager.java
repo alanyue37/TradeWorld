@@ -37,7 +37,6 @@ class DataManager {
         }
         sb.append("src/main/resources/");
         sb.append(fileName);
-        System.out.println(sb);
         return sb.toString();
     }
 

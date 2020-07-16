@@ -1,4 +1,4 @@
-Running the Program
+RUNNING THE PROGRAM
 Run the program from Main.java in package trademisc.
 
 ADMIN
@@ -7,7 +7,7 @@ Once the the Admin User successfully login's, the Admin can make an account for 
 to Users that have requested to unfreeze their accounts, can review items to add to the system and the User's inventory,
 view the current lending threshold and set a new lending threshold, view the current transaction threshold and
 set a new limit for transactions, view the current incomplete transaction and set a new limit for incomplete
-transactions
+transactions, view the current limit of edits and set a new limit for the edits.
 
 
 
