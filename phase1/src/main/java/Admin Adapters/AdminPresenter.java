@@ -194,7 +194,7 @@ public class AdminPresenter extends TextPresenter {
      * This method informs the admin user that the input is not an integer or the number entered is not
      * accepted by the program.
      */
-    public void notAnInteger() {
+    public void notAnIntegerOrMin() {
         System.out.println("This is not an integer or it is a number less than the minimum number.\n " +
                 "Please try again!");
     }
