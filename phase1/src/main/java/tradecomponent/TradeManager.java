@@ -23,8 +23,8 @@ public class TradeManager implements Serializable {
      */
     public TradeManager() {
         this.limitOfEdits = 3;
-        this.limitIncomplete = 5; //or null?
-        this.limitTransactionPerWeek = 10; //or null?
+        this.limitIncomplete = 3; //or null?
+        this.limitTransactionPerWeek = 3; //or null?
         this.ongoingTrades = new HashMap<>();
         this.meetingManager = new MeetingManager();
         this.completedTrades = new HashMap<>();
