@@ -17,9 +17,9 @@ import java.util.Map;
  */
 public class ConfirmTradesController implements RunnableController {
     private final BufferedReader br;
-    TradeModel tradeModel;
-    ConfirmTradesPresenter presenter;
-    private String username;
+    private final TradeModel tradeModel;
+    private final ConfirmTradesPresenter presenter;
+    private final String username;
 
     /**
      * Initiates ConfirmTradesController

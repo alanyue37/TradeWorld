@@ -150,6 +150,7 @@ public class TradeManager implements Serializable {
      * @param giver    username of the person giving the object
      * @param receiver username of the person receiving the object
      * @param itemId   ID of the item
+     * @return         the ID of the Trade
      */
     public String addOneWayTrade(String type, String giver, String receiver, String itemId) {
         String id = String.valueOf(counter.getAndIncrement());
@@ -175,6 +176,7 @@ public class TradeManager implements Serializable {
      * @param user2 username of user2 in the trade
      * @param item1 ID of the item of user1
      * @param item2 ID of the item of user2
+     * @return      the ID of the Trade
      */
     public String addTwoWayTrade(String type, String user1, String user2, String item1, String item2) {
         String id = String.valueOf(counter.getAndIncrement());

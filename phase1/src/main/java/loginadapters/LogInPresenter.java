@@ -94,6 +94,8 @@ public class LogInPresenter implements Iterator<String> {
 
     /**
      * Adds the prompt for a taken username.
+     *
+     * @param username The taken username
      */
     public void usernameTaken(String username) {
         prompts.add("Username " + username + " is taken. Please try again.\n");
@@ -101,6 +103,8 @@ public class LogInPresenter implements Iterator<String> {
 
     /**
      * Adds the welcome prompt after successful login
+     *
+     * @param username The username to be used in the prompt
      */
     public void welcome(String username) {
         prompts.add("Welcome " + username + ".\n");

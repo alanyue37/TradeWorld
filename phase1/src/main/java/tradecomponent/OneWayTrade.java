@@ -16,6 +16,7 @@ class OneWayTrade extends Trade {
 
     /**
      * @param type the type (temporary or permanent) of this Trade
+     * @param tradeId the ID of this Trade
      * @param giver the user who is giving the item in this Trade
      * @param receiver the user who is receiving the item in this Trade
      * @param itemId the ID of the item being traded

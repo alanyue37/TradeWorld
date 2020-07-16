@@ -105,9 +105,12 @@ public class UserController implements RunnableController {
         tradeModel.getItemManager().addItem(itemName, username, itemDescription);
     }
     /**
-     * View system inventory (except items in current user's inventory or wishlist). Gives the user the option of adding items to their wishlist.
+     * View system inventory (except items in current user's inventory or wishlist). Gives the user the option of adding
+     * items to their wishlist.
+     *
+     * @throws IOException if a problem occurs with reading in input
      */
-    public void viewItemsToAddToWishlist() throws IOException{
+    public void viewItemsToAddToWishlist() throws IOException {
         List<String> items = tradeModel.getItemManager().getConfirmedItems();
         Set<String> filterItems = tradeModel.getUserManager().getSetByUsername(username, ItemSets.INVENTORY);
         filterItems.addAll(tradeModel.getUserManager().getSetByUsername(username, ItemSets.WISHLIST));
