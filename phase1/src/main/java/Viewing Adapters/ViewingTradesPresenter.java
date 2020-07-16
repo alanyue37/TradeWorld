@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ViewingTradesPresenter extends TextPresenter{
     public ViewingTradesPresenter(){
@@ -7,19 +8,37 @@ public class ViewingTradesPresenter extends TextPresenter{
 
     public void showViewingOptions() {
         List<String> options = new ArrayList<>();
-        options.add("View your ongoing trades");
-        options.add("View trade status");
+        options.add("View your ongoing and completed trades ids");
+        options.add("View your trade information by typing trade id");
         options.add("View recent transaction items");
         options.add("View most frequent trading partners");
         printList(options, true, false);
-        System.out.println("\nPlease enter the # of your choice or \"back\" to go back: ");
+        System.out.println("\nPlease enter the # of your choice or \"exit\" to exit: ");
     }
 
     /**
      * Print the trade with id as tradeId
      */
-    public void showTrade(String tradeId, String tradeInfo){
-        System.out.println(tradeId + ": " + tradeInfo);
+    public void showTrade(List<String> ongoingIds, List<String> completedIds){
+        StringBuilder ongoing;
+        StringBuilder completed;
+        if (ongoingIds.size() == 0){
+            ongoing = new StringBuilder("No ongoing trades.");
+        } else{
+            ongoing = new StringBuilder("Ongoing trade Ids: ");
+            for (String ongoingId :ongoingIds){
+                ongoing.append(ongoingId).append("  ");
+            }
+        }
+        if (completedIds.size() == 0){
+            completed = new StringBuilder("No completed trades");
+        } else{
+            completed = new StringBuilder("Completed trade Ids: ");
+            for (String completedId: completedIds){
+                completed.append(completedId).append("  ");
+            }
+        }
+        System.out.println(ongoing + "\n" + completed);
     }
 
     /**
@@ -29,27 +48,19 @@ public class ViewingTradesPresenter extends TextPresenter{
         System.out.println("Enter trade id: ");
     }
 
-    /**
-     * Print a trade complete message for the user
-     */
-    public void printTradeCompleted(){
-        System.out.println("Trade Completed");
+    public void showInfo(String tradeInfo){
+        System.out.println(tradeInfo);
     }
 
-    /**
-     * Print a trade incomplete message for the user
-     */
-    public void printTradeIncomplete(){
-        System.out.println("Trade Incomplete");
+    public void noTrades(){
+        System.out.println("You do not have any trading history.");
     }
 
-    public void printRecentItems(int num, List<String> items){
-        printList(items, false, true);
-        if (items.size() > 0) {
-            System.out.println("Your last (up to) " + num + " items were:");
-            printList(items, true, false);
-        } else {
-            System.out.println("You do not have any trading history.");
+    public void printRecentItems(int num, Map<String, List<String>> itemMap){
+        System.out.println("Your last (up to) " + num + " items were:");
+        for (String itemsTraded: itemMap.keySet()){
+            System.out.println(itemsTraded);
+            printList(itemMap.get(itemsTraded), false, true);
         }
     }
 
@@ -67,6 +78,10 @@ public class ViewingTradesPresenter extends TextPresenter{
         } else {
             System.out.println("You do not have any trading history.");
         }
+    }
+
+    public void printEnterFrequent(){
+        System.out.println("Enter <number> to view your <number> top trading partners: ");
     }
 
 }

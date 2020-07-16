@@ -1,23 +1,19 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public class ViewingTradesController implements RunnableController {
     private final BufferedReader br;
     private final TradeModel tradeModel;
     private final ViewingTradesPresenter presenter;
     private final String username;
-    private final int numTradingPartners;
 
     public ViewingTradesController(TradeModel tradeModel, String username) {
         br = new BufferedReader(new InputStreamReader(System.in));
         this.tradeModel = tradeModel;
         this.username = username;
         presenter = new ViewingTradesPresenter();
-        numTradingPartners = 3;
     }
 
     @Override
@@ -35,12 +31,12 @@ public class ViewingTradesController implements RunnableController {
         do {
             String input = br.readLine();
             switch (input) {
-                case "1": // view all ongoing trades
-                    viewOngoingTrades();
+                case "1": // get all ongoing trades and completed trades ids (will be separated)
+                    viewTradeIds();
                     validInput = true;
                     break;
-                case "2": // view trade status
-                    viewTradeStatus();
+                case "2": // view trade information by inputting trade id
+                    viewTradeInfo();
                     validInput = true;
                     break;
                 case "3": // view recent transaction items
@@ -59,42 +55,60 @@ public class ViewingTradesController implements RunnableController {
         } while (!validInput);
     }
 
-    private void viewOngoingTrades(){
-        List<String> trades = tradeModel.getTradeManager().getTradesOfUser(username, "ongoing");
-        for (String tradeId : trades) {
-            presenter.showTrade(tradeId, tradeModel.getTradeManager().getTradeAllInfo(tradeId));
-        }
+    private void viewTradeIds(){
+        List<String> ongoingTradeIds = tradeModel.getTradeManager().getTradesOfUser(username, "ongoing");
+        List<String> completedTradeIds = tradeModel.getTradeManager().getTradesOfUser(username, "completed");
+        presenter.showTrade(ongoingTradeIds, completedTradeIds);
     }
 
-    private void viewTradeStatus() throws IOException{
+    private void viewTradeInfo() throws IOException{
+        List<String> userTrades = tradeModel.getTradeManager().getTradesOfUser(username, "ongoing");
+        userTrades.addAll(tradeModel.getTradeManager().getTradesOfUser(username, "completed"));
         presenter.printEnterTradeId();
         String tradeId = br.readLine();
-        if (tradeModel.getTradeManager().getTradesOfUser(username, "completed").contains(tradeId)) {
-            presenter.printTradeCompleted();
+        while (!userTrades.contains(tradeId)){
+            presenter.tryAgain(); // should add could write "exit" or "back"
+            tradeId = br.readLine();
         }
-        else if(tradeModel.getTradeManager().getIncompleteTrade().contains(tradeId)){
-            presenter.printTradeIncomplete();
-        }
+        presenter.showInfo(tradeModel.getTradeManager().getTradeAllInfo(tradeId));
     }
+
 
     /**
      * View user's last numLastTrades items
      */
     private void viewRecentItems() throws IOException{
         presenter.printEnterNumTrades();
-        String lastTrades = br.readLine();
-        int numLastTrades = Integer.parseInt(lastTrades);
-        List<String> itemsTraded = tradeModel.getTradeManager().getRecentItemsTraded(numLastTrades, username);
-        presenter.printRecentItems(numLastTrades, getItemsInfo(itemsTraded));
+        String numItems = br.readLine();
+        int numLastTrades = Integer.parseInt(numItems);
+        List<String> tradeIds = tradeModel.getTradeManager().getRecentTrades(numLastTrades, username);
+        if (tradeIds.size() == 0){
+            presenter.noTrades();
+        } else {
+            Map<String, List<String>> mapOfItem = new HashMap<>();
+            for (String tradeId : tradeIds) {
+                String itemTrading = "Trade with id" + tradeId + ": ";
+                for (String itemId : tradeModel.getTradeManager().itemToUsers(tradeId).keySet()) {
+                    String giver = tradeModel.getTradeManager().itemToUsers(tradeId).get(itemId).get(0);
+                    String receiver = tradeModel.getTradeManager().itemToUsers(tradeId).get(itemId).get(1);
+                    itemTrading += " item with id" + itemId + " was traded to " + receiver + " by " + giver + ", ";
+                }
+                mapOfItem.put(itemTrading, getItemsInfo(tradeModel.getTradeManager().itemToUsers(tradeId).keySet()));
+            }
+            presenter.printRecentItems(numLastTrades, mapOfItem);
+        }
     }
 
 
     /**
      * View top numTradingPartners most frequent trading partners
      */
-    private void viewTradingPartners(){
-        List<String> tradingPartners = tradeModel.getTradeManager().getFrequentPartners(numTradingPartners, username);
-        presenter.printViewTopTradingPartners(numTradingPartners, tradingPartners);
+    private void viewTradingPartners() throws IOException {
+        presenter.printEnterFrequent();
+        String numItems = br.readLine();
+        int numLastTrades = Integer.parseInt(numItems);
+        List<String> tradingPartners = tradeModel.getTradeManager().getFrequentPartners(numLastTrades, username);
+        presenter.printViewTopTradingPartners(numLastTrades, tradingPartners);
     }
 
     private List<String> getItemsInfo(Collection<String> itemIds) {

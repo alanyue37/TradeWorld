@@ -110,7 +110,7 @@ abstract class Trade implements Serializable {
         } else{
             status = "completed";
         }
-        return "Type: " + this.type + "\nStatus: " + status + "\nNumber of meetings: " + this.getMeetingList().size() +
+        return "Trade id:" + this.idOfTrade +"\nType: " + this.type + "\nStatus: " + status + "\nNumber of meetings: " + this.getMeetingList().size() +
                 "\nCreation Date: " + this.creationDate.toString() + "\nUsers involved: " + getUsers() + "\nItems involved: " + getItems();
     }
 
