@@ -92,11 +92,11 @@ public class ViewingTradesController implements RunnableController {
         } else {
             Map<String, List<String>> mapOfItem = new HashMap<>();
             for (String tradeId : tradeIds) {
-                String itemTrading = "Trade with id" + tradeId + ": ";
+                String itemTrading = "Trade with ID" + tradeId + ": ";
                 for (String itemId : tradeModel.getTradeManager().itemToUsers(tradeId).keySet()) {
                     String giver = tradeModel.getTradeManager().itemToUsers(tradeId).get(itemId).get(0);
                     String receiver = tradeModel.getTradeManager().itemToUsers(tradeId).get(itemId).get(1);
-                    itemTrading += " item with id" + itemId + " was traded to " + receiver + " by " + giver + ", ";
+                    itemTrading += " item with ID" + itemId + " was traded to " + receiver + " by " + giver + ", ";
                 }
                 mapOfItem.put(itemTrading, getItemsInfo(tradeModel.getTradeManager().itemToUsers(tradeId).keySet()));
             }

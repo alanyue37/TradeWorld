@@ -10,8 +10,8 @@ public class ViewingTradesPresenter extends TextPresenter {
 
     public void showViewingOptions() {
         List<String> options = new ArrayList<>();
-        options.add("View your ongoing and completed trades ids");
-        options.add("View your trade information by typing trade id");
+        options.add("View IDs of your ongoing and completed trades");
+        options.add("View your trade information by ID");
         options.add("View recent transaction items");
         options.add("View most frequent trading partners");
         printList(options, true, false);
@@ -27,7 +27,7 @@ public class ViewingTradesPresenter extends TextPresenter {
         if (ongoingIds.size() == 0){
             ongoing = new StringBuilder("No ongoing trades.");
         } else{
-            ongoing = new StringBuilder("Ongoing trade Ids: ");
+            ongoing = new StringBuilder("Ongoing trade IDs: ");
             for (String ongoingId :ongoingIds){
                 ongoing.append(ongoingId).append("  ");
             }
@@ -35,7 +35,7 @@ public class ViewingTradesPresenter extends TextPresenter {
         if (completedIds.size() == 0){
             completed = new StringBuilder("No completed trades");
         } else{
-            completed = new StringBuilder("Completed trade Ids: ");
+            completed = new StringBuilder("Completed trade IDs: ");
             for (String completedId: completedIds){
                 completed.append(completedId).append("  ");
             }
@@ -47,7 +47,7 @@ public class ViewingTradesPresenter extends TextPresenter {
      * Prompts the user to enter tradeID
      */
     public void printEnterTradeId(){
-        System.out.println("Enter trade id: ");
+        System.out.println("Enter trade ID: ");
     }
 
     public void showInfo(String tradeInfo){
@@ -87,7 +87,7 @@ public class ViewingTradesPresenter extends TextPresenter {
     }
 
     public void printSearchingInvalid(){
-        System.out.println("Entered an invalid trade id. You do not have any trade with this id");
+        System.out.println("You do not have a trade with this ID.");
     }
 
 }

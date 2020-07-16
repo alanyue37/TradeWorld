@@ -2,6 +2,7 @@ package tradeadapters;
 
 import trademisc.RunnableController;
 import tradegateway.TradeModel;
+import usercomponent.ItemSets;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -45,13 +46,13 @@ public class ConfirmTradesController implements RunnableController {
     }
 
     private boolean confirmTrades() throws IOException {
-        List<String> trades = tradeModel.getTradeManager().getToBeConfirmedTrades(username);
-        for (String tradeId : trades) {
+        Map<String, String> trades = tradeModel.getTradeManager().getToBeConfirmedTrades(username);
+        for (String tradeId : trades.keySet()) {
             presenter.showTrade(tradeModel.getTradeManager().getTradeAllInfo(tradeId));
             String input = br.readLine();
             switch(input) {
                 case "1":
-                    confirmTradeHappened(tradeId);
+                    confirmTradeHappened(tradeId, trades.get(tradeId));
                     break;
                 case "2":
                     break;
@@ -69,13 +70,13 @@ public class ConfirmTradesController implements RunnableController {
      * Allows the user to confirm that the real life meeting happened.
      * @param tradeId id of the trade
      */
-    private void confirmTradeHappened(String tradeId) {
+    private void confirmTradeHappened(String tradeId, String type) {
         if (tradeModel.getTradeManager().canChangeMeeting(tradeId, username)){
             tradeModel.getTradeManager().confirmMeetingHappened(tradeId, username);
             presenter.confirmedTrade();
 
             if (tradeModel.getTradeManager().getTradesOfUser(username, "completed").contains(tradeId)) {
-                completedTradeChanges(tradeId);
+                completedTradeChanges(tradeId, type);
             } else {
                 if (!tradeModel.getTradeManager().getIncompleteTrade().contains(tradeId)) {
                     if (tradeModel.getTradeManager().needToAddMeeting(tradeId)){
@@ -105,9 +106,16 @@ public class ConfirmTradesController implements RunnableController {
      * Makes the necessary changes of the item and user status once a trade is completed.
      * @param tradeId id of the trade
      */
-    private void completedTradeChanges(String tradeId){
+    private void completedTradeChanges(String tradeId, String type){
         Map<String, List<String>> itemToUsers = tradeModel.getTradeManager().itemToUsers(tradeId);
-        for (String item: itemToUsers.keySet()){
+        for (String item: itemToUsers.keySet()) {
+            if (type.equals("permanent")) {
+                tradeModel.getUserManager().removeFromSet(itemToUsers.get(item).get(1), item, ItemSets.WISHLIST);
+                tradeModel.getUserManager().removeFromSet(itemToUsers.get(item).get(0), item, ItemSets.INVENTORY);
+                tradeModel.getUserManager().addToSet(itemToUsers.get(item).get(1), item, ItemSets.INVENTORY);
+                tradeModel.getItemManager().setOwner(item, itemToUsers.get(item).get(1));
+            }
+
             tradeModel.getItemManager().setConfirmedItemAvailable(item, true);
             tradeModel.getUserManager().updateCreditByUsername(itemToUsers.get(item).get(0), true);
             tradeModel.getUserManager().updateCreditByUsername(itemToUsers.get(item).get(1), false);
