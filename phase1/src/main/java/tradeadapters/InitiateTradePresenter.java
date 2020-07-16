@@ -71,6 +71,13 @@ public class InitiateTradePresenter extends TextPresenter {
     }
 
     /**
+     * Prints that the user cannot borrow on a new account.
+     */
+    public void newAccount() {
+        System.out.println("Your first trade must be Two-Way or Lending.");
+    }
+
+    /**
      * Prints that user's account is frozen and asks if they would like to make an unfreeze request.
      */
     public void frozenAccount() {

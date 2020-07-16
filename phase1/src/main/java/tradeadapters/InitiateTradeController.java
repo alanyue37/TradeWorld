@@ -111,6 +111,12 @@ public class InitiateTradeController implements RunnableController {
                 presenter.notEnoughCredits(Math.abs(credit));
                 return false;
             }
+            int numOngoing = tradeModel.getTradeManager().getTradesOfUser(username, "ongoing").size();
+            int numCompleted = tradeModel.getTradeManager().getTradesOfUser(username, "completed").size();
+            if (numOngoing == 0 && numCompleted == 0) {
+                presenter.newAccount();
+                return false;
+            }
             tradeId = tradeModel.getTradeManager().addOneWayTrade(permanentOrTemporary, otherUsername, username, itemId);
         }
 
