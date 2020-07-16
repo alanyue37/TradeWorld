@@ -46,7 +46,7 @@ public class AdminController implements RunnableController {
     /**
      * This method prints the menu options and asks the admin user to enter a corresponding number to
      * select a menu option. The number determines which method to call in the admin controller. If the admin user
-     * types "exit" at the beginning or any time during the program, the screen prints a message and then the
+     * types "back" at the beginning or any time during the program, the screen prints a message and then the
      * admin user is brought back to selectMenu() and prints the same options again until the admin user enters
      * a corresponding number.
      *
@@ -91,8 +91,9 @@ public class AdminController implements RunnableController {
                     askAdminToSetLimitOfEdits();
                     validInput = true;
                     break;
-                case "exit":
+                case "back":
                     presenter.end();
+                    selectMenu();
                     return false;
                 default:
                     presenter.tryAgain();
