@@ -50,6 +50,7 @@ public class AdminController implements RunnableController {
      * admin user is brought back to selectMenu() and prints the same options again until the admin user enters
      * a corresponding number.
      *
+     * @return whether the admin User has selected a menu option
      * @throws IOException If something goes wrong.
      */
     public boolean selectMenu() throws IOException {

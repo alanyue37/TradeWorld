@@ -46,6 +46,7 @@ public class UserManager implements Serializable {
      *
      * @param username The submitted username.
      * @param password The submitted password.
+     * @param type The type of user
      * @return Whether or not the username/password combination is valid.
      */
     public boolean login(String username, String password, UserTypes type) {

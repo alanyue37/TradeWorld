@@ -12,6 +12,10 @@ class TradingUser extends User {
 
     /**
      * Instantiates a new TradingUser
+     *
+     * @param name The given name
+     * @param username The given username
+     * @param password The given password
      */
     protected TradingUser(String name, String username, String password) {
         super(name, username, password);

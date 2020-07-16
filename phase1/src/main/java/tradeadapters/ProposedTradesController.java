@@ -17,9 +17,9 @@ import java.util.*;
  */
 public class ProposedTradesController implements RunnableController {
     private final BufferedReader br;
-    TradeModel tradeModel;
-    ProposedTradesPresenter presenter;
-    private String username;
+    private final TradeModel tradeModel;
+    private final ProposedTradesPresenter presenter;
+    private final String username;
 
     /**
      * Initiates the ProposedTradesController.
@@ -53,7 +53,7 @@ public class ProposedTradesController implements RunnableController {
             String input = br.readLine();
             switch(input) {
                 case "1": // confirm meeting times
-                    confirmMeetingTime(tradeId, trades.get(tradeId));
+                    confirmMeetingTime(tradeId);
                     break;
                 case "2": // edit meeting time
                     if (tradeModel.getTradeManager().canChangeMeeting(tradeId, username)) {
@@ -74,12 +74,11 @@ public class ProposedTradesController implements RunnableController {
     /**
      * Allows user to confirm with the suggested meeting details (time, place)
      * @param tradeId id of the trade
-     * @param type type of the trade (permanent/temporary)
      */
-    private void confirmMeetingTime(String tradeId, String type) {
+    private void confirmMeetingTime(String tradeId) {
         if (tradeModel.getTradeManager().canChangeMeeting(tradeId, username)) {
             tradeModel.getTradeManager().agreeMeetingDetails(tradeId);
-            changeItems(tradeId, type);
+            changeItemUnavailable(tradeId);
             presenter.confirmedMeeting();
         } else {
             presenter.declineConfirmMeeting();
@@ -87,28 +86,15 @@ public class ProposedTradesController implements RunnableController {
     }
 
     /**
-     * Makes the changes that are necessary for the inventory and wishlist of the users when the trade
+     * Makes the changes that are necessary for availability of the items of the users when the trade
      * meeting time/place is confirmed.
      * @param tradeId id of the trade
-     * @param type type of trade (permanent/temporary)
      */
-    private void changeItems(String tradeId, String type) {
+    private void changeItemUnavailable(String tradeId) {
         Map<String, List<String>> itemToUsers = tradeModel.getTradeManager().itemToUsers(tradeId);
-        if (type.equals("permanent")) {
-            for (String item : itemToUsers.keySet()) {
-                tradeModel.getUserManager().removeFromSet(itemToUsers.get(item).get(1), item, ItemSets.WISHLIST);
-                tradeModel.getUserManager().removeFromSet(itemToUsers.get(item).get(0), item, ItemSets.INVENTORY);
-                tradeModel.getUserManager().addToSet(itemToUsers.get(item).get(1), item, ItemSets.INVENTORY);
-                tradeModel.getTradeManager().deleteCommonItemTrades(item, tradeId);
-                tradeModel.getItemManager().setOwner(item, itemToUsers.get(item).get(1));
-                tradeModel.getItemManager().setConfirmedItemAvailable(item, false);
-            }
-        } else {
-            for (String item : itemToUsers.keySet()) {
-                tradeModel.getUserManager().removeFromSet(itemToUsers.get(item).get(1), item, ItemSets.WISHLIST);
-                tradeModel.getItemManager().setConfirmedItemAvailable(item, false);
-                tradeModel.getTradeManager().deleteCommonItemTrades(item, tradeId);
-            }
+        for (String item : itemToUsers.keySet()) {
+            tradeModel.getItemManager().setConfirmedItemAvailable(item, false);
+            tradeModel.getTradeManager().deleteCommonItemTrades(item, tradeId);
         }
     }
 

@@ -23,8 +23,8 @@ public class TradeManager implements Serializable {
      */
     public TradeManager() {
         this.limitOfEdits = 3;
-        this.limitIncomplete = 5; //or null?
-        this.limitTransactionPerWeek = 10; //or null?
+        this.limitIncomplete = 3; //or null?
+        this.limitTransactionPerWeek = 3; //or null?
         this.ongoingTrades = new HashMap<>();
         this.meetingManager = new MeetingManager();
         this.completedTrades = new HashMap<>();
@@ -150,6 +150,7 @@ public class TradeManager implements Serializable {
      * @param giver    username of the person giving the object
      * @param receiver username of the person receiving the object
      * @param itemId   ID of the item
+     * @return         the ID of the Trade
      */
     public String addOneWayTrade(String type, String giver, String receiver, String itemId) {
         String id = String.valueOf(counter.getAndIncrement());
@@ -175,6 +176,7 @@ public class TradeManager implements Serializable {
      * @param user2 username of user2 in the trade
      * @param item1 ID of the item of user1
      * @param item2 ID of the item of user2
+     * @return      the ID of the Trade
      */
     public String addTwoWayTrade(String type, String user1, String user2, String item1, String item2) {
         String id = String.valueOf(counter.getAndIncrement());
@@ -601,9 +603,9 @@ public class TradeManager implements Serializable {
      * @param username username of user
      * @return map of to-be confirmed trade IDs
      */
-    public List<String> getToBeConfirmedTrades(String username) {
+    public Map<String, String> getToBeConfirmedTrades(String username) {
         List<String> userOngoingTrade = getTradesOfUser(username, "ongoing");
-        List<String> toBeConfirmed = new ArrayList<>();
+        Map<String, String> toBeConfirmed = new HashMap<>();
         for (String tradeId : userOngoingTrade) {
             Trade trade = getTrade(tradeId);
             Meeting meeting = trade.getMeetingList().get(trade.getMeetingList().size() - 1);
@@ -611,7 +613,7 @@ public class TradeManager implements Serializable {
                 Calendar cal = Calendar.getInstance();
                 Date newDate = cal.getTime();
                 if (meetingManager.getConfirmedMeetingTime(meeting).before(newDate)) {
-                    toBeConfirmed.add(trade.getIdOfTrade());
+                    toBeConfirmed.put(trade.getIdOfTrade(), trade.getTradeType());
                 }
             }
         }

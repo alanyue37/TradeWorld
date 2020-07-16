@@ -10,16 +10,19 @@ public class ViewingTradesPresenter extends TextPresenter {
 
     public void showViewingOptions() {
         List<String> options = new ArrayList<>();
-        options.add("View your ongoing and completed trades ids");
-        options.add("View your trade information by typing trade id");
+        options.add("View IDs of your ongoing and completed trades");
+        options.add("View your trade information by ID");
         options.add("View recent transaction items");
         options.add("View most frequent trading partners");
         printList(options, true, false);
-        System.out.println("\nPlease enter the # of your choice or \"exit\" to exit: ");
+        System.out.println("\nPlease enter the # of your choice or \"back\" to go back: ");
     }
 
     /**
      * Print the trade with id as tradeId
+     *
+     * @param ongoingIds The list of ongoing Trade IDs
+     * @param completedIds The list of completed Trade IDs
      */
     public void showTrade(List<String> ongoingIds, List<String> completedIds){
         StringBuilder ongoing;
@@ -27,7 +30,7 @@ public class ViewingTradesPresenter extends TextPresenter {
         if (ongoingIds.size() == 0){
             ongoing = new StringBuilder("No ongoing trades.");
         } else{
-            ongoing = new StringBuilder("Ongoing trade Ids: ");
+            ongoing = new StringBuilder("Ongoing trade IDs: ");
             for (String ongoingId :ongoingIds){
                 ongoing.append(ongoingId).append("  ");
             }
@@ -35,7 +38,7 @@ public class ViewingTradesPresenter extends TextPresenter {
         if (completedIds.size() == 0){
             completed = new StringBuilder("No completed trades");
         } else{
-            completed = new StringBuilder("Completed trade Ids: ");
+            completed = new StringBuilder("Completed trade IDs: ");
             for (String completedId: completedIds){
                 completed.append(completedId).append("  ");
             }
@@ -47,7 +50,7 @@ public class ViewingTradesPresenter extends TextPresenter {
      * Prompts the user to enter tradeID
      */
     public void printEnterTradeId(){
-        System.out.println("Enter trade id: ");
+        System.out.println("Enter trade ID: ");
     }
 
     public void showInfo(String tradeInfo){
@@ -72,6 +75,9 @@ public class ViewingTradesPresenter extends TextPresenter {
 
     /**
      * Print the top trading partners of a user (if any)
+     *
+     * @param num The number of partners to be displayed
+     * @param partners The list of trading partners
      */
     public void printViewTopTradingPartners(int num, List<String> partners){
         if (partners.size() > 0) {
@@ -87,7 +93,7 @@ public class ViewingTradesPresenter extends TextPresenter {
     }
 
     public void printSearchingInvalid(){
-        System.out.println("Entered an invalid trade id. You do not have any trade with this id");
+        System.out.println("You do not have a trade with this ID.");
     }
 
 }

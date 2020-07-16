@@ -13,6 +13,7 @@ public class AdminPresenter extends TextPresenter {
     /**
      * This method prints the menu options to the screen and asks the admin user to enter a corresponding number to
      * select a menu option. The number determines which method to call in the admin controller.
+     * @param username The username of the currently logged in admin User
      */
     public void startMenu(String username) {
         System.out.println("\n*** " + username + " Admin Menu***\n");

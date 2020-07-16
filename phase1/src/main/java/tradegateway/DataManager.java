@@ -16,13 +16,14 @@ class DataManager {
     /**
      * Creates a new DataManager.
      * @param fileName the name of the file containing the serialized objects
+     * @throws IOException if a problem occurs decoding the filepath
      */
     DataManager(String fileName) throws IOException {
         filePath = getFilePath(fileName);
     }
 
     // get the file path inside the resources folder
-    private String getFilePath(String fileName) throws IOException {
+    private String getFilePath(String fileName) throws UnsupportedEncodingException {
         ClassLoader loader = Main.class.getClassLoader();
         String filePath = String.valueOf(loader.getResource("tradegateway"));
 //        System.out.println(filePath);

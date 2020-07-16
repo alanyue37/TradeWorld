@@ -112,12 +112,13 @@ abstract class Trade implements Serializable {
         } else{
             status = "completed";
         }
-        return "Trade id:" + this.idOfTrade +"\nType: " + this.type + "\nStatus: " + status + "\nNumber of meetings: " + this.getMeetingList().size() +
+        return "Trade ID: " + this.idOfTrade +"\nType: " + this.type + "\nStatus: " + status + "\nNumber of meetings: " + this.getMeetingList().size() +
                 "\nCreation Date: " + this.creationDate.toString() + "\nUsers involved: " + getUsers() + "\nItems involved: " + getItems();
     }
 
     /**
      * Returns if the given item is part of the trade
+     * @param itemId the ID of the given item
      * @return true if the item with the ID "itemId" is part of the trade, false if not
      */
     protected boolean containItem(String itemId){
