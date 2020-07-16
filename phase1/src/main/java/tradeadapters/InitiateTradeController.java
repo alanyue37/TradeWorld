@@ -30,6 +30,9 @@ public class InitiateTradeController implements RunnableController {
         this.username = username;
     }
 
+    /**
+     * It tries to initiateTrade and catches IOException if something goes wrong.
+     */
     @Override
     public void run() {
         try {
@@ -39,6 +42,11 @@ public class InitiateTradeController implements RunnableController {
         }
     }
 
+    /**
+     *
+     * @return  false if the user account is frozen or if the item does not exist.
+     * @throws IOException  If something goes wrong.
+     */
     private boolean initiateTrade() throws IOException {
         boolean success = false;
         if (tradeModel.getUserManager().isFrozen(username)) {
@@ -100,7 +108,8 @@ public class InitiateTradeController implements RunnableController {
             if (thisUserItemId == null) {
                 return false;
             }
-            tradeId = tradeModel.getTradeManager().addTwoWayTrade(permanentOrTemporary, username, otherUsername, thisUserItemId, itemId);
+            tradeId = tradeModel.getTradeManager().addTwoWayTrade(permanentOrTemporary, username, otherUsername,
+                    thisUserItemId, itemId);
         }
         else {
             tradeId = tradeModel.getTradeManager().addOneWayTrade(permanentOrTemporary, otherUsername, username, itemId);
@@ -108,7 +117,8 @@ public class InitiateTradeController implements RunnableController {
 
         List<String> meetingDetails = getMeetingDetails();
         try {
-            tradeModel.getTradeManager().editMeetingOfTrade(tradeId, meetingDetails.get(0), parseDateString(meetingDetails.get(1)), username, "add");
+            tradeModel.getTradeManager().editMeetingOfTrade(tradeId, meetingDetails.get(0),
+                    parseDateString(meetingDetails.get(1)), username, "add");
         } catch (ParseException e) {
             // This shouldn't happen because date parsing was already checked
             System.out.println("Invalid date and time!");
