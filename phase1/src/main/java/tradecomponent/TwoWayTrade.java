@@ -14,6 +14,7 @@ class TwoWayTrade extends Trade {
 
     /** Constructs a two way trade
      * @param type the type (temporary or permanent) of this Trade
+     * @param tradeId the ID of this Trade
      * @param user1 the username of the first user of this Trade
      * @param user2 the username of the second user of this Trade
      * @param item1 the ID of the item that user1 will be trading

@@ -118,6 +118,7 @@ abstract class Trade implements Serializable {
 
     /**
      * Returns if the given item is part of the trade
+     * @param itemId the ID of the given item
      * @return true if the item with the ID "itemId" is part of the trade, false if not
      */
     protected boolean containItem(String itemId){

@@ -10,6 +10,10 @@ class User implements Serializable {
 
     /**
      * Instantiates a new User
+     *
+     * @param name The given name
+     * @param username The given username
+     * @param password The given password
      */
     protected User(String name, String username, String password) {
         this.name = name;
