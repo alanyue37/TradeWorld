@@ -603,9 +603,9 @@ public class TradeManager implements Serializable {
      * @param username username of user
      * @return map of to-be confirmed trade IDs
      */
-    public List<String> getToBeConfirmedTrades(String username) {
+    public Map<String, String> getToBeConfirmedTrades(String username) {
         List<String> userOngoingTrade = getTradesOfUser(username, "ongoing");
-        List<String> toBeConfirmed = new ArrayList<>();
+        Map<String, String> toBeConfirmed = new HashMap<>();
         for (String tradeId : userOngoingTrade) {
             Trade trade = getTrade(tradeId);
             Meeting meeting = trade.getMeetingList().get(trade.getMeetingList().size() - 1);
@@ -613,7 +613,7 @@ public class TradeManager implements Serializable {
                 Calendar cal = Calendar.getInstance();
                 Date newDate = cal.getTime();
                 if (meetingManager.getConfirmedMeetingTime(meeting).before(newDate)) {
-                    toBeConfirmed.add(trade.getIdOfTrade());
+                    toBeConfirmed.put(trade.getIdOfTrade(), trade.getTradeType());
                 }
             }
         }
