@@ -133,6 +133,16 @@ public class UserManager implements Serializable {
     }
 
     /**
+     * Gets a chosen TradingUser's credit attribute.
+     * @param username The username of the chosen TradingUser. Must be a valid username for an existing TradingUser.
+     * @return the TradingUser's credit value.
+     */
+    public int getCreditByUsername(String username) {
+        TradingUser account = tradingUsers.get(username);
+        return account.getCredit();
+    }
+
+    /**
      * Gets a particular set of item ids stored in a TradingUser
      *
      * @param username The username of the chosen TradingUser

@@ -30,6 +30,9 @@ public class InitiateTradeController implements RunnableController {
         this.username = username;
     }
 
+    /**
+     * The main run method to call when this controller is initiated.
+     */
     @Override
     public void run() {
         try {
@@ -103,6 +106,11 @@ public class InitiateTradeController implements RunnableController {
             tradeId = tradeModel.getTradeManager().addTwoWayTrade(permanentOrTemporary, username, otherUsername, thisUserItemId, itemId);
         }
         else {
+            int credit = tradeModel.getUserManager().getCreditByUsername(username);
+            if (credit < 0) {
+                presenter.notEnoughCredits(Math.abs(credit));
+                return false;
+            }
             tradeId = tradeModel.getTradeManager().addOneWayTrade(permanentOrTemporary, otherUsername, username, itemId);
         }
 
