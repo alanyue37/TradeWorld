@@ -2,8 +2,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ViewingTradesPresenter extends TextPresenter{
-    public ViewingTradesPresenter(){
-    }
 
     public void showViewingOptions() {
         List<String> options = new ArrayList<>();

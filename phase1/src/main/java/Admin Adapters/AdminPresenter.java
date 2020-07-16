@@ -6,9 +6,6 @@ import java.util.List;
  */
 public class AdminPresenter extends TextPresenter {
 
-    public AdminPresenter() {
-    }
-
     /**
      * This method prints the menu options to the screen and asks the admin user to enter a corresponding number to
      * select a menu option. The number determines which method to call in the admin controller.
