@@ -435,58 +435,91 @@ public class TradeManager implements Serializable {
     // only looks at completed trades
 
 
-    private List<Trade> sortTradesMeetingDate(List<Trade> trades)  {
-        List<Trade> sorted = new ArrayList<>();
+//    private List<Trade> sortTradesMeetingDate(List<Trade> trades)  {
+//        List<Trade> sorted = new ArrayList<>();
+//        if (trades.size() == 0) { return sorted; }
+//        sorted.add(trades.get(0));
+//        for (int i = 1; i < trades.size(); i++) {
+//            int ii = 0;
+//            while (ii < sorted.size() && getLastConfirmedMeetingTime(sorted.get(ii).getIdOfTrade()).before(getLastConfirmedMeetingTime(trades.get(i).getIdOfTrade()))) {
+//                ii++;
+//            }
+//            sorted.add(ii, trades.get(i));
+//        }
+//        return sorted;
+//    }
+
+    private List<String> sortTradesMeetingDate(List<String> trades)  {
+        List<String> sorted = new ArrayList<>();
         if (trades.size() == 0) { return sorted; }
         sorted.add(trades.get(0));
         for (int i = 1; i < trades.size(); i++) {
             int ii = 0;
-            while (ii < sorted.size() && getLastConfirmedMeetingTime(sorted.get(ii).getIdOfTrade()).before(getLastConfirmedMeetingTime(trades.get(i).getIdOfTrade()))) {
+            while (ii < sorted.size() && getLastConfirmedMeetingTime(sorted.get(ii)).before(getLastConfirmedMeetingTime(trades.get(i)))) {
                 ii++;
             }
             sorted.add(ii, trades.get(i));
         }
         return sorted;
-    }
+    } // goes from oldest (index 0) to newest
 
-    private List<String> getItemsTraded(String user) {
-        List<String> items = new ArrayList<>();
-        List<Trade> trades = new ArrayList<>();
-        if (this.userToTrades.get(user) == null) {
-            return items;
-        }
-        for (String tradeId : this.userToTrades.get(user)) {
-            if (this.completedTrades.containsKey(tradeId)) {
-                trades.add(this.completedTrades.get(tradeId));
-            }
-        }
-        for (Trade sortedTrade : sortTradesMeetingDate(trades)) {
-            if (sortedTrade instanceof OneWayTrade && user.equals(((OneWayTrade) sortedTrade).getGiverUsername())) {
-                items.add(((OneWayTrade) sortedTrade).getItemId());
-            } else if (sortedTrade instanceof TwoWayTrade) {
-                items.add(((TwoWayTrade) sortedTrade).getItemOfUser(user));
-            }
-        }
-        return items;
-    } // only looks at completed trades
+//    private List<String> getItemsTraded(String user) {
+//        List<String> items = new ArrayList<>();
+//        List<Trade> trades = new ArrayList<>();
+//        if (this.userToTrades.get(user) == null) {
+//            return items;
+//        }
+//        for (String tradeId : this.userToTrades.get(user)) {
+//            if (this.completedTrades.containsKey(tradeId)) {
+//                trades.add(this.completedTrades.get(tradeId));
+//            }
+//        }
+//        for (Trade sortedTrade : sortTradesMeetingDate(trades)) {
+//            if (sortedTrade instanceof OneWayTrade && user.equals(((OneWayTrade) sortedTrade).getGiverUsername())) {
+//                items.add(((OneWayTrade) sortedTrade).getItemId());
+//            } else if (sortedTrade instanceof TwoWayTrade) {
+//                items.add(((TwoWayTrade) sortedTrade).getItemOfUser(user));
+//            }
+//        }
+//        return items;
+//    } // only looks at completed trades
+//
+//    /**
+//     * Returns list of the top given number of most recently traded item IDs of a user
+//     *
+//     * @param num  the number of most recently traded item IDs wanted
+//     * @param user the username of the user to get most recently traded item IDs
+//     * @return list of item IDs that were the most recently traded by user "user." If "num" is greater
+//     * than the number of items that "user" has traded, all of the items traded are returned.
+//     */
+//    public List<String> getRecentItemsTraded(int num, String user) {
+//        List<String> tradedItems = getItemsTraded(user);
+//        List<String> recentItems = new ArrayList<>();
+//        int i = tradedItems.size() - 1;
+//        while (i >= tradedItems.size() - num && i >= 0) {
+//            recentItems.add(tradedItems.get(i));
+//            i--;
+//        }
+//        return recentItems;
+//    }
 
     /**
-     * Returns list of the top given number of most recently traded item IDs of a user
+     * Returns list of the IDs of the most recent given number of (completed) trades of a user
      *
-     * @param num  the number of most recently traded item IDs wanted
-     * @param user the username of the user to get most recently traded item IDs
-     * @return arraylist of item IDs that were the most recently traded by user "user." If "num" is greater
-     * than the number of items that "user" has traded, all of the items traded are returned.
+     * @param num  the number of IDs of most recent trades wanted
+     * @param user the username of the user to get IDs of most recent trades
+     * @return list of IDs of most recent (completed) trades involving user "user." If "num" is greater
+     * than the number of trades that "user" has been in, all of the trade IDs are returned.
      */
-    public List<String> getRecentItemsTraded(int num, String user) {
-        List<String> tradedItems = getItemsTraded(user);
-        List<String> recentItems = new ArrayList<>();
-        int i = tradedItems.size() - 1;
-        while (i >= tradedItems.size() - num && i >= 0) {
-            recentItems.add(tradedItems.get(i));
+    public List<String> getRecentTrades(int num, String user) {
+        List<String> sortedTrades = sortTradesMeetingDate(getTradesOfUser(user, "completed"));
+        List<String> recentTrades = new ArrayList<>();
+        int i = sortedTrades.size() - 1;
+        while (i >= sortedTrades.size() - num && i >= 0) {
+            recentTrades.add(sortedTrades.get(i));
             i--;
         }
-        return recentItems;
+        return recentTrades;
     }
 
     /**
