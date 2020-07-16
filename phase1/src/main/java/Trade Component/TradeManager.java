@@ -9,10 +9,10 @@ public class TradeManager implements Serializable {
     private int limitOfEdits;
     private int limitIncomplete;
     private int limitTransactionPerWeek;
-    private Map<String, Trade> ongoingTrades;
-    private MeetingManager meetingManager;
-    private Map<String, Trade> completedTrades;
-    private Map<String, List<String>> userToTrades;
+    private final Map<String, Trade> ongoingTrades;
+    private final MeetingManager meetingManager;
+    private final Map<String, Trade> completedTrades;
+    private final Map<String, List<String>> userToTrades;
     private final AtomicInteger counter = new AtomicInteger();
 
 
@@ -310,7 +310,7 @@ public class TradeManager implements Serializable {
         if (getLastConfirmedMeeting(tradeId) == null) {
             return null;
         } else {
-            return meetingManager.getConfirmedMeetingTime(getLastConfirmedMeeting(tradeId));
+            return meetingManager.getConfirmedMeetingTime(Objects.requireNonNull(getLastConfirmedMeeting(tradeId)));
         }
     }
 
@@ -326,7 +326,7 @@ public class TradeManager implements Serializable {
         if (getLastConfirmedMeeting(tradeId) == null) {
             return null;
         } else {
-            return meetingManager.getLastLocation(getLastConfirmedMeeting(tradeId));
+            return meetingManager.getLastLocation(Objects.requireNonNull(getLastConfirmedMeeting(tradeId)));
         }
     }
 
@@ -435,20 +435,6 @@ public class TradeManager implements Serializable {
     // only looks at completed trades
 
 
-//    private List<Trade> sortTradesMeetingDate(List<Trade> trades)  {
-//        List<Trade> sorted = new ArrayList<>();
-//        if (trades.size() == 0) { return sorted; }
-//        sorted.add(trades.get(0));
-//        for (int i = 1; i < trades.size(); i++) {
-//            int ii = 0;
-//            while (ii < sorted.size() && getLastConfirmedMeetingTime(sorted.get(ii).getIdOfTrade()).before(getLastConfirmedMeetingTime(trades.get(i).getIdOfTrade()))) {
-//                ii++;
-//            }
-//            sorted.add(ii, trades.get(i));
-//        }
-//        return sorted;
-//    }
-
     private List<String> sortTradesMeetingDate(List<String> trades)  {
         List<String> sorted = new ArrayList<>();
         if (trades.size() == 0) { return sorted; }
@@ -462,46 +448,6 @@ public class TradeManager implements Serializable {
         }
         return sorted;
     } // goes from oldest (index 0) to newest
-
-//    private List<String> getItemsTraded(String user) {
-//        List<String> items = new ArrayList<>();
-//        List<Trade> trades = new ArrayList<>();
-//        if (this.userToTrades.get(user) == null) {
-//            return items;
-//        }
-//        for (String tradeId : this.userToTrades.get(user)) {
-//            if (this.completedTrades.containsKey(tradeId)) {
-//                trades.add(this.completedTrades.get(tradeId));
-//            }
-//        }
-//        for (Trade sortedTrade : sortTradesMeetingDate(trades)) {
-//            if (sortedTrade instanceof OneWayTrade && user.equals(((OneWayTrade) sortedTrade).getGiverUsername())) {
-//                items.add(((OneWayTrade) sortedTrade).getItemId());
-//            } else if (sortedTrade instanceof TwoWayTrade) {
-//                items.add(((TwoWayTrade) sortedTrade).getItemOfUser(user));
-//            }
-//        }
-//        return items;
-//    } // only looks at completed trades
-//
-//    /**
-//     * Returns list of the top given number of most recently traded item IDs of a user
-//     *
-//     * @param num  the number of most recently traded item IDs wanted
-//     * @param user the username of the user to get most recently traded item IDs
-//     * @return list of item IDs that were the most recently traded by user "user." If "num" is greater
-//     * than the number of items that "user" has traded, all of the items traded are returned.
-//     */
-//    public List<String> getRecentItemsTraded(int num, String user) {
-//        List<String> tradedItems = getItemsTraded(user);
-//        List<String> recentItems = new ArrayList<>();
-//        int i = tradedItems.size() - 1;
-//        while (i >= tradedItems.size() - num && i >= 0) {
-//            recentItems.add(tradedItems.get(i));
-//            i--;
-//        }
-//        return recentItems;
-//    }
 
     /**
      * Returns list of the IDs of the most recent given number of (completed) trades of a user
