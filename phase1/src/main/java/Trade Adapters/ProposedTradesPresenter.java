@@ -10,10 +10,10 @@ public class ProposedTradesPresenter extends TextPresenter {
     /**
      * Prints the options available for the user and asks the user to enter a corresponding number
      * to select an option: confirm the meeting details, edit the meeting details or exit.
-     * @param tradeId id of the trade
+     *
      * @param tradeInfo information on the trade, including the meeting details
      */
-    public void showMeeting(String tradeId, String tradeInfo) {
+    public void showMeeting(String tradeInfo) {
         System.out.println(tradeInfo);
         System.out.println("Options for a User: \n" +
                 " Enter 1 to confirm the meeting time\n" +
@@ -54,13 +54,6 @@ public class ProposedTradesPresenter extends TextPresenter {
      */
     public void enterDateTime() {
         System.out.println("Enter the date and time of the meeting (dd/mm/yyyy hh:mm): ");
-    }
-
-    /**
-     * Informs the user that they entered an invalid time.
-     */
-    public void invalidDateTime() {
-        System.out.println("Enter a valid date and time!");
     }
 
     /**

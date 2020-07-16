@@ -43,7 +43,7 @@ public class ProposedTradesController implements RunnableController {
         Map<String, String> trades = tradeModel.getTradeManager().getProposedTrades(username);
 
         for (String tradeId : trades.keySet()) {
-            presenter.showMeeting(tradeId, tradeModel.getTradeManager().getTradeAllInfo(tradeId));
+            presenter.showMeeting(tradeModel.getTradeManager().getTradeAllInfo(tradeId));
             String input = br.readLine();
             switch(input) {
                 case "1": // confirm meeting times

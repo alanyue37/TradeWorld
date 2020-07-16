@@ -9,10 +9,10 @@ public class ConfirmTradesPresenter extends TextPresenter {
     /**
      * Prints the options available for the user and asks the user to enter a corresponding number
      * to select an option: confirm real life meeting, skip to next one or exit.
-     * @param tradeId id of the trade
-     * @param tradeInfo
+     *
+     * @param tradeInfo information on the trade, including the meeting details
      */
-    public void showTrade(String tradeId, String tradeInfo){
+    public void showTrade(String tradeInfo) {
         System.out.println(tradeInfo);
         System.out.println("Options for a user: \n" +
                 " Enter 1 to confirm the real life trade happened\n" +
