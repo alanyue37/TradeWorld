@@ -42,7 +42,7 @@ public class ConfirmTradesController implements RunnableController {
     private boolean confirmTrades() throws IOException {
         List<String> trades = tradeModel.getTradeManager().getToBeConfirmedTrades(username);
         for (String tradeId : trades) {
-            presenter.showTrade(tradeId, tradeModel.getTradeManager().getTradeAllInfo(tradeId));
+            presenter.showTrade(tradeModel.getTradeManager().getTradeAllInfo(tradeId));
             String input = br.readLine();
             switch(input) {
                 case "1":
