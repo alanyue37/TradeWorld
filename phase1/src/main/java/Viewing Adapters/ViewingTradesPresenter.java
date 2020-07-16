@@ -82,4 +82,8 @@ public class ViewingTradesPresenter extends TextPresenter{
         System.out.println("Enter <number> to view your <number> top trading partners: ");
     }
 
+    public void printSearchingInvalid(){
+        System.out.println("Entered an invalid trade id. You do not have any trade with this id");
+    }
+
 }

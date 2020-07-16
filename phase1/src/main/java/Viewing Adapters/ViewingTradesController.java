@@ -66,11 +66,11 @@ public class ViewingTradesController implements RunnableController {
         userTrades.addAll(tradeModel.getTradeManager().getTradesOfUser(username, "completed"));
         presenter.printEnterTradeId();
         String tradeId = br.readLine();
-        while (!userTrades.contains(tradeId)){
-            presenter.tryAgain(); // should add could write "exit" or "back"
-            tradeId = br.readLine();
+        if (!userTrades.contains(tradeId)){
+            presenter.printSearchingInvalid();
+        } else{
+            presenter.showInfo(tradeModel.getTradeManager().getTradeAllInfo(tradeId));
         }
-        presenter.showInfo(tradeModel.getTradeManager().getTradeAllInfo(tradeId));
     }
 
 
