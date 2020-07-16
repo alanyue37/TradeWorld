@@ -20,6 +20,9 @@ public class ViewingTradesPresenter extends TextPresenter {
 
     /**
      * Print the trade with id as tradeId
+     *
+     * @param ongoingIds The list of ongoing Trade IDs
+     * @param completedIds The list of completed Trade IDs
      */
     public void showTrade(List<String> ongoingIds, List<String> completedIds){
         StringBuilder ongoing;
@@ -72,6 +75,9 @@ public class ViewingTradesPresenter extends TextPresenter {
 
     /**
      * Print the top trading partners of a user (if any)
+     *
+     * @param num The number of partners to be displayed
+     * @param partners The list of trading partners
      */
     public void printViewTopTradingPartners(int num, List<String> partners){
         if (partners.size() > 0) {
