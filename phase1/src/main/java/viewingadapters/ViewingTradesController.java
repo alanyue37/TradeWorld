@@ -52,7 +52,7 @@ public class ViewingTradesController implements RunnableController {
                     viewTradingPartners();
                     validInput = true;
                     break;
-                case "exit":
+                case "back":
                     return;
                 default:
                     presenter.tryAgain();

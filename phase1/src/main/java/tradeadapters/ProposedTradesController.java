@@ -17,9 +17,9 @@ import java.util.*;
  */
 public class ProposedTradesController implements RunnableController {
     private final BufferedReader br;
-    TradeModel tradeModel;
-    ProposedTradesPresenter presenter;
-    private String username;
+    private final TradeModel tradeModel;
+    private final ProposedTradesPresenter presenter;
+    private final String username;
 
     /**
      * Initiates the ProposedTradesController.
