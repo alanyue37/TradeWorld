@@ -38,7 +38,7 @@ public class ViewingTradesPresenter extends TextPresenter {
             }
         }
         if (completedIds.size() == 0){
-            completed = new StringBuilder("No completed trades");
+            completed = new StringBuilder("No completed trades.");
         } else{
             completed = new StringBuilder("Completed trade IDs: ");
             for (String completedId: completedIds){

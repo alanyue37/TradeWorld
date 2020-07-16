@@ -31,7 +31,7 @@ public class InitiateTradeController implements RunnableController {
     }
 
     /**
-     * It tries to initiateTrade and catches IOException if something goes wrong.
+     * The main run method to call when this controller is initiated.
      */
     @Override
     public void run() {
@@ -42,12 +42,6 @@ public class InitiateTradeController implements RunnableController {
         }
     }
 
-    /**
-     * This method prevents the User from initiating the trade if the account of the User is frozen and if the item
-     * does not exist. Returns true iff the User account is not frozen and iff the item exists.
-     * @return  false if the user account is frozen or if the item does not exist.
-     * @throws IOException  If something goes wrong.
-     */
     private boolean initiateTrade() throws IOException {
         boolean success = false;
         if (tradeModel.getUserManager().isFrozen(username)) {
@@ -63,12 +57,6 @@ public class InitiateTradeController implements RunnableController {
         return success;
     }
 
-    /**
-     * Returns true iff the trade could occur, false otherwise
-     * @param itemId    The id of the item
-     * @return  True iff the trade could be conducted, false otherwise
-     * @throws IOException  If something goes wrong
-     */
     private boolean createTrade(String itemId) throws IOException {
         String otherUsername = tradeModel.getItemManager().getOwner(itemId);
         String tradeId;
@@ -115,17 +103,20 @@ public class InitiateTradeController implements RunnableController {
             if (thisUserItemId == null) {
                 return false;
             }
-            tradeId = tradeModel.getTradeManager().addTwoWayTrade(permanentOrTemporary, username, otherUsername,
-                    thisUserItemId, itemId);
+            tradeId = tradeModel.getTradeManager().addTwoWayTrade(permanentOrTemporary, username, otherUsername, thisUserItemId, itemId);
         }
         else {
+            int credit = tradeModel.getUserManager().getCreditByUsername(username);
+            if (credit < 0) {
+                presenter.notEnoughCredits(Math.abs(credit));
+                return false;
+            }
             tradeId = tradeModel.getTradeManager().addOneWayTrade(permanentOrTemporary, otherUsername, username, itemId);
         }
 
         List<String> meetingDetails = getMeetingDetails();
         try {
-            tradeModel.getTradeManager().editMeetingOfTrade(tradeId, meetingDetails.get(0),
-                    parseDateString(meetingDetails.get(1)), username, "add");
+            tradeModel.getTradeManager().editMeetingOfTrade(tradeId, meetingDetails.get(0), parseDateString(meetingDetails.get(1)), username, "add");
         } catch (ParseException e) {
             // This shouldn't happen because date parsing was already checked
             System.out.println("Invalid date and time!");
@@ -135,13 +126,6 @@ public class InitiateTradeController implements RunnableController {
         return true;
     }
 
-    /**
-     * Returns an item from the User's inventory (i.e., this item could be in the wishlist of the other User or not)
-     * which could be traded in a two way trade.
-     * @param otherUsername The username of the other Trading User
-     * @return  Returns an item from the User's inventory which could be traded in a two way trade
-     * @throws IOException  If something goes wrong
-     */
     private String getItemToOffer(String otherUsername) throws IOException {
         // two way requires user to propose item from other user's wishlist
         Set<String> otherWishlist = tradeModel.getUserManager().getSetByUsername(otherUsername, ItemSets.WISHLIST);
@@ -175,12 +159,6 @@ public class InitiateTradeController implements RunnableController {
         }
         return thisUserItemId;
     }
-
-    /**
-     * Returns a list of strings representing the details of the meeting (i.e., location and date).
-     * @return  A list of strings representing the details of the meeting (i.e., location and date)
-     * @throws IOException  If something goes wrong
-     */
     private List<String> getMeetingDetails() throws IOException {
         List<String> meetingDetails = new ArrayList<>();
 
@@ -207,23 +185,12 @@ public class InitiateTradeController implements RunnableController {
         return meetingDetails;
     }
 
-    /**
-     * Converts the date which is a string into dd/MM/yyyy HH:mm.
-     * @param dateString    The date in the string format
-     * @return  Returns the date in this format: dd/MM/yyyy HH:mm
-     * @throws ParseException   throws a ParseException if the date cannot be converted into dd/MM/yyyy HH:mm format
-     */
     private Date parseDateString(String dateString) throws ParseException {
         DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         return format.parse(dateString);
     }
 
-    /**
-     * Returns a list of strings of items that have the status as available and the User is the owner of the item.
-     * @param username  The username of the User
-     * @return  Returns a list of strings that are items that have the status as available in the inventory and the
-     * User is the owner of the item
-     */
+
     private List<String> getUserAvailableItems(String username) {
         List<String> itemsAvailable = tradeModel.getItemManager().getAvailableItems();
         List<String> userItemsAvailable = new ArrayList<>();
@@ -235,11 +202,6 @@ public class InitiateTradeController implements RunnableController {
         return userItemsAvailable;
     }
 
-    /**
-     * Returns the item that the User wants to trade or borrow and is not the owner of the item.
-     * @return  The item that the User wants to trade or borrow and is not the owner of the item
-     * @throws IOException  If something goes wrong
-     */
     private String getItemIdChoice() throws IOException {
         // Show items available not owned by user
         List<String> itemsAvailable = tradeModel.getItemManager().getAvailableItems();
@@ -256,7 +218,7 @@ public class InitiateTradeController implements RunnableController {
         }
         presenter.availableItemsMenu(itemsToShow);
         String itemId = br.readLine();
-        while (!itemsAvailable.contains(itemId) && !itemId.equals("back")) {  // shouldn't itemsAvailable be itemsToShow?
+        while (!itemsAvailable.contains(itemId) && !itemId.equals("back")) {
             // Validate input
             presenter.tryAgain();
             itemId = br.readLine();
@@ -267,10 +229,6 @@ public class InitiateTradeController implements RunnableController {
         return itemId;
     }
 
-    /**
-     * The method allows the User to make a request to the admin to unfreeze their account.
-     * @throws IOException  If something goes wrong
-     */
     private void unfreezeRequest() throws IOException {
         presenter.frozenAccount();
         String input = br.readLine();
@@ -283,11 +241,6 @@ public class InitiateTradeController implements RunnableController {
         }
     }
 
-    /**
-     * Returns the information of all the items in the itemIds.
-     * @param itemIds   The id of the items
-     * @return  A list of strings which includes the information of the items.
-     */
     private List<String> getItemsInfo(List<String> itemIds) {
         List <String> itemsInfo = new ArrayList<>();
         for (String itemId : itemIds) {
