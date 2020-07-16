@@ -6,7 +6,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-
+/**
+ * Manages input from the user to confirm or edit the meeting time(s) of proposed trades.
+ */
 public class ProposedTradesController implements RunnableController {
     private final BufferedReader br;
     TradeModel tradeModel;
@@ -79,7 +81,7 @@ public class ProposedTradesController implements RunnableController {
     }
 
     /**
-     * Make the changes that are necessary for the inventory and wishlist of the users when the trade
+     * Makes the changes that are necessary for the inventory and wishlist of the users when the trade
      * meeting time/place is confirmed.
      * @param tradeId id of the trade
      * @param type type of trade (permanent/temporary)

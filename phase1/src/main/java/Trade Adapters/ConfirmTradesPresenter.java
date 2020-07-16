@@ -1,10 +1,13 @@
+/**
+ * Manages output to the user to confirm trades happened in real life.
+ */
 public class ConfirmTradesPresenter extends TextPresenter {
 
     public ConfirmTradesPresenter() { // Java already has a default constructor
     }
 
     /**
-     * This menu prints the options available for the user and asks the user to enter a corresponding number
+     * Prints the options available for the user and asks the user to enter a corresponding number
      * to select an option: confirm real life meeting, skip to next one or exit.
      * @param tradeId id of the trade
      * @param tradeInfo
@@ -18,7 +21,7 @@ public class ConfirmTradesPresenter extends TextPresenter {
     }
 
     /**
-     * This method prints to the screen and signals to the user that the system has successfully ended.
+     * Prints to the screen and signals to the user that the system has successfully ended.
      */
     public void end() {
         System.out.println("Exiting...");

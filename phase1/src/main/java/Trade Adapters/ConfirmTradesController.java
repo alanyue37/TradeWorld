@@ -6,6 +6,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Manages input from the user to confirm trades happened in real life.
+ */
 public class ConfirmTradesController implements RunnableController {
     private final BufferedReader br;
     TradeModel tradeModel;
@@ -58,7 +61,7 @@ public class ConfirmTradesController implements RunnableController {
     }
 
     /**
-     * Allow the user to confirm that the real life meeting happened.
+     * Allows the user to confirm that the real life meeting happened.
      * @param tradeId id of the trade
      */
     private void confirmTradeHappened(String tradeId) {
@@ -94,7 +97,7 @@ public class ConfirmTradesController implements RunnableController {
     }
 
     /**
-     * Make the necessary changes of the item and user status once a trade is completed.
+     * Makes the necessary changes of the item and user status once a trade is completed.
      * @param tradeId id of the trade
      */
     private void completedTradeChanges(String tradeId){

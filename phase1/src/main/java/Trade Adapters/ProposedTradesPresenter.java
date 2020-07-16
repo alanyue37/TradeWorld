@@ -1,11 +1,14 @@
 import java.io.BufferedReader;
 
+/**
+ * Manages output to the user to confirm or edit the meeting time(s) of proposed trades.
+ */
 public class ProposedTradesPresenter extends TextPresenter {
 
     public ProposedTradesPresenter() { }
 
     /**
-     * This menu prints the options available for the user and asks the user to enter a corresponding number
+     * Prints the options available for the user and asks the user to enter a corresponding number
      * to select an option: confirm the meeting details, edit the meeting details or exit.
      * @param tradeId id of the trade
      * @param tradeInfo information on the trade, including the meeting details
@@ -75,7 +78,7 @@ public class ProposedTradesPresenter extends TextPresenter {
     }
 
     /**
-     * This method prints to the screen and signals to the user that the system has successfully ended.
+     * Prints to the screen and signals to the user that the system has successfully ended.
      */
     public void end() {
         System.out.println("Exiting...");
