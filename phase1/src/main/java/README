@@ -8,6 +8,7 @@ IMPORTANT: Make sure File -> Project Structure -> Project compiler output ends i
 Make sure there is a folder named "resources" in phase1/src/main. If there is not, create an empty folder with that
 name.
 
+
 ADMINS
 The initial admin user that is able to add other admins to the system has username "ia" and password "initialize".
 Once this user has logged in, there is an option to create additional admin users by specifying a name, username, and
@@ -33,6 +34,9 @@ indeed be added.
 
 
 OTHER INFORMATION
+The diagram_overview.pdf shows an overview of the classes and the associated inheritance and interface relationships.
+Each remaining diagram is a uml for an individual package.
+
 In line 29 of DataManager, there is a debug print statement for the filepath of the out package "tradegateway".
 This filepath is obtained by loading the ClassLoader of the DataManager class, then getting the filepath of the package
 folder.
