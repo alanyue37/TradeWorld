@@ -93,7 +93,6 @@ public class AdminController implements RunnableController {
                     break;
                 case "exit":
                     presenter.end();
-                    selectMenu();
                     return false;
                 default:
                     presenter.tryAgain();
