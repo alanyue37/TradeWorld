@@ -1,5 +1,12 @@
 RUNNING THE PROGRAM
-Run the program from Main.java in package trademisc.
+A pre-made system with admins, users, and items can be found in the DemoTradeSystem in the package tradegateway and
+can be run using DemoMain in the package trademisc.
+
+To run the program without anything premade, run the program from Main.java in package trademisc.
+
+IMPORTANT: Make sure File -> Project Structure -> Project compiler output ends in phase1/out
+Make sure there is a folder named "resources" in phase1/src/main. If there is not, create an empty folder with that
+name.
 
 ADMINS
 The initial admin user that is able to add other admins to the system has username "ia" and password "initialize".
@@ -25,12 +32,7 @@ name and description. An admin user must then login and review recently added it
 indeed be added.
 
 
-OTHER SPECIFICATIONS
-A pre-made system with admins, users, and items can be found in the DemoTradeSystem in the package tradegateway and
-can be run using DemoMain in the package trademisc.
-
-To run the program without anything premade, run the program from Main.java in package trademisc.
-
+OTHER INFORMATION
 In line 29 of DataManager, there is a debug print statement for the filepath of the out package "tradegateway".
 This filepath is obtained by loading the ClassLoader of the DataManager class, then getting the filepath of the package
 folder.
