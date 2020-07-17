@@ -1,7 +1,5 @@
 package tradegateway;
 
-import trademisc.Main;
-
 import java.io.*;
 import java.net.URLDecoder;
 

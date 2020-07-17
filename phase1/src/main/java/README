@@ -14,11 +14,9 @@ be instantiated with a provided name, username, and password. The username must 
 users and TradingUsers.
 
 
-
 TRADES
 A user can browse the system inventory and propose a trade by choosing the type of trade, items involved,
 and meeting time.
-
 
 
 ITEMS
@@ -32,3 +30,13 @@ A pre-made system with admins, users, and items can be found in the DemoTradeSys
 can be run using DemoMain in the package trademisc.
 
 To run the program without anything premade, run the program from Main.java in package trademisc.
+
+In line 29 of DataManager, there is a debug print statement for the filepath of the out package "tradegateway".
+This filepath is obtained by loading the ClassLoader of the DataManager class, then getting the filepath of the package
+folder.
+
+After uncommenting this line, the first thing that should print is the filepath. It should end
+.../group_0126/phase1/out/production/phase1/tradegateway
+
+The location of the serialized objects folder is obtained by removing the last four path components
+(to obtain .../group_0126/phase1) then appending /src/main/resources/ then the filename.
