@@ -26,7 +26,7 @@ class DataManager {
     private String getFilePath(String fileName) throws UnsupportedEncodingException {
         ClassLoader loader = DataManager.class.getClassLoader();
         String filePath = String.valueOf(loader.getResource("tradegateway"));
-        System.out.println(filePath);
+//        System.out.println(filePath);
         String decodedPath = URLDecoder.decode(filePath, "UTF-8"); // support for spaces in file path
 //        System.out.println(decodedPath);
         String[] tokens = decodedPath.split("/");
