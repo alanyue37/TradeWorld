@@ -1,0 +1,28 @@
+RUNNING THE PROGRAM
+Run the program from Main.java in package trademisc.
+
+ADMINS
+The initial Admin User that is able to add other admins to the system has username "ia" and password "initialize".
+Once the the Admin User is logged in successfully, the Admin can make an account for other Admins (using their name,
+choosing a unique username, and a password). The Admin User can freeze accounts and respond to Users that have requested
+to unfreeze their accounts. The Admin reviews items to add to the system and the User's inventory. Additionally, the
+admin can set a new lending threshold, set a new limit for transactions, set a new limit for incomplete transactions,
+and view the current limit of edits and set a new limit for the edits.
+
+
+
+USERS
+
+
+
+
+TRADES
+
+
+
+
+ITEMS
+
+
+
+OTHER SPECIFICATIONS
