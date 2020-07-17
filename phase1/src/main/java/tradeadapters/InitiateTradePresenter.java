@@ -64,6 +64,7 @@ public class InitiateTradePresenter extends TextPresenter {
 
     /**
      * Prints that user has not lent enough items to borrow.
+     * @param deficit The number of items the user must loan in order to borrow again
      */
     public void notEnoughCredits(int deficit) {
         System.out.println("You have insufficient credit to borrow. You may not initiate a one-way trade until you" +
