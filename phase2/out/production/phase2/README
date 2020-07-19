@@ -1,0 +1,48 @@
+RUNNING THE PROGRAM
+A pre-made system with admins, users, and items can be found in the DemoTradeSystem in the package tradegateway and
+can be run using DemoMain in the package trademisc.
+
+To run the program without anything premade, run the program from Main.java in package trademisc.
+
+IMPORTANT: Make sure File -> Project Structure -> Project compiler output ends in phase1/out
+Make sure there is a folder named "resources" in phase1/src/main. If there is not, create an empty folder with that
+name.
+
+
+ADMINS
+The initial admin user that is able to add other admins to the system has username "ia" and password "initialize".
+Once this user has logged in, there is an option to create additional admin users by specifying a name, username, and
+password. The username must be unique to both all existing admin users and TradingUsers. Any subsequent admin users
+that are created can then also create new admin users.
+
+
+TRADING USERS
+When the program is first run, there is an option to create a new account. This pertains to a new TradingUser and can
+be instantiated with a provided name, username, and password. The username must be unique to both all existing admin
+users and TradingUsers.
+
+
+TRADES
+A user can browse the system inventory and propose a trade by choosing the type of trade, items involved,
+and meeting time.
+
+
+ITEMS
+To add an item to the system, a TradingUser must login and request to add an item to their inventory, which includes a
+name and description. An admin user must then login and review recently added items to confirm that the item should
+indeed be added.
+
+
+OTHER INFORMATION
+The diagram_overview.pdf shows an overview of the classes and the associated inheritance and interface relationships.
+Each remaining diagram is a uml for an individual package.
+
+In line 29 of DataManager, there is a debug print statement for the filepath of the out package "tradegateway".
+This filepath is obtained by loading the ClassLoader of the DataManager class, then getting the filepath of the package
+folder.
+
+After uncommenting this line, the first thing that should print is the filepath. It should end
+.../group_0126/phase1/out/production/phase1/tradegateway
+
+The location of the serialized objects folder is obtained by removing the last four path components
+(to obtain .../group_0126/phase1) then appending /src/main/resources/ then the filename.
