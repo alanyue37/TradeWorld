@@ -14,6 +14,7 @@ class Meeting implements Serializable {
     private boolean IsCompleted; // real life meeting is completed
     private boolean IsConfirmed; // time/place is confirmed by the other user
     private String lastEditUser;
+    private String meetingId;
 
     /**
      * Initiates a new meeting
@@ -21,7 +22,7 @@ class Meeting implements Serializable {
      * @param time  The time of the meeting
      * @param username  The username of the User who suggested the meeting
      */
-    protected Meeting(String location, Date time, String username){
+    protected Meeting(String location, Date time, String username, String meetingId){
         this.location = location;
         this.meetingTime = time;
         this.numOfEdits = 0;
@@ -29,6 +30,7 @@ class Meeting implements Serializable {
         this.IsConfirmed = false;
         this.IsCompleted = false;
         this.lastEditUser = username;
+        this.meetingId = meetingId;
     }
 
     /**
@@ -39,6 +41,9 @@ class Meeting implements Serializable {
         return this.location;
     }
 
+    protected String getMeetingId(){
+        return this.meetingId;
+    }
     /**
      * Returns the User who last edited and made changes
      * @return The User who last edited and made changes
@@ -154,7 +159,7 @@ class Meeting implements Serializable {
         } else{
             status = "need to agree on meeting details";
         }
-        return "Status: " + status + "\nLocation: " + this.location + "\nTime: " + this.meetingTime
+        return "Meeting Id: " + this.meetingId + "\nStatus: " + status + "\nLocation: " + this.location + "\nTime: " + this.meetingTime
                 + "\nNumber of Edits: " + this.numOfEdits + "\nNumber of Confirmations: " + this.numConfirmations
                 + "\nLast user who modified the meeting: " + this.lastEditUser;
     }

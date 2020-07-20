@@ -13,7 +13,7 @@ abstract class Trade implements Serializable {
     private String type;
     private String idOfTrade;
     private boolean IsOpened;
-    private List<Meeting> meeting;
+    private List<String> meeting;
     private Date creationDate;
 
     /** Constructs trade given the type (temporary or permanent)
@@ -64,7 +64,7 @@ abstract class Trade implements Serializable {
      * Gets a list of meeting(s)
      * @return list of meeting(s)
      */
-    protected List<Meeting> getMeetingList(){
+    protected List<String> getMeetingList(){
         return this.meeting;
     }
 
@@ -72,7 +72,7 @@ abstract class Trade implements Serializable {
      * Adds another meeting to the list of meetings (if temporary trade)
      * @param newMeeting second meeting to return items (for temporary trade)
      */
-    protected void incrementMeetingList(Meeting newMeeting){
+    protected void incrementMeetingList(String newMeeting){
         this.meeting.add(newMeeting);
     }
 

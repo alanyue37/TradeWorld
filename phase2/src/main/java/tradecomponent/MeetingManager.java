@@ -2,11 +2,15 @@ package tradecomponent;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Manages the creation and editing of meetings of trades.
  */
 public class MeetingManager implements Serializable {
+    private Map<String, Meeting> allMeetings;
+    private final AtomicInteger counter = new AtomicInteger();
 
     /**
      * Changes a meeting according to the proposed location, time, and stores the username of the User that made
@@ -31,7 +35,8 @@ public class MeetingManager implements Serializable {
      * @return  The new meeting with the location, time, and username
      */
     public Meeting createMeeting(String location, Date time, String username){
-        return new Meeting(location, time, username);
+        String id = String.valueOf(counter.getAndIncrement());
+        return new Meeting(location, time, username, id);
     }
 
     /**
