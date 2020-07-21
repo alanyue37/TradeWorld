@@ -159,7 +159,7 @@ class Meeting implements Serializable {
         } else{
             status = "need to agree on meeting details";
         }
-        return "Meeting Id: " + this.meetingId + "\nStatus: " + status + "\nLocation: " + this.location + "\nTime: " + this.meetingTime
+        return "Meeting ID: " + this.meetingId + "\nStatus: " + status + "\nLocation: " + this.location + "\nTime: " + this.meetingTime
                 + "\nNumber of Edits: " + this.numOfEdits + "\nNumber of Confirmations: " + this.numConfirmations
                 + "\nLast user who modified the meeting: " + this.lastEditUser;
     }

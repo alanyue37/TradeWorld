@@ -2,6 +2,7 @@ package tradecomponent;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -11,6 +12,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class MeetingManager implements Serializable {
     private Map<String, Meeting> allMeetings;
     private final AtomicInteger counter = new AtomicInteger();
+
+    public MeetingManager() {
+        this.allMeetings = new HashMap<>();
+    }
 
     /**
      * Changes a meeting according to the proposed location, time, and stores the username of the User that made
@@ -161,4 +166,13 @@ public class MeetingManager implements Serializable {
         }
     }
 
+    public boolean isConfirmed(String meetingId) {
+        Meeting meeting = allMeetings.get(meetingId);
+        return meeting.getIsConfirmed();
+    }
+
+    public Date getMeetingTime(String meetingId){
+        Meeting meeting = allMeetings.get(meetingId);
+        return meeting.getTime();
+    }
 }

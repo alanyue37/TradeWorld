@@ -53,10 +53,10 @@ public class TradeManager implements Serializable {
      */
     public void confirmMeetingHappened(String tradeId, String username) {
         Trade trade = this.ongoingTrades.get(tradeId);
-        Meeting meeting = getLastConfirmedMeeting(tradeId);
-        assert meeting != null; // not really necessary? since the user can only confirm meeting happened after they set up a time for the meeting?
-        meetingManager.meetingHappened(meeting, username);
-        if (meetingManager.getMeetingStatus(meeting) == 2) {
+        String meetingId = getLastConfirmedMeeting(tradeId);
+        assert meetingId != null; // not really necessary? since the user can only confirm meeting happened after they set up a time for the meeting?
+        meetingManager.meetingHappened(meetingId, username);
+        if (meetingManager.getMeetingStatus(meetingId) == 2) {
             if (canClose(trade)) {
                 this.ongoingTrades.get(tradeId).changeIsOpened();
                 this.completedTrades.put(tradeId, trade);
@@ -73,20 +73,20 @@ public class TradeManager implements Serializable {
      * @return meeting of trade that the meeting time and place was last confirmed. If no meeting's time/place has been
      * confirmed for the trade, returns null.
      */
-    private Meeting getLastConfirmedMeeting(String tradeId) {
+    private String getLastConfirmedMeeting(String tradeId) {
         Trade trade = getTrade(tradeId);
         int i = trade.getMeetingList().size() - 1;
         if (i == -1) { // shouldn't happen anyway, as a trade is always created with a meeting
             return null;
         }
         if (i == 0) {
-            if (trade.getMeetingList().get(i).getIsConfirmed()) {
+            if (meetingManager.isConfirmed(trade.getMeetingList().get(i))) {
                 return trade.getMeetingList().get(i);
             } else {
                 return null;
             }
         } else { // i == 1
-            if (trade.getMeetingList().get(i).getIsConfirmed()) {
+            if (meetingManager.isConfirmed(trade.getMeetingList().get(i))) {
                 return trade.getMeetingList().get(i);
             } else {
                 return trade.getMeetingList().get(0);
@@ -117,7 +117,7 @@ public class TradeManager implements Serializable {
      */
     private boolean canClose(Trade trade) {
         for (int i = 0; i < trade.getMeetingList().size(); i++) {
-            if (!trade.getMeetingList().get(i).getIsCompleted()) {
+            if (!meetingManager.isConfirmed(trade.getMeetingList().get(i))) {
                 return false;
             }
         }
@@ -254,8 +254,8 @@ public class TradeManager implements Serializable {
         List<Trade> openTrades = new ArrayList<>(this.ongoingTrades.values());
         List<String> incompleteTrades = new ArrayList<>();
         for (Trade openTrade : openTrades) {
-            Meeting meeting = openTrade.getMeetingList().get(openTrade.getMeetingList().size() - 1);
-            if (meetingManager.isIncompleteMeeting(meeting)){
+            String meetingId = openTrade.getMeetingList().get(openTrade.getMeetingList().size() - 1);
+            if (meetingManager.isIncompleteMeeting(meetingId)){
                 incompleteTrades.add(openTrade.getIdOfTrade());
             }
         }
@@ -346,7 +346,7 @@ public class TradeManager implements Serializable {
         Date comparisonDate = compare.getTime();
         List<String> tradeInPastDays = new ArrayList<>();
         for (Trade trade : this.completedTrades.values()) {
-            if (trade.getMeetingList().get(trade.getMeetingList().size() - 1).getTime().after(comparisonDate)) {
+            if (meetingManager.getMeetingTime(trade.getMeetingList().get(trade.getMeetingList().size() - 1)).after(comparisonDate)) {
                 tradeInPastDays.add(trade.getIdOfTrade());
             }
         }
@@ -393,9 +393,9 @@ public class TradeManager implements Serializable {
      * @return true if the trade need to be cancelled, false otherwise.
      */
     public boolean needCancelTrade(String tradeId) {
-        Meeting meeting = this.ongoingTrades.get(tradeId).getMeetingList().get(0);
-        if ((meetingManager.getMeetingStatus(meeting) != 2) && (meetingManager.getMeetingStatus(meeting) != 1)) {
-            return meetingManager.attainedThresholdEdits(meeting, this.limitOfEdits * 2);
+        String meetingId = this.ongoingTrades.get(tradeId).getMeetingList().get(0);
+        if ((meetingManager.getMeetingStatus(meetingId) != 2) && (meetingManager.getMeetingStatus(meetingId) != 1)) {
+            return meetingManager.attainedThresholdEdits(meetingId, this.limitOfEdits * 2);
         }
         return false;
     }
@@ -483,13 +483,13 @@ public class TradeManager implements Serializable {
      */
     public void editMeetingOfTrade(String tradeId, String location, Date time, String username, String type) {
         if (type.equals("add")) {
-            Meeting meeting = meetingManager.createMeeting(location, time, username);
-            getTrade(tradeId).incrementMeetingList(meeting);
+            String meetingId = meetingManager.createMeeting(location, time, username);
+            getTrade(tradeId).incrementMeetingList(meetingId);
         } else { // edit meeting time
             Trade trade = getTrade(tradeId);
-            for (Meeting meeting : trade.getMeetingList()) {
-                if (meetingManager.getMeetingStatus(meeting) == 0) {
-                    meetingManager.changeMeeting(meeting, location, time, username);
+            for (String meetingId : trade.getMeetingList()) {
+                if (meetingManager.getMeetingStatus(meetingId) == 0) {
+                    meetingManager.changeMeeting(meetingId, location, time, username);
                 }
             }
         } // can only change if meeting is not completed and not confirmed
@@ -505,8 +505,8 @@ public class TradeManager implements Serializable {
     public String getTradeAllInfo(String tradeId) {
         Trade trade = getTrade(tradeId);
         StringBuilder meetingDetails = new StringBuilder();
-        for (Meeting meeting: trade.getMeetingList()){
-            meetingDetails.append("Meeting: \n").append(meetingManager.getMeetingsInfo(meeting)).append("\n");
+        for (String meetingId: trade.getMeetingList()){
+            meetingDetails.append("Meeting: \n").append(meetingManager.getMeetingsInfo(meetingId)).append("\n");
         }
         return trade.toString() + "\n" + meetingDetails;
     }
@@ -523,8 +523,8 @@ public class TradeManager implements Serializable {
         if (trade.getMeetingList().size() == 0) {
             return false;
         } else {
-            Meeting lastMeeting = trade.getMeetingList().get(trade.getMeetingList().size() - 1);
-            return meetingManager.canEditMeeting(lastMeeting, username);
+            String lastMeetingId = trade.getMeetingList().get(trade.getMeetingList().size() - 1);
+            return meetingManager.canEditMeeting(lastMeetingId, username);
         }
     }
 
@@ -540,9 +540,8 @@ public class TradeManager implements Serializable {
         Map<String, String> proposedTrades = new HashMap<>();
         for (String tradeId : userOngoingTrade) {
             Trade trade = getTrade(tradeId);
-            Meeting meeting = trade.getMeetingList().get(trade.getMeetingList().size() - 1);
-            assert meeting != null;
-            if (meetingManager.getMeetingStatus(meeting) != 1) {
+            String meetingId = trade.getMeetingList().get(trade.getMeetingList().size() - 1);
+            if (meetingManager.getMeetingStatus(meetingId) != 1) {
                 proposedTrades.put(trade.getIdOfTrade(), trade.getTradeType());
             }
         }
@@ -553,9 +552,8 @@ public class TradeManager implements Serializable {
         List<Trade> OngoingTrade = new ArrayList<>(this.ongoingTrades.values());
         List<Trade> proposedTrade = new ArrayList<>();
         for (Trade trade : OngoingTrade) {
-            Meeting meeting = trade.getMeetingList().get(trade.getMeetingList().size() - 1);
-            assert meeting != null;
-            if (meetingManager.getMeetingStatus(meeting) != 1) {
+            String meetingId = trade.getMeetingList().get(trade.getMeetingList().size() - 1);
+            if (meetingManager.getMeetingStatus(meetingId) != 1) {
                 proposedTrade.add(trade);
             }
         }
@@ -608,11 +606,11 @@ public class TradeManager implements Serializable {
         Map<String, String> toBeConfirmed = new HashMap<>();
         for (String tradeId : userOngoingTrade) {
             Trade trade = getTrade(tradeId);
-            Meeting meeting = trade.getMeetingList().get(trade.getMeetingList().size() - 1);
-            if (meetingManager.getMeetingStatus(meeting) == 1) {
+            String meetingId = trade.getMeetingList().get(trade.getMeetingList().size() - 1);
+            if (meetingManager.getMeetingStatus(meetingId) == 1) {
                 Calendar cal = Calendar.getInstance();
                 Date newDate = cal.getTime();
-                if (meetingManager.getConfirmedMeetingTime(meeting).before(newDate)) {
+                if (meetingManager.getConfirmedMeetingTime(meetingId).before(newDate)) {
                     toBeConfirmed.put(trade.getIdOfTrade(), trade.getTradeType());
                 }
             }
