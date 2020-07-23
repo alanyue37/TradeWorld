@@ -215,27 +215,24 @@ public class MeetingManager implements Serializable {
         return pastTrades;
     }
 
-    public List<String> getUnconfirmedTrades(List<String> trades) {
-        List<String> proposed = new ArrayList<>();
-        for (String tradeId : trades) {
-            String meetingId = tradeToMeetings.get(tradeId).get(tradeToMeetings.get(tradeId).size() - 1);
-            if (getMeetingStatus(meetingId) != 1) {
-                proposed.add(tradeId);
+    public List<String> getToCheckTrades(List<String> trades, String type) {
+        List<String> toCheck = new ArrayList<>();
+        if (type.equals("proposed")) {
+            for (String tradeId : trades) {
+                String meetingId = tradeToMeetings.get(tradeId).get(tradeToMeetings.get(tradeId).size() - 1);
+                if (getMeetingStatus(meetingId) != 1) {
+                    toCheck.add(tradeId); }
             }
-        } return proposed;
-    }
-
-    public List<String> getUncompletedTrades(List<String> trades) {
-        List<String> toConfirm = new ArrayList<>();
-        for (String tradeId : trades) {
-            String meetingId = tradeToMeetings.get(tradeId).get(tradeToMeetings.get(tradeId).size() - 1);
-            if (getMeetingStatus(meetingId) == 1) {
-                Calendar cal = Calendar.getInstance();
-                Date newDate = cal.getTime();
-                if (getMeetingTime(meetingId).before(newDate)) {
-                    toConfirm.add(tradeId);
+        } else { // to confirm
+            for (String tradeId : trades) {
+                String meetingId = tradeToMeetings.get(tradeId).get(tradeToMeetings.get(tradeId).size() - 1);
+                if (getMeetingStatus(meetingId) == 1) {
+                    Calendar cal = Calendar.getInstance();
+                    Date newDate = cal.getTime();
+                    if (getMeetingTime(meetingId).before(newDate)) {
+                        toCheck.add(tradeId); }
                 }
             }
-        } return toConfirm;
+        } return toCheck;
     }
 }
