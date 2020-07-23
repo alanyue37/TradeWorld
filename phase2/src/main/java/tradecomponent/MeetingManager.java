@@ -1,9 +1,7 @@
 package tradecomponent;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -11,10 +9,36 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class MeetingManager implements Serializable {
     private Map<String, Meeting> allMeetings;
+    private Map<String, Meeting> ongoingMeetings;
+    private Map<String, Meeting> completedMeetings;
+    private Map<String, List<String>> tradeToMeetings;
+    private int limitOfEdits;
     private final AtomicInteger counter = new AtomicInteger();
 
     public MeetingManager() {
+        this.limitOfEdits = 3;
         this.allMeetings = new HashMap<>();
+        this.tradeToMeetings = new HashMap<>();
+        this.ongoingMeetings = new HashMap<>();
+        this.completedMeetings = new HashMap<>();
+    }
+
+    /**
+     * Gets the limit of edits that users can suggest before the trade is cancelled
+     *
+     * @return the limit of edits to the meeting time/place
+     */
+    public int getLimitEdits() {
+        return this.limitOfEdits;
+    }
+
+    /**
+     * Change the limit of edit that users can suggest before the trade is cancelled
+     *
+     * @param newLimit  new limit for the edits allowed
+     */
+    public void changeLimitEdits(int newLimit) {
+        this.limitOfEdits = newLimit;
     }
 
     /**
@@ -26,7 +50,7 @@ public class MeetingManager implements Serializable {
      * @param username  The username of the User
      */
     public void changeMeeting(String meetingId, String location, Date time, String username) {
-        Meeting meeting = this.allMeetings.get(meetingId);
+        Meeting meeting = this.ongoingMeetings.get(meetingId);
         meeting.setLocation(location);
         meeting.setTime(time);
         meeting.incrementNumOfEdits();
@@ -41,9 +65,11 @@ public class MeetingManager implements Serializable {
      * @return  The new meeting with the location, time, and username
      */
     public String createMeeting(String location, Date time, String username){
-        String id = String.valueOf(counter.getAndIncrement());
-        allMeetings.put(id, new Meeting(location, time, username, id));
-        return id;
+        String meetingId = String.valueOf(counter.getAndIncrement());
+        Meeting meeting = new Meeting(location, time, username, meetingId);
+        allMeetings.put(meetingId, meeting);
+        ongoingMeetings.put(meetingId, meeting);
+        return meetingId;
     }
 
     /**
@@ -51,7 +77,7 @@ public class MeetingManager implements Serializable {
      * @param meetingId   id of the meeting
      */
     public void confirmAgreement(String meetingId) {
-        Meeting meeting = allMeetings.get(meetingId);
+        Meeting meeting = ongoingMeetings.get(meetingId);
         meeting.changeIsConfirmed();
         meeting.setLastEditUser("");
     }
@@ -63,11 +89,13 @@ public class MeetingManager implements Serializable {
      * @param username  The username of another User
      */
     public void meetingHappened(String meetingId, String username) {
-        Meeting meeting = allMeetings.get(meetingId);
+        Meeting meeting = ongoingMeetings.get(meetingId);
         meeting.incrementNumConfirmations();
         meeting.setLastEditUser(username);
         if (meeting.getNumConfirmations() == 2) {
             meeting.changeIsCompleted();
+            ongoingMeetings.remove(meetingId);
+            completedMeetings.put(meetingId, meeting);
         }
     }
 
@@ -75,10 +103,20 @@ public class MeetingManager implements Serializable {
      * Return whether a meeting is incomplete. An incomplete meeting is a meeting that the user agreed on the meeting
      * details (time, location), the meeting time has passed, but at least one of the users have not confirmed the
      * meeting happened
-     * @param meetingId id of the meeting
      * @return true if the meeting is incomplete and false if the meeting is completed.
      */
-    public boolean isIncompleteMeeting(String meetingId){
+    public List<String> getTradesIncompleteMeetings(List<String> trades) {
+        List<String> incomplete = new ArrayList<>();
+        for (String tradeId : trades) {
+            for (String meetingId : tradeToMeetings.get(tradeId)) {
+                if (isIncompleteMeeting(meetingId)) {
+                    incomplete.add(tradeId);
+                }
+            }
+        } return incomplete;
+    }
+
+    private boolean isIncompleteMeeting(String meetingId){
         Meeting meeting = allMeetings.get(meetingId);
         Date today = new Date();
         if (meeting.getIsCompleted()){
@@ -91,62 +129,29 @@ public class MeetingManager implements Serializable {
     }
 
     /**
-     * Returns the meeting time if the meeting has been confirmed, null otherwise
-     * @param meetingId   id of the meeting
-     * @return  The meeting time if the meeting has been confirmed
-     */
-    public Date getConfirmedMeetingTime(String meetingId){
-        Meeting meeting = allMeetings.get(meetingId);
-        if (meeting.getIsConfirmed()){
-            return meeting.getTime();
-        }
-        return null;
-    }
-
-    /**
      * Returns true iff True if the number of edits is equal to or greater than the threshold for the number of edits
      * allowed and false if the number of edits is less than the threshold for edits
      * @param meetingId   id of the meeting
-     * @param numOfEditThreshold    The threshold for how many edits can be made before the screen prints cancelled
-     *                              to the screen
      * @return  True if the number of edits is equal to or greater than the threshold for the number of edits allowed
      * and false if the number of edits is less than the threshold for edits
      */
-    public boolean attainedThresholdEdits(String meetingId, int numOfEditThreshold){
-        return allMeetings.get(meetingId).getNumOfEdits() >= numOfEditThreshold;
+    public boolean attainedThresholdEdits(String meetingId){
+        return ongoingMeetings.get(meetingId).getNumOfEdits() >= limitOfEdits;
     }
 
     /**
      * Returns a string which includes, the status of the meeting (i.e., whether it has been complete or its pending
      * for confirmation or still need to arrange), the location, the time, the number of edits made, the number of
      * confirmations, and the User who last edited
-     * @param meetingId   id of the meeting
      * @return A string that includes the meeting status, location, time, number of edits made, number of confirmation,
      * and the User who last edited
      */
-    public String getMeetingsInfo(String meetingId){
-        return allMeetings.get(meetingId).toString();
-    }
-
-    /**
-     * Returns a string of the meeting location
-     * @param meetingId id of the meeting
-     * @return a string representing the location of the meeting
-     */
-    public String getLastLocation(String meetingId){
-        return allMeetings.get(meetingId).getLocation();
-    }
-
-    /**
-     * Returns true iff the last User is not the same and can make the edit to the meeting and false if this User
-     * made the last edit and cannot make another edit before getting a response from the other User
-     * @param meetingId id of the meeting
-     * @param username  The username of the User
-     * @return True iff the last User is not the same and can make the edit to the meeting, false otherwise
-     */
-    public boolean canEditMeeting(String meetingId, String username){
-        Meeting meeting = allMeetings.get(meetingId);
-        return (!meeting.getLastEditUser().equals(username));
+    public String getMeetingsInfo(String tradeId) {
+        StringBuilder meetingDetails = new StringBuilder();
+        for (String meetingId : tradeToMeetings.get(tradeId)) {
+            meetingDetails.append("Meeting: \n").append(allMeetings.get(meetingId).toString()).append("\n");
+        }
+        return meetingDetails.toString();
     }
 
     /**
@@ -174,5 +179,63 @@ public class MeetingManager implements Serializable {
     public Date getMeetingTime(String meetingId){
         Meeting meeting = allMeetings.get(meetingId);
         return meeting.getTime();
+    }
+
+    public String getMeetingLocation(String meetingId) {
+        Meeting meeting = allMeetings.get(meetingId);
+        return meeting.getLocation();
+    }
+
+    public List<String> getMeetingsOfTrade(String tradeId) {
+        if (tradeToMeetings.containsKey(tradeId)) {
+            return tradeToMeetings.get(tradeId);
+        } else { return new ArrayList<>(); }
+    }
+
+    public boolean canChangeMeeting(String tradeId, String username) {
+        if (tradeToMeetings.get(tradeId) == null) {
+            return false;
+        } else {
+            String meetingId = tradeToMeetings.get(tradeId).get(tradeToMeetings.get(tradeId).size() - 1);
+            Meeting meeting = allMeetings.get(meetingId);
+            return (!meeting.getLastEditUser().equals(username));
+        }
+    }
+
+    private List<String> getTradesPastDays(int numDays, List<String> trades) {
+        List<String> pastTrades = new ArrayList<>();
+        for (String tradeId : trades) {
+            Calendar compare = Calendar.getInstance();
+            compare.add(Calendar.DATE, -7);
+            Date comparisonDate = compare.getTime();
+            if (getMeetingTime(tradeToMeetings.get(tradeId).get(tradeToMeetings.get(tradeId).size() - 1)).after(comparisonDate)) {
+                pastTrades.add(tradeId);
+            }
+        }
+        return pastTrades;
+    }
+
+    public List<String> getUnconfirmedTrades(List<String> trades) {
+        List<String> proposed = new ArrayList<>();
+        for (String tradeId : trades) {
+            String meetingId = tradeToMeetings.get(tradeId).get(tradeToMeetings.get(tradeId).size() - 1);
+            if (getMeetingStatus(meetingId) != 1) {
+                proposed.add(tradeId);
+            }
+        } return proposed;
+    }
+
+    public List<String> getUncompletedTrades(List<String> trades) {
+        List<String> toConfirm = new ArrayList<>();
+        for (String tradeId : trades) {
+            String meetingId = tradeToMeetings.get(tradeId).get(tradeToMeetings.get(tradeId).size() - 1);
+            if (getMeetingStatus(meetingId) == 1) {
+                Calendar cal = Calendar.getInstance();
+                Date newDate = cal.getTime();
+                if (getMeetingTime(meetingId).before(newDate)) {
+                    toConfirm.add(tradeId);
+                }
+            }
+        } return toConfirm;
     }
 }
