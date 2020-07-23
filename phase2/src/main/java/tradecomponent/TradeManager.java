@@ -8,11 +8,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Manages the creation and handling of trades.
  */
 public class TradeManager implements Serializable {
-    private int limitOfEdits;
     private int limitIncomplete;
     private int limitTransactionPerWeek;
     private final Map<String, Trade> ongoingTrades;
-    private final MeetingManager meetingManager;
     private final Map<String, Trade> completedTrades;
     private final Map<String, List<String>> userToTrades;
     private final AtomicInteger counter = new AtomicInteger();
@@ -22,77 +20,13 @@ public class TradeManager implements Serializable {
      * Constructor for TradeManager.
      */
     public TradeManager() {
-        this.limitOfEdits = 3;
         this.limitIncomplete = 3; //or null?
         this.limitTransactionPerWeek = 3; //or null?
         this.ongoingTrades = new HashMap<>();
-        this.meetingManager = new MeetingManager();
         this.completedTrades = new HashMap<>();
         this.userToTrades = new HashMap<>();
     }
 
-    /**
-     * Agrees to meeting details (time, location) of the trade with ID "tradeId"
-     *
-     * @param tradeId ID of the trade
-     */
-    public void agreeMeetingDetails(String tradeId) {
-        Trade trade = ongoingTrades.get(tradeId);
-        int i = 0;
-        while (meetingManager.getMeetingStatus(trade.getMeetingList().get(i)) != 0) {
-            i += 1;
-        }
-        meetingManager.confirmAgreement(trade.getMeetingList().get(i));
-    }
-
-    /**
-     * Confirms that the meeting happened in real life
-     *
-     * @param tradeId  ID of the trade of which we want to confirm the meeting
-     * @param username username of the user who confirms the meeting happened
-     */
-    public void confirmMeetingHappened(String tradeId, String username) {
-        Trade trade = this.ongoingTrades.get(tradeId);
-        String meetingId = getLastConfirmedMeeting(tradeId);
-        assert meetingId != null; // not really necessary? since the user can only confirm meeting happened after they set up a time for the meeting?
-        meetingManager.meetingHappened(meetingId, username);
-        if (meetingManager.getMeetingStatus(meetingId) == 2) {
-            if (canClose(trade)) {
-                this.ongoingTrades.get(tradeId).changeIsOpened();
-                this.completedTrades.put(tradeId, trade);
-                this.ongoingTrades.remove(tradeId);
-            }
-        }
-    }
-
-    /**
-     * Returns the meeting in a trade that was last confirmed. If the trade does not have any
-     * confirmed meeting (time, location), then it returns null.
-     *
-     * @param tradeId ID of the trade
-     * @return meeting of trade that the meeting time and place was last confirmed. If no meeting's time/place has been
-     * confirmed for the trade, returns null.
-     */
-    private String getLastConfirmedMeeting(String tradeId) {
-        Trade trade = getTrade(tradeId);
-        int i = trade.getMeetingList().size() - 1;
-        if (i == -1) { // shouldn't happen anyway, as a trade is always created with a meeting
-            return null;
-        }
-        if (i == 0) {
-            if (meetingManager.isConfirmed(trade.getMeetingList().get(i))) {
-                return trade.getMeetingList().get(i);
-            } else {
-                return null;
-            }
-        } else { // i == 1
-            if (meetingManager.isConfirmed(trade.getMeetingList().get(i))) {
-                return trade.getMeetingList().get(i);
-            } else {
-                return trade.getMeetingList().get(0);
-            }
-        }
-    }
 
     /**
      * Given the ID of a trade, returns the trade
@@ -105,29 +39,6 @@ public class TradeManager implements Serializable {
             return ongoingTrades.get(tradeId);
         }
         return completedTrades.get(tradeId);
-    }
-
-    /**
-     * Given a trade, returns whether the trade can be closed or not
-     *
-     * @param trade trade to see if it can be closed
-     * @return true iff all meetings of the trade are completed (both users have confirmed the meeting happened in real
-     * life). If the trade is permanent, one meeting should be completed. If the trade is temporary, two meetings are
-     * completed.
-     */
-    private boolean canClose(Trade trade) {
-        for (int i = 0; i < trade.getMeetingList().size(); i++) {
-            if (!meetingManager.isConfirmed(trade.getMeetingList().get(i))) {
-                return false;
-            }
-        }
-        if (trade.getTradeType().equals("permanent")) {
-            return (trade.getMeetingList().size() == 1);
-        }
-        if (trade.getTradeType().equals("temporary")) {
-            return trade.getMeetingList().size() == 2;
-        }
-        return false;
     }
 
     /**
@@ -195,24 +106,6 @@ public class TradeManager implements Serializable {
     }
 
     /**
-     * Gets the limit of edits that users can suggest before the trade is cancelled
-     *
-     * @return the limit of edits to the meeting time/place
-     */
-    public int getLimitEdits() {
-        return this.limitOfEdits;
-    }
-
-    /**
-     * Change the limit of edit that users can suggest before the trade is cancelled
-     *
-     * @param newLimit  new limit for the edits allowed
-     */
-    public void changeLimitEdits(int newLimit) {
-        this.limitOfEdits = newLimit;
-    }
-
-    /**
      * Gets the current limit for having incomplete transactions before the account is frozen
      * @return  the current limit of incomplete transactions
      */
@@ -244,24 +137,6 @@ public class TradeManager implements Serializable {
         this.limitTransactionPerWeek = newLimitPerWeek;
     }
 
-
-    /**
-     * Returns list of incomplete trades (trades that contains incomplete meetings)
-     *
-     * @return list of incomplete trades
-     */
-    public List<String> getIncompleteTrade() {
-        List<Trade> openTrades = new ArrayList<>(this.ongoingTrades.values());
-        List<String> incompleteTrades = new ArrayList<>();
-        for (Trade openTrade : openTrades) {
-            String meetingId = openTrade.getMeetingList().get(openTrade.getMeetingList().size() - 1);
-            if (meetingManager.isIncompleteMeeting(meetingId)){
-                incompleteTrades.add(openTrade.getIdOfTrade());
-            }
-        }
-        return incompleteTrades;
-    }
-
     /**
      * Given a list of trades, returns a map with the usernames of users in the list who took part of at least one trade
      * mapped to the number of trades they took part in
@@ -290,9 +165,8 @@ public class TradeManager implements Serializable {
      *
      * @return list of usernames that passed limit of incomplete trades
      */
-    public List<String> getExceedIncompleteLimitUser() {
-        List<String> incompleteTrades = getIncompleteTrade();
-        Map<String, Integer> usernamesMap = userToNumTradesInvolved(incompleteTrades);
+    public List<String> getExceedIncompleteLimitUser(List<String> tradeIds) {
+        Map<String, Integer> usernamesMap = userToNumTradesInvolved(tradeIds);
         List<String> incompleteUsernames = new ArrayList<>();
         for (String user : usernamesMap.keySet()) {
             if (usernamesMap.get(user) > this.limitIncomplete) {
@@ -303,64 +177,12 @@ public class TradeManager implements Serializable {
     }
 
     /**
-     * Given a trade, returns the date of the last confirmed meeting if there is any confirmed meeting. If none of
-     * the meetings of the trade are confirmed yet, then returns null.
-     *
-     * @param tradeId ID of trade
-     * @return the date of the last confirmed meeting. If none of the meeting(s) inside trade have been confirmed
-     * (time, location) yet, return null.
-     */
-    public Date getLastConfirmedMeetingTime(String tradeId) {
-        if (getLastConfirmedMeeting(tradeId) == null) {
-            return null;
-        } else {
-            return meetingManager.getConfirmedMeetingTime(Objects.requireNonNull(getLastConfirmedMeeting(tradeId)));
-        }
-    }
-
-    /**
-     * Given a trade, returns the location of the last confirmed meeting. If there are no confirmed meetings,
-     * returns null.
-     *
-     * @param tradeId ID of the trade
-     * @return location of the last confirmed meeting. If none of the meeting(s) inside trade have been confirmed,
-     * return null
-     */
-    public String getLastConfirmedMeetingLocation(String tradeId) {
-        if (getLastConfirmedMeeting(tradeId) == null) {
-            return null;
-        } else {
-            return meetingManager.getLastLocation(Objects.requireNonNull(getLastConfirmedMeeting(tradeId)));
-        }
-    }
-
-    /**
-     * Returns a list of trades that have had trades completed in the past given number of days
-     *
-     * @param numDays number of days
-     * @return list of trades that are completed in the past numDays
-     */
-    private List<String> getTradesPastDays(int numDays) {
-        Calendar compare = Calendar.getInstance();
-        compare.add(Calendar.DATE, -7);
-        Date comparisonDate = compare.getTime();
-        List<String> tradeInPastDays = new ArrayList<>();
-        for (Trade trade : this.completedTrades.values()) {
-            if (meetingManager.getMeetingTime(trade.getMeetingList().get(trade.getMeetingList().size() - 1)).after(comparisonDate)) {
-                tradeInPastDays.add(trade.getIdOfTrade());
-            }
-        }
-        return tradeInPastDays;
-    }
-
-    /**
      * Gets the list of usernames of users who surpassed a given limit of trades in the past given number of days.
      *
      * @return list of usernames
      */
-    public List<String> getExceedPerWeek() {
-        List<String> pastTrades = getTradesPastDays(7);
-        Map<String, Integer> usernamesMap = userToNumTradesInvolved(pastTrades);
+    public List<String> getExceedPerWeek(List<String> tradeIds) {
+        Map<String, Integer> usernamesMap = userToNumTradesInvolved(tradeIds);
         List<String> exceedLimitOfTradeUsers = new ArrayList<>();
         for (String user : usernamesMap.keySet()) {
             if (usernamesMap.get(user) > this.limitTransactionPerWeek) {
@@ -382,24 +204,6 @@ public class TradeManager implements Serializable {
         }
         this.ongoingTrades.remove(tradeId);
     }
-
-    /**
-     * Given a trade, returns whether this trade should be cancelled. For a permanent trade, a trade is cancelled if
-     * they are still in disagreement with the meeting details and have attained the limit of edits allowed. For a
-     * temporary trade, a trade is cancelled only if they cannot agree on the first meeting and have reached the limit
-     * of edits.
-     *
-     * @param tradeId ID of trade
-     * @return true if the trade need to be cancelled, false otherwise.
-     */
-    public boolean needCancelTrade(String tradeId) {
-        String meetingId = this.ongoingTrades.get(tradeId).getMeetingList().get(0);
-        if ((meetingManager.getMeetingStatus(meetingId) != 2) && (meetingManager.getMeetingStatus(meetingId) != 1)) {
-            return meetingManager.attainedThresholdEdits(meetingId, this.limitOfEdits * 2);
-        }
-        return false;
-    }
-    // only looks at the first meeting
 
     private List<String> sortPartnersList(Map<String, Integer> partners) {
         List<String> sorted = new ArrayList<>();
@@ -438,61 +242,21 @@ public class TradeManager implements Serializable {
     }
     // only looks at completed trades
 
-
-    private List<String> sortTradesMeetingDate(List<String> trades)  {
-        List<String> sorted = new ArrayList<>();
-        if (trades.size() == 0) { return sorted; }
-        sorted.add(trades.get(0));
-        for (int i = 1; i < trades.size(); i++) {
-            int ii = 0;
-            while (ii < sorted.size() && getLastConfirmedMeetingTime(sorted.get(ii)).before(getLastConfirmedMeetingTime(trades.get(i)))) {
-                ii++;
-            }
-            sorted.add(ii, trades.get(i));
-        }
-        return sorted;
-    } // goes from oldest (index 0) to newest
-
     /**
      * Returns list of the IDs of the most recent given number of (completed) trades of a user
      *
      * @param num  the number of IDs of most recent trades wanted
-     * @param user the username of the user to get IDs of most recent trades
      * @return list of IDs of most recent (completed) trades involving user "user." If "num" is greater
      * than the number of trades that "user" has been in, all of the trade IDs are returned.
      */
-    public List<String> getRecentTrades(int num, String user) {
-        List<String> sortedTrades = sortTradesMeetingDate(getTradesOfUser(user, "completed"));
+    public List<String> getRecentTrades(int num, List<String> sortedCompletedTrades) {
         List<String> recentTrades = new ArrayList<>();
-        int i = sortedTrades.size() - 1;
-        while (i >= sortedTrades.size() - num && i >= 0) {
-            recentTrades.add(sortedTrades.get(i));
+        int i = sortedCompletedTrades.size() - 1;
+        while (i >= sortedCompletedTrades.size() - num && i >= 0) {
+            recentTrades.add(sortedCompletedTrades.get(i));
             i--;
         }
         return recentTrades;
-    }
-
-    /**
-     * Adds or edits a meeting in a trade
-     *
-     * @param tradeId ID of trade
-     * @param location location of the meeting
-     * @param time date and time of the meeting
-     * @param username username of the user who suggests or edits the meeting
-     * @param type whether to add or edit a meeting
-     */
-    public void editMeetingOfTrade(String tradeId, String location, Date time, String username, String type) {
-        if (type.equals("add")) {
-            String meetingId = meetingManager.createMeeting(location, time, username);
-            getTrade(tradeId).incrementMeetingList(meetingId);
-        } else { // edit meeting time
-            Trade trade = getTrade(tradeId);
-            for (String meetingId : trade.getMeetingList()) {
-                if (meetingManager.getMeetingStatus(meetingId) == 0) {
-                    meetingManager.changeMeeting(meetingId, location, time, username);
-                }
-            }
-        } // can only change if meeting is not completed and not confirmed
     }
 
     /**
@@ -502,62 +266,24 @@ public class TradeManager implements Serializable {
      * @param tradeId ID of the trade
      * @return string with trade information
      */
-    public String getTradeAllInfo(String tradeId) {
+    public String getTradeInfo(String tradeId) {
         Trade trade = getTrade(tradeId);
-        StringBuilder meetingDetails = new StringBuilder();
-        for (String meetingId: trade.getMeetingList()){
-            meetingDetails.append("Meeting: \n").append(meetingManager.getMeetingsInfo(meetingId)).append("\n");
-        }
-        return trade.toString() + "\n" + meetingDetails;
-    }
-
-    /**
-     * Given a trade, checks whether a user can change the meeting details of the trade
-     *
-     * @param tradeId ID of the trade
-     * @param username username of user
-     * @return true iff user with username "username" can edit the meeting location/time of the trade
-     */
-    public boolean canChangeMeeting(String tradeId, String username) {
-        Trade trade = getTrade(tradeId);
-        if (trade.getMeetingList().size() == 0) {
-            return false;
-        } else {
-            String lastMeetingId = trade.getMeetingList().get(trade.getMeetingList().size() - 1);
-            return meetingManager.canEditMeeting(lastMeetingId, username);
-        }
+        return trade.toString();
     }
 
     /**
      * Given a user, returns a map with trade IDs of trades with meetings yet to be agreed upon that the user is a part of
      * mapped to the type of the trade
      *
-     * @param username username of user
      * @return map of proposed trade IDs to the type
      */
-    public Map<String, String> getProposedTrades(String username) {
-        List<String> userOngoingTrade = getTradesOfUser(username, "ongoing");
-        Map<String, String> proposedTrades = new HashMap<>();
-        for (String tradeId : userOngoingTrade) {
+    public Map<String, String> getType(List<String> tradeIds) {
+        Map<String, String> tradeIdToType = new HashMap<>();
+        for (String tradeId : tradeIds) {
             Trade trade = getTrade(tradeId);
-            String meetingId = trade.getMeetingList().get(trade.getMeetingList().size() - 1);
-            if (meetingManager.getMeetingStatus(meetingId) != 1) {
-                proposedTrades.put(trade.getIdOfTrade(), trade.getTradeType());
-            }
+            tradeIdToType.put(tradeId, trade.getTradeType());
         }
-        return proposedTrades;
-    }
-
-    private List<Trade> getProposedTrades() {
-        List<Trade> OngoingTrade = new ArrayList<>(this.ongoingTrades.values());
-        List<Trade> proposedTrade = new ArrayList<>();
-        for (Trade trade : OngoingTrade) {
-            String meetingId = trade.getMeetingList().get(trade.getMeetingList().size() - 1);
-            if (meetingManager.getMeetingStatus(meetingId) != 1) {
-                proposedTrade.add(trade);
-            }
-        }
-        return proposedTrade;
+        return tradeIdToType;
     }
 
     /**
@@ -567,10 +293,8 @@ public class TradeManager implements Serializable {
      * @param tradeId ID of the trade
      */
     public void deleteCommonItemTrades(String itemId, String tradeId) {
-        List<Trade> proposedTrade = getProposedTrades();
-        proposedTrade.remove(getTrade(tradeId));
-        for (Trade trade : proposedTrade) {
-            if (trade.containItem(itemId)) {
+        for (Trade trade: this.ongoingTrades.values()){
+            if ((trade.containItem(itemId)) && (!trade.getIdOfTrade().equals(tradeId))){
                 this.ongoingTrades.remove(trade.getIdOfTrade());
                 for (String user: trade.getUsers()){
                     this.userToTrades.get(user).remove(tradeId);
@@ -592,30 +316,6 @@ public class TradeManager implements Serializable {
         } else {
             return trade.getMeetingList().size() < 2;
         }
-    }
-
-    /**
-     * Given a user, returns a map with trade IDs of trades with real-life meetings yet to be confirmed
-     * that the user is a part of
-     *
-     * @param username username of user
-     * @return map of to-be confirmed trade IDs
-     */
-    public Map<String, String> getToBeConfirmedTrades(String username) {
-        List<String> userOngoingTrade = getTradesOfUser(username, "ongoing");
-        Map<String, String> toBeConfirmed = new HashMap<>();
-        for (String tradeId : userOngoingTrade) {
-            Trade trade = getTrade(tradeId);
-            String meetingId = trade.getMeetingList().get(trade.getMeetingList().size() - 1);
-            if (meetingManager.getMeetingStatus(meetingId) == 1) {
-                Calendar cal = Calendar.getInstance();
-                Date newDate = cal.getTime();
-                if (meetingManager.getConfirmedMeetingTime(meetingId).before(newDate)) {
-                    toBeConfirmed.put(trade.getIdOfTrade(), trade.getTradeType());
-                }
-            }
-        }
-        return toBeConfirmed;
     }
 
     /**
@@ -642,5 +342,12 @@ public class TradeManager implements Serializable {
                 }
             }
         } return returnList;
+    }
+
+    public void closeTrade(String tradeId){
+        Trade trade = getTrade(tradeId);
+        trade.changeIsOpened();
+        this.completedTrades.put(tradeId, trade);
+        this.ongoingTrades.remove(tradeId, trade);
     }
 }
