@@ -1,6 +1,7 @@
 package tradegateway;
 
 import itemcomponent.ItemManager;
+import tradecomponent.MeetingManager;
 import tradecomponent.TradeManager;
 import usercomponent.UserManager;
 
@@ -14,6 +15,7 @@ public class TradeModel implements Serializable {
     private UserManager userManager;
     private ItemManager itemManager;
     private TradeManager tradeManager;
+    private MeetingManager meetingManager;
 
     /**
      * Creates a new tradegateway.TradeModel with existing managers.
@@ -22,10 +24,11 @@ public class TradeModel implements Serializable {
      * @param im the ItemManager.
      * @param tm the TradeManager.
      */
-    public TradeModel(UserManager um, ItemManager im, TradeManager tm) {
+    public TradeModel(UserManager um, ItemManager im, TradeManager tm, MeetingManager mm) {
         userManager = um;
         itemManager = im;
         tradeManager = tm;
+        meetingManager = mm;
     }
 
     /**
@@ -35,6 +38,7 @@ public class TradeModel implements Serializable {
         userManager = new UserManager();
         itemManager = new ItemManager();
         tradeManager = new TradeManager();
+        meetingManager = new MeetingManager();
     }
 
     /**
@@ -67,7 +71,7 @@ public class TradeModel implements Serializable {
 
     /**
      * Set the TradeManager for the tradegateway.TradeModel.
-     * @param tradeManager the updated userManager
+     * @param tradeManager the updated tradeManager
      */
     public void setTradeManager(TradeManager tradeManager) { this.tradeManager = tradeManager; }
 
@@ -76,5 +80,17 @@ public class TradeModel implements Serializable {
      * @return tradeManager
      */
     public TradeManager getTradeManager() { return tradeManager; }
+
+    /**
+     * Set the MeetingManager for the tradegateway.TradeModel.
+     * @param meetingManager the updated meetingManager
+     */
+    public void setMeetingManager(MeetingManager meetingManager) { this.meetingManager = meetingManager; }
+
+    /**
+     * Return the MeetingManager for the tradegateway.TradeModel.
+     * @return meetingManager
+     */
+    public MeetingManager getMeetingManager() { return meetingManager; }
 
 }
