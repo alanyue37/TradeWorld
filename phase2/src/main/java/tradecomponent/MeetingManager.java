@@ -57,6 +57,16 @@ public class MeetingManager implements Serializable {
         meeting.setLastEditUser(username);
     }
 
+    public void addMeetingToTrade(String tradeId, String meetingId) {
+        if (tradeToMeetings.containsKey(tradeId)) {
+            tradeToMeetings.get(tradeId).add(meetingId);
+        } else {
+            List<String> meetingList = new ArrayList<>();
+            meetingList.add(meetingId);
+            tradeToMeetings.put(tradeId, meetingList);
+        }
+    }
+
     /**
      * Returns a new meeting with the proposed location, time, and the User who made the last edit
      * @param location  The location of the meeting
@@ -64,7 +74,7 @@ public class MeetingManager implements Serializable {
      * @param username  The username of the User
      * @return  The new meeting with the location, time, and username
      */
-    public String createMeeting(String location, Date time, String username){
+    public String createMeeting(String location, Date time, String username) {
         String meetingId = String.valueOf(counter.getAndIncrement());
         Meeting meeting = new Meeting(location, time, username, meetingId);
         allMeetings.put(meetingId, meeting);
@@ -234,5 +244,12 @@ public class MeetingManager implements Serializable {
                 }
             }
         } return toCheck;
+    }
+
+    public void cancelMeetings(String tradeId) {
+        allMeetings.remove(tradeId);
+        ongoingMeetings.remove(tradeId);
+        completedMeetings.remove(tradeId);
+        tradeToMeetings.remove(tradeId);
     }
 }
