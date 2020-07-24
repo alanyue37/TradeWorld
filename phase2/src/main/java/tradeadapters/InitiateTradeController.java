@@ -125,7 +125,8 @@ public class InitiateTradeController implements RunnableController {
 
         List<String> meetingDetails = getMeetingDetails();
         try {
-            tradeModel.getTradeManager().editMeetingOfTrade(tradeId, meetingDetails.get(0), parseDateString(meetingDetails.get(1)), username, "add");
+            String meetingId = tradeModel.getMeetingManager().createMeeting(meetingDetails.get(0), parseDateString(meetingDetails.get(1)), username, tradeId);
+            tradeModel.getTradeManager().addMeetingToTrade(tradeId, meetingId);
         } catch (ParseException e) {
             // This shouldn't happen because date parsing was already checked
             System.out.println("Invalid date and time!");

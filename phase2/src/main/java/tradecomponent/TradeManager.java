@@ -355,4 +355,9 @@ public class TradeManager implements Serializable {
         Trade trade = getTrade(tradeId);
         return trade.getMeetingList();
     }
+
+    public void addMeetingToTrade(String tradeId, String meetingId) {
+        Trade trade = getTrade(tradeId);
+        trade.incrementMeetingList(meetingId);
+    }
 }
