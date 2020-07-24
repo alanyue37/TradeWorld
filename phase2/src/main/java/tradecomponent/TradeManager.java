@@ -61,7 +61,7 @@ public class TradeManager implements Serializable {
      * @param giver    username of the person giving the object
      * @param receiver username of the person receiving the object
      * @param itemId   ID of the item
-     * @return         the ID of the Trade
+     * @return the ID of the Trade
      */
     public String addOneWayTrade(String type, String giver, String receiver, String itemId) {
         String id = String.valueOf(counter.getAndIncrement());
@@ -87,7 +87,7 @@ public class TradeManager implements Serializable {
      * @param user2 username of user2 in the trade
      * @param item1 ID of the item of user1
      * @param item2 ID of the item of user2
-     * @return      the ID of the Trade
+     * @return the ID of the Trade
      */
     public String addTwoWayTrade(String type, String user1, String user2, String item1, String item2) {
         String id = String.valueOf(counter.getAndIncrement());
@@ -107,7 +107,8 @@ public class TradeManager implements Serializable {
 
     /**
      * Gets the current limit for having incomplete transactions before the account is frozen
-     * @return  the current limit of incomplete transactions
+     *
+     * @return the current limit of incomplete transactions
      */
     public int getLimitIncomplete() {
         return this.limitIncomplete;
@@ -115,7 +116,8 @@ public class TradeManager implements Serializable {
 
     /**
      * Gets the current limit of transactions per week before the account is frozen
-     * @return  the current limit of transactions per week
+     *
+     * @return the current limit of transactions per week
      */
     public int getLimitTransactionPerWeek() {
         return this.limitTransactionPerWeek;
@@ -123,7 +125,8 @@ public class TradeManager implements Serializable {
 
     /**
      * Change the limit for incomplete transactions
-     * @param newIncompleteLimit    new value of incomplete transactions
+     *
+     * @param newIncompleteLimit new value of incomplete transactions
      */
     public void changeLimitIncomplete(int newIncompleteLimit) {
         this.limitIncomplete = newIncompleteLimit;
@@ -131,7 +134,8 @@ public class TradeManager implements Serializable {
 
     /**
      * Change the limit for transactions in one week
-     * @param newLimitPerWeek   new value of transactions in one week
+     *
+     * @param newLimitPerWeek new value of transactions in one week
      */
     public void changeLimitTransactionPerWeek(int newLimitPerWeek) {
         this.limitTransactionPerWeek = newLimitPerWeek;
@@ -245,7 +249,7 @@ public class TradeManager implements Serializable {
     /**
      * Returns list of the IDs of the most recent given number of (completed) trades of a user
      *
-     * @param num  the number of IDs of most recent trades wanted
+     * @param num the number of IDs of most recent trades wanted
      * @return list of IDs of most recent (completed) trades involving user "user." If "num" is greater
      * than the number of trades that "user" has been in, all of the trade IDs are returned.
      */
@@ -289,14 +293,14 @@ public class TradeManager implements Serializable {
     /**
      * Deletes all proposed trades involving the item with "itemId" except the trade with "tradeID"
      *
-     * @param itemId ID of the item
+     * @param itemId  ID of the item
      * @param tradeId ID of the trade
      */
     public void deleteCommonItemTrades(String itemId, String tradeId) {
-        for (Trade trade: this.ongoingTrades.values()){
-            if ((trade.containItem(itemId)) && (!trade.getIdOfTrade().equals(tradeId))){
+        for (Trade trade : this.ongoingTrades.values()) {
+            if ((trade.containItem(itemId)) && (!trade.getIdOfTrade().equals(tradeId))) {
                 this.ongoingTrades.remove(trade.getIdOfTrade());
-                for (String user: trade.getUsers()){
+                for (String user : trade.getUsers()) {
                     this.userToTrades.get(user).remove(tradeId);
                 }
             }
@@ -309,9 +313,9 @@ public class TradeManager implements Serializable {
      * @param tradeId ID of the trade
      * @return true iff the trade with "tradeId" requires a new meeting to be added
      */
-    public boolean needToAddMeeting(String tradeId){
+    public boolean needToAddMeeting(String tradeId) {
         Trade trade = getTrade(tradeId);
-        if (trade.getTradeType().equals("permanent")){
+        if (trade.getTradeType().equals("permanent")) {
             return trade.getMeetingList().size() < 1;
         } else {
             return trade.getMeetingList().size() < 2;
@@ -322,7 +326,7 @@ public class TradeManager implements Serializable {
      * Given a username and a type of trade (ongoing or completed), returns all trades of this user of the type
      *
      * @param username username of the user we want to get all trade
-     * @param type the type of the trade, ongoing or completed
+     * @param type     the type of the trade, ongoing or completed
      * @return list of "type" trades of user with username "username"
      */
     public List<String> getTradesOfUser(String username, String type) {
@@ -341,17 +345,18 @@ public class TradeManager implements Serializable {
                     returnList.add(id);
                 }
             }
-        } return returnList;
+        }
+        return returnList;
     }
 
-    public void closeTrade(String tradeId){
+    public void closeTrade(String tradeId) {
         Trade trade = getTrade(tradeId);
         trade.changeIsOpened();
         this.completedTrades.put(tradeId, trade);
         this.ongoingTrades.remove(tradeId, trade);
     }
 
-    public List<String> getMeetingOfTrade(String tradeId){
+    public List<String> getMeetingOfTrade(String tradeId) {
         Trade trade = getTrade(tradeId);
         return trade.getMeetingList();
     }
@@ -359,5 +364,15 @@ public class TradeManager implements Serializable {
     public void addMeetingToTrade(String tradeId, String meetingId) {
         Trade trade = getTrade(tradeId);
         trade.incrementMeetingList(meetingId);
+    }
+
+    public List<String> getAllTypeTrades(String type) {
+        List<String> trades = new ArrayList<>();
+        if (type.equals("ongoing")) {
+            trades.addAll(ongoingTrades.keySet());
+        } else { // all completed trades
+            trades.addAll(completedTrades.keySet());
+        }
+        return trades;
     }
 }

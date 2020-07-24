@@ -132,8 +132,10 @@ public class AdminController implements RunnableController {
      */
     public void askAdminToFreezeUsers() throws IOException {
         Set<String> flaggedAccounts = new HashSet<>();
-        flaggedAccounts.addAll(tradeModel.getTradeManager().getExceedIncompleteLimitUser());
-        flaggedAccounts.addAll(tradeModel.getTradeManager().getExceedPerWeek());
+        List<String> incompleteUsers = tradeModel.getMeetingManager().getTradesIncompleteMeetings(tradeModel.getTradeManager().getAllTypeTrades("ongoing"));
+        List<String> weeklyExceedUsers = tradeModel.getMeetingManager().getMeetingsPastDays(tradeModel.getTradeManager().getAllTypeTrades("completed"));
+        flaggedAccounts.addAll(tradeModel.getTradeManager().getExceedIncompleteLimitUser(incompleteUsers));
+        flaggedAccounts.addAll(tradeModel.getTradeManager().getExceedPerWeek(weeklyExceedUsers));
         flaggedAccounts.addAll(tradeModel.getUserManager().getUsersForFreezing());
         boolean empty = flaggedAccounts.isEmpty();
         presenter.freezeAccountsHeading(empty);
@@ -271,15 +273,15 @@ public class AdminController implements RunnableController {
      * @throws IOException If something goes wrong.
      */
     public void askAdminToSetLimitOfEdits() throws IOException {
-        presenter.limitOfEdits(tradeModel.getTradeManager().getLimitEdits());
+        presenter.limitOfEdits(tradeModel.getMeetingManager().getLimitEdits());
         String thresholdInput = br.readLine();
         while (notAnIntegerOrZero(thresholdInput)) {
             presenter.notAnIntegerOrMin();
-            presenter.limitOfEdits(tradeModel.getTradeManager().getLimitEdits());
+            presenter.limitOfEdits(tradeModel.getMeetingManager().getLimitEdits());
             thresholdInput = br.readLine();
         }
         int thresholdEdits = Integer.parseInt(thresholdInput);
-        tradeModel.getTradeManager().changeLimitEdits(thresholdEdits);
+        tradeModel.getMeetingManager().changeLimitEdits(thresholdEdits);
         selectMenu();
     }
 
