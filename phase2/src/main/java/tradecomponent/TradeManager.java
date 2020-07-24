@@ -350,4 +350,9 @@ public class TradeManager implements Serializable {
         this.completedTrades.put(tradeId, trade);
         this.ongoingTrades.remove(tradeId, trade);
     }
+
+    public List<String> getMeetingOfTrade(String tradeId){
+        Trade trade = getTrade(tradeId);
+        return trade.getMeetingList();
+    }
 }
