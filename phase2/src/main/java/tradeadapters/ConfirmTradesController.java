@@ -100,7 +100,8 @@ public class ConfirmTradesController implements RunnableController {
 
 
     private void changeToConfirmed(String tradeId, String username){
-        tradeModel.getMeetingManager().meetingHappened(tradeId, username);
+        String meetingId = tradeModel.getTradeManager().getMeetingOfTrade(tradeId).get(tradeModel.getTradeManager().getMeetingOfTrade(tradeId).size() - 1);
+        tradeModel.getMeetingManager().meetingHappened(meetingId, username);
         if ((!tradeModel.getTradeManager().needToAddMeeting(tradeId)) && (tradeModel.getMeetingManager().tradeMeetingsCompleted(tradeId))){
             tradeModel.getTradeManager().closeTrade(tradeId);
         }

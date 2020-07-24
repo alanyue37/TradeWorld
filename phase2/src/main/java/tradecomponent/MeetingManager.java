@@ -148,7 +148,7 @@ public class MeetingManager implements Serializable {
      * and false if the number of edits is less than the threshold for edits
      */
     public boolean attainedThresholdEdits(String meetingId) {
-        return ongoingMeetings.get(meetingId).getNumOfEdits() >= limitOfEdits;
+        return ongoingMeetings.get(meetingId).getNumOfEdits() >= (limitOfEdits * 2);
     }
 
     /**
