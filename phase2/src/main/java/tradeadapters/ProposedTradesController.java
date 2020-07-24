@@ -48,17 +48,17 @@ public class ProposedTradesController implements RunnableController {
     }
 
     private boolean browseMeetings() throws IOException {
-        Map<String, String> trades = tradeModel.getTradeManager().getProposedTrades(username);
+        List<String> trades = tradeModel.getMeetingManager().getToCheckTrades(tradeModel.getTradeManager().getTradesOfUser(username, "ongoing"), "proposed");
 
-        for (String tradeId : trades.keySet()) {
-            presenter.showMeeting(tradeModel.getTradeManager().getTradeAllInfo(tradeId));
+        for (String tradeId : trades) {
+            presenter.showMeeting(tradeModel.getTradeManager().getTradeInfo(tradeId), tradeModel.getMeetingManager().getMeetingsInfo(tradeId));
             String input = br.readLine();
             switch(input) {
                 case "1": // confirm meeting times
                     confirmMeetingTime(tradeId);
                     break;
                 case "2": // edit meeting time
-                    if (tradeModel.getTradeManager().canChangeMeeting(tradeId, username)) {
+                    if (tradeModel.getMeetingManager().canChangeMeeting(tradeId, username)) {
                         List<String> details = getMeetingDetails();
                         editMeetingTime(tradeId, details);
                     } else { presenter.declineEditMeeting(); }
@@ -78,8 +78,9 @@ public class ProposedTradesController implements RunnableController {
      * @param tradeId id of the trade
      */
     private void confirmMeetingTime(String tradeId) {
-        if (tradeModel.getTradeManager().canChangeMeeting(tradeId, username)) {
-            tradeModel.getTradeManager().agreeMeetingDetails(tradeId);
+        if (tradeModel.getMeetingManager().canChangeMeeting(tradeId, username)) {
+            String meetingId = tradeModel.getTradeManager().getMeetingOfTrade(tradeId).get(tradeModel.getTradeManager().getMeetingOfTrade(tradeId).size() - 1);
+            tradeModel.getMeetingManager().confirmAgreement(meetingId);
             changeItemUnavailable(tradeId);
             presenter.confirmedMeeting();
         } else {
@@ -124,14 +125,15 @@ public class ProposedTradesController implements RunnableController {
     }
 
     private void editMeetingTime(String tradeId, List<String> details) {
-        if (tradeModel.getTradeManager().needCancelTrade(tradeId)) {
+        if (tradeModel.getMeetingManager().attainedThresholdEdits(tradeModel.getTradeManager().getMeetingOfTrade(tradeId).get(0))) {
             tradeModel.getTradeManager().cancelTrade(tradeId);
             presenter.canceledTrade();
         } else {
             try {
                 DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                 Date time = format.parse(details.get(1));
-                tradeModel.getTradeManager().editMeetingOfTrade(tradeId, details.get(0), time, username, "edit");
+                String meetingId = tradeModel.getTradeManager().getMeetingOfTrade(tradeId).get(tradeModel.getTradeManager().getMeetingOfTrade(tradeId).size() - 1);
+                tradeModel.getMeetingManager().changeMeeting(meetingId, details.get(0), time, username);
                 presenter.editedMeeting();
             } catch (ParseException e) {
                 System.out.println("Invalid date and time!");

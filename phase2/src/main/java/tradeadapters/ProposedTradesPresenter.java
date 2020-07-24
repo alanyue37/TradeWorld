@@ -13,8 +13,8 @@ public class ProposedTradesPresenter extends TextPresenter {
      *
      * @param tradeInfo information on the trade, including the meeting details
      */
-    public void showMeeting(String tradeInfo) {
-        System.out.println(tradeInfo);
+    public void showMeeting(String tradeInfo, String meetingInfo) {
+        System.out.println(tradeInfo + "\n" + meetingInfo);
         System.out.println("Options for a User: \n" +
                 " Enter 1 to confirm the meeting time\n" +
                 " Enter 2 to edit the meeting time\n" +
