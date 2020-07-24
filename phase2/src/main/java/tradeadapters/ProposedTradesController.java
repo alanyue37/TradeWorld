@@ -25,8 +25,9 @@ public class ProposedTradesController implements RunnableController {
 
     /**
      * Initiates the ProposedTradesController.
+     *
      * @param tradeModel tradeModel
-     * @param username *username* of user
+     * @param username   *username* of user
      */
     public ProposedTradesController(TradeModel tradeModel, String username) {
         br = new BufferedReader(new InputStreamReader(System.in));
@@ -53,15 +54,18 @@ public class ProposedTradesController implements RunnableController {
         for (String tradeId : trades) {
             presenter.showMeeting(tradeModel.getTradeManager().getTradeInfo(tradeId), tradeModel.getMeetingManager().getMeetingsInfo(tradeId));
             String input = br.readLine();
-            switch(input) {
+            switch (input) {
                 case "1": // confirm meeting times
                     confirmMeetingTime(tradeId);
                     break;
                 case "2": // edit meeting time
                     if (tradeModel.getMeetingManager().canChangeMeeting(tradeId, username)) {
-                        List<String> details = getMeetingDetails();
-                        editMeetingTime(tradeId, details);
-                    } else { presenter.declineEditMeeting(); }
+                        List<String> details = getMeetingDetails(tradeId);
+                        if (details.size() > 0) {
+                            editMeetingTime(tradeId, details); }
+                    } else {
+                        presenter.declineEditMeeting();
+                    }
                     break;
                 case "exit":
                     presenter.end();
@@ -69,12 +73,14 @@ public class ProposedTradesController implements RunnableController {
                 default:
                     presenter.tryAgain();
             }
-        } presenter.endMeetings();
+        }
+        presenter.endMeetings();
         return true;
     }
 
     /**
      * Allows user to confirm with the suggested meeting details (time, place)
+     *
      * @param tradeId id of the trade
      */
     private void confirmMeetingTime(String tradeId) {
@@ -91,6 +97,7 @@ public class ProposedTradesController implements RunnableController {
     /**
      * Makes the changes that are necessary for availability of the items of the users when the trade
      * meeting time/place is confirmed.
+     *
      * @param tradeId id of the trade
      */
     private void changeItemUnavailable(String tradeId) {
@@ -101,44 +108,45 @@ public class ProposedTradesController implements RunnableController {
         }
     }
 
-    private List<String> getMeetingDetails() throws IOException {
-        List<String> details = new ArrayList<>();
-        presenter.enterLocation();
-        String location = br.readLine();
-        details.add(location);
-
-        String dateString = null;
-        Date date = null;
-        do {
-            try {
-                presenter.enterDateTime();
-                dateString = br.readLine();
-                DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-                date = format.parse(dateString); // check formatting is valid
-            }
-            catch (ParseException e) {
-                presenter.tryAgain();
-            }
-        } while (date == null);
-        details.add(dateString);
-        return details;
-    }
-
-    private void editMeetingTime(String tradeId, List<String> details) {
+    private List<String> getMeetingDetails(String tradeId) throws IOException {
         if (tradeModel.getMeetingManager().attainedThresholdEdits(tradeModel.getTradeManager().getMeetingOfTrade(tradeId).get(0))) {
             tradeModel.getTradeManager().cancelTrade(tradeId);
             tradeModel.getMeetingManager().cancelMeetingsOfTrade(tradeId);
             presenter.canceledTrade();
+            return new ArrayList<>();
         } else {
-            try {
-                DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-                Date time = format.parse(details.get(1));
-                String meetingId = tradeModel.getTradeManager().getMeetingOfTrade(tradeId).get(tradeModel.getTradeManager().getMeetingOfTrade(tradeId).size() - 1);
-                tradeModel.getMeetingManager().changeMeeting(meetingId, details.get(0), time, username);
-                presenter.editedMeeting();
-            } catch (ParseException e) {
-                System.out.println("Invalid date and time!");
-            }
+            List<String> details = new ArrayList<>();
+            presenter.enterLocation();
+            String location = br.readLine();
+            details.add(location);
+
+            String dateString = null;
+            Date date = null;
+            do {
+                try {
+                    presenter.enterDateTime();
+                    dateString = br.readLine();
+                    DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                    date = format.parse(dateString); // check formatting is valid
+                } catch (ParseException e) {
+                    presenter.tryAgain();
+                }
+            } while (date == null);
+            details.add(dateString);
+            return details;
+        }
+    }
+
+
+    private void editMeetingTime(String tradeId, List<String> details) {
+        try {
+            DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            Date time = format.parse(details.get(1));
+            String meetingId = tradeModel.getTradeManager().getMeetingOfTrade(tradeId).get(tradeModel.getTradeManager().getMeetingOfTrade(tradeId).size() - 1);
+            tradeModel.getMeetingManager().changeMeeting(meetingId, details.get(0), time, username);
+            presenter.editedMeeting();
+        } catch (ParseException e) {
+            System.out.println("Invalid date and time!");
         }
     }
 }
