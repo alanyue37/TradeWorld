@@ -46,9 +46,9 @@ public class ConfirmTradesController implements RunnableController {
     }
 
     private boolean confirmTrades() throws IOException {
-        Map<String, String> trades = tradeModel.getTradeManager().getToBeConfirmedTrades(username);
+        Map<String, String> trades = getToBeConfirmedTrades(username);
         for (String tradeId : trades.keySet()) {
-            presenter.showTrade(tradeModel.getTradeManager().getTradeAllInfo(tradeId));
+            presenter.showTrade(getTradeAllInfo(tradeId));
             String input = br.readLine();
             switch(input) {
                 case "1":
@@ -66,19 +66,30 @@ public class ConfirmTradesController implements RunnableController {
         return true;
     }
 
+    private Map<String, String> getToBeConfirmedTrades(String username){
+        List<String> userOngoing = tradeModel.getTradeManager().getTradesOfUser(username, "ongoing");
+        List<String> userToBeConfirmed = tradeModel.getMeetingManager().getToCheckTrades(userOngoing, "needConfirm");
+        return tradeModel.getTradeManager().getType(userToBeConfirmed);
+    }
+
+    private String getTradeAllInfo(String tradeId){
+        return tradeModel.getTradeManager().getTradeInfo(tradeId) + "\n" +
+                tradeModel.getMeetingManager().getMeetingsInfo(tradeId);
+    }
+
     /**
      * Allows the user to confirm that the real life meeting happened.
      * @param tradeId id of the trade
      */
     private void confirmTradeHappened(String tradeId, String type) {
-        if (tradeModel.getTradeManager().canChangeMeeting(tradeId, username)){
-            tradeModel.getTradeManager().confirmMeetingHappened(tradeId, username);
+        if (tradeModel.getMeetingManager().canChangeMeeting(tradeId, username)){
+            changeToConfirmed(tradeId, username);
             presenter.confirmedTrade();
 
             if (tradeModel.getTradeManager().getTradesOfUser(username, "completed").contains(tradeId)) {
                 completedTradeChanges(tradeId, type);
             } else {
-                if (!tradeModel.getTradeManager().getIncompleteTrade().contains(tradeId)) {
+                if (tradeModel.getMeetingManager().tradeMeetingsCompleted(tradeId)){
                     if (tradeModel.getTradeManager().needToAddMeeting(tradeId)){
                         createMandatoryReturnMeeting(tradeId);
                     }
@@ -87,18 +98,26 @@ public class ConfirmTradesController implements RunnableController {
         } else{ presenter.declineConfirm(); }
     }
 
+
+    private void changeToConfirmed(String tradeId, String username){
+        tradeModel.getMeetingManager().meetingHappened(tradeId, username);
+        if ((!tradeModel.getTradeManager().needToAddMeeting(tradeId)) && (tradeModel.getMeetingManager().tradeMeetingsCompleted(tradeId))){
+            tradeModel.getTradeManager().closeTrade(tradeId);
+        }
+    }
+
     /**
      * Creates the mandatory return meeting, 30 days after the first meeting time at the same location
      * @param tradeId id of the trade
      */
     private void createMandatoryReturnMeeting(String tradeId){
         Calendar cal = Calendar.getInstance();
-        cal.setTime(tradeModel.getTradeManager().getLastConfirmedMeetingTime(tradeId));
+        cal.setTime(tradeModel.getMeetingManager().getLastMeetingTime(tradeId));
         cal.add(Calendar.DATE, 30);
         Date newDate = cal.getTime();
-        tradeModel.getTradeManager().editMeetingOfTrade(tradeId,
-                tradeModel.getTradeManager().getLastConfirmedMeetingLocation(tradeId), newDate, username, "add");
-        tradeModel.getTradeManager().agreeMeetingDetails(tradeId);
+        String newMeetingId = tradeModel.getMeetingManager().createMeeting(tradeModel.getMeetingManager().getLastMeetingLocation(tradeId), newDate, username, tradeId);
+        tradeModel.getTradeManager().addMeetingToTrade(tradeId, newMeetingId);
+        tradeModel.getMeetingManager().confirmAgreement(newMeetingId);
         presenter.displayNewDate(newDate.toString());
     }
 

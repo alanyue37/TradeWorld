@@ -168,18 +168,14 @@ public class MeetingManager implements Serializable {
         return meetingDetails.toString();
     }
 
-    public boolean isConfirmed(String meetingId) {
-        Meeting meeting = getMeeting(meetingId);
-        return meeting.getIsConfirmed();
-    }
 
-    public Date getMeetingTime(String meetingId) {
-        Meeting meeting = getMeeting(meetingId);
+    public Date getLastMeetingTime(String tradeId) {
+        Meeting meeting = getMeeting(this.tradeToMeetings.get(tradeId).get(tradeToMeetings.get(tradeId).size()-1));
         return meeting.getTime();
     }
 
-    public String getMeetingLocation(String meetingId) {
-        Meeting meeting = getMeeting(meetingId);
+    public String getLastMeetingLocation(String tradeId) {
+        Meeting meeting = getMeeting(this.tradeToMeetings.get(tradeId).get(tradeToMeetings.get(tradeId).size() - 1));
         return meeting.getLocation();
     }
 
@@ -209,7 +205,7 @@ public class MeetingManager implements Serializable {
             Calendar compare = Calendar.getInstance();
             compare.add(Calendar.DATE, -7);
             Date comparisonDate = compare.getTime();
-            if (getMeetingTime(tradeToMeetings.get(tradeId).get(tradeToMeetings.get(tradeId).size() - 1)).after(comparisonDate)) {
+            if (getLastMeetingTime(tradeId).after(comparisonDate)) {
                 pastTrades.add(tradeId);
             }
         }
@@ -230,7 +226,7 @@ public class MeetingManager implements Serializable {
                 if (this.ongoingMeetings.get(meetingId).getIsConfirmed()) {
                     Calendar cal = Calendar.getInstance();
                     Date newDate = cal.getTime();
-                    if (getMeetingTime(meetingId).before(newDate)) {
+                    if (getLastMeetingTime(tradeId).before(newDate)) {
                         toCheck.add(tradeId); }
                 }
             }
@@ -248,4 +244,31 @@ public class MeetingManager implements Serializable {
         }
         tradeToMeetings.remove(tradeId);
     }
+
+    public boolean tradeMeetingsCompleted(String tradeId){
+        for (String id: this.tradeToMeetings.get(tradeId)){
+            if (!this.completedMeetings.containsKey(id)){
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    public List<String> sortedMeeting(List<String> tradeIds){
+        List<String> sorted = new ArrayList<>();
+        if (tradeIds.size() == 0){
+            return sorted;
+        }
+        sorted.add(tradeIds.get(0));
+        for (int i = 1; i < tradeIds.size(); i++) {
+            int ii = 0;
+            while (ii < sorted.size() && getLastMeetingTime(sorted.get(ii)).before(getLastMeetingTime(tradeIds.get(i)))) {
+                ii++;
+            }
+            sorted.add(ii, tradeIds.get(i));
+        }
+        return sorted;
+    }
+    // goes from oldest (index 0) to newest
 }

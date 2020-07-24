@@ -77,7 +77,8 @@ public class ViewingTradesController implements RunnableController {
         if (!userTrades.contains(tradeId)){
             presenter.printSearchingInvalid();
         } else{
-            presenter.showInfo(tradeModel.getTradeManager().getTradeAllInfo(tradeId));
+            String allTradeInfo = tradeModel.getTradeManager().getTradeInfo(tradeId) + "\n" + tradeModel.getMeetingManager().getMeetingsInfo(tradeId);
+            presenter.showInfo(allTradeInfo);
         }
     }
 
@@ -89,7 +90,11 @@ public class ViewingTradesController implements RunnableController {
         presenter.printEnterNumTrades();
         String numItems = br.readLine();
         int numLastTrades = Integer.parseInt(numItems);
-        List<String> tradeIds = tradeModel.getTradeManager().getRecentTrades(numLastTrades, username);
+
+        List<String> userCompletedTrades = tradeModel.getTradeManager().getTradesOfUser(username, "completed");
+        List<String> sortedCompletedTrades = tradeModel.getMeetingManager().sortedMeeting(userCompletedTrades);
+        List<String> tradeIds = tradeModel.getTradeManager().getRecentTrades(numLastTrades, sortedCompletedTrades);
+//        List<String> tradeIds = tradeModel.getTradeManager().getRecentTrades(numLastTrades, username);
         if (tradeIds.size() == 0){
             presenter.noTrades();
         } else {

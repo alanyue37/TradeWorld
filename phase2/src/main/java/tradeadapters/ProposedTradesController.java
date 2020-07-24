@@ -127,6 +127,7 @@ public class ProposedTradesController implements RunnableController {
     private void editMeetingTime(String tradeId, List<String> details) {
         if (tradeModel.getMeetingManager().attainedThresholdEdits(tradeModel.getTradeManager().getMeetingOfTrade(tradeId).get(0))) {
             tradeModel.getTradeManager().cancelTrade(tradeId);
+            tradeModel.getMeetingManager().cancelMeetingsOfTrade(tradeId);
             presenter.canceledTrade();
         } else {
             try {
