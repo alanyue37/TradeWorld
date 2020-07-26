@@ -73,13 +73,14 @@ public class UserManager implements Serializable {
      * @param name     The name of the TradingUser
      * @param username The username of the TradingUser
      * @param password The password of the TradingUser
+     * @param city     The city of thr TradingUser
      * @return Whether or not the TradingUser was successfully added
      */
-    public boolean createTradingUser(String name, String username, String password) {
+    public boolean createTradingUser(String name, String username, String password, String city) {
         if (tradingUsers.containsKey(username) | adminUsers.containsKey(username)) {
             return false;
         }
-        tradingUsers.put(username, new TradingUser(name, username, password));
+        tradingUsers.put(username, new TradingUser(name, username, password, city));
         return true;
     }
 
@@ -262,5 +263,15 @@ public class UserManager implements Serializable {
     public boolean isFrozen(String username) {
         TradingUser account = tradingUsers.get(username);
         return account.isFrozen();
+    }
+
+    /**
+     * Returns the city of a given TradingUser
+     * @param username The username of the given TradingUser.
+     */
+    public String getCityByUsername(String username) {
+        TradingUser account = tradingUsers.get(username);
+        return account.getCity();
+
     }
 }

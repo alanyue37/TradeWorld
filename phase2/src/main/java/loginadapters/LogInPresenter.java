@@ -88,6 +88,7 @@ public class LogInPresenter implements Iterator<String> {
      */
     public void newAccount() {
         prompts.add("Enter your name:");
+        prompts.add("Enter your city:");
         prompts.add("Enter your username:");
         prompts.add("Enter your password:");
     }

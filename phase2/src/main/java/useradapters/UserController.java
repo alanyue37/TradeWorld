@@ -108,25 +108,33 @@ public class UserController implements RunnableController {
         tradeModel.getItemManager().addItem(itemName, username, itemDescription);
     }
     /**
-     * View system inventory (except items in current user's inventory or wishlist). Gives the user the option of adding
-     * items to their wishlist.
+     * View system inventory of users in same city (except items in current user's inventory or wishlist).
+     * Gives the user the option of adding items to their wishlist.
      *
      * @throws IOException if a problem occurs with reading in input
      */
     public void viewItemsToAddToWishlist() throws IOException {
         List<String> items = tradeModel.getItemManager().getConfirmedItems();
-        Set<String> filterItems = tradeModel.getUserManager().getSetByUsername(username, ItemSets.INVENTORY);
-        filterItems.addAll(tradeModel.getUserManager().getSetByUsername(username, ItemSets.WISHLIST));
-        for (String itemId : filterItems) {
-            items.remove(itemId);
+        List <String> itemsToShow = new ArrayList<>();
+        Set<String> userInventory =  tradeModel.getUserManager().getSetByUsername(username, ItemSets.INVENTORY);
+        Set<String> userWishlist = tradeModel.getUserManager().getSetByUsername(username, ItemSets.WISHLIST);
+
+        for (String itemId : items) {
+            String otherUsername = tradeModel.getItemManager().getOwner(itemId);
+            String thisUserCity = tradeModel.getUserManager().getCityByUsername(username);
+            String otherUserCity = tradeModel.getUserManager().getCityByUsername(otherUsername);
+            if (!userInventory.contains(itemId) && !userWishlist.contains(itemId) && thisUserCity.equals(otherUserCity)) {
+                itemsToShow.add(itemId);
+            }
         }
-        presenter.printItemsToAddToWishlist(getItemsInfo(items));
+
+        presenter.printItemsToAddToWishlist(getItemsInfo(itemsToShow));
         String choice = br.readLine();
-        while (!items.contains(choice) && !choice.equals("back")) {
+        while (!itemsToShow.contains(choice) && !choice.equals("back")) {
             presenter.tryAgain();
             choice = br.readLine();
         }
-        if (items.contains(choice)) {
+        if (itemsToShow.contains(choice)) {
             tradeModel.getUserManager().addToSet(username, choice, ItemSets.WISHLIST);
         }
     }

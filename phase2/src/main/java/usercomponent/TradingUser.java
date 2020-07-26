@@ -9,6 +9,7 @@ class TradingUser extends User {
     private final Set<String> wishlist;
     private boolean frozen;
     private int credit;
+    private String city;
 
     /**
      * Instantiates a new TradingUser
@@ -16,13 +17,15 @@ class TradingUser extends User {
      * @param name The given name
      * @param username The given username
      * @param password The given password
+     * @param city     The given city
      */
-    protected TradingUser(String name, String username, String password) {
+    protected TradingUser(String name, String username, String password, String city) {
         super(name, username, password);
         inventory = new HashSet<>();
         wishlist = new HashSet<>();
         frozen = false;
         credit = 0;
+        this.city = city;
     }
 
     /**
@@ -118,6 +121,10 @@ class TradingUser extends User {
      */
     protected void decrementCredit(){
         credit--;
+    }
+
+    protected String getCity() {
+        return city;
     }
 
     @Override

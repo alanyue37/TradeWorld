@@ -109,13 +109,17 @@ public class LogInController {
         presenter.nextLine();
         String name = br.readLine();
 
+        // Get user's city
+        presenter.nextLine();
+        String city = br.readLine();
+
         presenter.nextLine();
         username = br.readLine();
 
         presenter.nextLine();
         password = br.readLine();
 
-        if (!tradeModel.getUserManager().createTradingUser(name, username, password)) {
+        if (!tradeModel.getUserManager().createTradingUser(name, username, password, city)) {
             presenter.usernameTaken(username);
             presenter.nextLine();
             return false;
