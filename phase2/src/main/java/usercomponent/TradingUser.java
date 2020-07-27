@@ -10,6 +10,7 @@ class TradingUser extends User {
     private boolean frozen;
     private int credit;
     private String city;
+    private boolean vacation;
 
     /**
      * Instantiates a new TradingUser
@@ -26,6 +27,7 @@ class TradingUser extends User {
         frozen = false;
         credit = 0;
         this.city = city;
+        this.vacation = false;
     }
 
     /**
@@ -141,6 +143,14 @@ class TradingUser extends User {
             status = "In Good Standing";
         }
         return super.toString() + "\n" + status + "\n" + "Credit: " + getCredit();
+    }
+
+    protected boolean isOnVacation(){
+        return this.vacation;
+    }
+
+    protected void setVacation(boolean vacation){
+        this.vacation = vacation;
     }
 
 }

@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A controller class using the RunnableController interface for viewing the menu options.
@@ -66,7 +67,10 @@ public class ViewingMenuController implements RunnableController {
      * View the system inventory (all confirmed items -- available and unavailable -- in the system)
      */
     public void viewSystemInventory(){
-        List<String> confirmedItems = getItemsInfo(tradeModel.getItemManager().getConfirmedItems());
+        Set<String> userOnVacation = tradeModel.getUserManager().getOnVacation();
+        List<String> confirmedItems = tradeModel.getItemManager().getConfirmedItems();
+        confirmedItems.removeIf(item -> userOnVacation.contains(tradeModel.getItemManager().getOwner(item)));
+        List<String> confirmedItemsInfo = getItemsInfo(confirmedItems);
         presenter.printSystemInventory(confirmedItems);
     }
 

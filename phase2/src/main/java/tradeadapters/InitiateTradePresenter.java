@@ -112,4 +112,8 @@ public class InitiateTradePresenter extends TextPresenter {
         System.out.println("Please enter the # of your choice of trade or \"back\" to go back: ");
     }
 
+    public void onVacation() {
+        System.out.println("Your account is currently on vacation mode. To initiate a trade, please go change your" +
+                "account back to trading mode.");
+    }
 }

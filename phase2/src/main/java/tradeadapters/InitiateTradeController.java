@@ -51,6 +51,10 @@ public class InitiateTradeController implements RunnableController {
             unfreezeRequest();
             return success;
         }
+        if (tradeModel.getUserManager().getOnVacation().contains(username)){
+            presenter.onVacation();
+            return success;
+        }
         String itemId = getItemIdChoice();
         if (itemId == null) {
             return success;

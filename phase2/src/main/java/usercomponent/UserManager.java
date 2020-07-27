@@ -274,4 +274,29 @@ public class UserManager implements Serializable {
         return account.getCity();
 
     }
+
+    /**
+     * Sets or unset the account on vacation mode.
+     * @param username The username of the given TradingUser.
+     * @param vacation Whether or not the intended account is set to vacation mode.
+     */
+    public void setOnVacation(String username, boolean vacation) {
+        TradingUser account = tradingUsers.get(username);
+        account.setVacation(vacation);
+    }
+
+    /**
+     * Gets a set of the usernames of TradingUsers who are on vacation mode.
+     * @return A set of the usernames of TradingUsers who are on vacation mode.
+     */
+    public Set<String> getOnVacation(){
+        Set<String> result = new HashSet<>();
+        for (TradingUser trader: tradingUsers.values()){
+            if (trader.isOnVacation()){
+                result.add(trader.getUsername());
+            }
+        }
+        return result;
+    }
+
 }
