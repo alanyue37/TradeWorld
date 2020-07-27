@@ -18,7 +18,7 @@ class TradingUser extends User {
      * @param password The given password
      */
     protected TradingUser(String name, String username, String password) {
-        super(name, username, password);
+        super(name, username, password, false);
         inventory = new HashSet<>();
         wishlist = new HashSet<>();
         frozen = false;
@@ -118,11 +118,6 @@ class TradingUser extends User {
      */
     protected void decrementCredit(){
         credit--;
-    }
-
-    @Override
-    protected boolean isAdmin() {
-        return false;
     }
 
     public String toString() {
