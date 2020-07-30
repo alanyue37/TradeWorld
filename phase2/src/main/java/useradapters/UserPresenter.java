@@ -52,4 +52,11 @@ public class UserPresenter extends TextPresenter {
         System.out.println("Please enter the ID of the item you would like to add or \"back\" to go back: ");
     }
 
+    /**
+     * Print a message that tells DemoUser they do not have permission to perform a task.
+     */
+    public void printDemoMessage() {
+        System.out.println("This is just a demo. You cannot actually do this.");
+    }
+
 }

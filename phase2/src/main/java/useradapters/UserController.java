@@ -18,10 +18,10 @@ import java.util.List;
 import java.util.Set;
 
 public class UserController implements RunnableController {
-    private final BufferedReader br;
-    private final TradeModel tradeModel;
-    private final UserPresenter presenter;
-    private final String username;
+    protected final BufferedReader br;
+    protected final TradeModel tradeModel;
+    protected final UserPresenter presenter;
+    protected final String username;
     /**
      * Constructor for UserController.
      * @param tradeModel Model of the system.
@@ -49,7 +49,7 @@ public class UserController implements RunnableController {
     /**
      * trademisc.Main menu to run the UserController
      */
-    private boolean selectMenu() throws IOException {
+    protected boolean selectMenu() throws IOException {
         presenter.startMenu(username);
         boolean validInput = false;
         do {
@@ -100,7 +100,7 @@ public class UserController implements RunnableController {
     /**
      * Allows user to create an item
      */
-    private void createItem() throws IOException{
+    protected void createItem() throws IOException{
         presenter.printInputItemName();             // enter name of the item
         String itemName = br.readLine();
         presenter.printInputItemDescription();      // enter description of the item
@@ -138,7 +138,7 @@ public class UserController implements RunnableController {
             tradeModel.getUserManager().addToSet(username, choice, ItemSets.WISHLIST);
         }
     }
-    private List<String> getItemsInfo(Collection<String> itemIds) {
+    protected List<String> getItemsInfo(Collection<String> itemIds) {
         List <String> itemsInfo = new ArrayList<>();
         for (String itemId : itemIds) {
             itemsInfo.add(tradeModel.getItemManager().getItemInfo(itemId));
