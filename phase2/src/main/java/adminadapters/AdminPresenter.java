@@ -34,22 +34,22 @@ public class AdminPresenter extends TextPresenter {
     /**
      * This method prompts the admin user to enter the name of another admin user.
      */
-    public void accountEnterName() {
-        System.out.println("Enter name: ");
+    public String accountEnterName() {
+        return "Enter name: ";
     }
 
     /**
      * This method prompts the admin user to enter the username of another admin user.
      */
-    public void accountEnterUsername() {
-        System.out.println("Enter Username: ");
+    public String accountEnterUsername() {
+        return "Enter Username: ";
     }
 
     /**
      * This method prompts the admin user to enter the password of another admin user.
      */
-    public void accountEnterPassword() {
-        System.out.println("Enter password: ");
+    public String accountEnterPassword() {
+        return "Enter password: ";
     }
 
     /**

@@ -4,6 +4,8 @@ import tradegateway.TradeModel;
 import trademisc.RunnableController;
 import usercomponent.ItemSets;
 
+
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -19,12 +21,14 @@ public class AdminController implements RunnableController {
     private final AdminPresenter presenter;
     private final BufferedReader br;
     private final String username;
+    private final AdminGUI adminGUI;
 
-    public AdminController(TradeModel tradeModel, String username) {
+    public AdminController(TradeModel tradeModel, String username, AdminGUI adminGUI) {
         this.tradeModel = tradeModel;
         this.presenter = new AdminPresenter();
         this.br = new BufferedReader(new InputStreamReader(System.in));
         this.username = username;
+        this.adminGUI = adminGUI;
     }
 
     /**
@@ -109,7 +113,8 @@ public class AdminController implements RunnableController {
      *
      * @throws IOException If something goes wrong.
      */
-    private void askAdminToAddNewAdmin() throws IOException {
+    public void askAdminToAddNewAdmin(JTextField name, JTextField username, JTextField password) throws IOException {
+        // adminGUI.askAdminForName().addActionListener(e -> askAdminToAddNewAdmin());
         presenter.accountEnterName();
         String nameInput = br.readLine();
         presenter.accountEnterUsername();
