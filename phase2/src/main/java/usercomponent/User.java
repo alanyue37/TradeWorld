@@ -7,6 +7,7 @@ class User implements Serializable {
     private String name;
     private String username;
     private String password;
+    private final boolean isAdmin;
 
     /**
      * Instantiates a new User
@@ -15,10 +16,11 @@ class User implements Serializable {
      * @param username The given username
      * @param password The given password
      */
-    protected User(String name, String username, String password) {
+    protected User(String name, String username, String password, boolean isAdmin) {
         this.name = name;
         this.username = username;
         this.password = password;
+        this.isAdmin = isAdmin;
     }
 
 
@@ -82,7 +84,7 @@ class User implements Serializable {
      * @return Whether the User is an admin
      */
     protected boolean isAdmin() {
-        return true;
+        return isAdmin;
     }
 
     /**

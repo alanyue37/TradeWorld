@@ -20,7 +20,7 @@ public class UserManager implements Serializable {
         tradingUsers = new HashMap<>();
         adminUsers = new HashMap<>();
         unfreezeRequests = new HashSet<>();
-        User initialAdmin = new User("Initial Admin", "ia", "initialize");
+        User initialAdmin = new User("Initial Admin", "ia", "initialize", true);
         adminUsers.put("ia", initialAdmin);
     }
 
@@ -96,7 +96,7 @@ public class UserManager implements Serializable {
         if (tradingUsers.containsKey(username) | adminUsers.containsKey(username)) {
             return false;
         }
-        adminUsers.put(username, new User(name, username, password));
+        adminUsers.put(username, new User(name, username, password, true));
         return true;
     }
 
