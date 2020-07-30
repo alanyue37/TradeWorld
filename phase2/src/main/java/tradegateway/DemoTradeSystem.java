@@ -48,10 +48,10 @@ public class DemoTradeSystem {
         tradeModel.getUserManager().createAdminUser("A_1", "a1", "a1");
         tradeModel.getUserManager().createAdminUser("A_2", "a2", "a2");
         tradeModel.getUserManager().createAdminUser("A_3", "a3", "a3");
-        tradeModel.getUserManager().createTradingUser("U_1", "u1", "u1");
-        tradeModel.getUserManager().createTradingUser("U_2", "u2", "u2");
-        tradeModel.getUserManager().createTradingUser("U_3", "u3", "u3");
-        tradeModel.getUserManager().createTradingUser("U_4", "u4", "u4");
+        tradeModel.getUserManager().createTradingUser("U_1", "u1", "u1", "Toronto");
+        tradeModel.getUserManager().createTradingUser("U_2", "u2", "u2", "Toronto");
+        tradeModel.getUserManager().createTradingUser("U_3", "u3", "u3", "Edmonton");
+        tradeModel.getUserManager().createTradingUser("U_4", "u4", "u4", "Brampton");
 
         // u1 items
         String u1_1 = tradeModel.getItemManager().addItem("red apple", "u1", "One red apple");
