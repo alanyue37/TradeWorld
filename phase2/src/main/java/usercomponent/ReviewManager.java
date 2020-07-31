@@ -39,4 +39,24 @@ public class ReviewManager {
             pendingReviews.remove(tradeId);
         }
     }
+
+    public List<String> viewProfile(String username, int num) { // num is how many most recent comments the user will see
+        List<Review> reviews = userToReviews.get(username);
+        List<String> profileInfo = new ArrayList<>();
+        if (reviews == null) {
+            return profileInfo;
+        }
+        int totalRatings = 0;
+        for (Review review : reviews) {
+            totalRatings += review.getRating();
+        }
+        int averageRating = totalRatings / reviews.size();
+        profileInfo.add(String.valueOf(averageRating));
+        int i = reviews.size() - 1;
+        while (i >= reviews.size() - num && i >= 0) {
+            profileInfo.add(reviews.get(i).getComment());
+            i--;
+        }
+        return profileInfo;
+    }
 }

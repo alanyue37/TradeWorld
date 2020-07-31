@@ -7,10 +7,7 @@ import usercomponent.ItemSets;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Manages input from the user to confirm trades happened in real life.
@@ -81,10 +78,22 @@ public class ConfirmTradesController implements RunnableController {
      * Allows the user to confirm that the real life meeting happened.
      * @param tradeId id of the trade
      */
-    private void confirmTradeHappened(String tradeId, String type) {
-        if (tradeModel.getMeetingManager().canChangeMeeting(tradeId, username)){
+    private void confirmTradeHappened(String tradeId, String type) throws IOException {
+        if (tradeModel.getMeetingManager().canChangeMeeting(tradeId, username)) {
             changeToConfirmed(tradeId, username);
             presenter.confirmedTrade();
+
+            if (!(tradeModel.getTradeManager().needToAddMeeting(tradeId))) {
+                List<String> reviewInfo = getReviewInfo();
+                if (reviewInfo.size() > 0) {
+                    String receiver = "";
+                    for (List<String> users : tradeModel.getTradeManager().itemToUsers(tradeId).values()) {
+                        users.remove(username);
+                        receiver = users.get(0);
+                    }
+                    tradeModel.getReviewManager().addReview(Integer.parseInt(reviewInfo.get(0)), reviewInfo.get(1), tradeId, username, receiver);
+                }
+            }
 
             if (tradeModel.getTradeManager().getTradesOfUser(username, "completed").contains(tradeId)) {
                 completedTradeChanges(tradeId, type);
@@ -95,11 +104,33 @@ public class ConfirmTradesController implements RunnableController {
                     }
                 }
             }
-        } else{ presenter.declineConfirm(); }
+        } else { presenter.declineConfirm(); }
+    }
+
+    private List<String> getReviewInfo() throws IOException {
+        List<String> reviewInfo = new ArrayList<>();
+        presenter.askRating();
+        String rating = br.readLine();
+        List<String> validRatings = new ArrayList<>(Arrays.asList("1", "2", "3", "4", "5"));
+        if (rating.equals("")) {
+            return reviewInfo;
+        } else {
+            do {
+                presenter.invalidRating();
+                rating = br.readLine();
+            } while (!(validRatings.contains(rating)));
+        }
+        presenter.askComment();
+        String comment = br.readLine();
+        if (!comment.equals("exit")) {
+            reviewInfo.add(rating);
+            reviewInfo.add(comment);
+        }
+        return reviewInfo;
     }
 
 
-    private void changeToConfirmed(String tradeId, String username){
+        private void changeToConfirmed(String tradeId, String username){
         String meetingId = tradeModel.getTradeManager().getMeetingOfTrade(tradeId).get(tradeModel.getTradeManager().getMeetingOfTrade(tradeId).size() - 1);
         tradeModel.getMeetingManager().meetingHappened(meetingId, username);
         if ((!tradeModel.getTradeManager().needToAddMeeting(tradeId)) && (tradeModel.getMeetingManager().tradeMeetingsCompleted(tradeId))){
@@ -140,5 +171,6 @@ public class ConfirmTradesController implements RunnableController {
             tradeModel.getUserManager().updateCreditByUsername(itemToUsers.get(item).get(0), true);
             tradeModel.getUserManager().updateCreditByUsername(itemToUsers.get(item).get(1), false);
         }
+        tradeModel.getReviewManager().verifyReview(tradeId);
     }
 }

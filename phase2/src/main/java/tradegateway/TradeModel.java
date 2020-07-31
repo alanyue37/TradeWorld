@@ -4,6 +4,7 @@ import itemcomponent.ItemManager;
 import tradecomponent.MeetingManager;
 import tradecomponent.TradeManager;
 import usercomponent.UserManager;
+import usercomponent.ReviewManager;
 
 import java.io.Serializable;
 
@@ -16,6 +17,7 @@ public class TradeModel implements Serializable {
     private ItemManager itemManager;
     private TradeManager tradeManager;
     private MeetingManager meetingManager;
+    private ReviewManager reviewManager;
 
     /**
      * Creates a new tradegateway.TradeModel with existing managers.
@@ -24,11 +26,12 @@ public class TradeModel implements Serializable {
      * @param im the ItemManager.
      * @param tm the TradeManager.
      */
-    public TradeModel(UserManager um, ItemManager im, TradeManager tm, MeetingManager mm) {
+    public TradeModel(UserManager um, ItemManager im, TradeManager tm, MeetingManager mm, ReviewManager rm) {
         userManager = um;
         itemManager = im;
         tradeManager = tm;
         meetingManager = mm;
+        reviewManager = rm;
     }
 
     /**
@@ -93,4 +96,15 @@ public class TradeModel implements Serializable {
      */
     public MeetingManager getMeetingManager() { return meetingManager; }
 
+    /**
+     * Set the ReviewManager for the tradegateway.TradeModel.
+     * @param reviewManager the updated reviewManager
+     */
+    public void setReviewManager(ReviewManager reviewManager) { this.reviewManager = reviewManager; }
+
+    /**
+     * Return the ReviewManager for the tradegateway.TradeModel.
+     * @return reviewManager
+     */
+    public ReviewManager getReviewManager() { return reviewManager; }
 }

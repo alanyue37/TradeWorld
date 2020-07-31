@@ -55,4 +55,12 @@ public class ConfirmTradesPresenter extends TextPresenter {
      */
     public void endTrades() { System.out.println("No more trades to confirm."); }
 
+    public void askRating() { System.out.println("If you would like to leave a review of your trading experience," +
+            "please enter a rating on a scale of 1-5. If not, press enter."); }
+
+    public void invalidRating() { System.out.println("Invalid rating. Please enter a rating on a scale of 1-5."); }
+
+    public void askComment() { System.out.println("If you would like to leave a comment," +
+            "please enter it here. If not, press enter. If you would like to cancel your review, enter \"exit\"."); }
+
 }
