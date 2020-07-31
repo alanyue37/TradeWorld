@@ -18,5 +18,9 @@ public class Review {
     public String getReceiver() {
         return receiver;
     }
+
+    public int getRating() { return rating; }
+
+    public String getComment() { return comment; }
 }
 
