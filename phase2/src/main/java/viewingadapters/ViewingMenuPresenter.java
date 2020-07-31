@@ -15,6 +15,7 @@ public class ViewingMenuPresenter extends TextPresenter {
         options.add("View system inventory");
         options.add("View your inventory");
         options.add("View your wishlist");
+        options.add("View a user's profile");
         printList(options, true, false);
 
         System.out.println("\nPlease enter the # of your choice or \"back\" to go back: ");
@@ -57,6 +58,27 @@ public class ViewingMenuPresenter extends TextPresenter {
             printList(items, false, true);
         } else {
             System.out.println("Your wishlist is empty.");
+        }
+    }
+
+    public void printEnterUsername(){
+        System.out.println("Enter username of user: ");
+    }
+
+    public void printInvalidUsername(){
+        System.out.println("There is no existing user with this username.");
+    }
+
+    public void printEnterNumReviews(){
+        System.out.println("Enter <number> to view the most recent <number> of reviews from your trades: ");
+    }
+
+    public void printViewLastReviews(int num, List<String> reviews){
+        if (reviews.size() > 0){
+            System.out.println("This user's most recent reviews are (up to " + num + "): ");
+            printList(reviews, true, false);
+        } else{
+            System.out.println("This user do not have any reviews yet.");
         }
     }
 

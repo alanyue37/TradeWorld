@@ -299,4 +299,8 @@ public class UserManager implements Serializable {
         return result;
     }
 
+    public boolean containsTradingUser(String username){
+        return this.tradingUsers.containsKey(username);
+    }
+
 }
