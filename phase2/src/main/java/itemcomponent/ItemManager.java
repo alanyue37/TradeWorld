@@ -1,5 +1,7 @@
 package itemcomponent;
 
+import javafx.scene.control.SelectionMode;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -173,5 +175,4 @@ public class ItemManager implements Serializable {
         confirmedItems.get(itemID).setAvailable(available);
         return true;
     }
-
 }

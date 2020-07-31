@@ -1,80 +1,382 @@
 package adminadapters;
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
 
-public class AdminGUI implements ActionListener {
-    private final JFrame frame;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import javafx.scene.Scene;
+import tradegateway.TradeModel;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+/**
+ * Used the code from LifeOnTheFarm.zip in week 10.
+ * https://docs.oracle.com/javafx/2/ui_controls/list-view.htm
+ */
+public class AdminGUI {
+    private final Stage stage;
+    private Scene scene;
     private final int width;
     private final int height;
-    private final JPanel panel;
-    private JButton button;
-    private AdminPresenter adminPresenter;
-    private  AdminController adminController;
+    private final AdminPresenter adminPresenter;
+    private final AdminController adminController;
+    private final TradeModel model;
 
-    public AdminGUI(int width, int height, AdminPresenter adminPresenter, AdminController adminController) {
+
+    public AdminGUI(Stage stage, int width, int height, AdminPresenter adminPresenter, AdminController adminController, TradeModel model) {
+        this.stage = stage;
         this.width = width;
         this.height = height;
-        this.frame = new JFrame();
-        this.button = new JButton();
-        this.panel = new JPanel();
         this.adminPresenter = adminPresenter;
         this.adminController = adminController;
+        this.model = model;
     }
 
-    public void adminInitialScreen() {
-        frame.setSize(width, height);
-        frame.setTitle("Admin User");   // or we could use JLabel and add to the panel?
-        frame.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);     // AdminUser closes the window
-        frame.add(panel);
+    public void addNewAdmin() {
+        stage.setTitle("Admin User");       // this will be in main
+        Text title = new Text("Add a New Admin");
+        title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(25, 25, 25, 25));
+        grid.add(title, 0, 0, 2, 1);
+
+        Label newNameLabel = new Label(adminPresenter.accountEnterName());
+        TextField nameField = new TextField();
+        Label newUsernameLabel = new Label(adminPresenter.accountEnterUsername());
+        TextField usernameField = new TextField();
+        Label newPasswordLabel = new Label(adminPresenter.accountEnterPassword());
+        TextField passwordField = new TextField();
+        Button createButton = new Button("Create a New Admin");
+        HBox hBoxCreateAdmin = new HBox(10);
+        hBoxCreateAdmin.setAlignment(Pos.BOTTOM_RIGHT);
+        hBoxCreateAdmin.getChildren().add(createButton);
+
+        grid.add(newNameLabel, 0, 1);
+        grid.add(nameField, 0, 1);
+        grid.add(newUsernameLabel, 0, 1);
+        grid.add(usernameField, 0, 1);
+        grid.add(newPasswordLabel, 0, 1);
+        grid.add(passwordField, 0, 1);
+        grid.add(hBoxCreateAdmin, 0, 1);
+
+        createButton.setOnAction(actionEvent -> {
+            try {
+                adminController.askAdminToAddNewAdmin(nameField.getText(), usernameField.getText(), passwordField.getText());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        scene = new Scene(grid, width, height);
+        stage.setScene(scene);
+        stage.show();
     }
 
-    public JTextField askAdminForName() {
-        JLabel askForName = new JLabel(adminPresenter.accountEnterName());
-        panel.add(askForName);
-        JTextField name = new JTextField();
-        return name;
+    public void freezeUsers() {
+        stage.setTitle("Admin User");       // this will be in main
+        Text title = new Text("Freeze Users");
+        title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+
+        ListView<String> list = new ListView<>();
+
+        list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        ObservableList<String> freezeAccounts = FXCollections.observableArrayList();
+
+        Set<String> flaggedAccounts = new HashSet<>();
+        List<String> incompleteUsers = model.getMeetingManager().getTradesIncompleteMeetings(model.getTradeManager().getAllTypeTrades("ongoing"));
+        List<String> weeklyExceedUsers = model.getMeetingManager().getMeetingsPastDays(model.getTradeManager().getAllTypeTrades("completed"));
+        flaggedAccounts.addAll(model.getTradeManager().getExceedIncompleteLimitUser(incompleteUsers));
+        flaggedAccounts.addAll(model.getTradeManager().getExceedPerWeek(weeklyExceedUsers));
+        flaggedAccounts.addAll(model.getUserManager().getUsersForFreezing());
+
+        freezeAccounts.addAll(flaggedAccounts);
+        list.setItems(freezeAccounts);
+
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(25, 25, 25, 25));
+        grid.add(title, 0, 0, 2, 1);
+
+
+        Button freezeButton = new Button("Freeze these Accounts");
+        HBox hBox = new HBox(list);
+        HBox freezeHBox = new HBox(10);
+
+        freezeButton.setAlignment(Pos.BOTTOM_RIGHT);
+        freezeHBox.getChildren().add(freezeButton);
+
+        grid.add(freezeHBox, 0, 1);
+
+        ObservableList<String> selectedItems =  list.getSelectionModel().getSelectedItems();
+        ArrayList<String> selected = new ArrayList<>(selectedItems);
+        freezeButton.setOnAction(actionEvent -> {
+            try {
+                adminController.askAdminToFreezeUsers(selected);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        scene = new Scene(grid, 300, 120);
+        stage.setScene(scene);
+        stage.show();
     }
 
-    public JTextField askAdminForUserName() {
-        JLabel askForUserName = new JLabel(adminPresenter.accountEnterUsername());
-        panel.add(askForUserName);
-        JTextField username = new JTextField();
-        return username;
+    public void unfreezeUsers() {
+        stage.setTitle("Admin User");       // this will be in main
+        Text title = new Text("Unfreeze Users");
+        title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+
+        ListView<String> list = new ListView<>();
+
+        list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        ObservableList<String> unfreezeAccounts = FXCollections.observableArrayList();
+
+        Set<String> accounts = model.getUserManager().getUnfreezeRequests();
+        unfreezeAccounts.addAll(accounts);
+        list.setItems(unfreezeAccounts);
+
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(25, 25, 25, 25));
+        grid.add(title, 0, 0, 2, 1);
+
+        Button unfreezeButton = new Button("Unfreeze these Accounts");
+        HBox hBox = new HBox(list);
+        HBox unfreezeHBox = new HBox(10);
+
+        unfreezeButton.setAlignment(Pos.BOTTOM_RIGHT);
+        unfreezeHBox.getChildren().add(unfreezeButton);
+
+        grid.add(unfreezeHBox, 0, 1);
+
+        ObservableList<String> selectedItems =  list.getSelectionModel().getSelectedItems();
+        ArrayList<String> selected = new ArrayList<>(selectedItems);
+        unfreezeButton.setOnAction(actionEvent -> {
+            try {
+                adminController.askAdminToUnfreezeUsers(selected);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        scene = new Scene(hBox, 300, 120);
+        stage.setScene(scene);
+        stage.show();
     }
 
-    public JTextField askAdminForPassword() {
-        JLabel askForPassword = new JLabel(adminPresenter.accountEnterPassword());
-        panel.add(askForPassword);
-        JTextField password = new JTextField();
-        return password;
+    public void reviewItems() {
+        stage.setTitle("Admin User");       // this will be in main
+        Text title = new Text("Review Items");
+        title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
+        ListView<String> list = new ListView<>();
+
+        list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        ObservableList<String> reviewItems =  FXCollections.observableArrayList();
+
+        List<String> items = model.getItemManager().getPendingItems();
+
+        for(String itemID : items) {
+            String itemInfo = model.getItemManager().getItemInfo(itemID);
+            reviewItems.addAll(itemInfo);
+        }
+        list.setItems(reviewItems);
+
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(25, 25, 25, 25));
+        grid.add(title, 0, 0, 2, 1);
+
+        Button addItemsButton = new Button("Add these Items");
+        HBox hBox = new HBox(list);
+        HBox itemsHBox = new HBox(10);
+
+        addItemsButton.setAlignment(Pos.BOTTOM_RIGHT);
+        itemsHBox.getChildren().add(addItemsButton);
+
+        grid.add(itemsHBox, 0, 1);
+
+        ObservableList<Integer> selectedItems =  list.getSelectionModel().getSelectedIndices();
+        ArrayList<Integer> conversion = new ArrayList<>(selectedItems);
+        ArrayList<String> selected = new ArrayList<>();
+
+        for(Integer item : conversion) {
+            selected.add(items.get(item));
+        }
+
+        addItemsButton.setOnAction(actionEvent -> {
+            try {
+                adminController.askAdminToReviewItems(selected);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        scene = new Scene(grid, width, height);
+        stage.setScene(scene);
+        stage.show();
     }
 
-    public void addAdminListener() throws IOException {
-        adminController.askAdminToAddNewAdmin(askAdminForName(), askAdminForUserName(), askAdminForPassword());
+    public void setLendingThreshold() {
+        stage.setTitle("Admin User");       // this will be in main
+        Text title = new Text("Set Lending Threshold");
+        title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(25, 25, 25, 25));
+        grid.add(title, 0, 0, 2, 1);
+
+        Label lendingThresholdLabel = new Label(adminPresenter.lendingThreshold());
+        TextField lendingThresholdField = new TextField();
+
+        Button setThresholdButton = new Button("Set Threshold");
+        HBox hBoxSetThreshold = new HBox(10);
+        hBoxSetThreshold.setAlignment(Pos.BOTTOM_RIGHT);
+        hBoxSetThreshold.getChildren().add(setThresholdButton);
+
+        grid.add(lendingThresholdLabel, 0, 1);
+        grid.add(lendingThresholdField, 0, 1);
+
+        setThresholdButton.setOnAction(actionEvent -> {
+            try {
+                adminController.askAdminToSetLendingThreshold(lendingThresholdField.getText());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        scene = new Scene(grid, 300, 120);
+        stage.setScene(scene);
+        stage.show();
     }
 
+    public void setLimitOfTransactionsThreshold() {
+        stage.setTitle("Admin User");       // this will be in main
+        Text title = new Text("Set A Limit for Transactions");
+        title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(25, 25, 25, 25));
+        grid.add(title, 0, 0, 2, 1);
 
-    //public void askAdminToAddNewAdmin() {
-      //  JLabel askForName = new JLabel(adminPresenter.accountEnterName());
-      //  JLabel askForUserName = new JLabel(adminPresenter.accountEnterUsername());
-      //  JLabel askForPassword = new JLabel(adminPresenter.accountEnterPassword());
-      //  panel.add(askForName);
-      //  panel.add(askForUserName);
-      //  panel.add(askForPassword);
-      //  JTextField name = new JTextField();
-      //  JTextField username = new JTextField();
-      //  JTextField password = new JTextField();
-   // }
+        Label limitThresholdLabel = new Label(adminPresenter.lendingThreshold());
+        TextField limitThresholdField = new TextField();
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
+        Button setThresholdButton = new Button("Set Threshold");
+        HBox hBoxSetThreshold = new HBox(10);
+        hBoxSetThreshold.setAlignment(Pos.BOTTOM_RIGHT);
+        hBoxSetThreshold.getChildren().add(setThresholdButton);
 
+        grid.add(limitThresholdLabel, 0, 1);
+        grid.add(limitThresholdField, 0, 1);
 
+        setThresholdButton.setOnAction(actionEvent -> {
+            try {
+                adminController.askAdminToSetLimitOfTransactions(limitThresholdField.getText());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        scene = new Scene(grid, width, height);
+        stage.setScene(scene);
+        stage.show();
+    }
 
+    public void setLimitOfIncompleteTrades() {
+        stage.setTitle("Admin User");       // this will be in main
+        Text title = new Text("Set Lending Threshold");
+        title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(25, 25, 25, 25));
+        grid.add(title, 0, 0, 2, 1);
+
+        Label limitThresholdLabel = new Label(adminPresenter.lendingThreshold());
+        TextField limitThresholdField = new TextField();
+
+        Button setThresholdButton = new Button("Set Threshold");
+        HBox hBoxSetThreshold = new HBox(10);
+        hBoxSetThreshold.setAlignment(Pos.BOTTOM_RIGHT);
+        hBoxSetThreshold.getChildren().add(setThresholdButton);
+
+        grid.add(limitThresholdLabel, 0, 1);
+        grid.add(limitThresholdField, 0, 1);
+
+        setThresholdButton.setOnAction(actionEvent -> {
+            try {
+                adminController.askAdminToSetLimitOfIncompleteTrades(limitThresholdField.getText());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        scene = new Scene(grid, width, height);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void setLimitOfEdits() {
+        stage.setTitle("Admin User");       // this will be in main
+        Text title = new Text("Set Threshold");
+        title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(25, 25, 25, 25));
+        grid.add(title, 0, 0, 2, 1);
+
+        Label limitThresholdLabel = new Label(adminPresenter.lendingThreshold());
+        TextField limitThresholdField = new TextField();
+
+        Button setThresholdButton = new Button("Set Threshold");
+        HBox hBoxSetThreshold = new HBox(10);
+        hBoxSetThreshold.setAlignment(Pos.BOTTOM_RIGHT);
+        hBoxSetThreshold.getChildren().add(setThresholdButton);
+
+        grid.add(limitThresholdLabel, 0, 1);
+        grid.add(limitThresholdField, 0, 1);
+
+        setThresholdButton.setOnAction(actionEvent -> {
+            try {
+                adminController.askAdminToSetLimitOfEdits(limitThresholdField.getText());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        scene = new Scene(grid, width, height);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void thresholdScreen() {
+        // TODO: so that the code for the threshold screen doesn't repeat
     }
 }
