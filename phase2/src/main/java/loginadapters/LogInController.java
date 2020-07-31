@@ -18,7 +18,6 @@ public class LogInController {
 
     private final TradeModel tradeModel;
     private final LogInPresenter presenter;
-    private final LoginGUI gui;
     private String username;
     private String password;
     private RunnableController nextController = null;
@@ -28,13 +27,10 @@ public class LogInController {
     /**
      * Creates a LogInController.
      * @param tradeModel the tradegateway.TradeModel containing all the information
-     * @param stage The GUI JavaFX stage
      */
-    public LogInController(TradeModel tradeModel, Stage stage) {
+    public LogInController(TradeModel tradeModel) {
         this.tradeModel = tradeModel;
-        gui = new LoginGUI(stage, 275, 300, this);
         presenter = new LogInPresenter();
-        gui.loginInitialScreen();
     }
 
     /**
@@ -54,7 +50,6 @@ public class LogInController {
         username = user;
         password = pass;
         if ((!isAdmin && !tradeModel.getUserManager().login(username, password, UserTypes.TRADING)) || (isAdmin && !tradeModel.getUserManager().login(username, password, UserTypes.ADMIN))) {
-            gui.invalidAccount();
             loggedIn = false;
             return false;
         }
@@ -76,7 +71,6 @@ public class LogInController {
         password = pass;
 
         if (!tradeModel.getUserManager().createTradingUser(name, username, password, city)) {
-            gui.usernameTaken(username);
             loggedIn = false;
             return false;
         }
