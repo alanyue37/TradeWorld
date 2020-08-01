@@ -301,6 +301,10 @@ public class UserManager implements Serializable {
         return result;
     }
 
+    public boolean containsTradingUser(String username){
+        return this.tradingUsers.containsKey(username);
+    }
+
     public String getRankByUsername(String username) {
         TradingUser account = tradingUsers.get(username);
         if (account.getCredit() >= goldThreshold) {

@@ -17,6 +17,7 @@ public class ViewingTradesPresenter extends TextPresenter {
         options.add("View your trade information by ID");
         options.add("View recent transaction items");
         options.add("View most frequent trading partners");
+        options.add("View most recent reviews from trade");
         printList(options, true, false);
         System.out.println("\nPlease enter the # of your choice or \"back\" to go back: ");
     }
@@ -99,4 +100,16 @@ public class ViewingTradesPresenter extends TextPresenter {
         System.out.println("You do not have a trade with this ID.");
     }
 
+    public void printEnterNumReviews(){
+        System.out.println("Enter <number> to view the most recent <number> of reviews from your trades: ");
+    }
+
+    public void printViewLastReviews(int num, List<String> reviews){
+        if (reviews.size() > 0){
+            System.out.println("Your most recent reviews are (up to " + num + "): ");
+            printList(reviews, true, false);
+        } else{
+            System.out.println("You do not have any reviews yet.");
+        }
+    }
 }
