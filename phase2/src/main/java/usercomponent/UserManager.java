@@ -12,6 +12,8 @@ public class UserManager implements Serializable {
     private final Map<String, User> adminUsers;
     private final Set<String> unfreezeRequests;
     private int threshold;
+    private int goldThreshold;
+    private int silverThreshold;
 
     /**
      * Instantiates a UserManager
@@ -297,6 +299,19 @@ public class UserManager implements Serializable {
             }
         }
         return result;
+    }
+
+    public String getRankByUsername(String username) {
+        TradingUser account = tradingUsers.get(username);
+        if (account.getCredit() >= goldThreshold) {
+            return "gold";
+        }
+        else if (account.getCredit() >= silverThreshold) {
+            return "silver";
+        }
+        else {
+            return "bronze";
+        }
     }
 
 }

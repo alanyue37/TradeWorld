@@ -148,7 +148,7 @@ public class TradeManager implements Serializable {
      * @param trades list of trades
      * @return a map of username to the number of trades that the user took part of
      */
-    private Map<String, Integer> userToNumTradesInvolved(List<String> trades) {
+    public Map<String, Integer> userToNumTradesInvolved(List<String> trades) {
         Map<String, Integer> usernameCount = new HashMap<>();
         for (String tradeId : trades) {
             Trade trade = getTrade(tradeId);
@@ -178,22 +178,6 @@ public class TradeManager implements Serializable {
             }
         }
         return incompleteUsernames;
-    }
-
-    /**
-     * Gets the list of usernames of users who surpassed a given limit of trades in the past given number of days.
-     *
-     * @return list of usernames
-     */
-    public List<String> getExceedPerWeek(List<String> tradeIds) {
-        Map<String, Integer> usernamesMap = userToNumTradesInvolved(tradeIds);
-        List<String> exceedLimitOfTradeUsers = new ArrayList<>();
-        for (String user : usernamesMap.keySet()) {
-            if (usernamesMap.get(user) > this.limitTransactionPerWeek) {
-                exceedLimitOfTradeUsers.add(user);
-            }
-        }
-        return exceedLimitOfTradeUsers;
     }
 
     /**
