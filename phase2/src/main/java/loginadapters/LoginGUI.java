@@ -104,7 +104,13 @@ public class LoginGUI {
         grid.add(passwordField, 1, 2);
         grid.add(hBoxLoginButton, 1, 4);
 
-        loginButton.setOnAction(actionEvent -> controller.logIn(isAdmin, usernameField.getText(), passwordField.getText()));
+        loginButton.setOnAction(actionEvent -> {
+            if(controller.logIn(isAdmin, usernameField.getText(), passwordField.getText())){
+                controller.getNextController();
+            } else {
+                invalidAccount();
+            }
+        });
 
         scene = new Scene(grid, width, height);
 
@@ -130,7 +136,7 @@ public class LoginGUI {
         Label passwordLabel = new Label("Password: ");
         PasswordField passwordField = new PasswordField();
         Label cityLabel = new Label("City: ");
-        TextField cityField = new PasswordField();
+        TextField cityField = new TextField();
 
         Button registerButton = new Button("Register");
         HBox hBoxRegisterButton = new HBox(10);
@@ -148,8 +154,11 @@ public class LoginGUI {
         grid.add(hBoxRegisterButton, 1, 5);
 
         registerButton.setOnAction(actionEvent -> {
-            controller.newTradingUser(nameField.getText(), usernameField.getText(), passwordField.getText(), cityField.getText());
-            controller.getNextController();
+            if(controller.newTradingUser(nameField.getText(), usernameField.getText(), passwordField.getText(), cityField.getText())){
+                controller.getNextController();
+            } else {
+                usernameTaken(nameField.getText());
+            }
         });
 
         scene = new Scene(grid, width, height);
