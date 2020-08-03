@@ -55,6 +55,10 @@ public class ViewingMenuController implements RunnableController {
                     viewWishlist();
                     validInput = true;
                     break;
+                case "4":
+                    viewUsersProfile();
+                    validInput = true;
+                    break;
                 case "back":
                     return;
                 default:
@@ -71,7 +75,7 @@ public class ViewingMenuController implements RunnableController {
         List<String> confirmedItems = tradeModel.getItemManager().getConfirmedItems();
         confirmedItems.removeIf(item -> userOnVacation.contains(tradeModel.getItemManager().getOwner(item)));
         List<String> confirmedItemsInfo = getItemsInfo(confirmedItems);
-        presenter.printSystemInventory(confirmedItems);
+        presenter.printSystemInventory(confirmedItemsInfo);
     }
 
     /**
@@ -98,5 +102,18 @@ public class ViewingMenuController implements RunnableController {
         return itemsInfo;
     }
 
+    public void viewUsersProfile() throws IOException {
+        presenter.printEnterUsername();
+        String user = br.readLine();
+        if (!tradeModel.getUserManager().containsTradingUser(user)){
+            presenter.printInvalidUsername();
+        } else{
+            presenter.printEnterNumReviews();
+            String numReviews = br.readLine();
+            int numLastReviews = Integer.parseInt(numReviews);
+            List<String> reviews = tradeModel.getReviewManager().viewProfile(username, numLastReviews);
+            presenter.printViewLastReviews(numLastReviews, reviews);
+        }
+    }
 
 }

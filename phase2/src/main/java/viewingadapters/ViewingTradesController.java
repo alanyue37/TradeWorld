@@ -51,8 +51,12 @@ public class ViewingTradesController implements RunnableController {
                     viewRecentItems();
                     validInput = true;
                     break;
-                case "4": // view top 3 most frequent trading partners
+                case "4": // view most frequent trading partners
                     viewTradingPartners();
+                    validInput = true;
+                    break;
+                case "5": // view most recent reviews
+                    viewReviews();
                     validInput = true;
                     break;
                 case "back":
@@ -131,4 +135,14 @@ public class ViewingTradesController implements RunnableController {
         }
         return itemsInfo;
     }
+
+    private void viewReviews() throws IOException {
+        presenter.printEnterNumReviews();
+        String numReviews = br.readLine();
+        int numLastReviews = Integer.parseInt(numReviews);
+        List<String> reviews = tradeModel.getReviewManager().viewProfile(username, numLastReviews);
+        presenter.printViewLastReviews(numLastReviews, reviews);
+    }
+
+
 }

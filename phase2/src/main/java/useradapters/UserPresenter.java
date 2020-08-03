@@ -17,7 +17,7 @@ public class UserPresenter extends TextPresenter {
         List<String> options = new ArrayList<>();
         options.add("Add items to inventory");
         options.add("Add items to wishlist");
-        options.add("View inventory or wishlist");
+        options.add("View inventory, wishlist or an user's profile");
         options.add("View trading history");
         options.add("Initiate trades");
         options.add("Manage proposed trades");

@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -133,9 +134,8 @@ public class AdminController implements RunnableController {
     public void askAdminToFreezeUsers() throws IOException {
         Set<String> flaggedAccounts = new HashSet<>();
         List<String> incompleteUsers = tradeModel.getMeetingManager().getTradesIncompleteMeetings(tradeModel.getTradeManager().getAllTypeTrades("ongoing"));
-        List<String> weeklyExceedUsers = tradeModel.getMeetingManager().getMeetingsPastDays(tradeModel.getTradeManager().getAllTypeTrades("completed"));
         flaggedAccounts.addAll(tradeModel.getTradeManager().getExceedIncompleteLimitUser(incompleteUsers));
-        flaggedAccounts.addAll(tradeModel.getTradeManager().getExceedPerWeek(weeklyExceedUsers));
+        flaggedAccounts.addAll(getUsersExceedWeekly());
         flaggedAccounts.addAll(tradeModel.getUserManager().getUsersForFreezing());
         boolean empty = flaggedAccounts.isEmpty();
         presenter.freezeAccountsHeading(empty);
@@ -151,6 +151,29 @@ public class AdminController implements RunnableController {
                 tradeModel.getUserManager().setFrozen(user, true);
             }
         }
+    }
+
+    /**
+     * Get the list of usernames who've surpassed the weekly limit of trades in the past week
+     *
+     * @return list of usernames who've surpassed the weekly limit of trades in the past week
+     */
+    public Set<String> getUsersExceedWeekly() {
+        int limit = tradeModel.getTradeManager().getLimitTransactionPerWeek();
+        HashSet<String> weeklyExceedUsers = new HashSet<>();
+        List<String> tradesPastWeek = tradeModel.getMeetingManager().getMeetingsPastDays(tradeModel.getTradeManager()
+                .getAllTypeTrades("completed"));
+        Map<String, Integer> usersPastWeek = tradeModel.getTradeManager().userToNumTradesInvolved(tradesPastWeek);
+        for (String username: usersPastWeek.keySet()) {
+            if (usersPastWeek.get(username) > limit+2) {
+                weeklyExceedUsers.add(username);
+            }
+            else if (tradeModel.getUserManager().getRankByUsername(username).equals("bronze") &&
+                    usersPastWeek.get(username) > limit) {
+                weeklyExceedUsers.add(username);
+            }
+        }
+        return weeklyExceedUsers;
     }
 
     /**
