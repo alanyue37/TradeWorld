@@ -48,16 +48,13 @@ public class LogInController extends Observable {
     boolean logIn(boolean isAdmin, String user, String pass) {
         username = user;
         password = pass;
-        if ((!isAdmin && !tradeModel.getUserManager().login(username, password, UserTypes.TRADING)) || (isAdmin && !tradeModel.getUserManager().login(username, password, UserTypes.ADMIN))) {
-                        return false;
-        }
-        if (isAdmin && tradeModel.getUserManager().login(username, password, UserTypes.ADMIN)) {
-            // Admin logged in
-            nextController = new AdminController(tradeModel, username);
-        }
-        else if (!isAdmin && tradeModel.getUserManager().login(username, password, UserTypes.TRADING)) {
-            // User logged in
-            nextController = new UserController(tradeModel, username);
+        if (tradeModel.getUserManager().login(username, password)) {
+            if (tradeModel.getUserManager().isAdmin(username)) {
+                nextController = new AdminController(tradeModel, username); // Admin logged in
+            }
+            else {
+                nextController = new UserController(tradeModel, username); // User logged in
+            }
         }
         setChanged();
         notifyObservers();

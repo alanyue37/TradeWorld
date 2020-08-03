@@ -44,7 +44,7 @@ public class DemoTradeSystem implements Observer {
 
     private void initializeTradeModel(TradeModel tradeModel) {
         // IF USERS HAVE ALREADY BEEN ADDED THEN SKIP INITIALIZATION (i.e. reading from persisted data)
-        if (tradeModel.getUserManager().login("a1", "a1", UserTypes.ADMIN)) {
+        if (tradeModel.getUserManager().login("a1", "a1")) {
             return;
         }
 

@@ -237,15 +237,15 @@ public class AdminController implements RunnableController {
      * @throws IOException If something goes wrong.
      */
     public void askAdminToSetLendingThreshold() throws IOException {
-        presenter.lendingThreshold(tradeModel.getUserManager().getThreshold());
+        presenter.lendingThreshold(tradeModel.getUserManager().getThreshold("trading"));
         String thresholdInput = br.readLine();
         while (notAnIntegerOrZero(thresholdInput)) {
             presenter.notAnIntegerOrMin();
-            presenter.lendingThreshold(tradeModel.getUserManager().getThreshold());
+            presenter.lendingThreshold(tradeModel.getUserManager().getThreshold("trading"));
             thresholdInput = br.readLine();
         }
         int lendingThreshold = Integer.parseInt(thresholdInput);
-        tradeModel.getUserManager().setThreshold(lendingThreshold);
+        tradeModel.getUserManager().setThreshold("trading", lendingThreshold);
         selectMenu();
     }
 
