@@ -10,19 +10,18 @@ import usercomponent.UserTypes;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Observable;
 
 /**
  * The controller class that allows users to log in to the system.
  */
-public class LogInController {
+public class LogInController extends Observable {
 
     private final TradeModel tradeModel;
     private final LogInPresenter presenter;
     private String username;
     private String password;
     private RunnableController nextController = null;
-
-    private volatile boolean loggedIn = false;
 
     /**
      * Creates a LogInController.
@@ -50,8 +49,7 @@ public class LogInController {
         username = user;
         password = pass;
         if ((!isAdmin && !tradeModel.getUserManager().login(username, password, UserTypes.TRADING)) || (isAdmin && !tradeModel.getUserManager().login(username, password, UserTypes.ADMIN))) {
-            loggedIn = false;
-            return false;
+                        return false;
         }
         if (isAdmin && tradeModel.getUserManager().login(username, password, UserTypes.ADMIN)) {
             // Admin logged in
@@ -61,7 +59,8 @@ public class LogInController {
             // User logged in
             nextController = new UserController(tradeModel, username);
         }
-        loggedIn = true;
+        setChanged();
+        notifyObservers();
         return true;
     }
 
@@ -71,12 +70,12 @@ public class LogInController {
         password = pass;
 
         if (!tradeModel.getUserManager().createTradingUser(name, username, password, city)) {
-            loggedIn = false;
             return false;
         }
 
         nextController = new UserController(tradeModel, username);
-        loggedIn = true;
+        setChanged();
+        notifyObservers();
         return true;
     }
 }
