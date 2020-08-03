@@ -1,38 +1,42 @@
 package tradegateway;
 
+import javafx.stage.Stage;
 import loginadapters.LogInController;
+import loginadapters.LoginGUI;
 import trademisc.RunnableController;
 import usercomponent.ItemSets;
 import usercomponent.UserTypes;
 
 import java.io.IOException;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * DEMO trading system with pre-inserted users, items, etc. solely for internal testing
  * INTENTIONALLY DOES NOT TEST PERSISTENCE
  */
-public class DemoTradeSystem {
+public class DemoTradeSystem implements Observer {
 
     private final String tradeModelFile = "serializedobjects.ser";
+    private LogInController controller;
+    private DataManager dataManager;
+    private TradeModel tradeModel;
 
     /**
      * Run the trading system.
      */
-    public void run() {
+    public void run(Stage stage) {
         try {
-            DataManager dataManager = new DataManager(tradeModelFile);
-            TradeModel tradeModel = dataManager.readFromFile();
+            dataManager = new DataManager(tradeModelFile);
+            tradeModel = dataManager.readFromFile();
 
             // INITIALIZE TRADEMODEL FOR DEMO
             initializeTradeModel(tradeModel);
 
-
-            LogInController controller = new LogInController(tradeModel);
-            RunnableController mainController = controller.getNextController();
-            if (mainController != null) {
-                mainController.run(); // This could be either UserController or AdminController
-            }
-            dataManager.saveToFile(tradeModel);
+            controller = new LogInController(tradeModel);
+            controller.addObserver(this);
+            LoginGUI gui = new LoginGUI(stage, 275, 300, controller);
+            gui.loginInitialScreen();
         } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
@@ -84,5 +88,18 @@ public class DemoTradeSystem {
             tradeModel.getUserManager().addToSet(username, itemId, ItemSets.INVENTORY);
         }
         // DEMO  --- END
+    }
+
+    @Override
+    public void update(Observable observable, Object o) {
+        try {
+            RunnableController mainController = controller.getNextController();
+            if (mainController != null) {
+                mainController.run(); // This could be either UserController or AdminController
+            }
+            dataManager.saveToFile(tradeModel);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
     }
 }
