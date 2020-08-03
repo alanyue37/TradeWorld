@@ -5,7 +5,6 @@ import javafx.stage.Stage;
 import tradegateway.TradeModel;
 import trademisc.RunnableController;
 import useradapters.UserController;
-import usercomponent.UserTypes;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -5,7 +5,6 @@ import loginadapters.LogInController;
 import loginadapters.LoginGUI;
 import trademisc.RunnableController;
 import usercomponent.ItemSets;
-import usercomponent.UserTypes;
 
 import java.io.IOException;
 import java.util.Observable;
