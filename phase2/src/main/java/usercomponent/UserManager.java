@@ -25,7 +25,7 @@ public class UserManager implements Serializable {
         tradingThreshold = 0;
         silverThreshold = 3;
         goldThreshold = 5;
-        User initialAdmin = new User("Initial Admin", "ia", "initialize", true);
+        User initialAdmin = new User("Initial Admin", "ia", "initialize");
         adminUsers.put("ia", initialAdmin);
     }
 
@@ -96,7 +96,7 @@ public class UserManager implements Serializable {
         if (tradingUsers.containsKey(username) | adminUsers.containsKey(username)) {
             return false;
         }
-        adminUsers.put(username, new User(name, username, password, true));
+        adminUsers.put(username, new User(name, username, password));
         return true;
     }
 
