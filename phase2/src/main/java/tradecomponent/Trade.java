@@ -6,6 +6,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+
 /**
  * Represents a trade to exchange item(s)
  */
@@ -108,15 +112,20 @@ abstract class Trade implements Serializable {
      * and the users and items involved
      * @return String representation of the trade
      */
-    public String toString(){
-        String status;
-        if (this.IsOpened){
-            status = "ongoing";
-        } else{
-            status = "completed";
+    public JSONObject getTradeInfo() throws JSONException {
+        JSONObject info = new JSONObject();
+        info.put("Trade ID", idOfTrade);
+        info.put("Type", type);
+        if (this.IsOpened) {
+            info.put("Status", "ongoing");
+        } else {
+            info.put("Status", "completed");
         }
-        return "Trade ID: " + this.idOfTrade +"\nType: " + this.type + "\nStatus: " + status + "\nNumber of meetings: " + this.getMeetingList().size() +
-                "\nCreation Date: " + this.creationDate.toString() + "\nUsers involved: " + getUsers() + "\nItems involved: " + getItems();
+        info.put("Number of meetings", String.valueOf(getMeetingList().size()));
+        info.put("Creation Date", creationDate.toString());
+        info.put ("Users involved", getUsers());
+        info.put("Items involved", getItems());
+        return info;
     }
 
     /**

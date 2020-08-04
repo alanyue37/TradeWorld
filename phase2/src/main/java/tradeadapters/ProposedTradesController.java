@@ -1,5 +1,7 @@
 package tradeadapters;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import tradegateway.TradeModel;
 import trademisc.RunnableController;
 
@@ -43,16 +45,19 @@ public class ProposedTradesController implements RunnableController {
     public void run() {
         try {
             browseMeetings();
-        } catch (IOException e) {
+        } catch (IOException | JSONException e) {
             System.out.println("Something bad happened.");
         }
     }
 
-    private boolean browseMeetings() throws IOException {
+    private boolean browseMeetings() throws IOException, JSONException {
         List<String> trades = tradeModel.getMeetingManager().getToCheckTrades(tradeModel.getTradeManager().getTradesOfUser(username, "ongoing"), "proposed");
 
         for (String tradeId : trades) {
-            presenter.showMeeting(tradeModel.getTradeManager().getTradeInfo(tradeId), tradeModel.getMeetingManager().getMeetingsInfo(tradeId));
+            List<JSONObject> allTradeInfo = new ArrayList<>();
+            allTradeInfo.add(tradeModel.getTradeManager().getTradeInfo(tradeId));
+            allTradeInfo.addAll(tradeModel.getMeetingManager().getMeetingsInfo(tradeId));
+            presenter.showMeeting(allTradeInfo);
             String input = br.readLine();
             switch (input) {
                 case "1": // confirm meeting times

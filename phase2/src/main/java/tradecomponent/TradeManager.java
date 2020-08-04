@@ -1,5 +1,8 @@
 package tradecomponent;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -254,9 +257,9 @@ public class TradeManager implements Serializable {
      * @param tradeId ID of the trade
      * @return string with trade information
      */
-    public String getTradeInfo(String tradeId) {
+    public JSONObject getTradeInfo(String tradeId) throws JSONException {
         Trade trade = getTrade(tradeId);
-        return trade.toString();
+        return trade.getTradeInfo();
     }
 
     /**

@@ -1,5 +1,7 @@
 package tradeadapters;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import tradegateway.TradeModel;
 import trademisc.RunnableController;
 import usercomponent.ItemSets;
@@ -37,12 +39,12 @@ public class ConfirmTradesController implements RunnableController {
     public void run() {
         try {
             confirmTrades();
-        } catch (IOException e) {
+        } catch (IOException | JSONException e) {
             System.out.println("Something bad happened.");
         }
     }
 
-    private boolean confirmTrades() throws IOException {
+    private boolean confirmTrades() throws IOException, JSONException {
         Map<String, String> trades = getToBeConfirmedTrades(username);
         for (String tradeId : trades.keySet()) {
             presenter.showTrade(getTradeAllInfo(tradeId));
@@ -69,9 +71,11 @@ public class ConfirmTradesController implements RunnableController {
         return tradeModel.getTradeManager().getType(userToBeConfirmed);
     }
 
-    private String getTradeAllInfo(String tradeId){
-        return tradeModel.getTradeManager().getTradeInfo(tradeId) + "\n" +
-                tradeModel.getMeetingManager().getMeetingsInfo(tradeId);
+    private List<JSONObject> getTradeAllInfo(String tradeId) throws JSONException {
+        List<JSONObject> allTradeInfo = new ArrayList<>();
+        allTradeInfo.add(tradeModel.getTradeManager().getTradeInfo(tradeId));
+        allTradeInfo.addAll(tradeModel.getMeetingManager().getMeetingsInfo(tradeId));
+        return allTradeInfo;
     }
 
     /**

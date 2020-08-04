@@ -1,5 +1,6 @@
 package viewingadapters;
 
+import org.json.JSONObject;
 import trademisc.TextPresenter;
 
 import java.util.ArrayList;
@@ -57,8 +58,10 @@ public class ViewingTradesPresenter extends TextPresenter {
         System.out.println("Enter trade ID: ");
     }
 
-    public void showInfo(String tradeInfo){
-        System.out.println(tradeInfo);
+    public void showInfo(List<JSONObject> tradeInfo) {
+        for (JSONObject details : tradeInfo) {
+            System.out.println(details);
+        }
     }
 
     public void noTrades(){
