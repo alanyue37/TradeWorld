@@ -206,7 +206,8 @@ public class InitiateTradeController implements RunnableController {
 
 
     private List<String> getUserAvailableItems(String username) {
-        List<String> itemsAvailable = tradeModel.getItemManager().getAvailableItems();
+        String userRank = tradeModel.getUserManager().getRankByUsername(username);
+        Set<String> itemsAvailable = tradeModel.getItemManager().getAvailableItems(userRank);
         List<String> userItemsAvailable = new ArrayList<>();
         for (String itemId: itemsAvailable) {
             if (tradeModel.getItemManager().getOwner(itemId).equals(username)) {
@@ -219,7 +220,8 @@ public class InitiateTradeController implements RunnableController {
     private String getItemIdChoice() throws IOException {
         // Show items available not owned by user and owned by users in same city
         // TODO: consider using a filter system with filter classes that implement interface
-        List<String> itemsAvailable = tradeModel.getItemManager().getAvailableItems();
+        String userRank = tradeModel.getUserManager().getRankByUsername(username);
+        Set<String> itemsAvailable = tradeModel.getItemManager().getAvailableItems(userRank);
         List <String> itemsToShow = new ArrayList<>();
 
         for (String itemId : itemsAvailable) {

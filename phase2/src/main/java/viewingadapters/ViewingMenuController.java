@@ -7,10 +7,7 @@ import usercomponent.ItemSets;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A controller class using the RunnableController interface for viewing the menu options.
@@ -72,7 +69,10 @@ public class ViewingMenuController implements RunnableController {
      */
     public void viewSystemInventory(){
         Set<String> userOnVacation = tradeModel.getUserManager().getOnVacation();
-        List<String> confirmedItems = tradeModel.getItemManager().getConfirmedItems();
+        Set<String> confirmedItems = tradeModel.getItemManager().getItemsByStage("common");
+        if (tradeModel.getUserManager().getRankByUsername(username).equals("gold")) {
+            confirmedItems.addAll(tradeModel.getItemManager().getItemsByStage("early"));
+        }
         confirmedItems.removeIf(item -> userOnVacation.contains(tradeModel.getItemManager().getOwner(item)));
         List<String> confirmedItemsInfo = getItemsInfo(confirmedItems);
         presenter.printSystemInventory(confirmedItemsInfo);

@@ -30,7 +30,7 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Returns the specified threshold value
+     * Gets the specified threshold value
      * Precondition: The requested threshold must be valid.
      *
      * @param which threshold is being requested
@@ -100,13 +100,6 @@ public class UserManager implements Serializable {
         return true;
     }
 
-    private HashMap<String, User> getAllUsers() {
-        HashMap<String, User> allUsers = new HashMap<>();
-        allUsers.putAll(tradingUsers);
-        allUsers.putAll(adminUsers);
-        return allUsers;
-    }
-
     /**
      * Returns whether a particular user has admin capabilities
      *
@@ -114,12 +107,14 @@ public class UserManager implements Serializable {
      * @return Whether the User is an admin
      */
     public boolean isAdmin(String username) {
-        HashMap<String, User> allUsers = getAllUsers();
-        User account = allUsers.get(username);
-        if (account == null){
-            return false; // account username not found
-        }
-        return account.isAdmin();
+        return adminUsers.containsKey(username);
+    }
+
+    private Map<String, User> getAllUsers() {
+        HashMap<String, User> allUsers = new HashMap<>();
+        allUsers.putAll(tradingUsers);
+        allUsers.putAll(adminUsers);
+        return allUsers;
     }
 
     /**
@@ -130,8 +125,7 @@ public class UserManager implements Serializable {
      * @return Whether or not the username/password combination is valid.
      */
     public boolean login(String username, String password) {
-        HashMap<String, User> allUsers = getAllUsers();
-        User account = allUsers.get(username);
+        User account = getAllUsers().get(username);
         if (account == null){
             return false; // account username not found
         }
@@ -145,8 +139,7 @@ public class UserManager implements Serializable {
      * @param password The intended password
      */
     public void setPasswordByUsername(String username, String password) {
-        HashMap<String, User> allUsers = getAllUsers();
-        User account = allUsers.get(username);
+        User account = getAllUsers().get(username);
         account.setPassword(password);
     }
 

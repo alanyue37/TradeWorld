@@ -12,10 +12,7 @@ import viewingadapters.ViewingTradesController;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class UserController implements RunnableController {
     protected final BufferedReader br;
@@ -37,6 +34,7 @@ public class UserController implements RunnableController {
      * trademisc.Main method to run the UserController
      */
     public void run() {
+        tradeModel.getItemManager().updateEarlyItems();
         try {
             boolean active = selectMenu();
             while (active) {
@@ -114,7 +112,10 @@ public class UserController implements RunnableController {
      * @throws IOException if a problem occurs with reading in input
      */
     public void viewItemsToAddToWishlist() throws IOException {
-        List<String> items = tradeModel.getItemManager().getConfirmedItems();
+        Set<String> items = tradeModel.getItemManager().getItemsByStage("common");
+        if (tradeModel.getUserManager().getRankByUsername(username).equals("gold")) {
+            items.addAll(tradeModel.getItemManager().getItemsByStage("early"));
+        }
         List <String> itemsToShow = new ArrayList<>();
         Set<String> userInventory =  tradeModel.getUserManager().getSetByUsername(username, ItemSets.INVENTORY);
         Set<String> userWishlist = tradeModel.getUserManager().getSetByUsername(username, ItemSets.WISHLIST);

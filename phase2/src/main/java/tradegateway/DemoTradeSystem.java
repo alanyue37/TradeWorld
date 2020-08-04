@@ -56,6 +56,13 @@ public class DemoTradeSystem implements Observer {
         tradeModel.getUserManager().createTradingUser("U_3", "u3", "u3", "Edmonton");
         tradeModel.getUserManager().createTradingUser("U_4", "u4", "u4", "Brampton");
 
+        String[] users = new String[] {"u1", "u2", "u3", "u4"};
+        for (String username: users) {
+            for (int i = 0; i < 5; ++i) {
+                tradeModel.getUserManager().updateCreditByUsername(username, true);
+            }
+        }
+
         // u1 items
         String u1_1 = tradeModel.getItemManager().addItem("red apple", "u1", "One red apple");
         String u1_2 = tradeModel.getItemManager().addItem("green apple", "u1", "One green apple");

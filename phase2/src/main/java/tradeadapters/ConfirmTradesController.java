@@ -167,7 +167,7 @@ public class ConfirmTradesController implements RunnableController {
                 tradeModel.getItemManager().setOwner(item, itemToUsers.get(item).get(1));
             }
 
-            tradeModel.getItemManager().setConfirmedItemAvailable(item, true);
+            tradeModel.getItemManager().setItemAvailable(item, true);
             tradeModel.getUserManager().updateCreditByUsername(itemToUsers.get(item).get(0), true);
             tradeModel.getUserManager().updateCreditByUsername(itemToUsers.get(item).get(1), false);
         }

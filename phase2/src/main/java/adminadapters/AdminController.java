@@ -207,7 +207,7 @@ public class AdminController implements RunnableController {
      * @throws IOException If something goes wrong.
      */
     public void askAdminToReviewItems() throws IOException {
-        List<String> items = tradeModel.getItemManager().getPendingItems();
+        Set<String> items = tradeModel.getItemManager().getItemsByStage("pending");
         boolean empty = items.isEmpty();
         presenter.reviewItemsHeading(empty);
 
