@@ -11,7 +11,7 @@ public class UserManager implements Serializable {
     private final Map<String, TradingUser> tradingUsers;
     private final Map<String, User> adminUsers;
     private final Set<String> unfreezeRequests;
-    private int threshold;
+    private int tradingThreshold;
     private int goldThreshold;
     private int silverThreshold;
 
@@ -22,51 +22,49 @@ public class UserManager implements Serializable {
         tradingUsers = new HashMap<>();
         adminUsers = new HashMap<>();
         unfreezeRequests = new HashSet<>();
-        User initialAdmin = new User("Initial Admin", "ia", "initialize", true);
+        tradingThreshold = 0;
+        silverThreshold = 3;
+        goldThreshold = 5;
+        User initialAdmin = new User("Initial Admin", "ia", "initialize");
         adminUsers.put("ia", initialAdmin);
     }
 
     /**
-     * Returns the allowed threshold for a TradingUser to continue trading
+     * Returns the specified threshold value
+     * Precondition: The requested threshold must be valid.
      *
-     * @return An int that represents the number of items a TradingUser must have lent more than they have borrowed
+     * @param which threshold is being requested
+     * @return The requested threshold value
      */
-    public int getThreshold() {
-        return threshold;
+    public int getThreshold(String which) {
+        if (which.equals("gold")) {
+            return goldThreshold;
+        }
+        else if (which.equals("silver")) {
+            return silverThreshold;
+        }
+        else {
+            return tradingThreshold;
+        }
     }
 
     /**
-     * Sets the allowed threshold for a TradingUser to continue trading
+     * Sets the specified threshold value
+     * Precondition: The requested threshold must be valid.
      *
-     * @param threshold An int that represents the number of items a TradingUser must have lent more than they have
-     *                  borrowed
+     * @param which threshold is being requested
+     * @param value The new value
      */
-    public void setThreshold(int threshold) {
-        this.threshold = threshold;
-    }
-
-    /**
-     * Checks a User's username and password on login.
-     *
-     * @param username The submitted username.
-     * @param password The submitted password.
-     * @param type The type of user
-     * @return Whether or not the username/password combination is valid.
-     */
-    public boolean login(String username, String password, UserTypes type) {
-        User account = null;
-        switch (type) {
-            case TRADING:
-                account = tradingUsers.get(username);
-                break;
-            case ADMIN:
-                account = adminUsers.get(username);
-                break;
+    public void setThreshold(String which, int value) {
+        if (which.equals("gold")) {
+            goldThreshold = value;
         }
-        if (account == null){
-            return false; // account username not found
+        else if (which.equals("silver")) {
+            silverThreshold = value;
         }
-        return password.equals(account.getPassword());
+        else {
+            tradingThreshold = value;
+        }
     }
 
     /**
@@ -98,8 +96,46 @@ public class UserManager implements Serializable {
         if (tradingUsers.containsKey(username) | adminUsers.containsKey(username)) {
             return false;
         }
-        adminUsers.put(username, new User(name, username, password, true));
+        adminUsers.put(username, new User(name, username, password));
         return true;
+    }
+
+    private HashMap<String, User> getAllUsers() {
+        HashMap<String, User> allUsers = new HashMap<>();
+        allUsers.putAll(tradingUsers);
+        allUsers.putAll(adminUsers);
+        return allUsers;
+    }
+
+    /**
+     * Returns whether a particular user has admin capabilities
+     *
+     * @param username The username of the chosen user.
+     * @return Whether the User is an admin
+     */
+    public boolean isAdmin(String username) {
+        HashMap<String, User> allUsers = getAllUsers();
+        User account = allUsers.get(username);
+        if (account == null){
+            return false; // account username not found
+        }
+        return account.isAdmin();
+    }
+
+    /**
+     * Checks a User's username and password on login.
+     *
+     * @param username The submitted username.
+     * @param password The submitted password.
+     * @return Whether or not the username/password combination is valid.
+     */
+    public boolean login(String username, String password) {
+        HashMap<String, User> allUsers = getAllUsers();
+        User account = allUsers.get(username);
+        if (account == null){
+            return false; // account username not found
+        }
+        return password.equals(account.getPassword());
     }
 
     /**
@@ -107,19 +143,21 @@ public class UserManager implements Serializable {
      *
      * @param username The username of the chosen User. Must be a valid username for an existing User.
      * @param password The intended password
-     * @param type     The type of User
      */
-    public void setPasswordByUsername(String username, String password, UserTypes type) {
-        User account = null;
-        switch (type) {
-            case TRADING:
-                account = tradingUsers.get(username);
-                break;
-            case ADMIN:
-                account = adminUsers.get(username);
-                break;
-        }
+    public void setPasswordByUsername(String username, String password) {
+        HashMap<String, User> allUsers = getAllUsers();
+        User account = allUsers.get(username);
         account.setPassword(password);
+    }
+
+    /**
+     * Gets a chosen TradingUser's credit attribute.
+     * @param username The username of the chosen TradingUser. Must be a valid username for an existing TradingUser.
+     * @return the TradingUser's credit value.
+     */
+    public int getCreditByUsername(String username) {
+        TradingUser account = tradingUsers.get(username);
+        return account.getCredit();
     }
 
     /**
@@ -138,13 +176,23 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Gets a chosen TradingUser's credit attribute.
-     * @param username The username of the chosen TradingUser. Must be a valid username for an existing TradingUser.
-     * @return the TradingUser's credit value.
+     * Gets the current rank of a particular TradingUser
+     * Precondition: A TradingUser with the specified username must exist.
+     *
+     * @param username The username of the chosen TradingUser
+     * @return The user's rank
      */
-    public int getCreditByUsername(String username) {
+    public String getRankByUsername(String username) {
         TradingUser account = tradingUsers.get(username);
-        return account.getCredit();
+        if (account.getCredit() >= goldThreshold) {
+            return "gold";
+        }
+        else if (account.getCredit() >= silverThreshold) {
+            return "silver";
+        }
+        else {
+            return "bronze";
+        }
     }
 
     /**
@@ -207,6 +255,18 @@ public class UserManager implements Serializable {
     }
 
     /**
+     * Returns whether a particular TradingUser is currently frozen
+     *
+     * @param username The username of the TradingUser checking their status. Must be a valid username for an existing
+     *                 TradingUser.
+     * @return Whether the TradingUser is currently frozen
+     */
+    public boolean isFrozen(String username) {
+        TradingUser account = tradingUsers.get(username);
+        return account.isFrozen();
+    }
+
+    /**
      * Freezes or unfreezes the account of a particular TradingUser and removes them from the set of TradingUsers who've
      * requested to be unfrozen if it's the latter
      *
@@ -229,7 +289,7 @@ public class UserManager implements Serializable {
     public Set<String> getUsersForFreezing() {
         Set<String> result = new HashSet<>();
         for (TradingUser trader : tradingUsers.values()) {
-            if (trader.getCredit() < getThreshold() && !trader.isFrozen()) {
+            if (trader.getCredit() < getThreshold("trading") && !trader.isFrozen()) {
                 result.add(trader.getUsername());
             }
         }
@@ -253,18 +313,6 @@ public class UserManager implements Serializable {
      */
     public void markUserForUnfreezing(String username) {
         unfreezeRequests.add(username);
-    }
-
-    /**
-     * Returns whether a particular TradingUser is currently frozen
-     *
-     * @param username The username of the TradingUser checking their status. Must be a valid username for an existing
-     *                 TradingUser.
-     * @return Whether the TradingUser is currently frozen
-     */
-    public boolean isFrozen(String username) {
-        TradingUser account = tradingUsers.get(username);
-        return account.isFrozen();
     }
 
     /**
@@ -303,19 +351,6 @@ public class UserManager implements Serializable {
 
     public boolean containsTradingUser(String username){
         return this.tradingUsers.containsKey(username);
-    }
-
-    public String getRankByUsername(String username) {
-        TradingUser account = tradingUsers.get(username);
-        if (account.getCredit() >= goldThreshold) {
-            return "gold";
-        }
-        else if (account.getCredit() >= silverThreshold) {
-            return "silver";
-        }
-        else {
-            return "bronze";
-        }
     }
 
 }

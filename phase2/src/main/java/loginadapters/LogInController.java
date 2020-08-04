@@ -5,24 +5,22 @@ import javafx.stage.Stage;
 import tradegateway.TradeModel;
 import trademisc.RunnableController;
 import useradapters.UserController;
-import usercomponent.UserTypes;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Observable;
 
 /**
  * The controller class that allows users to log in to the system.
  */
-public class LogInController {
+public class LogInController extends Observable {
 
     private final TradeModel tradeModel;
     private final LogInPresenter presenter;
     private String username;
     private String password;
     private RunnableController nextController = null;
-
-    private volatile boolean loggedIn = false;
 
     /**
      * Creates a LogInController.
@@ -49,19 +47,16 @@ public class LogInController {
     boolean logIn(boolean isAdmin, String user, String pass) {
         username = user;
         password = pass;
-        if ((!isAdmin && !tradeModel.getUserManager().login(username, password, UserTypes.TRADING)) || (isAdmin && !tradeModel.getUserManager().login(username, password, UserTypes.ADMIN))) {
-            loggedIn = false;
-            return false;
+        if (tradeModel.getUserManager().login(username, password)) {
+            if (tradeModel.getUserManager().isAdmin(username)) {
+                nextController = new AdminController(tradeModel, username); // Admin logged in
+            }
+            else {
+                nextController = new UserController(tradeModel, username); // User logged in
+            }
         }
-        if (isAdmin && tradeModel.getUserManager().login(username, password, UserTypes.ADMIN)) {
-            // Admin logged in
-            nextController = new AdminController(tradeModel, username);
-        }
-        else if (!isAdmin && tradeModel.getUserManager().login(username, password, UserTypes.TRADING)) {
-            // User logged in
-            nextController = new UserController(tradeModel, username);
-        }
-        loggedIn = true;
+        setChanged();
+        notifyObservers();
         return true;
     }
 
@@ -71,12 +66,12 @@ public class LogInController {
         password = pass;
 
         if (!tradeModel.getUserManager().createTradingUser(name, username, password, city)) {
-            loggedIn = false;
             return false;
         }
 
         nextController = new UserController(tradeModel, username);
-        loggedIn = true;
+        setChanged();
+        notifyObservers();
         return true;
     }
 }

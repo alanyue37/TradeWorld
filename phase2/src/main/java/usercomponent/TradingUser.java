@@ -21,7 +21,7 @@ class TradingUser extends User {
      * @param city     The given city
      */
     protected TradingUser(String name, String username, String password, String city) {
-        super(name, username, password, false);
+        super(name, username, password);
         inventory = new HashSet<>();
         wishlist = new HashSet<>();
         frozen = false;
@@ -127,6 +127,11 @@ class TradingUser extends User {
 
     protected String getCity() {
         return city;
+    }
+
+    @Override
+    protected boolean isAdmin() {
+        return false;
     }
 
     public String toString() {

@@ -1,32 +1,50 @@
 package tradegateway;
 
+import javafx.stage.Stage;
 import loginadapters.LogInController;
+import loginadapters.LoginGUI;
 import trademisc.RunnableController;
 
 import java.io.IOException;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * The entire trading system.
  */
-public class TradeSystem {
+public class TradeSystem implements Observer {
 
     private final String tradeModelFile = "serializedobjects.ser";
+    LogInController controller;
+    DataManager dataManager;
+    TradeModel tradeModel;
 
     /**
      * Run the trading system.
      */
-    public void run() {
+    public void run(Stage stage) {
         try {
-            DataManager dataManager = new DataManager(tradeModelFile);
-            TradeModel tradeModel = dataManager.readFromFile();
-            LogInController controller = new LogInController(tradeModel);
+            dataManager = new DataManager(tradeModelFile);
+            tradeModel = dataManager.readFromFile();
+            controller = new LogInController(tradeModel);
+            controller.addObserver(this);
+            LoginGUI gui = new LoginGUI(stage, 275, 300, controller);
+            gui.loginInitialScreen();
+            } catch (IOException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @Override
+    public void update(Observable observable, Object o) {
+        try {
             RunnableController mainController = controller.getNextController();
             if (mainController != null) {
                 mainController.run(); // This could be either UserController or AdminController
             }
             dataManager.saveToFile(tradeModel);
-        } catch (IOException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
