@@ -1,5 +1,7 @@
 package viewingadapters;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import tradegateway.TradeModel;
 import trademisc.RunnableController;
 
@@ -28,12 +30,12 @@ public class ViewingTradesController implements RunnableController {
     public void run() {
         try {
             browseViewOptions();
-        } catch (IOException e) {
+        } catch (IOException | JSONException e) {
             System.out.println("Something bad happened.");
         }
     }
 
-    private void browseViewOptions() throws IOException {
+    private void browseViewOptions() throws IOException, JSONException {
         presenter.showViewingOptions();
         boolean validInput = false;
         do {
@@ -73,15 +75,17 @@ public class ViewingTradesController implements RunnableController {
         presenter.showTrade(ongoingTradeIds, completedTradeIds);
     }
 
-    private void viewTradeInfo() throws IOException{
+    private void viewTradeInfo() throws IOException, JSONException {
         List<String> userTrades = tradeModel.getTradeManager().getTradesOfUser(username, "ongoing");
         userTrades.addAll(tradeModel.getTradeManager().getTradesOfUser(username, "completed"));
         presenter.printEnterTradeId();
         String tradeId = br.readLine();
-        if (!userTrades.contains(tradeId)){
+        if (!userTrades.contains(tradeId)) {
             presenter.printSearchingInvalid();
-        } else{
-            String allTradeInfo = tradeModel.getTradeManager().getTradeInfo(tradeId) + "\n" + tradeModel.getMeetingManager().getMeetingsInfo(tradeId);
+        } else {
+            List<JSONObject> allTradeInfo = new ArrayList<>();
+            allTradeInfo.add(tradeModel.getTradeManager().getTradeInfo(tradeId));
+            allTradeInfo.addAll(tradeModel.getMeetingManager().getMeetingsInfo(tradeId));
             presenter.showInfo(allTradeInfo);
         }
     }
@@ -98,19 +102,18 @@ public class ViewingTradesController implements RunnableController {
         List<String> userCompletedTrades = tradeModel.getTradeManager().getTradesOfUser(username, "completed");
         List<String> sortedCompletedTrades = tradeModel.getMeetingManager().sortedMeeting(userCompletedTrades);
         List<String> tradeIds = tradeModel.getTradeManager().getRecentTrades(numLastTrades, sortedCompletedTrades);
-//        List<String> tradeIds = tradeModel.getTradeManager().getRecentTrades(numLastTrades, username);
         if (tradeIds.size() == 0){
             presenter.noTrades();
         } else {
             Map<String, List<String>> mapOfItem = new HashMap<>();
             for (String tradeId : tradeIds) {
-                String itemTrading = "Trade with ID " + tradeId + ": ";
+                StringBuilder itemTrading = new StringBuilder("Trade with ID " + tradeId + ": ");
                 for (String itemId : tradeModel.getTradeManager().itemToUsers(tradeId).keySet()) {
                     String giver = tradeModel.getTradeManager().itemToUsers(tradeId).get(itemId).get(0);
                     String receiver = tradeModel.getTradeManager().itemToUsers(tradeId).get(itemId).get(1);
-                    itemTrading += "item with ID " + itemId + " was traded to " + receiver + " by " + giver + ". ";
+                    itemTrading.append("item with ID ").append(itemId).append(" was traded to ").append(receiver).append(" by ").append(giver).append(". ");
                 }
-                mapOfItem.put(itemTrading, getItemsInfo(tradeModel.getTradeManager().itemToUsers(tradeId).keySet()));
+                mapOfItem.put(itemTrading.toString(), getItemsInfo(tradeModel.getTradeManager().itemToUsers(tradeId).keySet()));
             }
             presenter.printRecentItems(numLastTrades, mapOfItem);
         }
