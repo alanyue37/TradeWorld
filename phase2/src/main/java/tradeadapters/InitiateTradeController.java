@@ -2,7 +2,6 @@ package tradeadapters;
 
 import tradegateway.TradeModel;
 import trademisc.RunnableController;
-import usercomponent.ItemSets;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -142,7 +141,7 @@ public class InitiateTradeController implements RunnableController {
 
     private String getItemToOffer(String otherUsername) throws IOException {
         // two way requires user to propose item from other user's wishlist
-        Set<String> otherWishlist = tradeModel.getUserManager().getSetByUsername(otherUsername, ItemSets.WISHLIST);
+        Set<String> otherWishlist = tradeModel.getUserManager().getWishlistByUsername(otherUsername);
         List<String> userItemsAvailable = getUserAvailableItems(username);
         List<String> overlappingItems = new ArrayList<>();
         for (String s : otherWishlist) {

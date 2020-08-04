@@ -2,7 +2,6 @@ package viewingadapters;
 
 import tradegateway.TradeModel;
 import trademisc.RunnableController;
-import usercomponent.ItemSets;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -82,7 +81,7 @@ public class ViewingMenuController implements RunnableController {
      * View user inventory
      */
     public void viewUserInventory() {
-        List<String> items = getItemsInfo(tradeModel.getUserManager().getSetByUsername(username, ItemSets.INVENTORY));
+        List<String> items = getItemsInfo(tradeModel.getItemManager().getInventory(username));
         presenter.printUserInventory(items);
     }
 
@@ -90,7 +89,7 @@ public class ViewingMenuController implements RunnableController {
      * View user wishlist
      */
     public void viewWishlist(){
-        List<String> items =  getItemsInfo(tradeModel.getUserManager().getSetByUsername(username, ItemSets.WISHLIST));
+        List<String> items =  getItemsInfo(tradeModel.getUserManager().getWishlistByUsername(username));
         presenter.printUserWishlist(items);
     }
 

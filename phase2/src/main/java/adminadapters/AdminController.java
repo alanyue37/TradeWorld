@@ -2,7 +2,6 @@ package adminadapters;
 
 import tradegateway.TradeModel;
 import trademisc.RunnableController;
-import usercomponent.ItemSets;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -221,8 +220,6 @@ public class AdminController implements RunnableController {
             }
             if (input.equals("1")) {
                 tradeModel.getItemManager().confirmItem(itemId);
-                String username = tradeModel.getItemManager().getOwner(itemId);
-                tradeModel.getUserManager().addToSet(username, itemId, ItemSets.INVENTORY); // Add to user's inventory
             } else {
                 tradeModel.getItemManager().deleteItem(itemId);
             }

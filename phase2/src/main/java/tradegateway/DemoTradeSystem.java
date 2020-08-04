@@ -4,7 +4,6 @@ import javafx.stage.Stage;
 import loginadapters.LogInController;
 import loginadapters.LoginGUI;
 import trademisc.RunnableController;
-import usercomponent.ItemSets;
 
 import java.io.IOException;
 import java.util.Observable;
@@ -90,8 +89,6 @@ public class DemoTradeSystem implements Observer {
         String[] items = new String[] {u1_1, u1_2, u1_3, u2_1, u2_2, u2_3, u3_1, u3_2, u4_1, u4_2};
         for (String itemId : items) {
             tradeModel.getItemManager().confirmItem(itemId);
-            String username = tradeModel.getItemManager().getOwner(itemId);
-            tradeModel.getUserManager().addToSet(username, itemId, ItemSets.INVENTORY);
         }
         // DEMO  --- END
     }

@@ -5,7 +5,6 @@ import tradeadapters.InitiateTradeController;
 import tradeadapters.ProposedTradesController;
 import tradegateway.TradeModel;
 import trademisc.RunnableController;
-import usercomponent.ItemSets;
 import viewingadapters.ViewingMenuController;
 import viewingadapters.ViewingTradesController;
 
@@ -117,8 +116,8 @@ public class UserController implements RunnableController {
             items.addAll(tradeModel.getItemManager().getItemsByStage("early"));
         }
         List <String> itemsToShow = new ArrayList<>();
-        Set<String> userInventory =  tradeModel.getUserManager().getSetByUsername(username, ItemSets.INVENTORY);
-        Set<String> userWishlist = tradeModel.getUserManager().getSetByUsername(username, ItemSets.WISHLIST);
+        Set<String> userInventory =  tradeModel.getItemManager().getInventory(username);
+        Set<String> userWishlist = tradeModel.getUserManager().getWishlistByUsername(username);
 
         for (String itemId : items) {
             String otherUsername = tradeModel.getItemManager().getOwner(itemId);
@@ -136,7 +135,7 @@ public class UserController implements RunnableController {
             choice = br.readLine();
         }
         if (itemsToShow.contains(choice)) {
-            tradeModel.getUserManager().addToSet(username, choice, ItemSets.WISHLIST);
+            tradeModel.getUserManager().addToWishlist(username, choice);
         }
     }
     protected List<String> getItemsInfo(Collection<String> itemIds) {

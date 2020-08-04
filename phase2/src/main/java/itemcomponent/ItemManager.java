@@ -37,7 +37,7 @@ public class ItemManager implements Serializable {
      * @return A set of item IDs that correspond to items in a particular stage
      */
     public Set<String> getItemsByStage(String stage) {
-        HashSet<String> filteredItems = new HashSet<>();
+        Set<String> filteredItems = new HashSet<>();
         for (String id : items.keySet()) {
             if (items.get(id).getStage().equals(stage)) {
                 filteredItems.add(id);
@@ -54,7 +54,7 @@ public class ItemManager implements Serializable {
      * @return A set of item IDs that correspond to items that are currently available to a user with a particular rank
      */
     public Set<String> getAvailableItems(String rank) {
-        HashSet<String> availableItems = new HashSet<>();
+        Set<String> availableItems = new HashSet<>();
         if (rank.equals("gold")) {
             for (String id : items.keySet()) {
                 if (items.get(id).isAvailable()) {
@@ -141,6 +141,22 @@ public class ItemManager implements Serializable {
      */
     public void setItemAvailable(String itemID, boolean available) {
         items.get(itemID).setAvailable(available);
+    }
+
+    /**
+     * Gets a set of all item IDs whose corresponding items are owned by a particular user
+     *
+     * @param username The given username
+     * @return A set of all item IDs whose corresponding items are owned by a particular user
+     */
+    public Set<String> getInventory(String username) {
+        Set<String> inventory = new HashSet<>();
+        for (String id : items.keySet()) {
+            if (items.get(id).getOwner().equals(username)) {
+                inventory.add(id);
+            }
+        }
+        return inventory;
     }
 
     /**

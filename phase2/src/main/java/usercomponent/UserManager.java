@@ -111,7 +111,7 @@ public class UserManager implements Serializable {
     }
 
     private Map<String, User> getAllUsers() {
-        HashMap<String, User> allUsers = new HashMap<>();
+        Map<String, User> allUsers = new HashMap<>();
         allUsers.putAll(tradingUsers);
         allUsers.putAll(adminUsers);
         return allUsers;
@@ -189,62 +189,36 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Gets a particular set of item ids stored in a TradingUser
+     * Gets the wishlist of a particular TradingUser
      *
-     * @param username The username of the chosen TradingUser
-     * @param set      The name of the requested set
-     * @return The requested set
+     * @param username The username of the chosen TradingUser. Must be a valid username for an existing TradingUser.
+     * @return The wishlist of a particular TradingUser
      */
-    public Set<String> getSetByUsername(String username, ItemSets set) {
+    public Set<String> getWishlistByUsername(String username) {
         TradingUser account = tradingUsers.get(username);
-        Set<String> requestedSet = null;
-        switch (set) {
-            case INVENTORY:
-                requestedSet = account.getInventory();
-                break;
-            case WISHLIST:
-                requestedSet = account.getWishlist();
-                break;
-        }
-        return requestedSet;
+        return account.getWishlist();
     }
 
     /**
-     * Adds the id of a particular item to one of the sets stored in a TradingUser
+     * Adds the id of a particular item to the wishlist of a particular TradingUser
      *
      * @param username The username of the chosen TradingUser. Must be a valid username for an existing TradingUser.
      * @param id       The id of the given item
-     * @param set      The name of the requested set
      */
-    public void addToSet(String username, String id, ItemSets set) {
+    public void addToWishlist(String username, String id) {
         TradingUser account = tradingUsers.get(username);
-        switch (set) {
-            case INVENTORY:
-                account.addToInventory(id);
-                break;
-            case WISHLIST:
-                account.addToWishlist(id);
-                break;
-        }
+        account.addToWishlist(id);
     }
 
     /**
-     * Removes the id of a particular item from one of the sets stored in a TradingUser
+     * Removes the id of a particular item from the wishlist of a particular TradingUser
      *
      * @param username The username of the chosen TradingUser. Must be a valid username for an existing TradingUser.
      * @param id       The id of the given item
-     * @param set      The name of the requested set
      */
-    public void removeFromSet(String username, String id, ItemSets set) {
+    public void removeFromWishlist(String username, String id) {
         TradingUser account = tradingUsers.get(username);
-        switch (set) {
-            case INVENTORY:
-                account.removeFromInventory(id);
-                break;
-            case WISHLIST:
-                account.removeFromWishlist(id);
-                break;
-        }
+        account.removeFromWishlist(id);
     }
 
     /**
