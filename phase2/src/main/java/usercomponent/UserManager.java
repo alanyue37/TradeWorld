@@ -320,4 +320,44 @@ public class UserManager implements Serializable {
         return this.tradingUsers.containsKey(username);
     }
 
+    public Set<String> getPrivateUser(){
+        Set<String> result = new HashSet<>();
+        for (TradingUser trader: tradingUsers.values()){
+            if (trader.isPrivate()){
+                result.add(trader.getUsername());
+            }
+        }
+        return result;
+    }
+
+    public void setPrivate(String username, boolean privacy){
+        TradingUser account = tradingUsers.get(username);
+        account.setPrivacy(privacy);
+    }
+
+    public Set<String> getFriendRequests(String username){
+        TradingUser account = tradingUsers.get(username);
+        return account.getPendingFriends();
+    }
+
+    public Set<String> getFriendList(String username){
+        TradingUser account = tradingUsers.get(username);
+        return account.getFriends();
+    }
+
+    public void setFriendRequest(String getRequestUsername, String sendRequestUsername, boolean accept){
+        TradingUser account = tradingUsers.get(getRequestUsername);
+        if (accept) {
+            account.removeFromPendingFriends(sendRequestUsername);
+            account.addToFriends(sendRequestUsername);
+            tradingUsers.get(sendRequestUsername).addToFriends(getRequestUsername);
+        } else{
+            account.removeFromPendingFriends(sendRequestUsername);
+        }
+    }
+
+    public void sendFriendRequest(String getRequestUsername, String username){
+        TradingUser account = tradingUsers.get(getRequestUsername);
+        account.addToPendingFriends(username);
+    }
 }

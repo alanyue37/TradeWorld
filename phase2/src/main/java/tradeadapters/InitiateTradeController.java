@@ -221,6 +221,16 @@ public class InitiateTradeController implements RunnableController {
         // TODO: consider using a filter system with filter classes that implement interface
         String userRank = tradeModel.getUserManager().getRankByUsername(username);
         Set<String> itemsAvailable = tradeModel.getItemManager().getAvailableItems(userRank);
+        if (tradeModel.getUserManager().getPrivateUser().contains(username)){ // if private user
+            Set<String> privateAccounts = tradeModel.getUserManager().getFriendList(username); // get friend not on vacation
+            privateAccounts.removeIf(user -> tradeModel.getUserManager().getOnVacation().contains(user));
+            itemsAvailable.removeIf(item -> !privateAccounts.contains(tradeModel.getItemManager().getOwner(item)));
+        } else{  //public user
+            Set<String> privateAccounts = tradeModel.getUserManager().getPrivateUser();
+            privateAccounts.removeAll(tradeModel.getUserManager().getFriendList(username));
+            privateAccounts.addAll(tradeModel.getUserManager().getOnVacation()); // remove not friend & vacation
+            itemsAvailable.removeIf(item -> privateAccounts.contains(tradeModel.getItemManager().getOwner(item)));
+        }
         List <String> itemsToShow = new ArrayList<>();
 
         for (String itemId : itemsAvailable) {
