@@ -1,6 +1,9 @@
 package tradeadapters;
 
+import org.json.JSONObject;
 import trademisc.TextPresenter;
+
+import java.util.List;
 
 /**
  * Manages output to the user to confirm or edit the meeting time(s) of proposed trades.
@@ -13,8 +16,10 @@ public class ProposedTradesPresenter extends TextPresenter {
      *
      * @param tradeInfo information on the trade, including the meeting details
      */
-    public void showMeeting(String tradeInfo, String meetingInfo) {
-        System.out.println(tradeInfo + "\n" + meetingInfo);
+    public void showMeeting(List<JSONObject> tradeInfo) {
+        for (JSONObject details : tradeInfo) {
+            System.out.println(details);
+        }
         System.out.println("Options for a User: \n" +
                 " Enter 1 to confirm the meeting time\n" +
                 " Enter 2 to edit the meeting time\n" +

@@ -41,11 +41,14 @@ public class ReviewManager {
     }
 
     public List<String> viewProfile(String username, int num) { // num is how many most recent comments the user will see
-        List<Review> reviews = userToReviews.get(username);
         List<String> profileInfo = new ArrayList<>();
-        if (reviews == null) {
+        if (!userToReviews.containsKey(username)){
             return profileInfo;
         }
+        List<Review> reviews = userToReviews.get(username);
+//        if (reviews == null) {
+//            return profileInfo;
+//        } // could we delete this? since users need to get a review to have be in the userToReviews
         int totalRatings = 0;
         for (Review review : reviews) {
             totalRatings += review.getRating();

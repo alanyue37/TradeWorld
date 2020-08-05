@@ -1,6 +1,10 @@
 package tradecomponent;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -159,13 +163,13 @@ public class MeetingManager implements Serializable {
      * @return A string that includes the meeting status, location, time, number of edits made, number of confirmation,
      * and the User who last edited
      */
-    public String getMeetingsInfo(String tradeId) {
-        StringBuilder meetingDetails = new StringBuilder();
+    public List<JSONObject> getMeetingsInfo(String tradeId) throws JSONException {
+        List<JSONObject> meetingDetails = new ArrayList<>();
         for (String meetingId : tradeToMeetings.get(tradeId)) {
             Meeting meeting = getMeeting(meetingId);
-            meetingDetails.append("Meeting: \n").append(meeting.toString()).append("\n");
+            meetingDetails.add(meeting.getMeetingInfo());
         }
-        return meetingDetails.toString();
+        return meetingDetails;
     }
 
 

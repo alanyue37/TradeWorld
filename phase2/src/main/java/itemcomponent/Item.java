@@ -1,14 +1,17 @@
 package itemcomponent;
 
 import java.io.Serializable;
+import java.util.Date;
 
 
 class Item implements Serializable {
     private final String id;
-    private String name;
+    private final String name;
+    private final String description;
     private String owner;
-    private String description;
+    private String stage;
     private boolean available;
+    private final Date dateCreated;
 
     /**
      * Initiates a new item
@@ -22,7 +25,9 @@ class Item implements Serializable {
         this.name = name;
         this.owner = owner;
         this.description = description;
+        this.stage = "pending";
         this.available = false; // initially set to false pending approval by admin
+        this.dateCreated = new Date();
     }
 
     /**
@@ -58,6 +63,14 @@ class Item implements Serializable {
     }
 
     /**
+     * Gets the current stage of this item
+     * @return  The current stage of this item
+     */
+    protected String getStage() {
+        return stage;
+    }
+
+    /**
      * Returns true if the item is available or false if the item is not available
      * @return  Whether the item is available or not
      */
@@ -66,11 +79,11 @@ class Item implements Serializable {
     }
 
     /**
-     * Sets the name of the item
-     * @param name  The new name of the item
+     * Gets when this item was created
+     * @return When this item was created
      */
-    protected void setName(String name) {
-        this.name = name;
+    protected Date getDateCreated() {
+        return dateCreated;
     }
 
     /**
@@ -82,11 +95,13 @@ class Item implements Serializable {
     }
 
     /**
-     * Sets a description of the item
-     * @param description   The new description of the item
+     * Sets the current stage of this item
+     * Precondition: A valid stage for an item must be given (pending, early, common).
+     *
+     * @param stage The new stage of the item
      */
-    protected void setDescription(String description) {
-        this.description = description;
+    protected void setStage(String stage) {
+        this.stage = stage;
     }
 
     /**

@@ -5,7 +5,6 @@ import java.util.Set;
 
 class TradingUser extends User {
 
-    private final Set<String> inventory;
     private final Set<String> wishlist;
     private boolean frozen;
     private int credit;
@@ -22,39 +21,11 @@ class TradingUser extends User {
      */
     protected TradingUser(String name, String username, String password, String city) {
         super(name, username, password);
-        inventory = new HashSet<>();
         wishlist = new HashSet<>();
         frozen = false;
         credit = 0;
         this.city = city;
         this.vacation = false;
-    }
-
-    /**
-     * Gets the inventory of this TradingUser
-     *
-     * @return The inventory of this TradingUser
-     */
-    protected Set<String> getInventory(){
-        return inventory;
-    }
-
-    /**
-     * Adds an item to the inventory of this TradingUser
-     *
-     * @param itemID The id of the item to be added
-     */
-    protected void addToInventory(String itemID){
-        inventory.add(itemID);
-    }
-
-    /**
-     * Removes an item from the inventory of this TradingUser
-     *
-     * @param itemID The id of the item to be removed
-     */
-    protected void removeFromInventory(String itemID){
-        inventory.remove(itemID);
     }
 
     /**

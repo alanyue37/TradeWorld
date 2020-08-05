@@ -4,7 +4,7 @@ import tradegateway.TradeModel;
 import trademisc.RunnableController;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Set;
 
 public class DemoController extends UserController implements RunnableController{
 
@@ -69,7 +69,7 @@ public class DemoController extends UserController implements RunnableController
      */
     @Override
     public void viewItemsToAddToWishlist() throws IOException {
-        List<String> items = tradeModel.getItemManager().getConfirmedItems();
+        Set<String> items = tradeModel.getItemManager().getItemsByStage("common");
         presenter.printItemsToAddToWishlist(getItemsInfo(items));
         String choice = br.readLine();
         while (!items.contains(choice) && !choice.equals("back")) {

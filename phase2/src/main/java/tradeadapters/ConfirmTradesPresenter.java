@@ -1,6 +1,9 @@
 package tradeadapters;
 
+import org.json.JSONObject;
 import trademisc.TextPresenter;
+
+import java.util.List;
 
 /**
  * Manages output to the user to confirm trades happened in real life.
@@ -13,8 +16,10 @@ public class ConfirmTradesPresenter extends TextPresenter {
      *
      * @param tradeInfo information on the trade, including the meeting details
      */
-    public void showTrade(String tradeInfo) {
-        System.out.println(tradeInfo);
+    public void showTrade(List<JSONObject> tradeInfo) {
+        for (JSONObject details : tradeInfo) {
+            System.out.println(details);
+        }
         System.out.println("Options for a user: \n" +
                 " Enter 1 to confirm the real life trade happened\n" +
                 " Enter 2 to skip and confirm later\n" +

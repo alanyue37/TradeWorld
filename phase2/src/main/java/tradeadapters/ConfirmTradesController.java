@@ -1,8 +1,9 @@
 package tradeadapters;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import tradegateway.TradeModel;
 import trademisc.RunnableController;
-import usercomponent.ItemSets;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -37,12 +38,12 @@ public class ConfirmTradesController implements RunnableController {
     public void run() {
         try {
             confirmTrades();
-        } catch (IOException e) {
+        } catch (IOException | JSONException e) {
             System.out.println("Something bad happened.");
         }
     }
 
-    private boolean confirmTrades() throws IOException {
+    private boolean confirmTrades() throws IOException, JSONException {
         Map<String, String> trades = getToBeConfirmedTrades(username);
         for (String tradeId : trades.keySet()) {
             presenter.showTrade(getTradeAllInfo(tradeId));
@@ -69,9 +70,11 @@ public class ConfirmTradesController implements RunnableController {
         return tradeModel.getTradeManager().getType(userToBeConfirmed);
     }
 
-    private String getTradeAllInfo(String tradeId){
-        return tradeModel.getTradeManager().getTradeInfo(tradeId) + "\n" +
-                tradeModel.getMeetingManager().getMeetingsInfo(tradeId);
+    private List<JSONObject> getTradeAllInfo(String tradeId) throws JSONException {
+        List<JSONObject> allTradeInfo = new ArrayList<>();
+        allTradeInfo.add(tradeModel.getTradeManager().getTradeInfo(tradeId));
+        allTradeInfo.addAll(tradeModel.getMeetingManager().getMeetingsInfo(tradeId));
+        return allTradeInfo;
     }
 
     /**
@@ -161,13 +164,11 @@ public class ConfirmTradesController implements RunnableController {
         Map<String, List<String>> itemToUsers = tradeModel.getTradeManager().itemToUsers(tradeId);
         for (String item: itemToUsers.keySet()) {
             if (type.equals("permanent")) {
-                tradeModel.getUserManager().removeFromSet(itemToUsers.get(item).get(1), item, ItemSets.WISHLIST);
-                tradeModel.getUserManager().removeFromSet(itemToUsers.get(item).get(0), item, ItemSets.INVENTORY);
-                tradeModel.getUserManager().addToSet(itemToUsers.get(item).get(1), item, ItemSets.INVENTORY);
+                tradeModel.getUserManager().removeFromWishlist(itemToUsers.get(item).get(1), item);
                 tradeModel.getItemManager().setOwner(item, itemToUsers.get(item).get(1));
             }
 
-            tradeModel.getItemManager().setConfirmedItemAvailable(item, true);
+            tradeModel.getItemManager().setItemAvailable(item, true);
             tradeModel.getUserManager().updateCreditByUsername(itemToUsers.get(item).get(0), true);
             tradeModel.getUserManager().updateCreditByUsername(itemToUsers.get(item).get(1), false);
         }

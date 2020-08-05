@@ -3,6 +3,9 @@ package tradecomponent;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Represents a meeting to exchange item(s) in a trade
  */
@@ -150,18 +153,22 @@ class Meeting implements Serializable {
      * the location, the time, the number of edits made, the number of confirmations, and the User who last edited
      * @return  String representation of the meeting
      */
-    public String toString(){
-        String status;
+    public JSONObject getMeetingInfo() throws JSONException {
+        JSONObject info = new JSONObject();
+        info.put("Meeting ID", meetingId);
         if (this.IsCompleted) {
-            status = "completed";
-        } else if (this.IsConfirmed){
-            status = "meeting details agreed, waiting for meeting to happen";
-        } else{
-            status = "need to agree on meeting details";
+            info.put("Status", "completed");
+        } else if (this.IsConfirmed) {
+            info.put("Status", "meeting details agreed, waiting for meeting to happen");
+        } else {
+            info.put("Status", "need to agree on meeting details");
         }
-        return "Meeting ID: " + this.meetingId + "\nStatus: " + status + "\nLocation: " + this.location + "\nTime: " + this.meetingTime
-                + "\nNumber of Edits: " + this.numOfEdits + "\nNumber of Confirmations: " + this.numConfirmations
-                + "\nLast user who modified the meeting: " + this.lastEditUser;
+        info.put("Location", location);
+        info.put("Time", meetingTime.toString());
+        info.put ("Number of Edits", numOfEdits);
+        info.put("Number of Confirmations", numConfirmations);
+        info.put("Last user who modified the meeting", lastEditUser);
+        return info;
     }
 }
 
