@@ -4,7 +4,6 @@ import javafx.stage.Stage;
 import loginadapters.LogInController;
 import loginadapters.LoginGUI;
 import trademisc.RunnableController;
-import usercomponent.ItemSets;
 
 import java.io.IOException;
 import java.util.Observable;
@@ -56,6 +55,13 @@ public class DemoTradeSystem implements Observer {
         tradeModel.getUserManager().createTradingUser("U_3", "u3", "u3", "Edmonton");
         tradeModel.getUserManager().createTradingUser("U_4", "u4", "u4", "Brampton");
 
+        String[] users = new String[] {"u1", "u2", "u3", "u4"};
+        for (String username: users) {
+            for (int i = 0; i < 5; ++i) {
+                tradeModel.getUserManager().updateCreditByUsername(username, true);
+            }
+        }
+
         // u1 items
         String u1_1 = tradeModel.getItemManager().addItem("red apple", "u1", "One red apple");
         String u1_2 = tradeModel.getItemManager().addItem("green apple", "u1", "One green apple");
@@ -83,8 +89,6 @@ public class DemoTradeSystem implements Observer {
         String[] items = new String[] {u1_1, u1_2, u1_3, u2_1, u2_2, u2_3, u3_1, u3_2, u4_1, u4_2};
         for (String itemId : items) {
             tradeModel.getItemManager().confirmItem(itemId);
-            String username = tradeModel.getItemManager().getOwner(itemId);
-            tradeModel.getUserManager().addToSet(username, itemId, ItemSets.INVENTORY);
         }
         // DEMO  --- END
     }

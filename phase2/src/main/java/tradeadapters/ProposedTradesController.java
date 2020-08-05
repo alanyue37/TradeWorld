@@ -111,7 +111,7 @@ public class ProposedTradesController implements RunnableController {
     private void changeItemUnavailable(String tradeId) {
         Map<String, List<String>> itemToUsers = tradeModel.getTradeManager().itemToUsers(tradeId);
         for (String item : itemToUsers.keySet()) {
-            tradeModel.getItemManager().setConfirmedItemAvailable(item, false);
+            tradeModel.getItemManager().setItemAvailable(item, false);
             tradeModel.getTradeManager().deleteCommonItemTrades(item, tradeId);
         }
     }

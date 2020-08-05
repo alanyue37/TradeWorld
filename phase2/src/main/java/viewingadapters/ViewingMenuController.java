@@ -2,15 +2,11 @@ package viewingadapters;
 
 import tradegateway.TradeModel;
 import trademisc.RunnableController;
-import usercomponent.ItemSets;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A controller class using the RunnableController interface for viewing the menu options.
@@ -55,7 +51,7 @@ public class ViewingMenuController implements RunnableController {
                     viewWishlist();
                     validInput = true;
                     break;
-                case "4":
+                case "4": // view a user's profile
                     viewUsersProfile();
                     validInput = true;
                     break;
@@ -71,9 +67,34 @@ public class ViewingMenuController implements RunnableController {
      * View the system inventory (all confirmed items -- available and unavailable -- in the system)
      */
     public void viewSystemInventory(){
-        Set<String> userOnVacation = tradeModel.getUserManager().getOnVacation();
-        List<String> confirmedItems = tradeModel.getItemManager().getConfirmedItems();
-        confirmedItems.removeIf(item -> userOnVacation.contains(tradeModel.getItemManager().getOwner(item)));
+        if (tradeModel.getUserManager().getPrivateUser().contains(username)){
+            viewPrivateInventory();
+        } else{
+            viewPublicInventory();
+        }
+    }
+
+    public void viewPublicInventory(){
+        Set<String> hiddenUser = tradeModel.getUserManager().getPrivateUser(); //  private users except friends
+        hiddenUser.removeAll(tradeModel.getUserManager().getFriendList(username));
+        hiddenUser.addAll(tradeModel.getUserManager().getOnVacation()); //  people on vacation mode
+        Set<String> confirmedItems = tradeModel.getItemManager().getItemsByStage("common");
+        if (tradeModel.getUserManager().getRankByUsername(username).equals("gold")) {
+            confirmedItems.addAll(tradeModel.getItemManager().getItemsByStage("early"));
+        }
+        confirmedItems.removeIf(item -> hiddenUser.contains(tradeModel.getItemManager().getOwner(item)));
+        List<String> confirmedItemsInfo = getItemsInfo(confirmedItems);
+        presenter.printSystemInventory(confirmedItemsInfo);
+    }
+
+    public void viewPrivateInventory(){
+        Set<String> allFriends = tradeModel.getUserManager().getFriendList(username); // gets friend list
+        allFriends.removeAll(tradeModel.getUserManager().getOnVacation()); // remove friends on vacation
+        Set<String> confirmedItems = tradeModel.getItemManager().getItemsByStage("common");
+        if (tradeModel.getUserManager().getRankByUsername(username).equals("gold")) {
+            confirmedItems.addAll(tradeModel.getItemManager().getItemsByStage("early"));
+        }
+        confirmedItems.removeIf(item -> !allFriends.contains(tradeModel.getItemManager().getOwner(item)));
         List<String> confirmedItemsInfo = getItemsInfo(confirmedItems);
         presenter.printSystemInventory(confirmedItemsInfo);
     }
@@ -82,7 +103,7 @@ public class ViewingMenuController implements RunnableController {
      * View user inventory
      */
     public void viewUserInventory() {
-        List<String> items = getItemsInfo(tradeModel.getUserManager().getSetByUsername(username, ItemSets.INVENTORY));
+        List<String> items = getItemsInfo(tradeModel.getItemManager().getInventory(username));
         presenter.printUserInventory(items);
     }
 
@@ -90,7 +111,7 @@ public class ViewingMenuController implements RunnableController {
      * View user wishlist
      */
     public void viewWishlist(){
-        List<String> items =  getItemsInfo(tradeModel.getUserManager().getSetByUsername(username, ItemSets.WISHLIST));
+        List<String> items =  getItemsInfo(tradeModel.getUserManager().getWishlistByUsername(username));
         presenter.printUserWishlist(items);
     }
 

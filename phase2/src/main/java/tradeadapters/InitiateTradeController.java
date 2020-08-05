@@ -2,7 +2,6 @@ package tradeadapters;
 
 import tradegateway.TradeModel;
 import trademisc.RunnableController;
-import usercomponent.ItemSets;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -142,7 +141,7 @@ public class InitiateTradeController implements RunnableController {
 
     private String getItemToOffer(String otherUsername) throws IOException {
         // two way requires user to propose item from other user's wishlist
-        Set<String> otherWishlist = tradeModel.getUserManager().getSetByUsername(otherUsername, ItemSets.WISHLIST);
+        Set<String> otherWishlist = tradeModel.getUserManager().getWishlistByUsername(otherUsername);
         List<String> userItemsAvailable = getUserAvailableItems(username);
         List<String> overlappingItems = new ArrayList<>();
         for (String s : otherWishlist) {
@@ -206,7 +205,8 @@ public class InitiateTradeController implements RunnableController {
 
 
     private List<String> getUserAvailableItems(String username) {
-        List<String> itemsAvailable = tradeModel.getItemManager().getAvailableItems();
+        String userRank = tradeModel.getUserManager().getRankByUsername(username);
+        Set<String> itemsAvailable = tradeModel.getItemManager().getAvailableItems(userRank);
         List<String> userItemsAvailable = new ArrayList<>();
         for (String itemId: itemsAvailable) {
             if (tradeModel.getItemManager().getOwner(itemId).equals(username)) {
@@ -219,7 +219,18 @@ public class InitiateTradeController implements RunnableController {
     private String getItemIdChoice() throws IOException {
         // Show items available not owned by user and owned by users in same city
         // TODO: consider using a filter system with filter classes that implement interface
-        List<String> itemsAvailable = tradeModel.getItemManager().getAvailableItems();
+        String userRank = tradeModel.getUserManager().getRankByUsername(username);
+        Set<String> itemsAvailable = tradeModel.getItemManager().getAvailableItems(userRank);
+        if (tradeModel.getUserManager().getPrivateUser().contains(username)){ // if private user
+            Set<String> privateAccounts = tradeModel.getUserManager().getFriendList(username); // get friend not on vacation
+            privateAccounts.removeIf(user -> tradeModel.getUserManager().getOnVacation().contains(user));
+            itemsAvailable.removeIf(item -> !privateAccounts.contains(tradeModel.getItemManager().getOwner(item)));
+        } else{  //public user
+            Set<String> privateAccounts = tradeModel.getUserManager().getPrivateUser();
+            privateAccounts.removeAll(tradeModel.getUserManager().getFriendList(username));
+            privateAccounts.addAll(tradeModel.getUserManager().getOnVacation()); // remove not friend & vacation
+            itemsAvailable.removeIf(item -> privateAccounts.contains(tradeModel.getItemManager().getOwner(item)));
+        }
         List <String> itemsToShow = new ArrayList<>();
 
         for (String itemId : itemsAvailable) {

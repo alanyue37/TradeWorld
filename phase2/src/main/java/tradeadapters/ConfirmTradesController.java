@@ -4,7 +4,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import tradegateway.TradeModel;
 import trademisc.RunnableController;
-import usercomponent.ItemSets;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -198,13 +197,11 @@ public class ConfirmTradesController implements RunnableController {
         Map<String, List<String>> itemToUsers = tradeModel.getTradeManager().itemToUsers(tradeId);
         for (String item: itemToUsers.keySet()) {
             if (type.equals("permanent")) {
-                tradeModel.getUserManager().removeFromSet(itemToUsers.get(item).get(1), item, ItemSets.WISHLIST);
-                tradeModel.getUserManager().removeFromSet(itemToUsers.get(item).get(0), item, ItemSets.INVENTORY);
-                tradeModel.getUserManager().addToSet(itemToUsers.get(item).get(1), item, ItemSets.INVENTORY);
+                tradeModel.getUserManager().removeFromWishlist(itemToUsers.get(item).get(1), item);
                 tradeModel.getItemManager().setOwner(item, itemToUsers.get(item).get(1));
             }
 
-            tradeModel.getItemManager().setConfirmedItemAvailable(item, true);
+            tradeModel.getItemManager().setItemAvailable(item, true);
             tradeModel.getUserManager().updateCreditByUsername(itemToUsers.get(item).get(0), true);
             tradeModel.getUserManager().updateCreditByUsername(itemToUsers.get(item).get(1), false);
         }

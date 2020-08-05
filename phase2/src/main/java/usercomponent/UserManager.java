@@ -30,7 +30,7 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Returns the specified threshold value
+     * Gets the specified threshold value
      * Precondition: The requested threshold must be valid.
      *
      * @param which threshold is being requested
@@ -100,13 +100,6 @@ public class UserManager implements Serializable {
         return true;
     }
 
-    private HashMap<String, User> getAllUsers() {
-        HashMap<String, User> allUsers = new HashMap<>();
-        allUsers.putAll(tradingUsers);
-        allUsers.putAll(adminUsers);
-        return allUsers;
-    }
-
     /**
      * Returns whether a particular user has admin capabilities
      *
@@ -114,12 +107,14 @@ public class UserManager implements Serializable {
      * @return Whether the User is an admin
      */
     public boolean isAdmin(String username) {
-        HashMap<String, User> allUsers = getAllUsers();
-        User account = allUsers.get(username);
-        if (account == null){
-            return false; // account username not found
-        }
-        return account.isAdmin();
+        return adminUsers.containsKey(username);
+    }
+
+    private Map<String, User> getAllUsers() {
+        Map<String, User> allUsers = new HashMap<>();
+        allUsers.putAll(tradingUsers);
+        allUsers.putAll(adminUsers);
+        return allUsers;
     }
 
     /**
@@ -130,8 +125,7 @@ public class UserManager implements Serializable {
      * @return Whether or not the username/password combination is valid.
      */
     public boolean login(String username, String password) {
-        HashMap<String, User> allUsers = getAllUsers();
-        User account = allUsers.get(username);
+        User account = getAllUsers().get(username);
         if (account == null){
             return false; // account username not found
         }
@@ -145,8 +139,7 @@ public class UserManager implements Serializable {
      * @param password The intended password
      */
     public void setPasswordByUsername(String username, String password) {
-        HashMap<String, User> allUsers = getAllUsers();
-        User account = allUsers.get(username);
+        User account = getAllUsers().get(username);
         account.setPassword(password);
     }
 
@@ -196,62 +189,36 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Gets a particular set of item ids stored in a TradingUser
+     * Gets the wishlist of a particular TradingUser
      *
-     * @param username The username of the chosen TradingUser
-     * @param set      The name of the requested set
-     * @return The requested set
+     * @param username The username of the chosen TradingUser. Must be a valid username for an existing TradingUser.
+     * @return The wishlist of a particular TradingUser
      */
-    public Set<String> getSetByUsername(String username, ItemSets set) {
+    public Set<String> getWishlistByUsername(String username) {
         TradingUser account = tradingUsers.get(username);
-        Set<String> requestedSet = null;
-        switch (set) {
-            case INVENTORY:
-                requestedSet = account.getInventory();
-                break;
-            case WISHLIST:
-                requestedSet = account.getWishlist();
-                break;
-        }
-        return requestedSet;
+        return account.getWishlist();
     }
 
     /**
-     * Adds the id of a particular item to one of the sets stored in a TradingUser
+     * Adds the id of a particular item to the wishlist of a particular TradingUser
      *
      * @param username The username of the chosen TradingUser. Must be a valid username for an existing TradingUser.
      * @param id       The id of the given item
-     * @param set      The name of the requested set
      */
-    public void addToSet(String username, String id, ItemSets set) {
+    public void addToWishlist(String username, String id) {
         TradingUser account = tradingUsers.get(username);
-        switch (set) {
-            case INVENTORY:
-                account.addToInventory(id);
-                break;
-            case WISHLIST:
-                account.addToWishlist(id);
-                break;
-        }
+        account.addToWishlist(id);
     }
 
     /**
-     * Removes the id of a particular item from one of the sets stored in a TradingUser
+     * Removes the id of a particular item from the wishlist of a particular TradingUser
      *
      * @param username The username of the chosen TradingUser. Must be a valid username for an existing TradingUser.
      * @param id       The id of the given item
-     * @param set      The name of the requested set
      */
-    public void removeFromSet(String username, String id, ItemSets set) {
+    public void removeFromWishlist(String username, String id) {
         TradingUser account = tradingUsers.get(username);
-        switch (set) {
-            case INVENTORY:
-                account.removeFromInventory(id);
-                break;
-            case WISHLIST:
-                account.removeFromWishlist(id);
-                break;
-        }
+        account.removeFromWishlist(id);
     }
 
     /**
@@ -353,4 +320,44 @@ public class UserManager implements Serializable {
         return this.tradingUsers.containsKey(username);
     }
 
+    public Set<String> getPrivateUser(){
+        Set<String> result = new HashSet<>();
+        for (TradingUser trader: tradingUsers.values()){
+            if (trader.isPrivate()){
+                result.add(trader.getUsername());
+            }
+        }
+        return result;
+    }
+
+    public void setPrivate(String username, boolean privacy){
+        TradingUser account = tradingUsers.get(username);
+        account.setPrivacy(privacy);
+    }
+
+    public Set<String> getFriendRequests(String username){
+        TradingUser account = tradingUsers.get(username);
+        return account.getPendingFriends();
+    }
+
+    public Set<String> getFriendList(String username){
+        TradingUser account = tradingUsers.get(username);
+        return account.getFriends();
+    }
+
+    public void setFriendRequest(String getRequestUsername, String sendRequestUsername, boolean accept){
+        TradingUser account = tradingUsers.get(getRequestUsername);
+        if (accept) {
+            account.removeFromPendingFriends(sendRequestUsername);
+            account.addToFriends(sendRequestUsername);
+            tradingUsers.get(sendRequestUsername).addToFriends(getRequestUsername);
+        } else{
+            account.removeFromPendingFriends(sendRequestUsername);
+        }
+    }
+
+    public void sendFriendRequest(String getRequestUsername, String username){
+        TradingUser account = tradingUsers.get(getRequestUsername);
+        account.addToPendingFriends(username);
+    }
 }
