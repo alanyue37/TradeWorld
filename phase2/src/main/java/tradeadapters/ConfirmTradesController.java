@@ -47,7 +47,14 @@ public class ConfirmTradesController implements RunnableController {
     private boolean confirmTrades() throws IOException, JSONException {
         Map<String, String> trades = getToBeConfirmedTrades(username);
         for (String tradeId : trades.keySet()) {
-            presenter.showTrade(getTradeAllInfo(tradeId));
+            List<JSONObject> allTrade = new ArrayList<>();
+            allTrade.add(tradeModel.getTradeManager().getTradeInfo(tradeId));
+            allTrade.addAll(tradeModel.getMeetingManager().getMeetingsInfo(tradeId));
+            StringBuilder allTradeInfo = new StringBuilder();
+            for (JSONObject details : allTrade) {
+                allTradeInfo.append(details.toString(4));
+            }
+            presenter.showTrade(allTradeInfo.toString());
             String input = br.readLine();
             switch(input) {
                 case "1":
@@ -71,12 +78,38 @@ public class ConfirmTradesController implements RunnableController {
         return tradeModel.getTradeManager().getType(userToBeConfirmed);
     }
 
-    private List<JSONObject> getTradeAllInfo(String tradeId) throws JSONException {
-        List<JSONObject> allTradeInfo = new ArrayList<>();
-        allTradeInfo.add(tradeModel.getTradeManager().getTradeInfo(tradeId));
-        allTradeInfo.addAll(tradeModel.getMeetingManager().getMeetingsInfo(tradeId));
-        return allTradeInfo;
-    }
+//    private List<JSONObject> getTradeAllInfo(String tradeId) throws JSONException {
+//        List<JSONObject> allTradeInfo = new ArrayList<>();
+//        allTradeInfo.add(tradeModel.getTradeManager().getTradeInfo(tradeId));
+//        allTradeInfo.addAll(tradeModel.getMeetingManager().getMeetingsInfo(tradeId));
+//        return allTradeInfo;
+//    }
+
+//    private StringBuilder formatTradeInfo(List<JSONObject> allTrade) throws JSONException {
+//        StringBuilder allTradeInfo = new StringBuilder();
+//        int i = 0;
+//        while (i < 1) {
+//            allTradeInfo.append("Trade ID: ").append(allTrade.get(i).get("Trade ID"));
+//            allTradeInfo.append("\nType: ").append(allTrade.get(i).get("Type"));
+//            allTradeInfo.append("\nStatus: ").append(allTrade.get(i).get("Status"));
+//            allTradeInfo.append("\nNumber of meetings: ").append(allTrade.get(i).get("Number of meetings"));
+//            allTradeInfo.append("\nCreation Date: ").append(allTrade.get(i).get("Creation Date"));
+//            allTradeInfo.append("\nUsers involved: ").append(allTrade.get(i).get("Users involved"));
+//            allTradeInfo.append("\nItems involved: ").append(allTrade.get(i).get("Items involved"));
+//            i += 1;
+//        }
+//        while (i < allTrade.size()) {
+//            allTradeInfo.append("\nMeeting\nMeeting ID: ").append(allTrade.get(i).get("Meeting ID"));
+//            allTradeInfo.append("\nStatus: ").append(allTrade.get(i).get("Status"));
+//            allTradeInfo.append("\nLocation: ").append(allTrade.get(i).get("Location"));
+//            allTradeInfo.append("\nTime: ").append(allTrade.get(i).get("Time"));
+//            allTradeInfo.append("\nNumber of Edits: ").append(allTrade.get(i).get("Number of Edits"));
+//            allTradeInfo.append("\nNumber of Confirmations: ").append(allTrade.get(i).get("Number of Confirmations"));
+//            allTradeInfo.append("\nLast user who modified the meeting: ").append(allTrade.get(i).get("Last user who modified the meeting"));
+//            i += 1;
+//        }
+//        return allTradeInfo;
+//    }
 
     /**
      * Allows the user to confirm that the real life meeting happened.

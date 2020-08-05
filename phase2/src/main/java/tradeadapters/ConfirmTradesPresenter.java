@@ -16,10 +16,8 @@ public class ConfirmTradesPresenter extends TextPresenter {
      *
      * @param tradeInfo information on the trade, including the meeting details
      */
-    public void showTrade(List<JSONObject> tradeInfo) {
-        for (JSONObject details : tradeInfo) {
-            System.out.println(details);
-        }
+    public void showTrade(String tradeInfo) {
+        System.out.println(tradeInfo);
         System.out.println("Options for a user: \n" +
                 " Enter 1 to confirm the real life trade happened\n" +
                 " Enter 2 to skip and confirm later\n" +
