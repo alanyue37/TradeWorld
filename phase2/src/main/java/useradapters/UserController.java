@@ -18,6 +18,7 @@ public class UserController implements RunnableController {
     protected final TradeModel tradeModel;
     protected final UserPresenter presenter;
     protected final String username;
+    private List <String> itemsToShow;
     /**
      * Constructor for UserController.
      * @param tradeModel Model of the system.
@@ -28,6 +29,7 @@ public class UserController implements RunnableController {
         this.tradeModel = tradeModel;
         this.username = username;
         presenter = new UserPresenter();
+        itemsToShow = new ArrayList<>();
     }
     /**
      * trademisc.Main method to run the UserController
@@ -53,7 +55,7 @@ public class UserController implements RunnableController {
             String input = br.readLine();
             switch (input) {
                 case "1": // add items to inventory
-                    createItem();
+//                    createItem();
                     validInput = true;
                     break;
                 case "2": // add items to wishlist
@@ -85,11 +87,6 @@ public class UserController implements RunnableController {
                     ctc.run();
                     validInput = true;
                     break;
-                case "8":
-                    RunnableController profileC = new ProfileController(tradeModel, username);
-                    profileC.run();
-                    validInput = true;
-                    break;
                 case "exit":
                     presenter.end();
                     return false;
@@ -102,25 +99,23 @@ public class UserController implements RunnableController {
     /**
      * Allows user to create an item
      */
-    protected void createItem() throws IOException{
-        presenter.printInputItemName();             // enter name of the item
-        String itemName = br.readLine();
-        presenter.printInputItemDescription();      // enter description of the item
-        String itemDescription = br.readLine();
+    protected void createItem(String username, String itemName, String itemDescription){
+//        presenter.printInputItemName();             // enter name of the item
+//        String itemName = br.readLine();
+//        presenter.printInputItemDescription();      // enter description of the item
+//        String itemDescription = br.readLine();
         tradeModel.getItemManager().addItem(itemName, username, itemDescription);
     }
+
     /**
      * View system inventory of users in same city (except items in current user's inventory or wishlist).
      * Gives the user the option of adding items to their wishlist.
-     *
-     * @throws IOException if a problem occurs with reading in input
      */
-    public void viewItemsToAddToWishlist() throws IOException {
+    public List<String> viewItemsToAddToWishlist(){
         Set<String> items = tradeModel.getItemManager().getItemsByStage("common");
         if (tradeModel.getUserManager().getRankByUsername(username).equals("gold")) {
             items.addAll(tradeModel.getItemManager().getItemsByStage("early"));
         }
-        List <String> itemsToShow = new ArrayList<>();
         Set<String> userInventory =  tradeModel.getItemManager().getInventory(username);
         Set<String> userWishlist = tradeModel.getUserManager().getWishlistByUsername(username);
 
@@ -132,17 +127,20 @@ public class UserController implements RunnableController {
                 itemsToShow.add(itemId);
             }
         }
+        return presenter.printItemsToAddToWishlist(getItemsInfo(itemsToShow));
+    }
 
-        presenter.printItemsToAddToWishlist(getItemsInfo(itemsToShow));
-        String choice = br.readLine();
+    public boolean addItemsToWishlist(String choice){
         while (!itemsToShow.contains(choice) && !choice.equals("back")) {
             presenter.tryAgain();
-            choice = br.readLine();
         }
         if (itemsToShow.contains(choice)) {
             tradeModel.getUserManager().addToWishlist(username, choice);
+            return true;
         }
+        return false;
     }
+
     protected List<String> getItemsInfo(Collection<String> itemIds) {
         List <String> itemsInfo = new ArrayList<>();
         for (String itemId : itemIds) {
