@@ -87,6 +87,11 @@ public class UserController implements RunnableController {
                     ctc.run();
                     validInput = true;
                     break;
+                case "8":
+                    RunnableController profileC = new ProfileController(tradeModel, username);
+                    profileC.run();
+                    validInput = true;
+                    break;
                 case "exit":
                     presenter.end();
                     return false;
