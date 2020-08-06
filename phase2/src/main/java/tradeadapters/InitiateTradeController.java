@@ -6,13 +6,11 @@ import trademisc.RunnableController;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class InitiateTradeController implements RunnableController {
     private final TradeModel tradeModel;
@@ -216,38 +214,66 @@ public class InitiateTradeController implements RunnableController {
         return userItemsAvailable;
     }
 
-    private String getItemIdChoice() throws IOException {
-        // Show items available not owned by user and owned by users in same city
-        // TODO: consider using a filter system with filter classes that implement interface
-        String userRank = tradeModel.getUserManager().getRankByUsername(username);
-        Set<String> itemsAvailable = tradeModel.getItemManager().getAvailableItems(userRank);
-        if (tradeModel.getUserManager().getPrivateUser().contains(username)){ // if private user
-            Set<String> privateAccounts = tradeModel.getUserManager().getFriendList(username); // get friend not on vacation
-            privateAccounts.removeIf(user -> tradeModel.getUserManager().getOnVacation().contains(user));
-            itemsAvailable.removeIf(item -> !privateAccounts.contains(tradeModel.getItemManager().getOwner(item)));
-        } else{  //public user
-            Set<String> privateAccounts = tradeModel.getUserManager().getPrivateUser();
-            privateAccounts.removeAll(tradeModel.getUserManager().getFriendList(username));
-            privateAccounts.addAll(tradeModel.getUserManager().getOnVacation()); // remove not friend & vacation
-            itemsAvailable.removeIf(item -> privateAccounts.contains(tradeModel.getItemManager().getOwner(item)));
-        }
-        List <String> itemsToShow = new ArrayList<>();
+//    private String getItemIdChoice() throws IOException {
+//        // Show items available not owned by user and owned by users in same city
+//        // TODO: consider using a filter system with filter classes that implement interface (check method under)
+//        String userRank = tradeModel.getUserManager().getRankByUsername(username);
+//        Set<String> itemsAvailable = tradeModel.getItemManager().getAvailableItems(userRank);
+//
+//        if (tradeModel.getUserManager().getPrivateUser().contains(username)) { // if private user
+//            Set<String> privateAccounts = tradeModel.getUserManager().getFriendList(username); // get friend not on vacation
+//            privateAccounts.removeIf(user -> tradeModel.getUserManager().getOnVacation().contains(user));
+//            itemsAvailable.removeIf(item -> !privateAccounts.contains(tradeModel.getItemManager().getOwner(item)));
+//        } else {  //public user
+//            Set<String> privateAccounts = tradeModel.getUserManager().getPrivateUser();
+//            privateAccounts.removeAll(tradeModel.getUserManager().getFriendList(username));
+//            privateAccounts.addAll(tradeModel.getUserManager().getOnVacation()); // remove not friend & vacation
+//            itemsAvailable.removeIf(item -> privateAccounts.contains(tradeModel.getItemManager().getOwner(item)));
+//        }
+//        List<String> itemsToShow = new ArrayList<>();
+//
+//        for (String itemId : itemsAvailable) {
+//            String otherUsername = tradeModel.getItemManager().getOwner(itemId);
+//            String thisUserCity = tradeModel.getUserManager().getCityByUsername(username);
+//            String otherUserCity = tradeModel.getUserManager().getCityByUsername(otherUsername);
+//            if (!otherUsername.equals(username) && thisUserCity.equals(otherUserCity)) {
+//                itemsToShow.add(tradeModel.getItemManager().getItemInfo(itemId));
+//            }
+//        }
+//        if (itemsToShow.size() == 0) {
+//            presenter.noItemsToTrade();
+//            return null;
+//        }
+//        presenter.availableItemsMenu(itemsToShow);
+//        String itemId = br.readLine();
+//        while (!itemsAvailable.contains(itemId) && !itemId.equals("back")) { //what if they enter available item not shown
+//            // Validate input
+//            presenter.tryAgain();
+//            itemId = br.readLine();
+//        }
+//        if (itemId.equals("back")) {
+//            itemId = null;
+//        }
+//        return itemId;
+//    }
 
-        for (String itemId : itemsAvailable) {
-            String otherUsername = tradeModel.getItemManager().getOwner(itemId);
-            String thisUserCity = tradeModel.getUserManager().getCityByUsername(username);
-            String otherUserCity = tradeModel.getUserManager().getCityByUsername(otherUsername);
-            if (!otherUsername.equals(username) && thisUserCity.equals(otherUserCity)) {
-                itemsToShow.add(tradeModel.getItemManager().getItemInfo(itemId));
-            }
+    private String getItemIdChoice() throws IOException {
+        String userRank = tradeModel.getUserManager().getRankByUsername(username);
+        Set<String> itemsAvailable = new HashSet<>();
+        if (tradeModel.getUserManager().getPrivateUser().contains(username)) { // if private user
+            itemsAvailable.addAll(getAvailableItemsPrivateAccount(tradeModel.getItemManager().getAvailableItems(userRank)));
+        } else {  //public user
+            itemsAvailable.addAll(getAvailableItemsPublicAccount(tradeModel.getItemManager().getAvailableItems(userRank)));
         }
+        List<String> itemsToShow = new ArrayList<>(itemsAvailable);
+
         if (itemsToShow.size() == 0) {
             presenter.noItemsToTrade();
             return null;
         }
         presenter.availableItemsMenu(itemsToShow);
         String itemId = br.readLine();
-        while (!itemsAvailable.contains(itemId) && !itemId.equals("back")) {
+        while (!itemsToShow.contains(itemId) && !itemId.equals("back")) {
             // Validate input
             presenter.tryAgain();
             itemId = br.readLine();
@@ -256,6 +282,25 @@ public class InitiateTradeController implements RunnableController {
             itemId = null;
         }
         return itemId;
+    }
+
+    private Set<String> getAvailableItemsPrivateAccount(Set<String> allItems){
+        Set<String> couldTrade = tradeModel.getUserManager().getFriendList(username);
+        couldTrade.removeIf(user -> tradeModel.getUserManager().getOnVacation().contains(user)); //remove vacation and different city
+        couldTrade.removeIf(friend -> !tradeModel.getUserManager().getCityByUsername(username).equals(tradeModel.getUserManager().getCityByUsername(friend)));
+        allItems.removeIf(item -> !couldTrade.contains(tradeModel.getItemManager().getOwner(item)));
+        return allItems;
+    }
+
+    private Set<String> getAvailableItemsPublicAccount(Set<String> allItems){
+        Set<String> couldNotTrade = tradeModel.getUserManager().getPrivateUser();
+        couldNotTrade.removeAll(tradeModel.getUserManager().getFriendList(username));
+        couldNotTrade.addAll(tradeModel.getUserManager().getOnVacation()); //vacation
+        couldNotTrade.add(username);
+        String thisUserCity = tradeModel.getUserManager().getCityByUsername(username);
+        allItems.removeIf(item -> couldNotTrade.contains(tradeModel.getItemManager().getOwner(item)) |
+                !thisUserCity.equals(tradeModel.getUserManager().getCityByUsername(tradeModel.getItemManager().getOwner(item))));
+        return allItems;
     }
 
     private void unfreezeRequest() throws IOException {

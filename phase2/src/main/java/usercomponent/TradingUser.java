@@ -31,6 +31,7 @@ class TradingUser extends User {
         this.vacation = false;
         this.privacy = false;
         this.friends = new HashSet<>();
+        this.pendingFriends = new HashSet<>();
     }
 
     /**
@@ -160,7 +161,6 @@ class TradingUser extends User {
     protected void removeFromPendingFriends(String username){
         this.pendingFriends.remove(username);
     }
-
 
 
 }
