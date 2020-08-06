@@ -73,12 +73,12 @@ public class AdminGUI {
         grid.add(newPasswordLabel, 0, 1);
         grid.add(passwordField, 0, 1);
         grid.add(hBoxCreateAdmin, 0, 1);
-
+        
         createButton.setOnAction(actionEvent -> {
-            try {
-                adminController.askAdminToAddNewAdmin(nameField.getText(), usernameField.getText(), passwordField.getText());
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (adminController.askAdminToAddNewAdmin(nameField.getText(), usernameField.getText(), passwordField.getText())) {
+                adminPresenter.newAccountCreated(usernameField.getText());  //add to the grid
+            } else {
+                adminPresenter.usernameTaken(usernameField.getText());
             }
         });
 
@@ -99,10 +99,10 @@ public class AdminGUI {
 
         Set<String> flaggedAccounts = new HashSet<>();
         List<String> incompleteUsers = model.getMeetingManager().getTradesIncompleteMeetings(model.getTradeManager().getAllTypeTrades("ongoing"));
-        List<String> weeklyExceedUsers = model.getMeetingManager().getMeetingsPastDays(model.getTradeManager().getAllTypeTrades("completed"));
         flaggedAccounts.addAll(model.getTradeManager().getExceedIncompleteLimitUser(incompleteUsers));
-        flaggedAccounts.addAll(model.getTradeManager().getExceedPerWeek(weeklyExceedUsers));
+        flaggedAccounts.addAll(adminController.getUsersExceedWeekly());
         flaggedAccounts.addAll(model.getUserManager().getUsersForFreezing());
+
 
         freezeAccounts.addAll(flaggedAccounts);
         list.setItems(freezeAccounts);
@@ -126,13 +126,15 @@ public class AdminGUI {
 
         ObservableList<String> selectedItems =  list.getSelectionModel().getSelectedItems();
         ArrayList<String> selected = new ArrayList<>(selectedItems);
+
         freezeButton.setOnAction(actionEvent -> {
-            try {
+            if (selected.isEmpty()) {
+                adminPresenter.freezeAccountsHeading(true);
+            } else {
                 adminController.askAdminToFreezeUsers(selected);
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         });
+
         scene = new Scene(grid, 300, 120);
         stage.setScene(scene);
         stage.show();
@@ -171,12 +173,13 @@ public class AdminGUI {
         ObservableList<String> selectedItems =  list.getSelectionModel().getSelectedItems();
         ArrayList<String> selected = new ArrayList<>(selectedItems);
         unfreezeButton.setOnAction(actionEvent -> {
-            try {
+            if (selected.isEmpty()) {
+                adminPresenter.freezeAccountsHeading(true);
+            } else {
                 adminController.askAdminToUnfreezeUsers(selected);
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         });
+
         scene = new Scene(hBox, 300, 120);
         stage.setScene(scene);
         stage.show();
@@ -192,7 +195,8 @@ public class AdminGUI {
         list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         ObservableList<String> reviewItems =  FXCollections.observableArrayList();
 
-        List<String> items = model.getItemManager().getPendingItems();
+        Set<String> items = model.getItemManager().getItemsByStage("pending");
+        List<String> itemsInList = new ArrayList<>(items);
 
         for(String itemID : items) {
             String itemInfo = model.getItemManager().getItemInfo(itemID);
@@ -219,17 +223,20 @@ public class AdminGUI {
         ObservableList<Integer> selectedItems =  list.getSelectionModel().getSelectedIndices();
         ArrayList<Integer> conversion = new ArrayList<>(selectedItems);
         ArrayList<String> selected = new ArrayList<>();
+        ArrayList<String> notSelected = new ArrayList<>();
 
         for(Integer item : conversion) {
-            selected.add(items.get(item));
+            selected.add(itemsInList.get(item));
+        }
+
+        for (String item : itemsInList) {
+            if (!selected.contains(item)) {
+                notSelected.add(item);
+            }
         }
 
         addItemsButton.setOnAction(actionEvent -> {
-            try {
-                adminController.askAdminToReviewItems(selected);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            adminController.askAdminToReviewItems(selected, notSelected);
         });
         scene = new Scene(grid, width, height);
         stage.setScene(scene);
@@ -260,10 +267,8 @@ public class AdminGUI {
         grid.add(lendingThresholdField, 0, 1);
 
         setThresholdButton.setOnAction(actionEvent -> {
-            try {
+            if (adminController.IsAnIntegerOrZero(lendingThresholdField.getText())) {
                 adminController.askAdminToSetLendingThreshold(lendingThresholdField.getText());
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         });
         scene = new Scene(grid, 300, 120);
@@ -295,10 +300,8 @@ public class AdminGUI {
         grid.add(limitThresholdField, 0, 1);
 
         setThresholdButton.setOnAction(actionEvent -> {
-            try {
+            if (adminController.IsAnIntegerOrOne(limitThresholdField.getText())) {
                 adminController.askAdminToSetLimitOfTransactions(limitThresholdField.getText());
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         });
         scene = new Scene(grid, width, height);
@@ -330,11 +333,10 @@ public class AdminGUI {
         grid.add(limitThresholdField, 0, 1);
 
         setThresholdButton.setOnAction(actionEvent -> {
-            try {
+            if (adminController.IsAnIntegerOrOne(limitThresholdField.getText())) {
                 adminController.askAdminToSetLimitOfIncompleteTrades(limitThresholdField.getText());
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+
         });
         scene = new Scene(grid, width, height);
         stage.setScene(scene);
@@ -365,10 +367,8 @@ public class AdminGUI {
         grid.add(limitThresholdField, 0, 1);
 
         setThresholdButton.setOnAction(actionEvent -> {
-            try {
+            if (adminController.IsAnIntegerOrZero(limitThresholdField.getText())) {
                 adminController.askAdminToSetLimitOfEdits(limitThresholdField.getText());
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         });
         scene = new Scene(grid, width, height);

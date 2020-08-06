@@ -109,19 +109,10 @@ public class AdminController implements RunnableController {
      *
      * @throws IOException If something goes wrong.
      */
-    private void askAdminToAddNewAdmin() throws IOException {
-        presenter.accountEnterName();
-        String nameInput = br.readLine();
-        presenter.accountEnterUsername();
-        String usernameInput = br.readLine();
-        presenter.accountEnterPassword();
-        String passwordInput = br.readLine();
-        boolean success = tradeModel.getUserManager().createAdminUser(nameInput, usernameInput, passwordInput);
-        if (success) {
-            presenter.newAccountCreated(usernameInput);
-        } else {
-            presenter.usernameTaken(usernameInput);
-        }
+    public boolean askAdminToAddNewAdmin(String name, String username, String password) {
+         if (tradeModel.getUserManager().createAdminUser(name, username, password)) {
+             return true;
+         } return false;
     }
 
     /**
@@ -130,25 +121,21 @@ public class AdminController implements RunnableController {
      *
      * @throws IOException If something goes wrong.
      */
-    public void askAdminToFreezeUsers() throws IOException {
-        Set<String> flaggedAccounts = new HashSet<>();
-        List<String> incompleteUsers = tradeModel.getMeetingManager().getTradesIncompleteMeetings(tradeModel.getTradeManager().getAllTypeTrades("ongoing"));
-        flaggedAccounts.addAll(tradeModel.getTradeManager().getExceedIncompleteLimitUser(incompleteUsers));
-        flaggedAccounts.addAll(getUsersExceedWeekly());
-        flaggedAccounts.addAll(tradeModel.getUserManager().getUsersForFreezing());
-        boolean empty = flaggedAccounts.isEmpty();
-        presenter.freezeAccountsHeading(empty);
+    public void askAdminToFreezeUsers(List<String> accountsSelected)  {
+        // Set<String> flaggedAccounts = new HashSet<>();
+        // List<String> incompleteUsers = tradeModel.getMeetingManager().getTradesIncompleteMeetings(tradeModel.getTradeManager().getAllTypeTrades("ongoing"));
+        // flaggedAccounts.addAll(tradeModel.getTradeManager().getExceedIncompleteLimitUser(incompleteUsers));
+        // flaggedAccounts.addAll(getUsersExceedWeekly());
+        // flaggedAccounts.addAll(tradeModel.getUserManager().getUsersForFreezing());
+        // boolean empty = flaggedAccounts.isEmpty();
+        // presenter.freezeAccountsHeading(empty);
 
-        for (String user : flaggedAccounts) {
-            presenter.freezeAccounts(user);
-            String confirmationInput = br.readLine();
-            while (!confirmationInput.equals("0") && !confirmationInput.equals("1")) {
-                presenter.invalidInput();
-                confirmationInput = br.readLine();
-            }
-            if (confirmationInput.equals("1")) {
-                tradeModel.getUserManager().setFrozen(user, true);
-            }
+        for (String user : accountsSelected) {
+            //while (!confirmationInput.equals("0") && !confirmationInput.equals("1")) {
+               // presenter.invalidInput();
+               // confirmationInput = br.readLine();
+            //}
+            tradeModel.getUserManager().setFrozen(user, true);
         }
     }
 
@@ -162,6 +149,7 @@ public class AdminController implements RunnableController {
         HashSet<String> weeklyExceedUsers = new HashSet<>();
         List<String> tradesPastWeek = tradeModel.getMeetingManager().getMeetingsPastDays(tradeModel.getTradeManager()
                 .getAllTypeTrades("completed"));
+
         Map<String, Integer> usersPastWeek = tradeModel.getTradeManager().userToNumTradesInvolved(tradesPastWeek);
         for (String username: usersPastWeek.keySet()) {
             if (usersPastWeek.get(username) > limit+2) {
@@ -181,21 +169,18 @@ public class AdminController implements RunnableController {
      *
      * @throws IOException If something goes wrong.
      */
-    public void askAdminToUnfreezeUsers() throws IOException {
-        Set<String> accounts = tradeModel.getUserManager().getUnfreezeRequests();
-        boolean empty = accounts.isEmpty();
-        presenter.unfreezeAccountsHeading(empty);
+    public void askAdminToUnfreezeUsers(List<String> accountsSelected)  {
+        // Set<String> accounts = tradeModel.getUserManager().getUnfreezeRequests();
+        // boolean empty = accounts.isEmpty();
+        // presenter.unfreezeAccountsHeading(empty);
 
-        for (String user : accounts) {
-            presenter.unfreezeAccounts(user);
-            String confirmationInput = br.readLine();
-            while (!confirmationInput.equals("0") && !confirmationInput.equals("1")) {
-                presenter.invalidInput();
-                confirmationInput = br.readLine();
-            }
-            if (confirmationInput.equals("1")) {
-                tradeModel.getUserManager().setFrozen(user, false);
-            }
+        for (String user : accountsSelected) {
+            // presenter.unfreezeAccounts(user);
+            // String confirmationInput = br.readLine();
+            // while (!confirmationInput.equals("0") && !confirmationInput.equals("1")) {
+              //  presenter.invalidInput();
+              //  confirmationInput = br.readLine();
+            tradeModel.getUserManager().setFrozen(user, false);
         }
     }
 
@@ -205,24 +190,23 @@ public class AdminController implements RunnableController {
      *
      * @throws IOException If something goes wrong.
      */
-    public void askAdminToReviewItems() throws IOException {
-        Set<String> items = tradeModel.getItemManager().getItemsByStage("pending");
-        boolean empty = items.isEmpty();
-        presenter.reviewItemsHeading(empty);
+    public void askAdminToReviewItems(List<String> itemsSelected, List<String> notItemsSelected) {
+        // Set<String> items = tradeModel.getItemManager().getItemsByStage("pending");
+        // boolean empty = items.isEmpty();
+        // presenter.reviewItemsHeading(empty);
 
-        for (String itemId : items) {
-            String itemInfo = tradeModel.getItemManager().getItemInfo(itemId);
-            presenter.reviewItem(itemInfo);
-            String input = br.readLine();
-            while (!input.equals("0") && !input.equals("1")) {
-                presenter.invalidInput();
-                input = br.readLine();
-            }
-            if (input.equals("1")) {
-                tradeModel.getItemManager().confirmItem(itemId);
-            } else {
-                tradeModel.getItemManager().deleteItem(itemId);
-            }
+        for (String itemId : itemsSelected) {
+            //String itemInfo = tradeModel.getItemManager().getItemInfo(itemId);
+            //presenter.reviewItem(itemInfo);
+            // String input = br.readLine();
+            // while (!input.equals("0") && !input.equals("1")) {
+               // presenter.invalidInput();
+                // input = br.readLine();
+            tradeModel.getItemManager().confirmItem(itemId);
+        }
+
+        for (String itemId : notItemsSelected) {
+            tradeModel.getItemManager().deleteItem(itemId);
         }
     }
 
@@ -233,17 +217,16 @@ public class AdminController implements RunnableController {
      *
      * @throws IOException If something goes wrong.
      */
-    public void askAdminToSetLendingThreshold() throws IOException {
-        presenter.lendingThreshold(tradeModel.getUserManager().getThreshold("trading"));
-        String thresholdInput = br.readLine();
-        while (notAnIntegerOrZero(thresholdInput)) {
-            presenter.notAnIntegerOrMin();
-            presenter.lendingThreshold(tradeModel.getUserManager().getThreshold("trading"));
-            thresholdInput = br.readLine();
-        }
-        int lendingThreshold = Integer.parseInt(thresholdInput);
+    public void askAdminToSetLendingThreshold(String lendingLimit) {
+        // presenter.lendingThreshold(tradeModel.getUserManager().getThreshold("trading"));
+        // String thresholdInput = br.readLine();
+        // while (notAnIntegerOrZero(thresholdInput)) {
+            // presenter.notAnIntegerOrMin();
+            // presenter.lendingThreshold(tradeModel.getUserManager().getThreshold("trading"));
+            // thresholdInput = br.readLine();
+        // }
+        int lendingThreshold = Integer.parseInt(lendingLimit);
         tradeModel.getUserManager().setThreshold("trading", lendingThreshold);
-        selectMenu();
     }
 
     /**
@@ -253,17 +236,16 @@ public class AdminController implements RunnableController {
      *
      * @throws IOException If something goes wrong.
      */
-    public void askAdminToSetLimitOfTransactions() throws IOException {
-        presenter.limitOfTransactions(tradeModel.getTradeManager().getLimitTransactionPerWeek());
-        String thresholdInput = br.readLine();
-        while (notAnIntegerOrOne(thresholdInput)) {
-            presenter.notAnIntegerOrMin();
-            presenter.limitOfTransactions(tradeModel.getTradeManager().getLimitTransactionPerWeek());
-            thresholdInput = br.readLine();
-        }
-        int thresholdTransactions = Integer.parseInt(thresholdInput);
-        tradeModel.getTradeManager().changeLimitTransactionPerWeek(thresholdTransactions);
-        selectMenu();
+    public void askAdminToSetLimitOfTransactions(String transactionsLimit) {
+        // presenter.limitOfTransactions(tradeModel.getTradeManager().getLimitTransactionPerWeek());
+        // String thresholdInput = br.readLine();
+        // while (notAnIntegerOrOne(thresholdInput)) {
+           //  presenter.notAnIntegerOrMin();
+           // presenter.limitOfTransactions(tradeModel.getTradeManager().getLimitTransactionPerWeek());
+            //thresholdInput = br.readLine();
+       // }
+        int transactionsThreshold = Integer.parseInt(transactionsLimit);
+        tradeModel.getTradeManager().changeLimitTransactionPerWeek(transactionsThreshold);
     }
 
     /**
@@ -272,17 +254,15 @@ public class AdminController implements RunnableController {
      *
      * @throws IOException If something goes wrong.
      */
-    public void askAdminToSetLimitOfIncompleteTrades() throws IOException {
-        presenter.limitOfIncompleteTransactions(tradeModel.getTradeManager().getLimitIncomplete());
-        String thresholdInput = br.readLine();
-        while (notAnIntegerOrOne(thresholdInput)) {
-            presenter.notAnIntegerOrMin();
-            presenter.limitOfIncompleteTransactions(tradeModel.getTradeManager().getLimitIncomplete());
-            thresholdInput = br.readLine();
-        }
-        int thresholdIncomplete = Integer.parseInt(thresholdInput);
-        tradeModel.getTradeManager().changeLimitIncomplete(thresholdIncomplete);
-        selectMenu();
+    public void askAdminToSetLimitOfIncompleteTrades(String tradeLimit) {
+        // presenter.limitOfIncompleteTransactions(tradeModel.getTradeManager().getLimitIncomplete());
+        // String thresholdInput = br.readLine();
+       // while (notAnIntegerOrOne(thresholdInput)) {
+           // presenter.notAnIntegerOrMin();
+           // presenter.limitOfIncompleteTransactions(tradeModel.getTradeManager().getLimitIncomplete());
+           // thresholdInput = br.readLine();
+        int tradeThreshold = Integer.parseInt(tradeLimit);
+        tradeModel.getTradeManager().changeLimitIncomplete(tradeThreshold);
     }
 
     /**
@@ -292,17 +272,15 @@ public class AdminController implements RunnableController {
      *
      * @throws IOException If something goes wrong.
      */
-    public void askAdminToSetLimitOfEdits() throws IOException {
-        presenter.limitOfEdits(tradeModel.getMeetingManager().getLimitEdits());
-        String thresholdInput = br.readLine();
-        while (notAnIntegerOrZero(thresholdInput)) {
-            presenter.notAnIntegerOrMin();
-            presenter.limitOfEdits(tradeModel.getMeetingManager().getLimitEdits());
-            thresholdInput = br.readLine();
-        }
-        int thresholdEdits = Integer.parseInt(thresholdInput);
-        tradeModel.getMeetingManager().changeLimitEdits(thresholdEdits);
-        selectMenu();
+    public void askAdminToSetLimitOfEdits(String editLimit) {
+        // presenter.limitOfEdits(tradeModel.getMeetingManager().getLimitEdits());
+        // String thresholdInput = br.readLine();
+        // while (notAnIntegerOrZero(thresholdInput)) {
+          //  presenter.notAnIntegerOrMin();
+          // presenter.limitOfEdits(tradeModel.getMeetingManager().getLimitEdits());
+          // thresholdInput = br.readLine();
+        int editThreshold = Integer.parseInt(editLimit);
+        tradeModel.getMeetingManager().changeLimitEdits(editThreshold);
     }
 
     /**
@@ -311,12 +289,12 @@ public class AdminController implements RunnableController {
      * @param adminInput    The input from the Admin user.
      * @return  True iff the input is not an integer or the input is less than 0.
      */
-    private boolean notAnIntegerOrZero(String adminInput) {
+    protected boolean IsAnIntegerOrZero(String adminInput) {
         try {
             int isInt = Integer.parseInt(adminInput);
-            return isInt < 0;
+            return isInt >= 0;
         } catch (NumberFormatException e) {
-            return true;
+            return false;
         }
     }
 
@@ -326,12 +304,12 @@ public class AdminController implements RunnableController {
      * @param adminInput    The input from the Admin user.
      * @return  True iff the input is not an integer or the input is less than 1.
      */
-    private boolean notAnIntegerOrOne(String adminInput) {
+    protected boolean IsAnIntegerOrOne(String adminInput) {
         try {
             int isInt = Integer.parseInt(adminInput);
-            return isInt < 1;
+            return isInt >= 1;
         } catch (NumberFormatException e) {
-            return true;
+            return false;
         }
     }
 }

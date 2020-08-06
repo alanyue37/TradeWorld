@@ -1,7 +1,5 @@
 package itemcomponent;
 
-import javafx.scene.control.SelectionMode;
-
 import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
