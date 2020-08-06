@@ -22,6 +22,7 @@ public class UserPresenter extends TextPresenter {
         options.add("Initiate trades");
         options.add("Manage proposed trades");
         options.add("Confirm trades");
+        options.add("Manage/view your account settings");
         printList(options, true, false);
 
         System.out.println("\nPlease enter the # of your choice or \"exit\" to exit: ");
