@@ -1,13 +1,16 @@
 package usercomponent;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public class ReviewManager {
+public class ReviewManager implements Serializable {
     private Map<String, List<Review>> userToReviews; // maps username to list of reviews
     private Map<String, List<Review>> pendingReviews; // maps tradeId to list of reviews
+    private final AtomicInteger counter = new AtomicInteger(); // keeps count of reviews for review id
 
     public ReviewManager() {
         userToReviews = new HashMap<>();
@@ -15,7 +18,8 @@ public class ReviewManager {
     }
 
     public void addReview(int rating, String comment, String tradeId, String author, String receiver) {
-        Review r = new Review(rating, comment, tradeId, author, receiver);
+        String id = String.valueOf(counter.getAndIncrement());
+        Review r = new Review(id, rating, comment, tradeId, author, receiver);
         if (pendingReviews.containsKey(tradeId)) {
             pendingReviews.get(tradeId).add(r);
         } else {
