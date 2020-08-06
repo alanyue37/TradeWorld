@@ -22,6 +22,7 @@ public class UserPresenter extends TextPresenter {
         options.add("Initiate trades");
         options.add("Manage proposed trades");
         options.add("Confirm trades");
+        options.add("Manage/view your account settings");
         printList(options, true, false);
 
         System.out.println("\nPlease enter the # of your choice or \"exit\" to exit: ");
@@ -46,10 +47,13 @@ public class UserPresenter extends TextPresenter {
      *
      * @param items The list of item IDs to print
      */
-    public void printItemsToAddToWishlist(List<String> items){
+    public List<String> printItemsToAddToWishlist(List<String> items){
         System.out.println("The following items may be added to your wishlist: ");
-        printList(items, false, true);
-        System.out.println("Please enter the ID of the item you would like to add or \"back\" to go back: ");
+        List<String> returnList = new ArrayList<>();
+        for (String s : items) {
+            returnList.add(s + "\n");
+        }
+        return returnList;
     }
 
     /**

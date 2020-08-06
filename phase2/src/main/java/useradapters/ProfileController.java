@@ -101,7 +101,7 @@ public class ProfileController implements RunnableController {
         String friend = br.readLine();
         if (!tradeModel.getUserManager().containsTradingUser(friend)){
             presenter.printSearchingInvalid();
-        } else if(tradeModel.getUserManager().getFriendList(username).contains(friend)){
+        } else if((tradeModel.getUserManager().getFriendList(username).contains(friend))| (friend.equals(username))){
             presenter.alreadyFriend();
         } else if(tradeModel.getUserManager().getFriendRequests(friend).contains(username)){
             presenter.alreadySentRequest();
