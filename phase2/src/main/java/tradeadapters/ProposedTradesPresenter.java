@@ -16,10 +16,8 @@ public class ProposedTradesPresenter extends TextPresenter {
      *
      * @param tradeInfo information on the trade, including the meeting details
      */
-    public void showMeeting(List<JSONObject> tradeInfo) {
-        for (JSONObject details : tradeInfo) {
-            System.out.println(details);
-        }
+    public void showMeeting(String tradeInfo) {
+        System.out.println(tradeInfo);
         System.out.println("Options for a User: \n" +
                 " Enter 1 to confirm the meeting time\n" +
                 " Enter 2 to edit the meeting time\n" +

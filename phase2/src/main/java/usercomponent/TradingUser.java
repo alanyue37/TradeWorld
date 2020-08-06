@@ -10,6 +10,9 @@ class TradingUser extends User {
     private int credit;
     private String city;
     private boolean vacation;
+    private boolean privacy;
+    private Set<String> friends;
+    private Set<String> pendingFriends;
 
     /**
      * Instantiates a new TradingUser
@@ -26,6 +29,8 @@ class TradingUser extends User {
         credit = 0;
         this.city = city;
         this.vacation = false;
+        this.privacy = false;
+        this.friends = new HashSet<>();
     }
 
     /**
@@ -123,5 +128,39 @@ class TradingUser extends User {
     protected void setVacation(boolean vacation){
         this.vacation = vacation;
     }
+
+    protected boolean isPrivate(){
+        return this.privacy;
+    }
+
+    protected void setPrivacy(boolean privacy){
+        this.privacy = privacy;
+    }
+
+    protected Set<String> getFriends(){
+        return this.friends;
+    }
+
+    protected Set<String> getPendingFriends(){
+        return this.pendingFriends;
+    }
+
+    protected void addToFriends(String username){
+        this.friends.add(username);
+    }
+
+    protected void removeFromFriends(String username){
+        this.friends.remove(username);
+    }
+
+    protected void addToPendingFriends(String username){
+        this.pendingFriends.add(username);
+    }
+
+    protected void removeFromPendingFriends(String username){
+        this.pendingFriends.remove(username);
+    }
+
+
 
 }
