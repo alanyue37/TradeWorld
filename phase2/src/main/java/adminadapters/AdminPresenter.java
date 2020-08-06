@@ -145,11 +145,9 @@ public class AdminPresenter extends TextPresenter {
      * @param current   The current threshold set for how much the user has to lend than borrow to make a non-lending
      *                  transaction.
      */
-    public void lendingThreshold(int current) {
-        System.out.println("How many more times (at least) does the user have to lend than they borrow in order to make " +
-                "a non-lending transaction?");
-        System.out.println("The current Lending Threshold is: " + current);
-        System.out.println("Enter a whole number (minimum 0) for the Lending Threshold: ");
+    public String lendingThreshold() {
+        return "How many more times (at least) does the user have to lend than they borrow in order to make " +
+                "a non-lending transaction? " + "Enter a whole number (minimum 0) for the Lending Threshold: ";
     }
 
     /**

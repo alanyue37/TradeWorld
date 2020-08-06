@@ -6,24 +6,20 @@ import trademisc.RunnableController;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A controller class that sends admin input to Use Cases and calls methods in the Use Case classes.
  */
-public class AdminController implements RunnableController {
+public class AdminController extends Observable implements RunnableController {
     private final TradeModel tradeModel;
     private final AdminPresenter presenter;
-    private final BufferedReader br;
     private final String username;
 
     public AdminController(TradeModel tradeModel, String username) {
         this.tradeModel = tradeModel;
         this.presenter = new AdminPresenter();
-        this.br = new BufferedReader(new InputStreamReader(System.in));
+       // this.br = new BufferedReader(new InputStreamReader(System.in));
         this.username = username;
     }
 
@@ -53,11 +49,11 @@ public class AdminController implements RunnableController {
      * @return whether the admin User has selected a menu option
      * @throws IOException If something goes wrong.
      */
-    public boolean selectMenu() throws IOException {
+    /*public boolean selectMenu() throws IOException {
         presenter.startMenu(username);
         boolean validInput = false;
-        do {
-            String input = br.readLine();
+        do {*/
+           /* String input = br.readLine();
             switch (input) {
                 case "1":
                     askAdminToAddNewAdmin();
@@ -99,7 +95,7 @@ public class AdminController implements RunnableController {
             }
         } while (!validInput);
         return true;
-    }
+    }*/
 
     /**
      * This method allows an admin user to add another, subsequent admin user.
@@ -110,9 +106,7 @@ public class AdminController implements RunnableController {
      * @throws IOException If something goes wrong.
      */
     public boolean askAdminToAddNewAdmin(String name, String username, String password) {
-         if (tradeModel.getUserManager().createAdminUser(name, username, password)) {
-             return true;
-         } return false;
+         return tradeModel.getUserManager().createAdminUser(name, username, password);
     }
 
     /**

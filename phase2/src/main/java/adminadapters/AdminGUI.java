@@ -14,7 +14,6 @@ import javafx.stage.Stage;
 import javafx.scene.Scene;
 import tradegateway.TradeModel;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -44,7 +43,7 @@ public class AdminGUI {
     }
 
     public void addNewAdmin() {
-        stage.setTitle("Admin User");       // this will be in main
+        stage.setTitle("Admin User");
         Text title = new Text("Add a New Admin");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -76,9 +75,11 @@ public class AdminGUI {
         
         createButton.setOnAction(actionEvent -> {
             if (adminController.askAdminToAddNewAdmin(nameField.getText(), usernameField.getText(), passwordField.getText())) {
-                adminPresenter.newAccountCreated(usernameField.getText());  //add to the grid
+                newAdminCreated(usernameField.getText());
+            } else if (nameField.getText().equals("") || usernameField.getText().equals("") || passwordField.getText().equals("")) {
+                tryAgain();
             } else {
-                adminPresenter.usernameTaken(usernameField.getText());
+                usernameTaken(usernameField.getText());
             }
         });
 
@@ -87,8 +88,32 @@ public class AdminGUI {
         stage.show();
     }
 
+    public void newAdminCreated(String username) {
+        GridPane grid = (GridPane) scene.getRoot();
+        Text message = new Text("New admin is created: " + username);
+        if(!grid.getChildren().contains(message)){
+            grid.add(message, 0, 6, 2, 1);
+        }
+    }
+
+    public void usernameTaken(String username) {
+        GridPane grid = (GridPane) scene.getRoot();
+        Text message = new Text("Username " + username + " is already taken.");
+        if(!grid.getChildren().contains(message)){
+            grid.add(message, 0, 6, 2, 1);
+        }
+    }
+
+    public void tryAgain() {
+        GridPane grid = (GridPane) scene.getRoot();
+        Text message = new Text("Please try again!");
+        if(!grid.getChildren().contains(message)){
+            grid.add(message, 0, 6, 2, 1);
+        }
+    }
+
     public void freezeUsers() {
-        stage.setTitle("Admin User");       // this will be in main
+        stage.setTitle("Admin User");
         Text title = new Text("Freeze Users");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -141,7 +166,7 @@ public class AdminGUI {
     }
 
     public void unfreezeUsers() {
-        stage.setTitle("Admin User");       // this will be in main
+        stage.setTitle("Admin User");
         Text title = new Text("Unfreeze Users");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -186,7 +211,7 @@ public class AdminGUI {
     }
 
     public void reviewItems() {
-        stage.setTitle("Admin User");       // this will be in main
+        stage.setTitle("Admin User");
         Text title = new Text("Review Items");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -244,7 +269,7 @@ public class AdminGUI {
     }
 
     public void setLendingThreshold() {
-        stage.setTitle("Admin User");       // this will be in main
+        stage.setTitle("Admin User");
         Text title = new Text("Set Lending Threshold");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -277,7 +302,7 @@ public class AdminGUI {
     }
 
     public void setLimitOfTransactionsThreshold() {
-        stage.setTitle("Admin User");       // this will be in main
+        stage.setTitle("Admin User");
         Text title = new Text("Set A Limit for Transactions");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -310,7 +335,7 @@ public class AdminGUI {
     }
 
     public void setLimitOfIncompleteTrades() {
-        stage.setTitle("Admin User");       // this will be in main
+        stage.setTitle("Admin User");
         Text title = new Text("Set Lending Threshold");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -344,7 +369,7 @@ public class AdminGUI {
     }
 
     public void setLimitOfEdits() {
-        stage.setTitle("Admin User");       // this will be in main
+        stage.setTitle("Admin User");
         Text title = new Text("Set Threshold");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -374,9 +399,5 @@ public class AdminGUI {
         scene = new Scene(grid, width, height);
         stage.setScene(scene);
         stage.show();
-    }
-
-    public void thresholdScreen() {
-        // TODO: so that the code for the threshold screen doesn't repeat
     }
 }

@@ -28,7 +28,7 @@ public class LoginGUI {
         this.height = height;
     }
 
-    public void usernameTaken(String username){
+    public void usernameTaken(String username) {
         GridPane grid = (GridPane) scene.getRoot();
         Text message = new Text("Username " + username + " is already taken.");
         if(!grid.getChildren().contains(message)){
