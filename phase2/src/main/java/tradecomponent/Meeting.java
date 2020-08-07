@@ -44,9 +44,6 @@ class Meeting implements Serializable {
         return this.location;
     }
 
-    protected String getMeetingId(){
-        return this.meetingId;
-    }
     /**
      * Returns the User who last edited and made changes
      * @return The User who last edited and made changes
@@ -115,14 +112,6 @@ class Meeting implements Serializable {
      */
     protected void incrementNumConfirmations(){
         this.numConfirmations += 1;
-    }
-
-    /**
-     * Returns true iff the meeting is completed, false otherwise
-     * @return  True iff the meeting is completed, false otherwise
-     */
-    protected boolean getIsCompleted(){
-        return this.IsCompleted;
     }
 
     /**

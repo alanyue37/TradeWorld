@@ -8,6 +8,7 @@ import trademisc.RunnableController;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.util.*;
 
 /**
@@ -166,7 +167,7 @@ public class ConfirmTradesController implements RunnableController {
     }
 
 
-        private void changeToConfirmed(String tradeId, String username){
+    private void changeToConfirmed(String tradeId, String username){
         String meetingId = tradeModel.getTradeManager().getMeetingOfTrade(tradeId).get(tradeModel.getTradeManager().getMeetingOfTrade(tradeId).size() - 1);
         tradeModel.getMeetingManager().meetingHappened(meetingId, username);
         if ((!tradeModel.getTradeManager().needToAddMeeting(tradeId)) && (tradeModel.getMeetingManager().tradeMeetingsCompleted(tradeId))){
@@ -200,11 +201,16 @@ public class ConfirmTradesController implements RunnableController {
                 tradeModel.getUserManager().removeFromWishlist(itemToUsers.get(item).get(1), item);
                 tradeModel.getItemManager().setOwner(item, itemToUsers.get(item).get(1));
             }
-
             tradeModel.getItemManager().setItemAvailable(item, true);
             tradeModel.getUserManager().updateCreditByUsername(itemToUsers.get(item).get(0), true);
             tradeModel.getUserManager().updateCreditByUsername(itemToUsers.get(item).get(1), false);
         }
-        tradeModel.getReviewManager().verifyReview(tradeId);
+        String otherUser = "";
+        for (List<String> users: tradeModel.getTradeManager().itemToUsers(tradeId).values()){
+            users.remove(username);
+            otherUser = users.get(0);
+        }
+        List<String> users = new ArrayList<>(Arrays.asList(username, otherUser));
+        tradeModel.getReviewManager().verifyReview(tradeId, users);
     }
 }

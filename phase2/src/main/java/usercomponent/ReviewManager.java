@@ -1,10 +1,7 @@
 package usercomponent;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ReviewManager implements Serializable {
@@ -32,8 +29,8 @@ public class ReviewManager implements Serializable {
         if (!userToReviews.containsKey(username)){
             return profileInfo;
         }
-        List<Review> reviews = userToReviews.get(username);
-        if (reviews == null) {
+        List<Review> reviews = getAvailableReviews(username);
+        if (reviews.size() == 0) {
             return profileInfo;
         }
         int totalRatings = 0;
@@ -58,7 +55,7 @@ public class ReviewManager implements Serializable {
 //        } else{
 //            List<Review> reviews = userToReviews.get(receiverUsername);
 //            for (Review review: reviews){
-//                if (review.getReviewer().equals(writerUsername) && review.getTradeId().equals(tradeId)){
+//                if (review.getAuthor().equals(writerUsername) && review.getTradeId().equals(tradeId)){
 //                    return true;
 //                }
 //            }
@@ -66,5 +63,23 @@ public class ReviewManager implements Serializable {
 //        return false;
 //    }
 
+    public void verifyReview(String tradeId, List<String> usernames){
+        for (String user: usernames){
+            for (Review review: userToReviews.get(user)){
+                if (review.getTradeId().equals(tradeId)){
+                    review.setState("available");
+                }
+            }
+        }
+    }
 
+    private List<Review> getAvailableReviews(String username){
+        List<Review> availableReviews = new ArrayList<>();
+        for (Review review: userToReviews.get(username)){
+            if (review.getState().equals("available")){
+                availableReviews.add(review);
+            }
+        }
+        return availableReviews;
+    }
 }
