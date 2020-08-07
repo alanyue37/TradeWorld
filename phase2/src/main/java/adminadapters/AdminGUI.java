@@ -92,6 +92,7 @@ public class AdminGUI {
         ArrayList<Integer> conversion = new ArrayList<>(selectedItem);
         String selected = conversion.toString();
 
+        // Should we have buttons for each option instead?
         goButton.setOnAction(actionEvent -> {
             switch (selected) {
                 case "0": {

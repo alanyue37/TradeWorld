@@ -38,6 +38,8 @@ public class UserGUI{
         Text title = new Text("Trading User");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
+        // should we present these options in a list and have the user select an option?
+
         Button addInventory = new Button("Add items to inventory");
         Button addWishlist = new Button("Add items to wishlist");
         Button viewUserItems = new Button("View inventory or wishlist");
