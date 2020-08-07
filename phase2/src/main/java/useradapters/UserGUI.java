@@ -17,11 +17,11 @@ import javafx.stage.Stage;
 import java.util.List;
 
 public class UserGUI{
-    private Stage stage;
+    private final Stage stage;
     private Scene scene;
     private final UserController controller;
-    private int width;
-    private int height;
+    private final int width;
+    private final int height;
     protected String username;
 
     public UserGUI(String username, Stage stage, int width, int height, UserController controller) {
@@ -37,6 +37,8 @@ public class UserGUI{
 
         Text title = new Text("Trading User");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+
+        // should we present these options in a list and have the user select an option?
 
         Button addInventory = new Button("Add items to inventory");
         Button addWishlist = new Button("Add items to wishlist");

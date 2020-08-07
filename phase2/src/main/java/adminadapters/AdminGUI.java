@@ -60,7 +60,7 @@ public class AdminGUI {
      * which method to call in the AdminGUI. This screen is displayed again, if the Admin does not select an
      * option.
      */
-    public void menuOptions() {
+    public void adminUserInitialScreen() {
         stage.setTitle("Admin Menu Options");
 
         Text title = new Text("What would you like to do?");
@@ -84,11 +84,15 @@ public class AdminGUI {
         grid.setPadding(new Insets(25, 25, 25, 25));
         grid.add(title, 0, 0, 2, 1);
         grid.getChildren().add(list);
+        list.setPrefHeight(height - 50); // we could change this
+        list.setPrefWidth(width - 50);   // we could change this
         grid.add(hBoxGo, 0, 1);
 
         ObservableList<Integer> selectedItem =  list.getSelectionModel().getSelectedIndices();
         ArrayList<Integer> conversion = new ArrayList<>(selectedItem);
         String selected = conversion.toString();
+
+        // If the group suggests, I can also have these options presented in buttons (just like in UserGUI).
 
         goButton.setOnAction(actionEvent -> {
             switch (selected) {
@@ -125,7 +129,7 @@ public class AdminGUI {
                     break;
                 } default: {
                     tryAgain();
-                    menuOptions();
+                    adminUserInitialScreen();
                 }
             }
         });
@@ -189,7 +193,7 @@ public class AdminGUI {
     public void newAdminCreated(String username) {
         GridPane grid = (GridPane) scene.getRoot();
         Text message = new Text(presenter.newAccountCreated(username));
-        if(!grid.getChildren().contains(message)){
+        if (!grid.getChildren().contains(message)){
             grid.add(message, 0, 6, 2, 1);
         }
     }
@@ -201,7 +205,7 @@ public class AdminGUI {
     public void usernameTaken(String username) {
         GridPane grid = (GridPane) scene.getRoot();
         Text message = new Text(presenter.usernameTaken(username));
-        if(!grid.getChildren().contains(message)){
+        if (!grid.getChildren().contains(message)){
             grid.add(message, 0, 6, 2, 1);
         }
     }
@@ -212,7 +216,7 @@ public class AdminGUI {
     public void tryAgain() {
         GridPane grid = (GridPane) scene.getRoot();
         Text message = new Text("Please try again!");
-        if(!grid.getChildren().contains(message)){
+        if (!grid.getChildren().contains(message)){
             grid.add(message, 0, 6, 2, 1);
         }
     }
@@ -248,6 +252,9 @@ public class AdminGUI {
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
         grid.add(title, 0, 0, 2, 1);
+        grid.getChildren().add(list);
+        list.setPrefHeight(height - 50); // we could change this
+        list.setPrefWidth(width - 50);   // we could change this
 
 
         Button freezeButton = new Button("Freeze these Accounts");
@@ -312,6 +319,7 @@ public class AdminGUI {
         Set<String> accounts = model.getUserManager().getUnfreezeRequests();
         unfreezeAccounts.addAll(accounts);
         list.setItems(unfreezeAccounts);
+        list.setPlaceholder(new Label("There are no accounts to be unfrozen"));
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -319,6 +327,9 @@ public class AdminGUI {
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
         grid.add(title, 0, 0, 2, 1);
+        grid.getChildren().add(list);
+        list.setPrefHeight(height - 50); // we could change this
+        list.setPrefWidth(width - 50);   // we could change this
 
         Button unfreezeButton = new Button("Unfreeze these Accounts");
         HBox unfreezeHBox = new HBox(10);

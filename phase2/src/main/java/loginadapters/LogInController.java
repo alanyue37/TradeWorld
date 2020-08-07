@@ -49,7 +49,7 @@ public class LogInController extends Observable {
         password = pass;
         if (tradeModel.getUserManager().login(username, password)) {
             if (tradeModel.getUserManager().isAdmin(username)) {
-                nextController = new AdminController(tradeModel, username); // Admin logged in
+                nextController = (RunnableController) new AdminController(tradeModel, username); // Admin logged in
             }
             else {
                 nextController = new UserController(tradeModel, username); // User logged in

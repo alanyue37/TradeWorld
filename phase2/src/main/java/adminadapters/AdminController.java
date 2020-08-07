@@ -1,15 +1,13 @@
 package adminadapters;
 
 import tradegateway.TradeModel;
-import trademisc.RunnableController;
-
 import java.io.IOException;
 import java.util.*;
 
 /**
  * A controller class that sends admin input to Use Cases and calls methods in the Use Case classes.
  */
-public class AdminController extends Observable implements RunnableController {
+public class AdminController extends Observable {
     private final TradeModel tradeModel;
     private final AdminPresenter presenter;
     private final String username;
@@ -24,7 +22,7 @@ public class AdminController extends Observable implements RunnableController {
      * This method overrides run() method in the trademisc.RunnableController interface. It shows the menu options
      * to the admin user and might catch an IOException if something goes wrong when showing the menu options.
      */
-    @Override
+    /*@Override
     public void run() {
         try {
             boolean active = selectMenu();
@@ -34,7 +32,7 @@ public class AdminController extends Observable implements RunnableController {
         } catch (IOException e) {
             System.out.println("Oops, something bad happened!");
         }
-    }
+    }*/
 
     /**
      * This method prints the menu options and asks the admin user to enter a corresponding number to
