@@ -78,39 +78,6 @@ public class ConfirmTradesController implements RunnableController {
         return tradeModel.getTradeManager().getType(userToBeConfirmed);
     }
 
-//    private List<JSONObject> getTradeAllInfo(String tradeId) throws JSONException {
-//        List<JSONObject> allTradeInfo = new ArrayList<>();
-//        allTradeInfo.add(tradeModel.getTradeManager().getTradeInfo(tradeId));
-//        allTradeInfo.addAll(tradeModel.getMeetingManager().getMeetingsInfo(tradeId));
-//        return allTradeInfo;
-//    }
-
-//    private StringBuilder formatTradeInfo(List<JSONObject> allTrade) throws JSONException {
-//        StringBuilder allTradeInfo = new StringBuilder();
-//        int i = 0;
-//        while (i < 1) {
-//            allTradeInfo.append("Trade ID: ").append(allTrade.get(i).get("Trade ID"));
-//            allTradeInfo.append("\nType: ").append(allTrade.get(i).get("Type"));
-//            allTradeInfo.append("\nStatus: ").append(allTrade.get(i).get("Status"));
-//            allTradeInfo.append("\nNumber of meetings: ").append(allTrade.get(i).get("Number of meetings"));
-//            allTradeInfo.append("\nCreation Date: ").append(allTrade.get(i).get("Creation Date"));
-//            allTradeInfo.append("\nUsers involved: ").append(allTrade.get(i).get("Users involved"));
-//            allTradeInfo.append("\nItems involved: ").append(allTrade.get(i).get("Items involved"));
-//            i += 1;
-//        }
-//        while (i < allTrade.size()) {
-//            allTradeInfo.append("\nMeeting\nMeeting ID: ").append(allTrade.get(i).get("Meeting ID"));
-//            allTradeInfo.append("\nStatus: ").append(allTrade.get(i).get("Status"));
-//            allTradeInfo.append("\nLocation: ").append(allTrade.get(i).get("Location"));
-//            allTradeInfo.append("\nTime: ").append(allTrade.get(i).get("Time"));
-//            allTradeInfo.append("\nNumber of Edits: ").append(allTrade.get(i).get("Number of Edits"));
-//            allTradeInfo.append("\nNumber of Confirmations: ").append(allTrade.get(i).get("Number of Confirmations"));
-//            allTradeInfo.append("\nLast user who modified the meeting: ").append(allTrade.get(i).get("Last user who modified the meeting"));
-//            i += 1;
-//        }
-//        return allTradeInfo;
-//    }
-
     /**
      * Allows the user to confirm that the real life meeting happened.
      * @param tradeId id of the trade
@@ -120,7 +87,7 @@ public class ConfirmTradesController implements RunnableController {
             changeToConfirmed(tradeId, username);
             presenter.confirmedTrade();
 
-            if (!(tradeModel.getTradeManager().needToAddMeeting(tradeId))) {
+            if (!(tradeModel.getTradeManager().needToAddMeeting(tradeId, 1, 2))) {
                 List<String> reviewInfo = getReviewInfo();
                 if (reviewInfo.size() > 0) {
                     String receiver = "";
@@ -136,7 +103,7 @@ public class ConfirmTradesController implements RunnableController {
                 completedTradeChanges(tradeId, type);
             } else {
                 if (tradeModel.getMeetingManager().tradeMeetingsCompleted(tradeId)){
-                    if (tradeModel.getTradeManager().needToAddMeeting(tradeId)){
+                    if (tradeModel.getTradeManager().needToAddMeeting(tradeId, 1, 2)){
                         createMandatoryReturnMeeting(tradeId);
                     }
                 }
@@ -170,7 +137,7 @@ public class ConfirmTradesController implements RunnableController {
     private void changeToConfirmed(String tradeId, String username){
         String meetingId = tradeModel.getTradeManager().getMeetingOfTrade(tradeId).get(tradeModel.getTradeManager().getMeetingOfTrade(tradeId).size() - 1);
         tradeModel.getMeetingManager().meetingHappened(meetingId, username);
-        if ((!tradeModel.getTradeManager().needToAddMeeting(tradeId)) && (tradeModel.getMeetingManager().tradeMeetingsCompleted(tradeId))){
+        if ((!tradeModel.getTradeManager().needToAddMeeting(tradeId, 1, 2)) && (tradeModel.getMeetingManager().tradeMeetingsCompleted(tradeId))){
             tradeModel.getTradeManager().closeTrade(tradeId);
         }
     }
