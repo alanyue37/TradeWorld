@@ -15,11 +15,11 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class LoginGUI {
-    private Stage stage;
+    private final Stage stage;
     private Scene scene;
     private final LogInController controller;
-    private int width;
-    private int height;
+    private final int width;
+    private final int height;
 
     public LoginGUI(Stage stage, int width, int height, LogInController controller) {
         this.stage = stage;
@@ -28,7 +28,7 @@ public class LoginGUI {
         this.height = height;
     }
 
-    public void usernameTaken(String username){
+    public void usernameTaken(String username) {
         GridPane grid = (GridPane) scene.getRoot();
         Text message = new Text("Username " + username + " is already taken.");
         if(!grid.getChildren().contains(message)){
