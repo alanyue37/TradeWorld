@@ -84,6 +84,8 @@ public class AdminGUI {
         grid.setPadding(new Insets(25, 25, 25, 25));
         grid.add(title, 0, 0, 2, 1);
         grid.getChildren().add(list);
+        list.setPrefHeight(height - 50); // we could change this
+        list.setPrefWidth(width - 50);   // we could change this
         grid.add(hBoxGo, 0, 1);
 
         ObservableList<Integer> selectedItem =  list.getSelectionModel().getSelectedIndices();
@@ -248,6 +250,9 @@ public class AdminGUI {
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
         grid.add(title, 0, 0, 2, 1);
+        grid.getChildren().add(list);
+        list.setPrefHeight(height - 50); // we could change this
+        list.setPrefWidth(width - 50);   // we could change this
 
 
         Button freezeButton = new Button("Freeze these Accounts");
@@ -312,6 +317,7 @@ public class AdminGUI {
         Set<String> accounts = model.getUserManager().getUnfreezeRequests();
         unfreezeAccounts.addAll(accounts);
         list.setItems(unfreezeAccounts);
+        list.setPlaceholder(new Label("There are no accounts to be unfrozen"));
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -319,6 +325,9 @@ public class AdminGUI {
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
         grid.add(title, 0, 0, 2, 1);
+        grid.getChildren().add(list);
+        list.setPrefHeight(height - 50); // we could change this
+        list.setPrefWidth(width - 50);   // we could change this
 
         Button unfreezeButton = new Button("Unfreeze these Accounts");
         HBox unfreezeHBox = new HBox(10);
