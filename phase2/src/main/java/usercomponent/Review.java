@@ -9,7 +9,6 @@ public class Review implements Serializable {
     private String tradeId;
     private String author;
     private String receiver;
-    private String state;
 
     public Review(String id, int rating, String comment, String tradeId, String author, String receiver) {
         this.id = id;
@@ -18,7 +17,6 @@ public class Review implements Serializable {
         this.tradeId = tradeId;
         this.author = author;
         this.receiver = receiver;
-        this.state = "pending";
     }
 
     /**
@@ -37,16 +35,8 @@ public class Review implements Serializable {
 
     public String getComment() { return comment; }
 
-//    public String getAuthor(){
-//        return author;
-//    }
-
-    public String getState(){
-        return state;
-    }
-
-    public void setState(String state){
-        this.state = state;
+    public String getAuthor(){
+        return author;
     }
 }
 

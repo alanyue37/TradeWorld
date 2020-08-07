@@ -87,18 +87,6 @@ public class ConfirmTradesController implements RunnableController {
             changeToConfirmed(tradeId, username);
             presenter.confirmedTrade();
 
-            if (!(tradeModel.getTradeManager().needToAddMeeting(tradeId, 1, 2))) {
-                List<String> reviewInfo = getReviewInfo();
-                if (reviewInfo.size() > 0) {
-                    String receiver = "";
-                    for (List<String> users : tradeModel.getTradeManager().itemToUsers(tradeId).values()) {
-                        users.remove(username);
-                        receiver = users.get(0);
-                    }
-                    tradeModel.getReviewManager().addReview(Integer.parseInt(reviewInfo.get(0)), reviewInfo.get(1), tradeId, username, receiver);
-                }
-            }
-
             if (tradeModel.getTradeManager().getTradesOfUser(username, "completed").contains(tradeId)) {
                 completedTradeChanges(tradeId, type);
             } else {
@@ -110,29 +98,6 @@ public class ConfirmTradesController implements RunnableController {
             }
         } else { presenter.declineConfirm(); }
     }
-
-    private List<String> getReviewInfo() throws IOException {
-        List<String> reviewInfo = new ArrayList<>();
-        presenter.askRating();
-        String rating = br.readLine();
-        List<String> validRatings = new ArrayList<>(Arrays.asList("1", "2", "3", "4", "5"));
-        if (rating.equals("")) {
-            return reviewInfo;
-        } else {
-            do {
-                presenter.invalidRating();
-                rating = br.readLine();
-            } while (!(validRatings.contains(rating)));
-        }
-        presenter.askComment();
-        String comment = br.readLine();
-        if (!comment.equals("exit")) {
-            reviewInfo.add(rating);
-            reviewInfo.add(comment);
-        }
-        return reviewInfo;
-    }
-
 
     private void changeToConfirmed(String tradeId, String username){
         String meetingId = tradeModel.getTradeManager().getMeetingOfTrade(tradeId).get(tradeModel.getTradeManager().getMeetingOfTrade(tradeId).size() - 1);
@@ -172,12 +137,5 @@ public class ConfirmTradesController implements RunnableController {
             tradeModel.getUserManager().updateCreditByUsername(itemToUsers.get(item).get(0), true);
             tradeModel.getUserManager().updateCreditByUsername(itemToUsers.get(item).get(1), false);
         }
-        String otherUser = "";
-        for (List<String> users: tradeModel.getTradeManager().itemToUsers(tradeId).values()){
-            users.remove(username);
-            otherUser = users.get(0);
-        }
-        List<String> users = new ArrayList<>(Arrays.asList(username, otherUser));
-        tradeModel.getReviewManager().verifyReview(tradeId, users);
     }
 }

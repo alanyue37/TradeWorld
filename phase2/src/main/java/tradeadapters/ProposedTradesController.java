@@ -75,6 +75,9 @@ public class ProposedTradesController implements RunnableController {
                         presenter.declineEditMeeting();
                     }
                     break;
+                case "3": // decline/cancel trade
+                    declineTrade(tradeId);
+                    break;
                 case "exit":
                     presenter.end();
                     return false;
@@ -156,5 +159,11 @@ public class ProposedTradesController implements RunnableController {
         } catch (ParseException e) {
             System.out.println("Invalid date and time!");
         }
+    }
+
+    private void declineTrade(String tradeId){
+        tradeModel.getTradeManager().cancelTrade(tradeId);
+        tradeModel.getMeetingManager().cancelMeetingsOfTrade(tradeId);
+        presenter.canceledTrade();
     }
 }

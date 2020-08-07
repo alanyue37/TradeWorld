@@ -29,7 +29,7 @@ public class ReviewManager implements Serializable {
         if (!userToReviews.containsKey(username)){
             return profileInfo;
         }
-        List<Review> reviews = getAvailableReviews(username);
+        List<Review> reviews = userToReviews.get(username);
         if (reviews.size() == 0) {
             return profileInfo;
         }
@@ -47,39 +47,20 @@ public class ReviewManager implements Serializable {
         return profileInfo;
     }
 
-//    public boolean alreadyWroteReview(String writerUsername, String receiverUsername, String tradeId){
-//        if (!userToReviews.containsKey(receiverUsername)){
-//            return false;
-//        } else if(userToReviews.get(receiverUsername).size() == 0){
-//            return false;
-//        } else{
-//            List<Review> reviews = userToReviews.get(receiverUsername);
-//            for (Review review: reviews){
-//                if (review.getAuthor().equals(writerUsername) && review.getTradeId().equals(tradeId)){
-//                    return true;
-//                }
-//            }
-//        }
-//        return false;
-//    }
-
-    public void verifyReview(String tradeId, List<String> usernames){
-        for (String user: usernames){
-            for (Review review: userToReviews.get(user)){
-                if (review.getTradeId().equals(tradeId)){
-                    review.setState("available");
+    public boolean alreadyWroteReview(String writerUsername, String receiverUsername, String tradeId){
+        if (!userToReviews.containsKey(receiverUsername)){
+            return false;
+        } else if(userToReviews.get(receiverUsername).size() == 0){
+            return false;
+        } else{
+            List<Review> reviews = userToReviews.get(receiverUsername);
+            for (Review review: reviews){
+                if (review.getAuthor().equals(writerUsername) && review.getTradeId().equals(tradeId)){
+                    return true;
                 }
             }
         }
+        return false;
     }
 
-    private List<Review> getAvailableReviews(String username){
-        List<Review> availableReviews = new ArrayList<>();
-        for (Review review: userToReviews.get(username)){
-            if (review.getState().equals("available")){
-                availableReviews.add(review);
-            }
-        }
-        return availableReviews;
-    }
 }
