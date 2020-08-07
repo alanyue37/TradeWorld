@@ -462,12 +462,19 @@ public class AdminGUI {
         Text title = new Text("Set Lending Threshold");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
+        Text text = new Text();
+        int currentLimit = model.getUserManager().getThreshold("trading");
+        text.setText(Integer.toString(currentLimit));
+
+
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
         grid.add(title, 0, 0, 2, 1);
+        grid.add(text, 1, 1, 3, 4);
+
 
         Label lendingThresholdLabel = new Label(presenter.lendingThreshold());
         TextField lendingThresholdField = new TextField();
@@ -478,7 +485,7 @@ public class AdminGUI {
         hBoxSetThreshold.getChildren().add(setThresholdButton);
 
         grid.add(lendingThresholdLabel, 0, 1);
-        grid.add(lendingThresholdField, 0, 1);
+        grid.add(lendingThresholdField, 0, 3);
 
         setThresholdButton.setOnAction(actionEvent -> {
             if (controller.IsAnIntegerOrZero(lendingThresholdField.getText())) {
@@ -503,12 +510,17 @@ public class AdminGUI {
         Text title = new Text("Set A Limit for Transactions");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
+        Text text = new Text();
+        int currentLimit = model.getTradeManager().getLimitTransactionPerWeek();
+        text.setText(Integer.toString(currentLimit));
+
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
         grid.add(title, 0, 0, 2, 1);
+        grid.add(text, 1, 1, 3, 4);
 
         Label limitThresholdLabel = new Label(presenter.lendingThreshold());
         TextField limitThresholdField = new TextField();
@@ -519,7 +531,7 @@ public class AdminGUI {
         hBoxSetThreshold.getChildren().add(setThresholdButton);
 
         grid.add(limitThresholdLabel, 0, 1);
-        grid.add(limitThresholdField, 0, 1);
+        grid.add(limitThresholdField, 0, 3);
 
         setThresholdButton.setOnAction(actionEvent -> {
             if (controller.IsAnIntegerOrOne(limitThresholdField.getText())) {
@@ -544,12 +556,17 @@ public class AdminGUI {
         Text title = new Text("Set Lending Threshold");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
+        Text text = new Text();
+        int currentLimit = model.getTradeManager().getLimitIncomplete();
+        text.setText(Integer.toString(currentLimit));
+
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
         grid.add(title, 0, 0, 2, 1);
+        grid.add(text, 1, 1, 3, 4);
 
         Label limitThresholdLabel = new Label(presenter.lendingThreshold());
         TextField limitThresholdField = new TextField();
@@ -560,7 +577,7 @@ public class AdminGUI {
         hBoxSetThreshold.getChildren().add(setThresholdButton);
 
         grid.add(limitThresholdLabel, 0, 1);
-        grid.add(limitThresholdField, 0, 1);
+        grid.add(limitThresholdField, 0, 3);
 
         setThresholdButton.setOnAction(actionEvent -> {
             if (controller.IsAnIntegerOrOne(limitThresholdField.getText())) {
@@ -586,12 +603,17 @@ public class AdminGUI {
         Text title = new Text("Set Threshold");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
+        Text text = new Text();
+        int currentLimit = model.getMeetingManager().getLimitEdits();
+        text.setText(Integer.toString(currentLimit));
+
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
         grid.add(title, 0, 0, 2, 1);
+        grid.add(text, 1, 1, 3, 4);
 
         Label limitThresholdLabel = new Label(presenter.lendingThreshold());
         TextField limitThresholdField = new TextField();
@@ -602,7 +624,7 @@ public class AdminGUI {
         hBoxSetThreshold.getChildren().add(setThresholdButton);
 
         grid.add(limitThresholdLabel, 0, 1);
-        grid.add(limitThresholdField, 0, 1);
+        grid.add(limitThresholdField, 0, 3);
 
         setThresholdButton.setOnAction(actionEvent -> {
             if (controller.IsAnIntegerOrZero(limitThresholdField.getText())) {
