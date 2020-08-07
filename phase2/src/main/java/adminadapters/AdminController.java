@@ -3,9 +3,7 @@ package adminadapters;
 import tradegateway.TradeModel;
 import trademisc.RunnableController;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.*;
 
 /**
@@ -19,7 +17,6 @@ public class AdminController extends Observable implements RunnableController {
     public AdminController(TradeModel tradeModel, String username) {
         this.tradeModel = tradeModel;
         this.presenter = new AdminPresenter();
-       // this.br = new BufferedReader(new InputStreamReader(System.in));
         this.username = username;
     }
 
@@ -102,20 +99,16 @@ public class AdminController extends Observable implements RunnableController {
      * It asks the admin user to type in their name, email, and password to create an account for the subsequent
      * admin user. After adding the subsequent admin user to admin users in UserManager, the admin is presented with
      * the same menu options again.
-     *
-     * @throws IOException If something goes wrong.
      */
-    public boolean askAdminToAddNewAdmin(String name, String username, String password) {
+    protected boolean askAdminToAddNewAdmin(String name, String username, String password) {
          return tradeModel.getUserManager().createAdminUser(name, username, password);
     }
 
     /**
      * This method allows an admin user to freeze accounts of trading users who have reached the limits and thresholds.
      * After freezing the account(s), the admin is presented with the same menu options again.
-     *
-     * @throws IOException If something goes wrong.
      */
-    public void askAdminToFreezeUsers(List<String> accountsSelected)  {
+    protected void askAdminToFreezeUsers(List<String> accountsSelected)  {
         // Set<String> flaggedAccounts = new HashSet<>();
         // List<String> incompleteUsers = tradeModel.getMeetingManager().getTradesIncompleteMeetings(tradeModel.getTradeManager().getAllTypeTrades("ongoing"));
         // flaggedAccounts.addAll(tradeModel.getTradeManager().getExceedIncompleteLimitUser(incompleteUsers));
@@ -138,7 +131,7 @@ public class AdminController extends Observable implements RunnableController {
      *
      * @return list of usernames who've surpassed the weekly limit of trades in the past week
      */
-    public Set<String> getUsersExceedWeekly() {
+    protected Set<String> getUsersExceedWeekly() {
         int limit = tradeModel.getTradeManager().getLimitTransactionPerWeek();
         HashSet<String> weeklyExceedUsers = new HashSet<>();
         List<String> tradesPastWeek = tradeModel.getMeetingManager().getMeetingsPastDays(tradeModel.getTradeManager()
@@ -160,10 +153,8 @@ public class AdminController extends Observable implements RunnableController {
     /**
      * This method allows an admin user to unfreeze accounts of trading users who have requested to unfreeze.
      * After unfreezing the account(s), the admin is presented with the same menu options again.
-     *
-     * @throws IOException If something goes wrong.
      */
-    public void askAdminToUnfreezeUsers(List<String> accountsSelected)  {
+    protected void askAdminToUnfreezeUsers(List<String> accountsSelected)  {
         // Set<String> accounts = tradeModel.getUserManager().getUnfreezeRequests();
         // boolean empty = accounts.isEmpty();
         // presenter.unfreezeAccountsHeading(empty);
@@ -181,10 +172,8 @@ public class AdminController extends Observable implements RunnableController {
     /**
      * This method allows an admin user to look at the item and check whether this item should be added to the system
      * or not. This is a way to prevent the user from selling items that are possible to sell such as intangible items.
-     *
-     * @throws IOException If something goes wrong.
      */
-    public void askAdminToReviewItems(List<String> itemsSelected, List<String> notItemsSelected) {
+    protected void askAdminToReviewItems(List<String> itemsSelected, List<String> notItemsSelected) {
         // Set<String> items = tradeModel.getItemManager().getItemsByStage("pending");
         // boolean empty = items.isEmpty();
         // presenter.reviewItemsHeading(empty);
@@ -208,10 +197,8 @@ public class AdminController extends Observable implements RunnableController {
      * This method allows an admin user to change the lending threshold, that is, how much the user lends than borrow
      * in order to make a non-lending transaction. It prompts the Admin user to enter a number that is an integer
      * greater than or equal to zero.
-     *
-     * @throws IOException If something goes wrong.
      */
-    public void askAdminToSetLendingThreshold(String lendingLimit) {
+    protected void askAdminToSetLendingThreshold(String lendingLimit) {
         // presenter.lendingThreshold(tradeModel.getUserManager().getThreshold("trading"));
         // String thresholdInput = br.readLine();
         // while (notAnIntegerOrZero(thresholdInput)) {
@@ -227,10 +214,8 @@ public class AdminController extends Observable implements RunnableController {
      * This method allows an admin user to set a limit for the number of transactions that a user can conduct
      * in one week. It prompts the Admin user to enter a number that is an integer greater than
      * or equal to one.
-     *
-     * @throws IOException If something goes wrong.
      */
-    public void askAdminToSetLimitOfTransactions(String transactionsLimit) {
+    protected void askAdminToSetLimitOfTransactions(String transactionsLimit) {
         // presenter.limitOfTransactions(tradeModel.getTradeManager().getLimitTransactionPerWeek());
         // String thresholdInput = br.readLine();
         // while (notAnIntegerOrOne(thresholdInput)) {
@@ -245,10 +230,8 @@ public class AdminController extends Observable implements RunnableController {
     /**
      * This method allows an admin user to set a limit on how many transactions remain incomplete before the account
      * is frozen. It prompts the Admin user to enter a number that is an integer greater than or equal to one.
-     *
-     * @throws IOException If something goes wrong.
      */
-    public void askAdminToSetLimitOfIncompleteTrades(String tradeLimit) {
+    protected void askAdminToSetLimitOfIncompleteTrades(String tradeLimit) {
         // presenter.limitOfIncompleteTransactions(tradeModel.getTradeManager().getLimitIncomplete());
         // String thresholdInput = br.readLine();
        // while (notAnIntegerOrOne(thresholdInput)) {
@@ -263,8 +246,6 @@ public class AdminController extends Observable implements RunnableController {
      * This method allows an admin user to set a limit on edits that the user can make to change the
      * meeting place and time. It prompts the Admin user to enter a number that is an integer greater than
      * or equal to zero.
-     *
-     * @throws IOException If something goes wrong.
      */
     public void askAdminToSetLimitOfEdits(String editLimit) {
         // presenter.limitOfEdits(tradeModel.getMeetingManager().getLimitEdits());
@@ -278,10 +259,10 @@ public class AdminController extends Observable implements RunnableController {
     }
 
     /**
-     * A helper method that returns true iff the input is not an integer or the input is a negative number
-     * to prompt the Admin user to re-enter a valid input. Returns false when the input is valid.
+     * A helper method that returns true iff the input is an integer or and the input is at least 0
+     * to prompt the Admin user to re-enter a valid input. Returns false when the input is not valid.
      * @param adminInput    The input from the Admin user.
-     * @return  True iff the input is not an integer or the input is less than 0.
+     * @return  True iff the input is an integer and the input is at least 0.
      */
     protected boolean IsAnIntegerOrZero(String adminInput) {
         try {
@@ -293,10 +274,10 @@ public class AdminController extends Observable implements RunnableController {
     }
 
     /**
-     * A helper method that returns true iff the input is not an integer or the input is less than 1 to prompt the Admin
-     * user to re-enter a valid input. Returns false when the input is valid.
+     * A helper method that returns true iff the input is an integer or and the input is at least 1 to prompt the Admin
+     * user to re-enter a valid input. Returns false when the input is not valid.
      * @param adminInput    The input from the Admin user.
-     * @return  True iff the input is not an integer or the input is less than 1.
+     * @return  True iff the input is an integer and the input is at least 1.
      */
     protected boolean IsAnIntegerOrOne(String adminInput) {
         try {

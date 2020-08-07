@@ -15,20 +15,24 @@ public class AdminPresenter extends TextPresenter {
      * select a menu option. The number determines which method to call in the admin controller.
      * @param username The username of the currently logged in admin User
      */
-    public void startMenu(String username) {
-        System.out.println("\n*** " + username + " Admin Menu***\n");
-        List<String> options = new ArrayList<>();
-        options.add("Add new admins");
-        options.add("Freeze user accounts");
-        options.add("Unfreeze user accounts");
-        options.add("Review newly added items");
-        options.add("Set the lending threshold");
-        options.add("Set the limit of number of weekly transactions");
-        options.add("Set the limit of number of incomplete transactions");
-        options.add("Set the limit of number of edits to a meeting");
-        printList(options, true, false);
+    public String startMenu() {
+        return "Add new admins, Freeze user accounts, Unfreeze user accounts, Review newly added items, " +
+                "Set the lending threshold, Set the limit of number of weekly transactions, " +
+                "Set the limit of number of incomplete transactions, Set the limit of number of edits to a meeting";
 
-        System.out.println("\nPlease enter the # of your choice or \"exit\" to exit: ");
+
+       // System.out.println("\n*** " + username + " Admin Menu***\n");
+        //List<String> options = new ArrayList<>();
+        //options.add("Add new admins");
+        //options.add("Freeze user accounts");
+        //options.add("Unfreeze user accounts");
+        //options.add("Review newly added items");
+        //options.add("Set the lending threshold");
+       // options.add("Set the limit of number of weekly transactions");
+        //options.add("Set the limit of number of incomplete transactions");
+        //options.add("Set the limit of number of edits to a meeting");
+       // printList(options, true, false);
+        //System.out.println("\nPlease enter the # of your choice or \"exit\" to exit: ");
     }
 
     /**
