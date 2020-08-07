@@ -21,6 +21,7 @@ public class ProposedTradesPresenter extends TextPresenter {
         System.out.println("Options for a User: \n" +
                 " Enter 1 to confirm the meeting time\n" +
                 " Enter 2 to edit the meeting time\n" +
+                " Enter 3 to cancel/decline this trade\n" +
                 "\n Type \"exit\" at any time to exit.");
     }
 
