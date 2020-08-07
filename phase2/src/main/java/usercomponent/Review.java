@@ -27,12 +27,17 @@ public class Review implements Serializable {
         return id;
     }
 
-    public String getReceiver() {
-        return receiver;
-    }
+//    public String getTradeId(){
+//        return tradeId;
+//    }
 
     public int getRating() { return rating; }
 
     public String getComment() { return comment; }
+
+//    public String getReviewer(){
+//        return author;
+//    }
 }
+
 

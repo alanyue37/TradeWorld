@@ -45,6 +45,7 @@ public class UserGUI{
         Button initiateTrades = new Button("Initiate trades");
         Button manageProposedTrades = new Button("Manage proposed trades");
         Button confirmTrades = new Button("Confirm trades");
+        Button manageAccount = new Button("Manage/view account settings");
 
         addInventory.setOnAction(actionEvent -> createItem());
         addWishlist.setOnAction(actionEvent -> viewItemsToAddToWishlist());
@@ -63,6 +64,7 @@ public class UserGUI{
         grid.add(initiateTrades, 0, 5, 2, 1);
         grid.add(manageProposedTrades, 0, 6, 2, 1);
         grid.add(confirmTrades, 0, 7, 2, 1);
+        grid.add(manageAccount, 0, 8, 2, 1);
 
         scene = new Scene(grid, width, height);
         stage.setScene(scene);
