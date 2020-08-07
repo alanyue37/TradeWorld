@@ -16,6 +16,7 @@ public class ProfilePresenter extends TextPresenter {
         options.add("Send friend requests");
         options.add("View your friends list");
         options.add("View your account settings");
+        options.add("Add review to past trade");
 
         printList(options, true, false);
 
@@ -68,5 +69,27 @@ public class ProfilePresenter extends TextPresenter {
         printList(friends, true, false);
     }
 
-
+//    public void printEnterTradeIdForReview(){
+//        System.out.println("Enter the trade Id of the trade that you would like to leave a review.");
+//    }
+//
+//    public void printInvalidTradeId(){
+//        System.out.println("You do not have any completed trade with this ID.");
+//    }
+//
+//    public void alreadyWroteReview(String receiver, String tradeId){
+//        System.out.println("You have already written a review for user " + receiver + " for the trade with Id " + tradeId);
+//    }
+//
+//    public void askRating() {
+//        System.out.println("If you would like to leave a review of your trading experience," +
+//            "please enter a rating on a scale of 1-5.");
+//    }
+//
+//    public void invalidRating() {
+//        System.out.println("Invalid rating. Please enter a rating on a scale of 1-5.");
+//    }
+//
+//    public void askComment() { System.out.println("If you would like to leave a comment," +
+//            "please enter it here. If not, press enter."); }
 }

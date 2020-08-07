@@ -9,38 +9,21 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ReviewManager implements Serializable {
     private Map<String, List<Review>> userToReviews; // maps username to list of reviews
-    private Map<String, List<Review>> pendingReviews; // maps tradeId to list of reviews
     private final AtomicInteger counter = new AtomicInteger(); // keeps count of reviews for review id
 
     public ReviewManager() {
         userToReviews = new HashMap<>();
-        pendingReviews = new HashMap<>();
     }
 
     public void addReview(int rating, String comment, String tradeId, String author, String receiver) {
         String id = String.valueOf(counter.getAndIncrement());
         Review r = new Review(id, rating, comment, tradeId, author, receiver);
-        if (pendingReviews.containsKey(tradeId)) {
-            pendingReviews.get(tradeId).add(r);
-        } else {
+        if (userToReviews.containsKey(receiver)){
+            userToReviews.get(receiver).add(r);
+        } else{
             List<Review> reviews = new ArrayList<>();
             reviews.add(r);
-            pendingReviews.put(tradeId, reviews);
-        }
-    }
-
-    public void verifyReview(String tradeId) { // when trade is completed
-        if (pendingReviews.get(tradeId) != null) { // users could have the option to not leave a review, then there might not be any reviews for a trade
-            for (Review review : pendingReviews.get(tradeId)) {
-                if (userToReviews.containsKey(review.getReceiver())) {
-                    userToReviews.get(review.getReceiver()).add(review);
-                } else {
-                    List<Review> reviews = new ArrayList<>();
-                    reviews.add(review);
-                    userToReviews.put(review.getReceiver(), reviews);
-                }
-            }
-            pendingReviews.remove(tradeId);
+            userToReviews.put(receiver, reviews);
         }
     }
 
@@ -50,9 +33,9 @@ public class ReviewManager implements Serializable {
             return profileInfo;
         }
         List<Review> reviews = userToReviews.get(username);
-//        if (reviews == null) {
-//            return profileInfo;
-//        } // could we delete this? since users need to get a review to have be in the userToReviews
+        if (reviews == null) {
+            return profileInfo;
+        }
         int totalRatings = 0;
         for (Review review : reviews) {
             totalRatings += review.getRating();
@@ -66,4 +49,22 @@ public class ReviewManager implements Serializable {
         }
         return profileInfo;
     }
+
+//    public boolean alreadyWroteReview(String writerUsername, String receiverUsername, String tradeId){
+//        if (!userToReviews.containsKey(receiverUsername)){
+//            return false;
+//        } else if(userToReviews.get(receiverUsername).size() == 0){
+//            return false;
+//        } else{
+//            List<Review> reviews = userToReviews.get(receiverUsername);
+//            for (Review review: reviews){
+//                if (review.getReviewer().equals(writerUsername) && review.getTradeId().equals(tradeId)){
+//                    return true;
+//                }
+//            }
+//        }
+//        return false;
+//    }
+
+
 }

@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -52,6 +53,8 @@ public class ProfileController implements RunnableController {
                 viewFriends();
             case "6": // view account setting: privacy, vacation, city
                 viewAccountSetting();
+//            case "7": // add review after trade is complete
+//                addReview();
             case "exit":
                 return false;
             default:
@@ -129,5 +132,44 @@ public class ProfileController implements RunnableController {
         List<String> friends = new ArrayList<>(tradeModel.getUserManager().getFriendList(username));
         presenter.printViewFriends(friends);
     }
+
+//    private void addReview() throws IOException{
+//        List<String> userTrades = tradeModel.getTradeManager().getTradesOfUser(username, "completed");
+//        presenter.printEnterTradeIdForReview();
+//        String tradeId = br.readLine();
+//        if (!userTrades.contains(tradeId)) {
+//            presenter.printInvalidTradeId();
+//        } else{
+//            String receiver = "";
+//            for (List<String> users: tradeModel.getTradeManager().itemToUsers(tradeId).values()){
+//                users.remove(username);
+//                receiver = users.get(0);
+//            }
+//            if (tradeModel.getReviewManager().alreadyWroteReview(username, receiver, tradeId)){
+//                presenter.alreadyWroteReview(receiver, tradeId);
+//            } else{
+//                List<String> reviewInfo = getReviewInfo();
+//                tradeModel.getReviewManager().addReview(Integer.parseInt(reviewInfo.get(0)), reviewInfo.get(1), tradeId, username, receiver);
+//            }
+//        }
+//    }
+//
+//    private List<String> getReviewInfo() throws IOException {
+//        List<String> reviewInfo = new ArrayList<>();
+//        presenter.askRating();
+//        String rating = br.readLine();
+//        List<String> validRatings = new ArrayList<>(Arrays.asList("1", "2", "3", "4", "5"));
+//        while (!(validRatings.contains(rating))) {
+//            presenter.invalidRating();
+//            rating = br.readLine();
+//            }
+//        presenter.askComment();
+//        String comment = br.readLine();
+//        if (!comment.equals("exit")) {
+//            reviewInfo.add(rating);
+//            reviewInfo.add(comment);
+//        }
+//        return reviewInfo;
+//    }
 
 }
