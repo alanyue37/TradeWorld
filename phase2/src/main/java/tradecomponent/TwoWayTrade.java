@@ -28,64 +28,6 @@ class TwoWayTrade extends Trade {
     }
 
     /**
-     * Gets the username of the first user in the trade
-     * @return username of first user
-     */
-    protected String getUser1() {
-        return this.user1;
-    }
-
-    /**
-     * Gets the username of the second user in the trade
-     * @return username of second user
-     */
-    protected String getUser2() {
-        return this.user2;
-    }
-
-    /**
-     * Gets the item ID of the item being traded by user1
-     * @return item ID of item being traded by user1
-     */
-    protected String getItem1() {
-        return item1;
-    }
-
-    /**
-     * Gets the item ID of the item being traded by user2
-     * @return item ID of item being traded by user2
-     */
-    protected String getItem2() {
-        return item2;
-    }
-
-    /**
-     * Gets the item ID based on the user trading it
-     * @param user the user who is trading an item
-     * @return the item ID that the given user is trading
-     */
-    protected String getItemOfUser(String user) {
-        if (user.equals(this.user1)) {
-            return this.item1;
-        } else {
-            return this.item2;
-        }
-    }
-
-    /**
-     * Gets the user based on the item being trading
-     * @param item the ID of the item being traded
-     * @return user that is trading the given item
-     */
-    protected String getUserOfItem(String item) {
-        if (item.equals(this.item1)) {
-            return this.item1;
-        } else {
-            return this.item2;
-        }
-    }
-
-    /**
      * Gets users involved in the trade
      * @return list of users in trade
      */

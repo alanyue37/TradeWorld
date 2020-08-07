@@ -49,15 +49,6 @@ abstract class Trade implements Serializable {
     }
 
     /**
-     * Gets status of the trade: whether the trade is opened or closed
-     * @return for permanent trade, false if the meeting has occurred and been confirmed; for temporary trade, false if
-     * both meetings have occurred and been confirmed
-     */
-    protected boolean getIsOpened() {
-        return this.IsOpened;
-    }
-
-    /**
      * Changes IsOpened to false (the trade is closed)
      */
     protected void changeIsOpened() {
@@ -78,14 +69,6 @@ abstract class Trade implements Serializable {
      */
     protected void incrementMeetingList(String newMeeting){
         this.meeting.add(newMeeting);
-    }
-
-    /**
-     * Gets the date of creation of the trade
-     * @return creationDate (date the trade was created)
-     */
-    protected Date getCreationDate(){
-        return this.creationDate;
     }
 
     /**

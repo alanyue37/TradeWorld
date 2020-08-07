@@ -300,12 +300,12 @@ public class TradeManager implements Serializable {
      * @param tradeId ID of the trade
      * @return true iff the trade with "tradeId" requires a new meeting to be added
      */
-    public boolean needToAddMeeting(String tradeId) {
+    public boolean needToAddMeeting(String tradeId, int numPermanent, int numTemporary) {
         Trade trade = getTrade(tradeId);
         if (trade.getTradeType().equals("permanent")) {
-            return trade.getMeetingList().size() < 1;
+            return trade.getMeetingList().size() < numPermanent;
         } else {
-            return trade.getMeetingList().size() < 2;
+            return trade.getMeetingList().size() < numTemporary;
         }
     }
 

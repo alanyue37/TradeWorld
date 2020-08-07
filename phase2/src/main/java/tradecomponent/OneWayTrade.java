@@ -29,30 +29,6 @@ class OneWayTrade extends Trade {
     }
 
     /**
-     * Gets the item ID of the item being traded
-     * @return item ID of item being traded
-     */
-    protected String getItemId() {
-        return this.itemId;
-    }
-
-    /**
-     * Gets the username of the user giving the item
-     * @return username of the giver
-     */
-    protected String getGiverUsername(){
-        return this.giverUsername;
-    }
-
-    /**
-     * Gets the username of the user receiving the item
-     * @return username of the receiver
-     */
-    protected String getReceiverUsername(){
-        return this.receiverUsername;
-    }
-
-    /**
      * Gets users involved in the one way trade
      * @return list of users in trade
      */
