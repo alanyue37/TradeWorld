@@ -17,11 +17,11 @@ import javafx.stage.Stage;
 import java.util.List;
 
 public class UserGUI{
-    private Stage stage;
+    private final Stage stage;
     private Scene scene;
     private final UserController controller;
-    private int width;
-    private int height;
+    private final int width;
+    private final int height;
     protected String username;
 
     public UserGUI(String username, Stage stage, int width, int height, UserController controller) {

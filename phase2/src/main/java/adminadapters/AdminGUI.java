@@ -60,7 +60,7 @@ public class AdminGUI {
      * which method to call in the AdminGUI. This screen is displayed again, if the Admin does not select an
      * option.
      */
-    public void menuOptions() {
+    public void adminUserInitialScreen() {
         stage.setTitle("Admin Menu Options");
 
         Text title = new Text("What would you like to do?");
@@ -92,7 +92,8 @@ public class AdminGUI {
         ArrayList<Integer> conversion = new ArrayList<>(selectedItem);
         String selected = conversion.toString();
 
-        // Should we have buttons for each option instead?
+        // If the group suggests, I can also have these options presented in buttons (just like in UserGUI).
+
         goButton.setOnAction(actionEvent -> {
             switch (selected) {
                 case "0": {
@@ -128,7 +129,7 @@ public class AdminGUI {
                     break;
                 } default: {
                     tryAgain();
-                    menuOptions();
+                    adminUserInitialScreen();
                 }
             }
         });
@@ -192,7 +193,7 @@ public class AdminGUI {
     public void newAdminCreated(String username) {
         GridPane grid = (GridPane) scene.getRoot();
         Text message = new Text(presenter.newAccountCreated(username));
-        if(!grid.getChildren().contains(message)){
+        if (!grid.getChildren().contains(message)){
             grid.add(message, 0, 6, 2, 1);
         }
     }
@@ -204,7 +205,7 @@ public class AdminGUI {
     public void usernameTaken(String username) {
         GridPane grid = (GridPane) scene.getRoot();
         Text message = new Text(presenter.usernameTaken(username));
-        if(!grid.getChildren().contains(message)){
+        if (!grid.getChildren().contains(message)){
             grid.add(message, 0, 6, 2, 1);
         }
     }
@@ -215,7 +216,7 @@ public class AdminGUI {
     public void tryAgain() {
         GridPane grid = (GridPane) scene.getRoot();
         Text message = new Text("Please try again!");
-        if(!grid.getChildren().contains(message)){
+        if (!grid.getChildren().contains(message)){
             grid.add(message, 0, 6, 2, 1);
         }
     }
