@@ -56,39 +56,42 @@ public class AdminPresenter extends TextPresenter {
      * Prints message that the admin new account has been successfully created.
      * @param username  The username of the Admin User inputs.
      */
-    public void newAccountCreated(String username) {
-        System.out.println("New admin account " + username + " created.\n");
+    public String newAccountCreated(String username) {
+        return "New admin account " + username + " created.\n";
     }
 
     /**
      * Prints message that the inputted username for new account has been taken.
      * @param username  The username of the Admin User inputs.
      */
-    public void usernameTaken(String username) {
-        System.out.println("Username " + username + " is taken. Please try again.\n");
+    public String usernameTaken(String username) {
+        return "Username " + username + " is taken. Please try again.\n";
     }
 
     /**
      * Prints relevant heading for freeze account view.
      * Prints no accounts to be frozen if empty is true. Otherwise prints instructions.
-     * @param empty True iff no accounts have been flagged for freezing.
+     * @param selected True iff no accounts have been flagged for freezing.
      */
-    public void freezeAccountsHeading(boolean empty) {
-        if (empty) {
-            System.out.println("No accounts have been flagged.\n");
+    public String freezeAccountsHeading(boolean selected) {
+        if (selected) {
+            return "Selected accounts have been frozen";
+                    // "No accounts have been flagged.\n";
         }
         else {
-            System.out.println("The following accounts have exceeded one or more of the system thresholds.\n" +
-                            "For each account enter 1 to freeze or 0 to skip.\n");
+            return "No accounts have been selected to be frozen.";
+
+                    //"The following accounts have exceeded one or more of the system thresholds.\n" +
+                           // "For each account enter 1 to freeze or 0 to skip.\n");
         }
     }
     /**
      * This method prompts the admin user to enter 1 to freeze this particular account or 0 to skip.
      * @param user  The account that the admin can freeze.
      */
-    public void freezeAccounts(String user) {
-        System.out.println("This account has reached the limits. Enter 1 to freeze this account or 0 to skip. " +
-                "\n Freeze Account for:" + user);
+    public String freezeAccounts(String user) {
+        return "This account has reached the limits. Enter 1 to freeze this account or 0 to skip. " +
+                "\n Freeze Account for:" + user;  // Delete this method?
     }
 
     /**
@@ -96,13 +99,12 @@ public class AdminPresenter extends TextPresenter {
      * Prints no accounts to be unfrozen if empty is true. Otherwise prints instructions.
      * @param empty True iff no accounts have requested to be unfrozen.
      */
-    public void unfreezeAccountsHeading(boolean empty) {
-        if (empty) {
-            System.out.println("No users have requested to have their accounts unfrozen.\n");
+    public String unfreezeAccountsHeading(boolean selected) {
+        if (selected) {
+            return "Selected accounts are now unfrozen.";
         }
         else {
-            System.out.println("The following accounts have requested to be unfrozen.\n" +
-                    "For each account enter 1 to unfreeze or 0 to skip.\n");
+            return "No accounts are selected to be unfrozen";
         }
     }
 
@@ -120,13 +122,15 @@ public class AdminPresenter extends TextPresenter {
      * Prints no items to be reviewed if empty is true. Otherwise prints instructions.
      * @param empty True iff no items to be reviewed.
      */
-    public void reviewItemsHeading(boolean empty) {
+    public String reviewItemsHeading(boolean empty) {
         if (empty) {
-            System.out.println("No items to be reviewed.\n");
+            return "No items to be reviewed.\n";
         }
         else {
-            System.out.println("The following items have been recently added and need to be reviewed.\n" +
-                    "For each item enter 1 to add the item or 0 to not add the item.\n");
+            return "Selected items have been added to the system.";
+
+            // System.out.println("The following items have been recently added and need to be reviewed.\n" +
+              //      "For each item enter 1 to add the item or 0 to not add the item.\n");
         }
     }
 
@@ -135,8 +139,10 @@ public class AdminPresenter extends TextPresenter {
      * to the system or not.
      * @param item  The item could be added to the system.
      */
-    public void reviewItem(String item) {
-        System.out.println("Enter 1 to add the following item or 0 to not add the following item: \n" + item);
+    public String reviewItem(String item) {
+        return "Selected items have been added to the system and the items not selected are deleted.";
+
+               // "Enter 1 to add the following item or 0 to not add the following item: \n" + item);
     }
 
     /**
@@ -190,13 +196,17 @@ public class AdminPresenter extends TextPresenter {
         System.out.println("This is an invalid input.\n Please try again!");
     }
 
-    /**
-     * This method informs the admin user that the input is not an integer or the number entered is not
-     * accepted by the program.
-     */
-    public void notAnIntegerOrMin() {
-        System.out.println("This is not an integer or it is a number less than the minimum number.\n " +
-                "Please try again!");
+
+    public String enterAtLeastZero() {
+        return "Not an integer or is a number less than zero. \n Please try again";
+    }
+
+    public String enterAtLeastOne() {
+        return "Not an integer or is a number less than one. \n Please try again";
+    }
+
+    public String confirmationOfThreshold() {
+        return "Threshold is set.";
     }
 
     /**
@@ -205,5 +215,6 @@ public class AdminPresenter extends TextPresenter {
     public void end() {
         System.out.println("See you soon!");
     }
+
 
 }

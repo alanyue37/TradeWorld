@@ -90,7 +90,7 @@ public class AdminGUI {
 
     public void newAdminCreated(String username) {
         GridPane grid = (GridPane) scene.getRoot();
-        Text message = new Text("New admin is created: " + username);
+        Text message = new Text(adminPresenter.newAccountCreated(username));
         if(!grid.getChildren().contains(message)){
             grid.add(message, 0, 6, 2, 1);
         }
@@ -98,7 +98,7 @@ public class AdminGUI {
 
     public void usernameTaken(String username) {
         GridPane grid = (GridPane) scene.getRoot();
-        Text message = new Text("Username " + username + " is already taken.");
+        Text message = new Text(adminPresenter.usernameTaken(username));
         if(!grid.getChildren().contains(message)){
             grid.add(message, 0, 6, 2, 1);
         }
@@ -154,15 +154,31 @@ public class AdminGUI {
 
         freezeButton.setOnAction(actionEvent -> {
             if (selected.isEmpty()) {
-                adminPresenter.freezeAccountsHeading(true);
+                noAccountsSelectedToFreeze();
             } else {
-                adminController.askAdminToFreezeUsers(selected);
+                accountsSelectedToFreeze();
             }
         });
 
         scene = new Scene(grid, 300, 120);
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void noAccountsSelectedToFreeze() {
+        GridPane grid = (GridPane) scene.getRoot();
+        Text message = new Text(adminPresenter.freezeAccountsHeading(false));
+        if (!grid.getChildren().contains(message)) {
+            grid.add(message, 0, 6, 2, 1);
+        }
+    }
+
+    public void accountsSelectedToFreeze() {
+        GridPane grid = (GridPane) scene.getRoot();
+        Text message = new Text(adminPresenter.freezeAccountsHeading(true));
+        if (!grid.getChildren().contains(message)) {
+            grid.add(message, 0, 6, 2, 1);
+        }
     }
 
     public void unfreezeUsers() {
@@ -199,15 +215,31 @@ public class AdminGUI {
         ArrayList<String> selected = new ArrayList<>(selectedItems);
         unfreezeButton.setOnAction(actionEvent -> {
             if (selected.isEmpty()) {
-                adminPresenter.freezeAccountsHeading(true);
+                noAccountsSelectedToUnfreeze();
             } else {
-                adminController.askAdminToUnfreezeUsers(selected);
+                accountsSelectedToUnfreeze();
             }
         });
 
         scene = new Scene(hBox, 300, 120);
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void noAccountsSelectedToUnfreeze() {
+        GridPane grid = (GridPane) scene.getRoot();
+        Text message = new Text(adminPresenter.unfreezeAccountsHeading(false));
+        if (!grid.getChildren().contains(message)) {
+            grid.add(message, 0, 6, 2, 1);
+        }
+    }
+
+    public void accountsSelectedToUnfreeze() {
+        GridPane grid = (GridPane) scene.getRoot();
+        Text message = new Text(adminPresenter.unfreezeAccountsHeading(true));
+        if (!grid.getChildren().contains(message)) {
+            grid.add(message, 0, 6, 2, 1);
+        }
     }
 
     public void reviewItems() {
@@ -262,10 +294,19 @@ public class AdminGUI {
 
         addItemsButton.setOnAction(actionEvent -> {
             adminController.askAdminToReviewItems(selected, notSelected);
+            itemReviewed();
         });
         scene = new Scene(grid, width, height);
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void itemReviewed() {
+        GridPane grid = (GridPane) scene.getRoot();
+        Text message = new Text(adminPresenter.reviewItemsHeading(true));
+        if (!grid.getChildren().contains(message)) {
+            grid.add(message, 0, 6, 2, 1);
+        }
     }
 
     public void setLendingThreshold() {
@@ -294,6 +335,10 @@ public class AdminGUI {
         setThresholdButton.setOnAction(actionEvent -> {
             if (adminController.IsAnIntegerOrZero(lendingThresholdField.getText())) {
                 adminController.askAdminToSetLendingThreshold(lendingThresholdField.getText());
+                thresholdSet();
+            } else {
+                enterAtLeastZero();
+                setLendingThreshold();
             }
         });
         scene = new Scene(grid, 300, 120);
@@ -327,6 +372,10 @@ public class AdminGUI {
         setThresholdButton.setOnAction(actionEvent -> {
             if (adminController.IsAnIntegerOrOne(limitThresholdField.getText())) {
                 adminController.askAdminToSetLimitOfTransactions(limitThresholdField.getText());
+                thresholdSet();
+            } else {
+                enterAtLeastOne();
+                setLimitOfTransactionsThreshold();
             }
         });
         scene = new Scene(grid, width, height);
@@ -360,6 +409,10 @@ public class AdminGUI {
         setThresholdButton.setOnAction(actionEvent -> {
             if (adminController.IsAnIntegerOrOne(limitThresholdField.getText())) {
                 adminController.askAdminToSetLimitOfIncompleteTrades(limitThresholdField.getText());
+                thresholdSet();
+            } else {
+                enterAtLeastOne();
+                setLimitOfIncompleteTrades();
             }
 
         });
@@ -394,10 +447,38 @@ public class AdminGUI {
         setThresholdButton.setOnAction(actionEvent -> {
             if (adminController.IsAnIntegerOrZero(limitThresholdField.getText())) {
                 adminController.askAdminToSetLimitOfEdits(limitThresholdField.getText());
+                thresholdSet();
+            } else {
+                enterAtLeastZero();
+                setLimitOfEdits();
             }
         });
         scene = new Scene(grid, width, height);
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void enterAtLeastZero() {
+        GridPane grid = (GridPane) scene.getRoot();
+        Text message = new Text(adminPresenter.enterAtLeastZero());
+        if (!grid.getChildren().contains(message)) {
+            grid.add(message, 0, 6, 2, 1);
+        }
+    }
+
+    public void enterAtLeastOne() {
+        GridPane grid = (GridPane) scene.getRoot();
+        Text message = new Text(adminPresenter.enterAtLeastOne());
+        if (!grid.getChildren().contains(message)) {
+            grid.add(message, 0, 6, 2, 1);
+        }
+    }
+
+    public void thresholdSet() {
+        GridPane grid = (GridPane) scene.getRoot();
+        Text message = new Text(adminPresenter.confirmationOfThreshold());
+        if (!grid.getChildren().contains(message)) {
+            grid.add(message, 0, 6, 2, 1);
+        }
     }
 }
