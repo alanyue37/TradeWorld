@@ -66,7 +66,12 @@ public class ProfilePresenter extends TextPresenter {
     }
 
     public void printViewFriends(List<String> friends){
-        printList(friends, true, false);
+        if (friends.size() == 0){
+            System.out.println("Your friend list is currently empty.");
+        } else{
+            System.out.println("Your friend list is: ");
+            printList(friends, true, false);
+        }
     }
 
     public void printEnterTradeIdForReview(){

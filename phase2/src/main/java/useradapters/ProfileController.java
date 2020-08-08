@@ -51,10 +51,13 @@ public class ProfileController implements RunnableController {
                 break;
             case "5": // view friend list
                 viewFriends();
+                break;
             case "6": // view account setting: privacy, vacation, city
                 viewAccountSetting();
+                break;
             case "7": // add review after trade is complete
                 addReview();
+                break;
             case "exit":
                 return false;
             default:
