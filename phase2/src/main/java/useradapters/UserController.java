@@ -5,6 +5,8 @@ import tradeadapters.InitiateTradeController;
 import tradeadapters.ProposedTradesController;
 import tradegateway.TradeModel;
 import trademisc.RunnableController;
+import undocomponent.UndoAddWishlistItem;
+import undocomponent.UndoableOperation;
 import viewingadapters.ViewingMenuController;
 import viewingadapters.ViewingTradesController;
 
@@ -141,6 +143,8 @@ public class UserController implements RunnableController {
         }
         if (itemsToShow.contains(choice)) {
             tradeModel.getUserManager().addToWishlist(username, choice);
+            UndoableOperation undoableOperation = new UndoAddWishlistItem(tradeModel.getUserManager(), username, choice);
+            tradeModel.getUndoManager().add(undoableOperation);
             return true;
         }
         return false;

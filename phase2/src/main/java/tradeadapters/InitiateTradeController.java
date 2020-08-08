@@ -2,6 +2,8 @@ package tradeadapters;
 
 import tradegateway.TradeModel;
 import trademisc.RunnableController;
+import undocomponent.UndoAddProposedTrade;
+import undocomponent.UndoableOperation;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -136,6 +138,8 @@ public class InitiateTradeController implements RunnableController {
             return false;
         }
 
+        UndoableOperation undoableOperation = new UndoAddProposedTrade(this.tradeModel.getTradeManager(), tradeId);
+        this.tradeModel.getUndoManager().add(undoableOperation);
         return true;
     }
 

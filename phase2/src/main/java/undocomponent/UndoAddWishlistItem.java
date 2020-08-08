@@ -21,7 +21,7 @@ public class UndoAddWishlistItem implements UndoableOperation {
 
     /**
      * Deletes item with itemId from wishlist of user with username
-     * Throws NoLongerUndoableException if item is no longer present in wishlist.
+     * Does not throw NoLongerUndoableException if item is no longer present in wishlist.
      */
     @Override
     public void undo() throws NoLongerUndoableException {

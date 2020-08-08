@@ -252,6 +252,23 @@ public class TradeManager implements Serializable {
     }
 
     /**
+     * Deletes all proposed trades involving the item with "itemId".
+     *
+     * @param itemId  ID of the item
+     */
+    public void deleteCommonItemTrades(String itemId) {
+        for (Trade trade : this.ongoingTrades.values()) {
+            if ((trade.containItem(itemId))) {
+                String tradeId = trade.getIdOfTrade();
+                this.ongoingTrades.remove(trade.getIdOfTrade());
+                for (String user : trade.getUsers()) {
+                    this.userToTrades.get(user).remove(tradeId);
+                }
+            }
+        }
+    }
+
+    /**
      * Deletes all proposed trades involving the item with "itemId" except the trade with "tradeID"
      *
      * @param itemId  ID of the item

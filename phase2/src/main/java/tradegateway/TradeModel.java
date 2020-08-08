@@ -3,6 +3,7 @@ package tradegateway;
 import itemcomponent.ItemManager;
 import tradecomponent.MeetingManager;
 import tradecomponent.TradeManager;
+import undocomponent.UndoManager;
 import usercomponent.UserManager;
 import usercomponent.ReviewManager;
 
@@ -18,6 +19,7 @@ public class TradeModel implements Serializable {
     private TradeManager tradeManager;
     private MeetingManager meetingManager;
     private ReviewManager reviewManager;
+    private UndoManager undoManager;
 
     /**
      * Creates a new tradegateway.TradeModel with existing managers.
@@ -42,6 +44,7 @@ public class TradeModel implements Serializable {
         itemManager = new ItemManager();
         tradeManager = new TradeManager();
         meetingManager = new MeetingManager();
+        this.undoManager = undoManager;
     }
 
     /**
@@ -107,4 +110,16 @@ public class TradeModel implements Serializable {
      * @return reviewManager
      */
     public ReviewManager getReviewManager() { return reviewManager; }
+
+    /**
+     * Set the UndoManager for the tradegateway.TradeModel.
+     * @param undoManager the new undoManager
+     */
+    public void setUndoManager(UndoManager undoManager) { this.undoManager = undoManager; }
+
+    /**
+     * Return the UndoManager for the tradegateway.TradeModel.
+     * @return undoManager
+     */
+    public UndoManager getUndoManager() { return undoManager; }
 }

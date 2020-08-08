@@ -22,8 +22,9 @@ public class ReviewManager implements Serializable {
      * @param tradeId trade id of review
      * @param author author of review
      * @param receiver receiver of review
+     * @return
      */
-    public void addReview(int rating, String comment, String tradeId, String author, String receiver) {
+    public String addReview(int rating, String comment, String tradeId, String author, String receiver) {
         String id = String.valueOf(counter.getAndIncrement());
         Review r = new Review(id, rating, comment, tradeId, author, receiver);
         if (userToReviews.containsKey(receiver)){
@@ -33,6 +34,7 @@ public class ReviewManager implements Serializable {
             reviews.add(r);
             userToReviews.put(receiver, reviews);
         }
+        return r.getId();
     }
 
     /**
@@ -87,4 +89,8 @@ public class ReviewManager implements Serializable {
         return false;
     }
 
+    public boolean deleteReview(String reviewId) {
+        // TODO: implement once pendingReviews and UserToReviews is merged.
+        return true;
+    }
 }

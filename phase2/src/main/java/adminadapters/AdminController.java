@@ -1,6 +1,10 @@
 package adminadapters;
 
+import undocomponent.NoLongerUndoableException;
 import tradegateway.TradeModel;
+import undocomponent.UndoAddInventoryItem;
+import undocomponent.UndoableOperation;
+
 import java.io.IOException;
 import java.util.*;
 
@@ -184,10 +188,18 @@ public class AdminController extends Observable {
                // presenter.invalidInput();
                 // input = br.readLine();
             tradeModel.getItemManager().confirmItem(itemId);
+            UndoableOperation undoableOperation = new UndoAddInventoryItem(tradeModel.getItemManager(), tradeModel.getTradeManager(), itemId);
+            tradeModel.getUndoManager().add(undoableOperation);
         }
 
         for (String itemId : notItemsSelected) {
-            tradeModel.getItemManager().deleteItem(itemId);
+            try {
+                tradeModel.getItemManager().deleteItem(itemId);
+            }
+            catch (NoLongerUndoableException e) {
+                // This should not happen since item is pending at this time.
+                e.printStackTrace();
+            }
         }
     }
 
