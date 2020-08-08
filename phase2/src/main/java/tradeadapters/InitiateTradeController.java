@@ -107,7 +107,7 @@ public class InitiateTradeController implements RunnableController {
             if (thisUserItemId == null) {
                 return false;
             }
-            List<String> details = new ArrayList<String>(Arrays.asList(username, otherUsername, thisUserItemId, itemId));
+            List<String> details = new ArrayList<>(Arrays.asList(username, otherUsername, thisUserItemId, itemId));
             tradeId = tradeModel.getTradeManager().addTrade("twoWay", permanentOrTemporary, details);
         }
         else {
@@ -122,7 +122,7 @@ public class InitiateTradeController implements RunnableController {
                 presenter.newAccount();
                 return false;
             }
-            List<String> details = new ArrayList<String>(Arrays.asList(otherUsername, username, itemId));
+            List<String> details = new ArrayList<>(Arrays.asList(otherUsername, username, itemId));
             tradeId = tradeModel.getTradeManager().addTrade("oneWay", permanentOrTemporary, details);
         }
 
