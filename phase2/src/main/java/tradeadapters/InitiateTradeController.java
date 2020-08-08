@@ -107,7 +107,8 @@ public class InitiateTradeController implements RunnableController {
             if (thisUserItemId == null) {
                 return false;
             }
-            tradeId = tradeModel.getTradeManager().addTwoWayTrade(permanentOrTemporary, username, otherUsername, thisUserItemId, itemId);
+            List<String> details = new ArrayList<String>(Arrays.asList(username, otherUsername, thisUserItemId, itemId));
+            tradeId = tradeModel.getTradeManager().addTrade("twoWay", permanentOrTemporary, details);
         }
         else {
             int credit = tradeModel.getUserManager().getCreditByUsername(username);
@@ -121,7 +122,8 @@ public class InitiateTradeController implements RunnableController {
                 presenter.newAccount();
                 return false;
             }
-            tradeId = tradeModel.getTradeManager().addOneWayTrade(permanentOrTemporary, otherUsername, username, itemId);
+            List<String> details = new ArrayList<String>(Arrays.asList(otherUsername, username, itemId));
+            tradeId = tradeModel.getTradeManager().addTrade("oneWay", permanentOrTemporary, details);
         }
 
         List<String> meetingDetails = getMeetingDetails();
