@@ -35,7 +35,7 @@ public class AdminGUI {
     private final AdminController controller;
     private final TradeModel model;
 
-    // TODO: I still have to write java docs for this class and change method signatures in AdminController.
+    // TODO: I still need to make MAJOR changes to the screen displays and have to TEST!
 
     /**
      * A constructor for AdminGUI class.
@@ -466,7 +466,6 @@ public class AdminGUI {
         int currentLimit = model.getUserManager().getThreshold("trading");
         text.setText(Integer.toString(currentLimit));
 
-
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
@@ -474,6 +473,8 @@ public class AdminGUI {
         grid.setPadding(new Insets(25, 25, 25, 25));
         grid.add(title, 0, 0, 2, 1);
         grid.add(text, 1, 1, 3, 4);
+        text.setX(70);
+        text.setY(70);
 
 
         Label lendingThresholdLabel = new Label(presenter.lendingThreshold());
@@ -521,6 +522,8 @@ public class AdminGUI {
         grid.setPadding(new Insets(25, 25, 25, 25));
         grid.add(title, 0, 0, 2, 1);
         grid.add(text, 1, 1, 3, 4);
+        text.setX(70);
+        text.setY(70);
 
         Label limitThresholdLabel = new Label(presenter.lendingThreshold());
         TextField limitThresholdField = new TextField();
@@ -567,6 +570,8 @@ public class AdminGUI {
         grid.setPadding(new Insets(25, 25, 25, 25));
         grid.add(title, 0, 0, 2, 1);
         grid.add(text, 1, 1, 3, 4);
+        text.setX(70);
+        text.setY(70);
 
         Label limitThresholdLabel = new Label(presenter.lendingThreshold());
         TextField limitThresholdField = new TextField();
@@ -614,6 +619,8 @@ public class AdminGUI {
         grid.setPadding(new Insets(25, 25, 25, 25));
         grid.add(title, 0, 0, 2, 1);
         grid.add(text, 1, 1, 3, 4);
+        text.setX(70);
+        text.setY(70);
 
         Label limitThresholdLabel = new Label(presenter.lendingThreshold());
         TextField limitThresholdField = new TextField();
