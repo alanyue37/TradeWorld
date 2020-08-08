@@ -137,7 +137,7 @@ class Meeting implements Serializable {
     }
 
     /**
-     * Returns a string representation of the meeting which includes: the status of the meeting
+     * Returns a JSON object of the meeting which includes: the status of the meeting
      * (i.e., whether it has been complete or is pending for confirmation or still need to arrange),
      * the location, the time, the number of edits made, the number of confirmations, and the User who last edited
      * @return  String representation of the meeting
@@ -153,7 +153,7 @@ class Meeting implements Serializable {
             info.put("Status", "need to agree on meeting details");
         }
         info.put("Location", location);
-        info.put("Time", meetingTime.toString());
+        info.put("Time", meetingTime);
         info.put ("Number of Edits", numOfEdits);
         info.put("Number of Confirmations", numConfirmations);
         info.put("Last user who modified the meeting", lastEditUser);

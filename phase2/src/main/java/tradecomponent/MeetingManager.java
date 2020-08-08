@@ -18,6 +18,9 @@ public class MeetingManager implements Serializable {
     private int limitOfEdits;
     private final AtomicInteger counter = new AtomicInteger();
 
+    /**
+     * Constructor for TradeManager.
+     */
     public MeetingManager() {
         this.limitOfEdits = 3;
         this.tradeToMeetings = new HashMap<>();
@@ -47,7 +50,7 @@ public class MeetingManager implements Serializable {
      * Changes a meeting according to the proposed location, time, and stores the username of the User that made
      * the last edit
      *
-     * @param meetingId The Id of the meeting
+     * @param meetingId The ID of the meeting
      * @param location  The location
      * @param time      The time of the meeting
      * @param username  The username of the User
@@ -66,7 +69,7 @@ public class MeetingManager implements Serializable {
      * @param location The location of the meeting
      * @param time     The time of the meeting
      * @param username The username of the User
-     * @param tradeId  id of the trade to add the meeting
+     * @param tradeId  ID of the trade to add the meeting
      * @return The new meeting with the location, time, and username
      */
     public String createMeeting(String location, Date time, String username, String tradeId) {
@@ -86,7 +89,7 @@ public class MeetingManager implements Serializable {
     /**
      * Sets meeting to confirm and the last User who edited changes to no one (i.e., empty string)
      *
-     * @param meetingId id of the meeting
+     * @param meetingId ID of the meeting
      */
     public void confirmAgreement(String meetingId) {
         Meeting meeting = ongoingMeetings.get(meetingId);
@@ -98,7 +101,7 @@ public class MeetingManager implements Serializable {
      * If there the number of confirmations is 2, this means that the meeting is confirmed and means that the meeting
      * will take place and thus, it is completed
      *
-     * @param meetingId id of the meeting
+     * @param meetingId ID of the meeting
      * @param username  The username of another User
      */
     public void meetingHappened(String meetingId, String username) {
@@ -156,12 +159,12 @@ public class MeetingManager implements Serializable {
     }
 
     /**
-     * Returns a string which includes, the status of the meeting (i.e., whether it has been complete or its pending
-     * for confirmation or still need to arrange), the location, the time, the number of edits made, the number of
-     * confirmations, and the User who last edited
+     * Returns a list of JSON objects of all the meetings of a trade which includes, the status(es) of the meeting(s)
+     * (i.e., whether it has been complete or its pending for confirmation or still need to arrange), the location(s),
+     * the time(s), the number of edits made, the number of confirmations, and the User(s) who last edited
      *
-     * @return A string that includes the meeting status, location, time, number of edits made, number of confirmation,
-     * and the User who last edited
+     * @return A list of JSON objects that includes the meeting status(es), location(s), time(s), number of edits made, number of confirmations,
+     * and the User(s) who last edited
      */
     public List<JSONObject> getMeetingsInfo(String tradeId) throws JSONException {
         List<JSONObject> meetingDetails = new ArrayList<>();
@@ -172,12 +175,23 @@ public class MeetingManager implements Serializable {
         return meetingDetails;
     }
 
-
+    /**
+     * Returns the Date of the last meeting planned in a trade
+     *
+     * @param tradeId ID of the trade
+     * @return Date of the last meeting planned in a trade
+     */
     public Date getLastMeetingTime(String tradeId) {
-        Meeting meeting = getMeeting(this.tradeToMeetings.get(tradeId).get(tradeToMeetings.get(tradeId).size()-1));
+        Meeting meeting = getMeeting(this.tradeToMeetings.get(tradeId).get(tradeToMeetings.get(tradeId).size() - 1));
         return meeting.getTime();
     }
 
+    /**
+     * Returns the Location of the last meeting planned in a trade
+     *
+     * @param tradeId ID of the trade
+     * @return Location of the last meeting planned in a trade
+     */
     public String getLastMeetingLocation(String tradeId) {
         Meeting meeting = getMeeting(this.tradeToMeetings.get(tradeId).get(tradeToMeetings.get(tradeId).size() - 1));
         return meeting.getLocation();
@@ -193,6 +207,13 @@ public class MeetingManager implements Serializable {
         return meeting;
     }
 
+    /**
+     * Returns if a user can edit or confirm a meeting, which they can if they were not the last user to make an edit or confirm
+     *
+     * @param tradeId ID of the trade
+     * @param username username of the user to make an edit or confirm
+     * @return true if the user is not the last user to make an edit or confirm, false otherwise
+     */
     public boolean canChangeMeeting(String tradeId, String username) {
         if (tradeToMeetings.get(tradeId) == null) {
             return false;
@@ -203,6 +224,12 @@ public class MeetingManager implements Serializable {
         }
     }
 
+    /**
+     * Takes a list of trade IDs and returns the IDs of the trades that had their last meeting in the past 7 days
+     *
+     * @param trades list of trade IDs
+     * @return list of trade IDs with their last meeting in the past 7 days
+     */
     public List<String> getMeetingsPastDays(List<String> trades) {
         List<String> pastTrades = new ArrayList<>();
         for (String tradeId : trades) {
@@ -216,6 +243,13 @@ public class MeetingManager implements Serializable {
         return pastTrades;
     }
 
+    /**
+     * Returns a list of trade IDs of all trades that are proposed or need to be confirmed
+     *
+     * @param trades list of trade IDs
+     * @param type proposed or to be confirmed
+     * @return list of trade IDs of type "type"
+     */
     public List<String> getToCheckTrades(List<String> trades, String type) {
         List<String> toCheck = new ArrayList<>();
         if (type.equals("proposed")) {
@@ -237,6 +271,11 @@ public class MeetingManager implements Serializable {
         } return toCheck;
     }
 
+    /**
+     * Cancels (removes) the meetings of a trade
+     *
+     * @param tradeId ID of the trade
+     */
     public void cancelMeetingsOfTrade(String tradeId) {
         List<String> meetingIds = tradeToMeetings.get(tradeId);
         for (String id: meetingIds){
@@ -249,6 +288,12 @@ public class MeetingManager implements Serializable {
         tradeToMeetings.remove(tradeId);
     }
 
+    /**
+     * Returns if all the meetings of a trade are completed
+     *
+     * @param tradeId ID of the trade
+     * @return true if all the meetings are completed, false otherwise
+     */
     public boolean tradeMeetingsCompleted(String tradeId){
         for (String id: this.tradeToMeetings.get(tradeId)){
             if (!this.completedMeetings.containsKey(id)){
@@ -258,7 +303,13 @@ public class MeetingManager implements Serializable {
         return true;
     }
 
-
+    /**
+     * Takes in a list of trade IDs and returns a sorted list of the IDs, going from the trade with the oldest last
+     * meeting time to the trade with the most recent last meeting time
+     *
+     * @param tradeIds list of trade IDs
+     * @return list of trade IDs sorted by last meeting time
+     */
     public List<String> sortedMeeting(List<String> tradeIds){
         List<String> sorted = new ArrayList<>();
         if (tradeIds.size() == 0){

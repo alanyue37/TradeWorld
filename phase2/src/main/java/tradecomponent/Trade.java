@@ -90,10 +90,10 @@ abstract class Trade implements Serializable {
     protected abstract Map<String, List<String>> itemToTrader();
 
     /**
-     * Returns a String representation of the trade which includes: the type of the trade, the status of the trade
+     * Returns a JSON object of the trade which includes: the type of the trade, the status of the trade
      * (i.e., ongoing or completed), the number of meetings that have happened and/or been planned, the creation date,
      * and the users and items involved
-     * @return String representation of the trade
+     * @return JSON object of the trade
      */
     public JSONObject getTradeInfo() throws JSONException {
         JSONObject info = new JSONObject();
