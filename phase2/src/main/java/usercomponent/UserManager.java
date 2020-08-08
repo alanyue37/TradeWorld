@@ -316,6 +316,11 @@ public class UserManager implements Serializable {
         return result;
     }
 
+    /**
+     * Returns whether there exists a user with *username*
+     * @param username username of user
+     * @return true iff there exists an user with this username, returns false otherwise.
+     */
     public boolean containsTradingUser(String username){
         return this.tradingUsers.containsKey(username);
     }
@@ -330,21 +335,42 @@ public class UserManager implements Serializable {
         return result;
     }
 
+    /**
+     * Sets the TradingUser with *username* to private or public.
+     * @param username username of TradingUser
+     * @param privacy true if we want to set it to private. If we want to set it to public, then false.
+     */
     public void setPrivate(String username, boolean privacy){
         TradingUser account = tradingUsers.get(username);
         account.setPrivacy(privacy);
     }
 
+    /**
+     * Gets all the friend requests of a given user.
+     * @param username username of TradingUser
+     * @return set of friend requests
+     */
     public Set<String> getFriendRequests(String username){
         TradingUser account = tradingUsers.get(username);
         return account.getPendingFriends();
     }
 
+    /**
+     * Gets the set of friends of a TradingUser
+     * @param username username of TradingUser
+     * @return set of friend
+     */
     public Set<String> getFriendList(String username){
         TradingUser account = tradingUsers.get(username);
         return account.getFriends();
     }
 
+    /**
+     * Sets a friend request of a TradingUser
+     * @param getRequestUsername username of user who received the friend request
+     * @param sendRequestUsername username of user who sent the friend request
+     * @param accept true if getRequestUser accepts friend request and false if declines the friend request
+     */
     public void setFriendRequest(String getRequestUsername, String sendRequestUsername, boolean accept){
         TradingUser account = tradingUsers.get(getRequestUsername);
         if (accept) {
@@ -356,6 +382,11 @@ public class UserManager implements Serializable {
         }
     }
 
+    /**
+     * Sends a friend request to a user.
+     * @param getRequestUsername username of TradingUser who will get the friend request
+     * @param username username of TradingUser sending the request
+     */
     public void sendFriendRequest(String getRequestUsername, String username){
         TradingUser account = tradingUsers.get(getRequestUsername);
         account.addToPendingFriends(username);
