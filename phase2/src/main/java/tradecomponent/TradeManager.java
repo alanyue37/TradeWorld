@@ -13,6 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class TradeManager implements Serializable {
     private int limitIncomplete;
     private int limitTransactionPerWeek;
+    private TradeFactory factory;
     private final Map<String, Trade> ongoingTrades;
     private final Map<String, Trade> completedTrades;
     private final Map<String, List<String>> userToTrades;
@@ -28,6 +29,7 @@ public class TradeManager implements Serializable {
         this.ongoingTrades = new HashMap<>();
         this.completedTrades = new HashMap<>();
         this.userToTrades = new HashMap<>();
+        this.factory = new TradeFactory();
     }
 
 
@@ -58,43 +60,16 @@ public class TradeManager implements Serializable {
 
 
     /**
-     * Adds a one way trade to the map of trades in TradeManager.
+     * Adds a trade to the map of trades in TradeManager.
      *
-     * @param type     permanent or temporary
-     * @param giver    username of the person giving the object
-     * @param receiver username of the person receiving the object
-     * @param itemId   ID of the item
+     * @param way one way or two way
+     * @param type permanent or temporary
+     * @param details a list of the users and items involved
      * @return the ID of the Trade
      */
-    public String addOneWayTrade(String type, String giver, String receiver, String itemId) {
+    public String addTrade(String way, String type, List<String> details) {
         String id = String.valueOf(counter.getAndIncrement());
-        Trade trade = new OneWayTrade(type, id, giver, receiver, itemId);
-        this.ongoingTrades.put(trade.getIdOfTrade(), trade);
-        for (String user : trade.getUsers()) {
-            if (userToTrades.containsKey(user)) {
-                userToTrades.get(user).add(trade.getIdOfTrade());
-            } else {
-                List<String> tradeIds = new ArrayList<>();
-                tradeIds.add(trade.getIdOfTrade());
-                userToTrades.put(user, tradeIds);
-            }
-        }
-        return trade.getIdOfTrade();
-    }
-
-    /**
-     * Adds a two way trade to the map of trades in TradeManager.
-     *
-     * @param type  permanent or temporary
-     * @param user1 username of user1 in the trade
-     * @param user2 username of user2 in the trade
-     * @param item1 ID of the item of user1
-     * @param item2 ID of the item of user2
-     * @return the ID of the Trade
-     */
-    public String addTwoWayTrade(String type, String user1, String user2, String item1, String item2) {
-        String id = String.valueOf(counter.getAndIncrement());
-        Trade trade = new TwoWayTrade(type, id, user1, user2, item1, item2);
+        Trade trade = factory.getTrade(way, type, id, details);
         this.ongoingTrades.put(trade.getIdOfTrade(), trade);
         for (String user : trade.getUsers()) {
             if (userToTrades.containsKey(user)) {
@@ -211,7 +186,6 @@ public class TradeManager implements Serializable {
         }
         return sorted;
     }
-    // better sorting way? interface?
 
     /**
      * Returns list of the top given number of most frequent trading partners of a user
@@ -251,11 +225,11 @@ public class TradeManager implements Serializable {
     }
 
     /**
-     * Returns a string with all the information about the trade (type, status, number of meetings, creation date, items
-     * and users involved) and the meeting details of all meetings of the trade
+     * Returns a JSON object with all the information about the trade (type, status, number of meetings, creation date, items
+     * and users involved)
      *
      * @param tradeId ID of the trade
-     * @return string with trade information
+     * @return JSON object with trade information
      */
     public JSONObject getTradeInfo(String tradeId) throws JSONException {
         Trade trade = getTrade(tradeId);
@@ -336,6 +310,11 @@ public class TradeManager implements Serializable {
         return returnList;
     }
 
+    /**
+     * Closes a trade (trade is completed)
+     *
+     * @param tradeId the ID of the trade to be closed
+     */
     public void closeTrade(String tradeId) {
         Trade trade = getTrade(tradeId);
         trade.changeIsOpened();
@@ -343,16 +322,34 @@ public class TradeManager implements Serializable {
         this.ongoingTrades.remove(tradeId, trade);
     }
 
+    /**
+     * Returns list of the IDs of the meetings that are part of a trade
+     *
+     * @param tradeId the ID of the trade
+     * @return list of IDs of meetings that are part of trade with ID "tradeId"
+     */
     public List<String> getMeetingOfTrade(String tradeId) {
         Trade trade = getTrade(tradeId);
         return trade.getMeetingList();
     }
 
+    /**
+     * Adds a meeting to a trade
+     *
+     * @param tradeId the ID of the trade to add a new meeting
+     * @param meetingId the ID of the meeting to be added
+     */
     public void addMeetingToTrade(String tradeId, String meetingId) {
         Trade trade = getTrade(tradeId);
         trade.incrementMeetingList(meetingId);
     }
 
+    /**
+     * Returns list of the IDs of trades of a certain type (ongoing or completed)
+     *
+     * @param type ongoing or completed
+     * @return list of IDs of trades that are type "type"
+     */
     public List<String> getAllTypeTrades(String type) {
         List<String> trades = new ArrayList<>();
         if (type.equals("ongoing")) {
