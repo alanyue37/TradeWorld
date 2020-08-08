@@ -149,7 +149,7 @@ public class UserGUI{
 
         addItemButton.setOnAction(actionEvent -> {
             if(controller.addItemsToWishlist(itemIdField.getText())) {
-                System.out.println("Success");
+                System.out.println("Success");  // I think you might need to create a method for this. Check AdminGUI or LoginGUI for examples
             }
         });
 
