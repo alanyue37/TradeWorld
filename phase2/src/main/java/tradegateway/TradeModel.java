@@ -28,12 +28,13 @@ public class TradeModel implements Serializable {
      * @param im the ItemManager.
      * @param tm the TradeManager.
      */
-    public TradeModel(UserManager um, ItemManager im, TradeManager tm, MeetingManager mm, ReviewManager rm) {
+    public TradeModel(UserManager um, ItemManager im, TradeManager tm, MeetingManager mm, ReviewManager rm, UndoManager undomanager) {
         userManager = um;
         itemManager = im;
         tradeManager = tm;
         meetingManager = mm;
         reviewManager = rm;
+        this.undoManager = undomanager;
     }
 
     /**
@@ -44,7 +45,8 @@ public class TradeModel implements Serializable {
         itemManager = new ItemManager();
         tradeManager = new TradeManager();
         meetingManager = new MeetingManager();
-        this.undoManager = undoManager;
+        reviewManager = new ReviewManager();
+        this.undoManager = new UndoManager();
     }
 
     /**
