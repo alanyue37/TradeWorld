@@ -1,5 +1,7 @@
 package usercomponent;
 
+import undocomponent.NoLongerUndoableException;
+
 import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -89,8 +91,26 @@ public class ReviewManager implements Serializable {
         return false;
     }
 
-    public boolean deleteReview(String reviewId) {
-        // TODO: implement once pendingReviews and UserToReviews is merged.
-        return true;
+    /**
+     * Delete review with given reviewId.
+     * @param reviewId id of review to be deleted
+     * @throws NoLongerUndoableException if no review with reviewId exists
+     */
+    public void deleteReview(String reviewId) throws NoLongerUndoableException {
+        String username = null;
+        Review reviewToBeDeleted = null;
+        for (String u: userToReviews.keySet()) {
+            List<Review> reviewsList = userToReviews.get(u);
+            for (Review review :reviewsList) {
+                if (review.getId().equals(reviewId)) {
+                    username = u;
+                    reviewToBeDeleted = review;
+                }
+            }
+        }
+        if (reviewToBeDeleted == null) {
+            throw new NoLongerUndoableException();
+        }
+        userToReviews.get(username).remove(reviewToBeDeleted);
     }
 }
