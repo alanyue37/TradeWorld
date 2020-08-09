@@ -1,18 +1,25 @@
 package undocomponent;
 
+import tradecomponent.MeetingManager;
 import tradecomponent.TradeManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class UndoAddProposedTrade implements UndoableOperation {
     private final TradeManager tradeManager;
+    private final MeetingManager meetingManager;
     private final String tradeId;
 
     /**
      * Instantiates UndoAddProposedTrade
-     * @param tradeManager reference to TradeManager reference
+     * @param tradeManager reference to TradeManager instance
+     * @param meetingManager reference to MeetingManager instance
      * @param tradeId id of trade proposed
      */
-    public UndoAddProposedTrade(TradeManager tradeManager, String tradeId) {
+    public UndoAddProposedTrade(TradeManager tradeManager, MeetingManager meetingManager, String tradeId) {
         this.tradeManager = tradeManager;
+        this.meetingManager = meetingManager;
         this.tradeId = tradeId;
     }
 
@@ -23,6 +30,16 @@ public class UndoAddProposedTrade implements UndoableOperation {
      */
     @Override
     public void undo() throws NoLongerUndoableException {
-        // TODO: add trademanager method call to delete trade with tradeId
+        List<String> trades = new ArrayList<>();
+        trades.add(tradeId);
+        if (meetingManager.getToCheckTrades(trades, "proposed").contains(tradeId)) {
+            // Confirmed that trade is still at proposed stage
+            // Need to check here rather than TradeManager because TradeManager doesn't have access to MeetingManager
+            tradeManager.deleteProposedTrade(tradeId);
+        }
+        else {
+            throw new NoLongerUndoableException();
+        }
+
     }
 }

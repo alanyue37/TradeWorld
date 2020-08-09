@@ -138,7 +138,7 @@ public class InitiateTradeController implements RunnableController {
             return false;
         }
 
-        UndoableOperation undoableOperation = new UndoAddProposedTrade(this.tradeModel.getTradeManager(), tradeId);
+        UndoableOperation undoableOperation = new UndoAddProposedTrade(this.tradeModel.getTradeManager(), tradeModel.getMeetingManager(), tradeId);
         this.tradeModel.getUndoManager().add(undoableOperation);
         return true;
     }
