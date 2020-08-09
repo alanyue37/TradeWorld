@@ -44,7 +44,9 @@ public class TradeModel implements Serializable {
         itemManager = new ItemManager();
         tradeManager = new TradeManager();
         meetingManager = new MeetingManager();
+        this.reviewManager = new ReviewManager();
         this.undoManager = undoManager;
+
     }
 
     /**
