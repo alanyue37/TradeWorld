@@ -1,9 +1,7 @@
 package adminadapters;
 
-import undocomponent.NoLongerUndoableException;
 import tradegateway.TradeModel;
-import undocomponent.UndoAddInventoryItem;
-import undocomponent.UndoableOperation;
+import undocomponent.NoLongerUndoableException;
 
 import java.io.IOException;
 import java.util.*;
@@ -11,15 +9,13 @@ import java.util.*;
 /**
  * A controller class that sends admin input to Use Cases and calls methods in the Use Case classes.
  */
-public class AdminController extends Observable {
+public class AdminController {
     private final TradeModel tradeModel;
-    private final AdminPresenter presenter;
-    private final String username;
+    // private final String username;
 
-    public AdminController(TradeModel tradeModel, String username) {
+    public AdminController(TradeModel tradeModel) {
         this.tradeModel = tradeModel;
-        this.presenter = new AdminPresenter();
-        this.username = username;
+        // this.username = username;
     }
 
     /**
@@ -175,30 +171,25 @@ public class AdminController extends Observable {
      * This method allows an admin user to look at the item and check whether this item should be added to the system
      * or not. This is a way to prevent the user from selling items that are possible to sell such as intangible items.
      */
-    protected void askAdminToReviewItems(List<String> itemsSelected, List<String> notItemsSelected) {
+    protected void askAdminToReviewItems(List<String> itemsSelected, List<String> notItemsSelected) throws NoLongerUndoableException {
         // Set<String> items = tradeModel.getItemManager().getItemsByStage("pending");
         // boolean empty = items.isEmpty();
         // presenter.reviewItemsHeading(empty);
 
-        for (String itemId : itemsSelected) {
-            //String itemInfo = tradeModel.getItemManager().getItemInfo(itemId);
-            //presenter.reviewItem(itemInfo);
-            // String input = br.readLine();
-            // while (!input.equals("0") && !input.equals("1")) {
-               // presenter.invalidInput();
+        if (!itemsSelected.isEmpty()) {
+            for (String itemId : itemsSelected) {
+                //String itemInfo = tradeModel.getItemManager().getItemInfo(itemId);
+                //presenter.reviewItem(itemInfo);
+                // String input = br.readLine();
+                // while (!input.equals("0") && !input.equals("1")) {
+                // presenter.invalidInput();
                 // input = br.readLine();
-            tradeModel.getItemManager().confirmItem(itemId);
-            UndoableOperation undoableOperation = new UndoAddInventoryItem(tradeModel.getItemManager(), tradeModel.getTradeManager(), itemId);
-            tradeModel.getUndoManager().add(undoableOperation);
-        }
-
-        for (String itemId : notItemsSelected) {
-            try {
-                tradeModel.getItemManager().deleteItem(itemId);
+                tradeModel.getItemManager().confirmItem(itemId);
             }
-            catch (NoLongerUndoableException e) {
-                // This should not happen since item is pending at this time.
-                e.printStackTrace();
+        }
+        if (!notItemsSelected.isEmpty()) {
+            for (String itemId : notItemsSelected) {
+                tradeModel.getItemManager().deleteItem(itemId);
             }
         }
     }
@@ -296,5 +287,15 @@ public class AdminController extends Observable {
         } catch (NumberFormatException e) {
             return false;
         }
+    }
+
+    protected void setGoldThreshold(String goldLimit) {
+        int goldThreshold = Integer.parseInt(goldLimit);
+        tradeModel.getUserManager().setThreshold("gold", goldThreshold);
+    }
+
+    protected void setSilverThreshold(String silverLimit) {
+        int silverThreshold = Integer.parseInt(silverLimit);
+        tradeModel.getUserManager().setThreshold("silver", silverThreshold);
     }
 }
