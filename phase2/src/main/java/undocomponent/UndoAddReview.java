@@ -19,10 +19,15 @@ public class UndoAddReview implements UndoableOperation {
 
     /**
      * Deletes review with reviewId
-     * Throws NoLongerUndoableException if the item is currently part of an active trade.
+     * Throws NoLongerUndoableException if the review no longer exists.
      */
     @Override
     public void undo() throws NoLongerUndoableException{
         reviewManager.deleteReview(reviewId);
+    }
+
+    @Override
+    public String toString() {
+        return "Review with id " + reviewId + " was added";
     }
 }

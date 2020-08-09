@@ -40,6 +40,10 @@ public class UndoAddProposedTrade implements UndoableOperation {
         else {
             throw new NoLongerUndoableException();
         }
+    }
 
+    @Override
+    public String toString() {
+        return "Trade with id " + tradeId + " was proposed";
     }
 }

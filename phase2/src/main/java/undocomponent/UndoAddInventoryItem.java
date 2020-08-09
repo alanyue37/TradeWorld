@@ -21,12 +21,17 @@ public class UndoAddInventoryItem implements UndoableOperation {
     }
 
     /**
-     * Deletes item with itemId and all proposed trades which involve itemId
+     * Deletes item with itemId already confirmed by admin and all proposed trades which involve itemId
      * Throws NoLongerUndoableException if the item is currently part of an active trade.
      */
     @Override
     public void undo() throws NoLongerUndoableException{
         itemManager.deleteItem(itemId); // Delete item from inventory
         tradeManager.deleteCommonItemTrades(itemId); // Delete proposed trades (not yet confirmed) involving itemId
+    }
+
+    @Override
+    public String toString() {
+        return "Item with id " + itemId + " was confirmed by admin";
     }
 }
