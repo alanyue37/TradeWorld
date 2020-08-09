@@ -1,5 +1,7 @@
 package usercomponent;
 
+import com.sun.xml.internal.bind.v2.TODO;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -102,15 +104,27 @@ class TradingUser extends User {
         credit--;
     }
 
+    /**
+     * Returns the city of this TradingUser.
+     * @return The current city of this TradingUser.
+     */
     protected String getCity() {
         return city;
     }
 
+    /**
+     * Returns whether this TradingUser is an admin
+     * @return whether this TradingUser is an admin
+     */
     @Override
     protected boolean isAdmin() {
         return false;
     }
 
+    /**
+     * Returns the TradingUser's current status and credit as a toString.
+     * @return TradingUser's current status
+     */
     public String toString() {
         String status;
         if (isFrozen()) {
@@ -122,42 +136,82 @@ class TradingUser extends User {
         return super.toString() + "\n" + status + "\n" + "Credit: " + getCredit();
     }
 
+    /**
+     * Returns whether this TradingUser is on vacation mode.
+     * @return true iff this user is on vacation. Otherwise, returns false.
+     */
     protected boolean isOnVacation(){
         return this.vacation;
     }
 
+    /**
+     * Sets the vacation mode of this TradingUser
+     * @param vacation Whether or not this TradingUser is on vacation
+     */
     protected void setVacation(boolean vacation){
         this.vacation = vacation;
     }
 
+    /**
+     * Returns whether this TradingUser is a private account.
+     * @return true iff this TradingUser's account is private. Otherwise, returns false.
+     */
     protected boolean isPrivate(){
         return this.privacy;
     }
 
+    /**
+     * Sets the privacy of this TradingUser
+     * @param privacy whether or not this TradingUser's account is private.
+     */
     protected void setPrivacy(boolean privacy){
         this.privacy = privacy;
     }
 
+    /**
+     * Returns the set of friends of this TradingUser.
+     * @return set of friends
+     */
     protected Set<String> getFriends(){
         return this.friends;
     }
 
+    /**
+     * Returns the set of friend requests of this TradingUser.
+     * @return the set of friend requests
+     */
     protected Set<String> getPendingFriends(){
         return this.pendingFriends;
     }
 
+    /**
+     * Adds a user to a given TradingUser's list of friends
+     * @param username username of TradingUser to add to friend list
+     */
     protected void addToFriends(String username){
         this.friends.add(username);
     }
 
+    /**
+     * Remove a user to given TradingUser
+     * @param username username of TradingUser to remove from friend list
+     */
     protected void removeFromFriends(String username){
         this.friends.remove(username);
     }
 
+    /**
+     * Adds a user to a given TradingUser's pending friend list.
+     * @param username username of TradingUser to add to pending friend list.
+     */
     protected void addToPendingFriends(String username){
         this.pendingFriends.add(username);
     }
 
+    /**
+     * Removes a user to a given TradingUser's pending friend list.
+     * @param username username of TradingUser to remove from pending friend list.
+     */
     protected void removeFromPendingFriends(String username){
         this.pendingFriends.remove(username);
     }

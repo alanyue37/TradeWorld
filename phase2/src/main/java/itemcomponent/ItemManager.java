@@ -1,5 +1,7 @@
 package itemcomponent;
 
+import undocomponent.NoLongerUndoableException;
+
 import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -125,11 +127,16 @@ public class ItemManager implements Serializable {
     /**
      * Deletes the item from the system
      * Precondition: An item with the given ID must exist.
-     *
      * @param itemId    The id of the item
+     * @throws NoLongerUndoableException if item is both confirmed and unavailable (i.e. part of active trade)
      */
-    public void deleteItem(String itemId) {
-        items.remove(itemId);
+    public void deleteItem(String itemId) throws NoLongerUndoableException {
+        if (items.get(itemId).isAvailable() || items.get(itemId).getStage().equals("pending")) {
+            items.remove(itemId);
+        }
+        else {
+            throw new NoLongerUndoableException();
+        }
     }
 
     /**

@@ -2,6 +2,8 @@ package useradapters;
 
 import tradegateway.TradeModel;
 import trademisc.RunnableController;
+import undocomponent.UndoAddReview;
+import undocomponent.UndoableOperation;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -152,7 +154,9 @@ public class ProfileController implements RunnableController {
                 presenter.alreadyWroteReview(receiver, tradeId);
             } else{
                 List<String> reviewInfo = getReviewInfo();
-                tradeModel.getReviewManager().addReview(Integer.parseInt(reviewInfo.get(0)), reviewInfo.get(1), tradeId, username, receiver);
+                String reviewId = tradeModel.getReviewManager().addReview(Integer.parseInt(reviewInfo.get(0)), reviewInfo.get(1), tradeId, username, receiver);
+                UndoableOperation undoableOperation = new UndoAddReview(this.tradeModel.getReviewManager(), reviewId);
+                tradeModel.getUndoManager().add(undoableOperation);
             }
         }
     }
