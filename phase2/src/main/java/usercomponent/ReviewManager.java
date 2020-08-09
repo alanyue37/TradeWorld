@@ -22,7 +22,7 @@ public class ReviewManager implements Serializable {
      * @param tradeId trade id of review
      * @param author author of review
      * @param receiver receiver of review
-     * @return
+     * @return id of the review
      */
     public String addReview(int rating, String comment, String tradeId, String author, String receiver) {
         String id = String.valueOf(counter.getAndIncrement());
