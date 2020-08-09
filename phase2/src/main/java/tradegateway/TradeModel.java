@@ -20,6 +20,7 @@ public class TradeModel implements Serializable {
     private MeetingManager meetingManager;
     private ReviewManager reviewManager;
     private UndoManager undoManager;
+    private String currentUser;
 
     /**
      * Creates a new tradegateway.TradeModel with existing managers.
@@ -124,4 +125,20 @@ public class TradeModel implements Serializable {
      * @return undoManager
      */
     public UndoManager getUndoManager() { return undoManager; }
+
+    /**
+     * Set the username of the user currently logged in.
+     * @param currentUser the username of logged in user
+     */
+    public void setCurrentUser(String currentUser) {
+        this.currentUser = currentUser;
+    }
+
+    /**
+     * Return the username of the user currently logged in.
+     * @return undoManager
+     */
+    public String getCurrentUser() {
+        return currentUser;
+    }
 }
