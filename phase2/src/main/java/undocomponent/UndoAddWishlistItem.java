@@ -27,4 +27,9 @@ public class UndoAddWishlistItem implements UndoableOperation {
     public void undo() throws NoLongerUndoableException {
         userManager.removeFromWishlist(username, itemId);
     }
+
+    @Override
+    public String toString() {
+        return "Item with id " + itemId + " was added to wishlist by " + username;
+    }
 }

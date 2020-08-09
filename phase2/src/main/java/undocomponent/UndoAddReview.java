@@ -25,4 +25,9 @@ public class UndoAddReview implements UndoableOperation {
     public void undo() throws NoLongerUndoableException{
         reviewManager.deleteReview(reviewId);
     }
+
+    @Override
+    public String toString() {
+        return "Review with id " + reviewId + " was added";
+    }
 }
