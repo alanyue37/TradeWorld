@@ -376,4 +376,20 @@ public class TradeManager implements Serializable {
         }
         return trades;
     }
+
+    /**
+     * Delete proposed trade with tradeId
+     * Precondition: tradeId exists and is associated with a trade at proposed stage
+     *
+     * @param tradeId id of proposed trade to be deleted
+     */
+    public void deleteProposedTrade(String tradeId) {
+        // Delete trade from ongoingTrades and usersToTrades;
+        Trade trade = this.ongoingTrades.remove(tradeId);
+        for (String user : trade.getUsers()) {
+            if (userToTrades.containsKey(user)) {
+                userToTrades.get(user).remove(trade.getIdOfTrade());
+            }
+        }
+    }
 }
