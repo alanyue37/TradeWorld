@@ -291,21 +291,47 @@ public class AdminController {
         }
     }
 
+    /**
+     * This method allows an admin user to set a value for the gold limit.
+     * @param goldLimit The goldLimit input from the Admin user.
+     */
     protected void setGoldThreshold(String goldLimit) {
         int goldThreshold = Integer.parseInt(goldLimit);
         tradeModel.getUserManager().setThreshold("gold", goldThreshold);
     }
 
+    /**
+     * This method allows an admin user to set a value for the silver limit.
+     * @param silverLimit The silver limit input from the Admin user.
+     */
     protected void setSilverThreshold(String silverLimit) {
         int silverThreshold = Integer.parseInt(silverLimit);
         tradeModel.getUserManager().setThreshold("silver", silverThreshold);
     }
 
-    protected void undoAddInventoryItem() throws NoLongerUndoableException {
+    /**
+     * This method provides an admin user all the undo operations (i.e., undo add inventory item, undo add proposed
+     * trade, undo add review, and undo add wishlist item).
+     * @throws NoLongerUndoableException If the undo no longer exists.
+     */
+    protected void undoOperations() throws NoLongerUndoableException {
         Set<String> undoIDs = tradeModel.getUndoManager().getUndoableOperations().keySet();
-        // ArrayList<String> undoID = new ArrayList<>(undoIDs);
         for (String undoID : undoIDs) {
             tradeModel.getUndoManager().execute(undoID);
         }
+    }
+
+    /**
+     * This method returns a list of strings representing the undo operation and what needs to be undone.
+     * @return A list of strings representing the type of undo operations (i.e., undo add inventory item, undo add proposed
+     * trade, undo add review, and undo add wishlist item) and what needs to be reversed.
+     */
+    protected List<String> undoOperationsString() {
+        Collection<UndoableOperation> undoOperations = tradeModel.getUndoManager().getUndoableOperations().values();
+        ArrayList<String> undoOperationsString = new ArrayList<>();
+
+        for (UndoableOperation undoableOperation : undoOperations) {
+            undoOperationsString.add(undoableOperation.toString());
+        } return undoOperationsString;
     }
 }

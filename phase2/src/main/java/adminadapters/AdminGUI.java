@@ -13,6 +13,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import tradegateway.TradeModel;
+import trademisc.RunnableGUI;
 import undocomponent.NoLongerUndoableException;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ import java.util.Set;
  * Used code from LifeOnTheFarm.zip in week 10 for reference.
  * Also, used https://docs.oracle.com/javafx/2/ui_controls/list-view.htm.
  */
-public class AdminGUI {
+public class AdminGUI implements RunnableGUI {
     private final Stage stage;
     private Scene scene;
     private final int width;
@@ -53,6 +54,12 @@ public class AdminGUI {
         this.presenter = presenter;
         this.controller = new AdminController(model);
         this.model = model;
+    }
+
+    @Override
+    public void initialScreen() {
+
+
     }
 
     /**
@@ -719,7 +726,6 @@ public class AdminGUI {
         stage.show();
     }
 
-
     /**
      * This method informs that Admin user that the number entered to set the threshold is not an integer or zero.
      */
@@ -751,5 +757,55 @@ public class AdminGUI {
         if (!grid.getChildren().contains(message)) {
             grid.add(message, 0, 6, 2, 1);
         }
+    }
+
+    /**
+     *
+     */
+    public void undoOperations() {
+        stage.setTitle("Admin User");
+        Text title = new Text("Undo Operations");
+        title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+
+        ListView<String> list = new ListView<>();
+
+        list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        ObservableList<String> reviewItems =  FXCollections.observableArrayList();
+
+        // Set<String> items = model.getItemManager().getItemsByStage("pending");
+        List<String> undoOperations = new ArrayList<>(controller.undoOperationsString());
+
+        reviewItems.addAll(undoOperations);
+        list.setItems(reviewItems);
+        list.setPlaceholder(new Label ("There are no undo operations."));
+
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(25, 25, 25, 25));
+        grid.add(title, 0, 0, 2, 1);
+        grid.getChildren().add(list);
+        list.setPrefHeight(height - 50); // we could change this
+        list.setPrefWidth(width - 50);   // we could change this
+
+        Button confirmToUndo = new Button("Confirm to Undo");
+        HBox hBoxConfirmToUndo = new HBox(10);
+
+        hBoxConfirmToUndo.setAlignment(Pos.BOTTOM_RIGHT);
+        hBoxConfirmToUndo.getChildren().add(confirmToUndo);
+
+        grid.add(hBoxConfirmToUndo, 1, 4);
+
+        confirmToUndo.setOnAction(actionEvent -> {
+            try {
+                controller.undoOperations();
+            } catch (NoLongerUndoableException e) {
+                e.printStackTrace();
+            }
+        });
+        scene = new Scene(grid, width, height);
+        stage.setScene(scene);
+        stage.show();
     }
 }
