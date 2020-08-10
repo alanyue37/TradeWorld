@@ -13,17 +13,22 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import tradegateway.TradeModel;
+import trademisc.RunnableController;
+import trademisc.RunnableGUI;
 
-public class LoginGUI {
+import java.util.Observable;
+
+public class LoginGUI extends Observable implements RunnableGUI {
     private final Stage stage;
     private Scene scene;
     private final LogInController controller;
     private final int width;
     private final int height;
 
-    public LoginGUI(Stage stage, int width, int height, LogInController controller) {
+    public LoginGUI(Stage stage, int width, int height, TradeModel model) {
         this.stage = stage;
-        this.controller = controller;
+        this.controller = new LogInController(model);
         this.width = width;
         this.height = height;
     }
@@ -44,7 +49,8 @@ public class LoginGUI {
         }
     }
 
-    public void loginInitialScreen() {
+    @Override
+    public void initialScreen() {
         stage.setTitle("Trading System - Login");
 
         Text title = new Text("Welcome");
@@ -53,10 +59,16 @@ public class LoginGUI {
         Button userLoginBtn = new Button("Log in as a trading user");
         Button adminLoginBtn = new Button("Log in as an admin");
         Button registerBtn = new Button("Create a new account");
+        Button demoBtn = new Button("Program demo");
 
         userLoginBtn.setOnAction(actionEvent -> logIn(false));
         adminLoginBtn.setOnAction(actionEvent -> logIn(true));
         registerBtn.setOnAction(actionEvent -> newAccount());
+        demoBtn.setOnAction(actionEvent -> {
+            controller.demo();
+            setChanged();
+            notifyObservers();
+        });
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -68,6 +80,7 @@ public class LoginGUI {
         grid.add(userLoginBtn, 0, 1, 2, 1);
         grid.add(adminLoginBtn, 0, 2, 2, 1);
         grid.add(registerBtn, 0, 3, 2, 1);
+        grid.add(demoBtn, 0, 4, 2, 1);
 
         scene = new Scene(grid, width, height);
 
@@ -106,7 +119,8 @@ public class LoginGUI {
 
         loginButton.setOnAction(actionEvent -> {
             if(controller.logIn(isAdmin, usernameField.getText(), passwordField.getText())){
-                controller.getNextController();
+                setChanged();
+                notifyObservers();
             } else {
                 invalidAccount();
             }
@@ -155,7 +169,8 @@ public class LoginGUI {
 
         registerButton.setOnAction(actionEvent -> {
             if(controller.newTradingUser(nameField.getText(), usernameField.getText(), passwordField.getText(), cityField.getText())){
-                controller.getNextController();
+                setChanged();
+                notifyObservers();
             } else {
                 usernameTaken(nameField.getText());
             }
@@ -164,5 +179,9 @@ public class LoginGUI {
         scene = new Scene(grid, width, height);
 
         stage.setScene(scene);
+    }
+
+    public RunnableController getNextController() {
+        return controller.getNextController();
     }
 }

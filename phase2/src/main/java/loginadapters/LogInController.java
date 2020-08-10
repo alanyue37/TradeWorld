@@ -1,23 +1,17 @@
 package loginadapters;
 
 import adminadapters.AdminController;
-import javafx.stage.Stage;
 import tradegateway.TradeModel;
 import trademisc.RunnableController;
+import useradapters.DemoController;
 import useradapters.UserController;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Observable;
 
 /**
  * The controller class that allows users to log in to the system.
  */
-public class LogInController extends Observable {
+public class LogInController {
 
     private final TradeModel tradeModel;
-    private final LogInPresenter presenter;
     private String username;
     private String password;
     private RunnableController nextController = null;
@@ -28,7 +22,6 @@ public class LogInController extends Observable {
      */
     public LogInController(TradeModel tradeModel) {
         this.tradeModel = tradeModel;
-        presenter = new LogInPresenter();
     }
 
     /**
@@ -36,10 +29,6 @@ public class LogInController extends Observable {
      * @return the next controller that will be run
      */
     public RunnableController getNextController() {
-        if (nextController != null) {
-            presenter.welcome(username);
-            presenter.nextLine();
-        }
         return nextController;
     }
 
@@ -55,8 +44,6 @@ public class LogInController extends Observable {
                 nextController = new UserController(tradeModel, username); // User logged in
             }
         }
-        setChanged();
-        notifyObservers();
         return true;
     }
 
@@ -70,8 +57,11 @@ public class LogInController extends Observable {
         }
 
         nextController = new UserController(tradeModel, username);
-        setChanged();
-        notifyObservers();
         return true;
+    }
+
+    void demo(){
+        username = "DemoUser"; //TODO demo without username?
+        nextController = new DemoController(tradeModel, username);
     }
 }
