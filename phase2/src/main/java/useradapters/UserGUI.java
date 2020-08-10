@@ -40,16 +40,16 @@ public class UserGUI{
         Text title = new Text("Trading User");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
-        // should we present these options in a list and have the user select an option?
-
-        Button addInventory = new Button("Add items to inventory");
-        Button addWishlist = new Button("Add items to wishlist");
-        Button viewUserItems = new Button("View inventory or wishlist");
-        Button viewTradingHistory = new Button("View trading history");
-        Button initiateTrades = new Button("Initiate trades");
-        Button manageProposedTrades = new Button("Manage proposed trades");
-        Button confirmTrades = new Button("Confirm trades");
-        Button manageAccount = new Button("Manage/view account settings");
+        List<String> options = presenter.startMenu();
+        // for loop this maybe ?
+        Button addInventory = new Button(options.get(0));
+        Button addWishlist = new Button(options.get(1));
+        Button viewUserItems = new Button(options.get(2));
+        Button viewTradingHistory = new Button(options.get(3));
+        Button initiateTrades = new Button(options.get(4));
+        Button manageProposedTrades = new Button(options.get(5));
+        Button confirmTrades = new Button(options.get(6));
+        Button manageAccount = new Button(options.get(7));
 
         addInventory.setOnAction(actionEvent -> createItem());
         addWishlist.setOnAction(actionEvent -> viewItemsToAddToWishlist());
@@ -112,7 +112,7 @@ public class UserGUI{
     }
 
     private void viewItemsToAddToWishlist(){
-        Text title = new Text("Welcome");
+        Text title = new Text("Add items to Wishlist");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
         GridPane grid = new GridPane();
@@ -130,10 +130,6 @@ public class UserGUI{
         list.setPrefHeight(100);
 
         grid.add(list, 0, 1);
-
-//        List<String> itemsToAddToWishlist = controller.viewItemsToAddToWishlist();
-//        ScrollPane itemsScrollPane = new ScrollPane();
-//        itemsScrollPane.setContent((Node) itemsToAddToWishlist);
 
         Label itemIdLabel = new Label("Please enter the ID of the item you would like to add or \"back\" to go back: ");
         TextField itemIdField = new TextField();

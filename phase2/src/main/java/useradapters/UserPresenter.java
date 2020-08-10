@@ -10,10 +10,13 @@ public class UserPresenter extends TextPresenter {
     /**
      * Print main menu to run the UserController
      *
-     * @param username The username of the currently logged in TradingUser
+     * // @param username The username of the currently logged in TradingUser
      */
-    public void startMenu(String username) {
-        System.out.println("\n*** " + username + " User Menu***");
+
+    // SHOULD WE DISPLAY THE USERNAME ?
+    public List<String> startMenu() {
+        // System.out.println("\n*** " + username + " User Menu***");
+
         List<String> options = new ArrayList<>();
         options.add("Add items to inventory");
         options.add("Add items to wishlist");
@@ -23,9 +26,7 @@ public class UserPresenter extends TextPresenter {
         options.add("Manage proposed trades");
         options.add("Confirm trades");
         options.add("Manage/view your account settings");
-        printList(options, true, false);
-
-        System.out.println("\nPlease enter the # of your choice or \"exit\" to exit: ");
+        return options;
     }
 
     /**
