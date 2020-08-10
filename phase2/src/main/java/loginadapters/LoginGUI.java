@@ -1,5 +1,6 @@
 package loginadapters;
 
+import adminadapters.AdminGUI;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -14,23 +15,24 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import tradegateway.TradeModel;
-import trademisc.RunnableController;
 import trademisc.RunnableGUI;
+import useradapters.UserGUI;
 
-import java.util.Observable;
-
-public class LoginGUI extends Observable implements RunnableGUI {
+public class LoginGUI implements RunnableGUI {
     private final Stage stage;
     private Scene scene;
     private final LogInController controller;
     private final int width;
     private final int height;
+    private TradeModel model;
+    private RunnableGUI nextGUI;
 
     public LoginGUI(Stage stage, int width, int height, TradeModel model) {
         this.stage = stage;
         this.controller = new LogInController(model);
         this.width = width;
         this.height = height;
+        this.model = model;
     }
 
     public void usernameTaken(String username) {
@@ -66,8 +68,7 @@ public class LoginGUI extends Observable implements RunnableGUI {
         registerBtn.setOnAction(actionEvent -> newAccount());
         demoBtn.setOnAction(actionEvent -> {
             controller.demo();
-            setChanged();
-            notifyObservers();
+            // TODO DemoGUI
         });
 
         GridPane grid = new GridPane();
@@ -119,8 +120,13 @@ public class LoginGUI extends Observable implements RunnableGUI {
 
         loginButton.setOnAction(actionEvent -> {
             if(controller.logIn(isAdmin, usernameField.getText(), passwordField.getText())){
-                setChanged();
-                notifyObservers();
+                model.setCurrentUser(usernameField.getText());
+                if (isAdmin){
+                    nextGUI = new AdminGUI(stage, width, height, model);
+                } else {
+                    nextGUI = new UserGUI(usernameField.getText(), stage, width, height, model);
+                }
+                nextGUI.initialScreen();
             } else {
                 invalidAccount();
             }
@@ -169,8 +175,8 @@ public class LoginGUI extends Observable implements RunnableGUI {
 
         registerButton.setOnAction(actionEvent -> {
             if(controller.newTradingUser(nameField.getText(), usernameField.getText(), passwordField.getText(), cityField.getText())){
-                setChanged();
-                notifyObservers();
+                nextGUI = new UserGUI(usernameField.getText(), stage, width, height, model);
+                nextGUI.initialScreen();
             } else {
                 usernameTaken(nameField.getText());
             }
@@ -179,9 +185,5 @@ public class LoginGUI extends Observable implements RunnableGUI {
         scene = new Scene(grid, width, height);
 
         stage.setScene(scene);
-    }
-
-    public RunnableController getNextController() {
-        return controller.getNextController();
     }
 }

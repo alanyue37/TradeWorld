@@ -44,14 +44,13 @@ public class AdminGUI implements RunnableGUI {
      * @param stage The stage of the screen.
      * @param width The width of the screen.
      * @param height    The height of the screen.
-     * @param presenter The AdminPresenter.
      * @param model The TradeModel.
      */
-    public AdminGUI(Stage stage, int width, int height, AdminPresenter presenter, TradeModel model) {
+    public AdminGUI(Stage stage, int width, int height, TradeModel model) {
         this.stage = stage;
         this.width = width;
         this.height = height;
-        this.presenter = presenter;
+        this.presenter = new AdminPresenter();
         this.controller = new AdminController(model);
         this.model = model;
     }

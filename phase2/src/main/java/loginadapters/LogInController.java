@@ -36,15 +36,7 @@ public class LogInController {
     boolean logIn(boolean isAdmin, String user, String pass) {
         username = user;
         password = pass;
-        if (tradeModel.getUserManager().login(username, password)) {
-            if (tradeModel.getUserManager().isAdmin(username)) {
-                nextController = (RunnableController) new AdminController(tradeModel); // Admin logged in
-            }
-            else {
-                nextController = new UserController(tradeModel, username); // User logged in
-            }
-        }
-        return true;
+        return tradeModel.getUserManager().login(username, password);
     }
 
     // Create new account

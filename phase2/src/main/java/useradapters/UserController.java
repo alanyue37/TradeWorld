@@ -115,7 +115,7 @@ public class UserController implements RunnableController {
      * View system inventory of users in same city (except items in current user's inventory or wishlist).
      * Gives the user the option of adding items to their wishlist.
      */
-    public List<String> viewItemsToAddToWishlist(){
+    public List<String> viewItemsToAddToWishlist() throws IOException {
         Set<String> items = tradeModel.getItemManager().getItemsByStage("common");
         if (tradeModel.getUserManager().getRankByUsername(username).equals("gold")) {
             items.addAll(tradeModel.getItemManager().getItemsByStage("early"));

@@ -15,9 +15,9 @@ import java.util.Observer;
 public class TradeSystem implements Observer {
 
     private final String tradeModelFile = "serializedobjects.ser";
-    LogInController controller;
-    DataManager dataManager;
-    TradeModel tradeModel;
+    private LogInController controller;
+    private DataManager dataManager;
+    private TradeModel tradeModel;
 
     /**
      * Run the trading system.
@@ -26,10 +26,8 @@ public class TradeSystem implements Observer {
         try {
             dataManager = new DataManager(tradeModelFile);
             tradeModel = dataManager.readFromFile();
-            controller = new LogInController(tradeModel);
-            controller.addObserver(this);
-            LoginGUI gui = new LoginGUI(stage, 275, 300, controller);
-            gui.loginInitialScreen();
+            LoginGUI gui = new LoginGUI(stage, 275, 300, tradeModel);
+            gui.initialScreen();
             } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
