@@ -4,6 +4,7 @@ import tradegateway.TradeModel;
 import trademisc.RunnableController;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 public class DemoController extends UserController implements RunnableController{
@@ -22,7 +23,7 @@ public class DemoController extends UserController implements RunnableController
      */
     @Override
     protected boolean selectMenu() throws IOException {
-        presenter.startMenu(username);
+        // presenter.startMenu(username);
         boolean validInput = false;
         do {
             String input = br.readLine();
@@ -55,8 +56,7 @@ public class DemoController extends UserController implements RunnableController
     /**
      * Allows user to simulate creating an item
      */
-    @Override
-    protected void createItem(){
+    protected void createItem() {
         presenter.printInputItemName();             // enter name of the item
         presenter.printInputItemDescription();      // enter description of the item
         presenter.printDemoMessage();
@@ -66,19 +66,20 @@ public class DemoController extends UserController implements RunnableController
      * View system inventory. Gives the user the option of simulating adding items to their wishlist.
      *
      * @throws IOException if a problem occurs with reading in input
+     * @return
      */
-    @Override
+    /*@Override
     public void viewItemsToAddToWishlist() throws IOException {
         Set<String> items = tradeModel.getItemManager().getItemsByStage("common");
         presenter.printItemsToAddToWishlist(getItemsInfo(items));
-        String choice = br.readLine();
+        //String choice = br.readLine();
         while (!items.contains(choice) && !choice.equals("back")) {
             presenter.tryAgain();
-            choice = br.readLine();
+           // choice = br.readLine();
         }
         if (items.contains(choice)) {
             presenter.printDemoMessage();
         }
-    }
-
+        */
 }
+

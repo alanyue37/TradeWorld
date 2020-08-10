@@ -13,6 +13,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import tradegateway.TradeModel;
+import trademisc.RunnableGUI;
+import undocomponent.NoLongerUndoableException;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -26,7 +28,7 @@ import java.util.Set;
  * Used code from LifeOnTheFarm.zip in week 10 for reference.
  * Also, used https://docs.oracle.com/javafx/2/ui_controls/list-view.htm.
  */
-public class AdminGUI {
+public class AdminGUI implements RunnableGUI {
     private final Stage stage;
     private Scene scene;
     private final int width;
@@ -35,7 +37,7 @@ public class AdminGUI {
     private final AdminController controller;
     private final TradeModel model;
 
-    // TODO: I still need to make MAJOR changes to the screen displays and have to TEST!
+    // TODO: I still need to make changes to the screen displays and have to TEST!
 
     /**
      * A constructor for AdminGUI class.
@@ -43,16 +45,21 @@ public class AdminGUI {
      * @param width The width of the screen.
      * @param height    The height of the screen.
      * @param presenter The AdminPresenter.
-     * @param controller    The AdminController.
      * @param model The TradeModel.
      */
-    public AdminGUI(Stage stage, int width, int height, AdminPresenter presenter, AdminController controller, TradeModel model) {
+    public AdminGUI(Stage stage, int width, int height, AdminPresenter presenter, TradeModel model) {
         this.stage = stage;
         this.width = width;
         this.height = height;
         this.presenter = presenter;
-        this.controller = controller;
+        this.controller = new AdminController(model);
         this.model = model;
+    }
+
+    @Override
+    public void initialScreen() {
+
+
     }
 
     /**
@@ -66,13 +73,8 @@ public class AdminGUI {
         Text title = new Text("What would you like to do?");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
-        ListView<String> list = new ListView<>();
-        list.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        ObservableList<String> options = FXCollections.observableArrayList(presenter.startMenu());
-
-        list.setItems(options);
-
         Button goButton = new Button("Go");
+
         HBox hBoxGo = new HBox(10);
         hBoxGo.setAlignment(Pos.BOTTOM_RIGHT);
         hBoxGo.getChildren().add(goButton);
@@ -83,56 +85,34 @@ public class AdminGUI {
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
         grid.add(title, 0, 0, 2, 1);
-        grid.getChildren().add(list);
-        list.setPrefHeight(height - 50); // we could change this
-        list.setPrefWidth(width - 50);   // we could change this
-        grid.add(hBoxGo, 0, 1);
 
-        ObservableList<Integer> selectedItem =  list.getSelectionModel().getSelectedIndices();
-        ArrayList<Integer> conversion = new ArrayList<>(selectedItem);
-        String selected = conversion.toString();
+        Button addNewAdmins = new Button("Add new admins");
+        Button freezeUsers = new Button("Freeze users");
+        Button unfreezeUsers = new Button("Unfreeze users");
+        Button reviewItems = new Button("Review items");
+        Button lendingThreshold = new Button("Set lending threshold");
+        Button weeklyThreshold = new Button("Set weekly threshold");
+        Button incompleteThreshold = new Button("Set incomplete transactions threshold");
+        Button editThreshold = new Button("Set edit threshold");
 
-        // If the group suggests, I can also have these options presented in buttons (just like in UserGUI).
+        grid.add(addNewAdmins, 0, 1, 2, 1);
+        grid.add(freezeUsers, 0, 2, 2, 1);
+        grid.add(unfreezeUsers, 0, 3, 2, 1);
+        grid.add(reviewItems, 0, 4, 2, 1);
+        grid.add(lendingThreshold, 0, 5, 2, 1);
+        grid.add(weeklyThreshold, 0, 6, 2, 1);
+        grid.add(incompleteThreshold, 0, 7, 2, 1);
+        grid.add(editThreshold, 0, 8, 2, 1);
 
-        goButton.setOnAction(actionEvent -> {
-            switch (selected) {
-                case "0": {
-                    addNewAdmin();
-                    break;
-                }
-                case "1": {
-                    freezeUsers();
-                    break;
-                }
-                case "2": {
-                    unfreezeUsers();
-                    break;
-                }
-                case "3": {
-                    reviewItems();
-                    break;
-                }
-                case "4": {
-                    setLendingThreshold();
-                    break;
-                }
-                case "5": {
-                    setLimitOfTransactionsThreshold();
-                    break;
-                }
-                case "6": {
-                    setLimitOfIncompleteTrades();
-                    break;
-                }
-                case "7": {
-                    setLimitOfEdits();
-                    break;
-                } default: {
-                    tryAgain();
-                    adminUserInitialScreen();
-                }
-            }
-        });
+        addNewAdmins.setOnAction(actionEvent -> addNewAdmin());
+        freezeUsers.setOnAction(actionEvent -> freezeUsers());
+        unfreezeUsers.setOnAction(actionEvent -> unfreezeUsers());
+        reviewItems.setOnAction(actionEvent -> reviewItems());
+        lendingThreshold.setOnAction(actionEvent -> setLendingThreshold());
+        weeklyThreshold.setOnAction(actionEvent -> setLimitOfTransactionsThreshold());
+        incompleteThreshold.setOnAction(actionEvent -> setLimitOfIncompleteTrades());
+        editThreshold.setOnAction(actionEvent -> setLimitOfEdits());
+
         scene = new Scene(grid, width, height);
         stage.setScene(scene);
         stage.show();
@@ -177,8 +157,10 @@ public class AdminGUI {
                 newAdminCreated(usernameField.getText());
             } else if (nameField.getText().equals("") || usernameField.getText().equals("") || passwordField.getText().equals("")) {
                 tryAgain();
+                addNewAdmin();
             } else {
                 usernameTaken(usernameField.getText());
+                addNewAdmin();
             }
         });
         scene = new Scene(grid, width, height);
@@ -275,7 +257,7 @@ public class AdminGUI {
                 accountsSelectedToFreeze();
             }
         });
-        scene = new Scene(grid, 300, 120);
+        scene = new Scene(grid, width, height);
         stage.setScene(scene);
         stage.show();
     }
@@ -349,7 +331,7 @@ public class AdminGUI {
                 accountsSelectedToUnfreeze();
             }
         });
-        scene = new Scene(grid, 300, 120);
+        scene = new Scene(grid, width, height);
         stage.setScene(scene);
         stage.show();
     }
@@ -433,8 +415,17 @@ public class AdminGUI {
         }
 
         addItemsButton.setOnAction(actionEvent -> {
-            controller.askAdminToReviewItems(selected, notSelected);
-            itemReviewed();
+            if (!selected.isEmpty() || !notSelected.isEmpty()) {
+                try {
+                    controller.askAdminToReviewItems(selected, notSelected);
+                } catch (NoLongerUndoableException e) {
+                    e.printStackTrace();                // Check this
+                }
+                itemReviewed();
+            } else {
+                tryAgain();
+                reviewItems();
+            }
         });
         scene = new Scene(grid, width, height);
         stage.setScene(scene);
@@ -497,7 +488,7 @@ public class AdminGUI {
                 setLendingThreshold();
             }
         });
-        scene = new Scene(grid, 300, 120);
+        scene = new Scene(grid, width, height);
         stage.setScene(scene);
         stage.show();
     }
@@ -647,6 +638,94 @@ public class AdminGUI {
         stage.show();
     }
 
+    public void setGoldThreshold() {
+        stage.setTitle("Admin User");
+        Text title = new Text("Set Gold Threshold");
+        title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+
+        Text text = new Text();
+        int currentLimit = model.getUserManager().getThreshold("gold");
+        text.setText(Integer.toString(currentLimit));
+
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(25, 25, 25, 25));
+        grid.add(title, 0, 0, 2, 1);
+        grid.add(text, 1, 1, 3, 4);
+        text.setX(70);
+        text.setY(70);
+
+        Label limitThresholdLabel = new Label(presenter.lendingThreshold());
+        TextField limitThresholdField = new TextField();
+
+        Button setThresholdButton = new Button("Set Threshold");
+        HBox hBoxSetThreshold = new HBox(10);
+        hBoxSetThreshold.setAlignment(Pos.BOTTOM_RIGHT);
+        hBoxSetThreshold.getChildren().add(setThresholdButton);
+
+        grid.add(limitThresholdLabel, 0, 1);
+        grid.add(limitThresholdField, 0, 3);
+
+        setThresholdButton.setOnAction(actionEvent -> {
+            if (controller.IsAnIntegerOrZero(limitThresholdField.getText())) {
+                controller.setGoldThreshold(limitThresholdField.getText());
+                thresholdSet();
+            } else {
+                enterAtLeastZero();
+                setLimitOfEdits();
+            }
+        });
+        scene = new Scene(grid, width, height);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void setSilverThreshold() {
+        stage.setTitle("Admin User");
+        Text title = new Text("Set Silver Threshold");
+        title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+
+        Text text = new Text();
+        int currentLimit = model.getUserManager().getThreshold("silver");
+        text.setText(Integer.toString(currentLimit));
+
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(25, 25, 25, 25));
+        grid.add(title, 0, 0, 2, 1);
+        grid.add(text, 1, 1, 3, 4);
+        text.setX(70);
+        text.setY(70);
+
+        Label limitThresholdLabel = new Label(presenter.lendingThreshold());
+        TextField limitThresholdField = new TextField();
+
+        Button setThresholdButton = new Button("Set Threshold");
+        HBox hBoxSetThreshold = new HBox(10);
+        hBoxSetThreshold.setAlignment(Pos.BOTTOM_RIGHT);
+        hBoxSetThreshold.getChildren().add(setThresholdButton);
+
+        grid.add(limitThresholdLabel, 0, 1);
+        grid.add(limitThresholdField, 0, 3);
+
+        setThresholdButton.setOnAction(actionEvent -> {
+            if (controller.IsAnIntegerOrZero(limitThresholdField.getText())) {
+                controller.setSilverThreshold(limitThresholdField.getText());
+                thresholdSet();
+            } else {
+                enterAtLeastZero();
+                setLimitOfEdits();
+            }
+        });
+        scene = new Scene(grid, width, height);
+        stage.setScene(scene);
+        stage.show();
+    }
+
     /**
      * This method informs that Admin user that the number entered to set the threshold is not an integer or zero.
      */
@@ -678,5 +757,55 @@ public class AdminGUI {
         if (!grid.getChildren().contains(message)) {
             grid.add(message, 0, 6, 2, 1);
         }
+    }
+
+    /**
+     *
+     */
+    public void undoOperations() {
+        stage.setTitle("Admin User");
+        Text title = new Text("Undo Operations");
+        title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+
+        ListView<String> list = new ListView<>();
+
+        list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        ObservableList<String> reviewItems =  FXCollections.observableArrayList();
+
+        // Set<String> items = model.getItemManager().getItemsByStage("pending");
+        List<String> undoOperations = new ArrayList<>(controller.undoOperationsString());
+
+        reviewItems.addAll(undoOperations);
+        list.setItems(reviewItems);
+        list.setPlaceholder(new Label ("There are no undo operations."));
+
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(25, 25, 25, 25));
+        grid.add(title, 0, 0, 2, 1);
+        grid.getChildren().add(list);
+        list.setPrefHeight(height - 50); // we could change this
+        list.setPrefWidth(width - 50);   // we could change this
+
+        Button confirmToUndo = new Button("Confirm to Undo");
+        HBox hBoxConfirmToUndo = new HBox(10);
+
+        hBoxConfirmToUndo.setAlignment(Pos.BOTTOM_RIGHT);
+        hBoxConfirmToUndo.getChildren().add(confirmToUndo);
+
+        grid.add(hBoxConfirmToUndo, 1, 4);
+
+        confirmToUndo.setOnAction(actionEvent -> {
+            try {
+                controller.undoOperations();
+            } catch (NoLongerUndoableException e) {
+                e.printStackTrace();
+            }
+        });
+        scene = new Scene(grid, width, height);
+        stage.setScene(scene);
+        stage.show();
     }
 }
