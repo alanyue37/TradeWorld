@@ -1,5 +1,6 @@
 package tradegateway;
 
+import adminadapters.AdminGUI;
 import javafx.stage.Stage;
 import loginadapters.LogInController;
 import loginadapters.LoginGUI;
@@ -8,6 +9,7 @@ import trademisc.RunnableController;
 import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Set;
 
 /**
  * DEMO trading system with pre-inserted users, items, etc. solely for internal testing
@@ -26,15 +28,19 @@ public class DemoTradeSystem {
     public void run(Stage stage) {
         try {
             dataManager = new DataManager(tradeModelFile);
-            tradeModel = dataManager.readFromFile();
+            //tradeModel = dataManager.readFromFile();
+            tradeModel = new TradeModel();
 
             // INITIALIZE TRADEMODEL FOR DEMO
             initializeTradeModel(tradeModel);
 
-            gui = new LoginGUI(stage, 275, 300, tradeModel);
-            gui.initialScreen();
-            dataManager.saveToFile(tradeModel);
-        } catch (IOException | ClassNotFoundException ex) {
+            // controller = new LogInController(tradeModel);
+            //controller.addObserver(this);
+           //LoginGUI gui = new LoginGUI(stage, 500, 500, tradeModel);
+           //gui.initialScreen();
+           AdminGUI adminGUI = new AdminGUI(stage, 500, 500, tradeModel);
+           adminGUI.adminUserInitialScreen();
+        } catch (IOException ex)  {// | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
     }
@@ -89,6 +95,13 @@ public class DemoTradeSystem {
         for (String itemId : items) {
             tradeModel.getItemManager().confirmItem(itemId);
         }
+
+        tradeModel.getUserManager().markUserForUnfreezing("U_1");
+        tradeModel.getUserManager().markUserForUnfreezing("U_2");
+        tradeModel.getUserManager().markUserForUnfreezing("U_3");
+        tradeModel.getUserManager().markUserForUnfreezing("U_4");
+
+
         // DEMO  --- END
     }
 }

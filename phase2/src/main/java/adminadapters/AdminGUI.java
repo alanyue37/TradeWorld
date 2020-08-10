@@ -2,9 +2,12 @@ package adminadapters;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
@@ -16,6 +19,7 @@ import tradegateway.TradeModel;
 import trademisc.RunnableGUI;
 import undocomponent.NoLongerUndoableException;
 
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -57,8 +61,7 @@ public class AdminGUI implements RunnableGUI {
 
     @Override
     public void initialScreen() {
-
-
+        adminUserInitialScreen();
     }
 
     /**
@@ -69,7 +72,7 @@ public class AdminGUI implements RunnableGUI {
     public void adminUserInitialScreen() {
         stage.setTitle("Admin Menu Options");
 
-        Text title = new Text("What would you like to do?");
+        Text title = new Text("Menu Options");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
         Button goButton = new Button("Go");
@@ -144,19 +147,18 @@ public class AdminGUI implements RunnableGUI {
         hBoxCreateAdmin.getChildren().add(createButton);
 
         grid.add(newNameLabel, 0, 1);
-        grid.add(nameField, 0, 1);
-        grid.add(newUsernameLabel, 0, 1);
-        grid.add(usernameField, 0, 1);
-        grid.add(newPasswordLabel, 0, 1);
-        grid.add(passwordField, 0, 1);
-        grid.add(hBoxCreateAdmin, 0, 1);
+        grid.add(nameField, 0, 2);
+        grid.add(newUsernameLabel, 0, 3);
+        grid.add(usernameField, 0, 4);
+        grid.add(newPasswordLabel, 0, 5);
+        grid.add(passwordField, 0, 6);
+        grid.add(hBoxCreateAdmin, 0, 7);
         
         createButton.setOnAction(actionEvent -> {
-            if (controller.askAdminToAddNewAdmin(nameField.getText(), usernameField.getText(), passwordField.getText())) {
-                newAdminCreated(usernameField.getText());
-            } else if (nameField.getText().equals("") || usernameField.getText().equals("") || passwordField.getText().equals("")) {
+            if (nameField.getText().isBlank() || usernameField.getText().isBlank() || passwordField.getText().isBlank()) {
                 tryAgain();
-                addNewAdmin();
+            } else if (controller.askAdminToAddNewAdmin(nameField.getText(), usernameField.getText(), passwordField.getText())) {
+                newAdminCreated(usernameField.getText());
             } else {
                 usernameTaken(usernameField.getText());
                 addNewAdmin();
@@ -175,7 +177,7 @@ public class AdminGUI implements RunnableGUI {
         GridPane grid = (GridPane) scene.getRoot();
         Text message = new Text(presenter.newAccountCreated(username));
         if (!grid.getChildren().contains(message)){
-            grid.add(message, 0, 6, 2, 1);
+            grid.add(message, 0, 9, 1, 1);
         }
     }
 
@@ -187,7 +189,7 @@ public class AdminGUI implements RunnableGUI {
         GridPane grid = (GridPane) scene.getRoot();
         Text message = new Text(presenter.usernameTaken(username));
         if (!grid.getChildren().contains(message)){
-            grid.add(message, 0, 6, 2, 1);
+            grid.add(message, 0, 9, 1, 1);
         }
     }
 
@@ -198,7 +200,7 @@ public class AdminGUI implements RunnableGUI {
         GridPane grid = (GridPane) scene.getRoot();
         Text message = new Text("Please try again!");
         if (!grid.getChildren().contains(message)){
-            grid.add(message, 0, 6, 2, 1);
+            grid.add(message, 0, 9, 1, 1);
         }
     }
 
@@ -241,7 +243,7 @@ public class AdminGUI implements RunnableGUI {
         Button freezeButton = new Button("Freeze these Accounts");
         HBox freezeHBox = new HBox(10);
 
-        freezeButton.setAlignment(Pos.BOTTOM_RIGHT);
+        freezeHBox.setAlignment(Pos.BOTTOM_RIGHT);
         freezeHBox.getChildren().add(freezeButton);
 
         grid.add(freezeHBox, 0, 1);
@@ -293,8 +295,6 @@ public class AdminGUI implements RunnableGUI {
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
         ListView<String> list = new ListView<>();
-
-        list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         ObservableList<String> unfreezeAccounts = FXCollections.observableArrayList();
 
         Set<String> accounts = model.getUserManager().getUnfreezeRequests();
@@ -320,19 +320,22 @@ public class AdminGUI implements RunnableGUI {
 
         grid.add(unfreezeHBox, 0, 1);
 
-        ObservableList<String> selectedItems =  list.getSelectionModel().getSelectedItems();
-        ArrayList<String> selected = new ArrayList<>(selectedItems);
-        unfreezeButton.setOnAction(actionEvent -> {
+        list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        unfreezeButton.setOnAction(EventHandler -> {
+            ObservableList<String> selectedItems = list.getSelectionModel().getSelectedItems();
+            ArrayList<String> selected = new ArrayList<>(selectedItems);
+            selected.addAll(selectedItems);
             if (selected.isEmpty()) {
                 noAccountsSelectedToUnfreeze();
             } else {
                 controller.askAdminToUnfreezeUsers(selected);
-                accountsSelectedToUnfreeze();
+                // accountsSelectedToUnfreeze();
             }
-        });
         scene = new Scene(grid, width, height);
         stage.setScene(scene);
         stage.show();
+        });
     }
 
     /**
