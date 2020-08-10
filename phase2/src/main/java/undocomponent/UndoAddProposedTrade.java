@@ -35,7 +35,8 @@ public class UndoAddProposedTrade implements UndoableOperation {
         if (meetingManager.getToCheckTrades(trades, "proposed").contains(tradeId)) {
             // Confirmed that trade is still at proposed stage
             // Need to check here rather than TradeManager because TradeManager doesn't have access to MeetingManager
-            tradeManager.deleteProposedTrade(tradeId);
+            tradeManager.cancelTrade(tradeId);
+            meetingManager.cancelMeetingsOfTrade(tradeId); //cancels the meetings associated with this trade too
         }
         else {
             throw new NoLongerUndoableException();
