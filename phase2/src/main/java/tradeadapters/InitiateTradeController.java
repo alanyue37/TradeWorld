@@ -37,29 +37,40 @@ public class InitiateTradeController implements RunnableController {
      */
     @Override
     public void run() {
-        try {
-            initiateTrade();
-        } catch (IOException e) {
-            System.out.println("Something went wrong!");
-        }
+//        try {
+//            initiateTrade();
+//        } catch (IOException e) {
+//            System.out.println("Something went wrong!");
+//        }
     }
 
-    private boolean initiateTrade() throws IOException {
-        boolean success = false;
-        if (tradeModel.getUserManager().isFrozen(username)) {
-            unfreezeRequest();
-            return success;
+//    private boolean initiateTrade() throws IOException {
+//        boolean success = false;
+//        if (tradeModel.getUserManager().isFrozen(username)) {
+//            unfreezeRequest(); //TODO: move to somewhere else
+//            return success;
+//        }
+//        if (tradeModel.getUserManager().getOnVacation().contains(username)){
+//            presenter.onVacation();
+//            return success;
+//        }
+//        String itemId = getItemIdChoice();
+//        if (itemId == null) {
+//            return success;
+//        }
+//        success = createTrade(itemId);
+//        presenter.successful(success);
+//        return success;
+//    }
+
+    protected boolean initiateTrade(){
+        boolean success = true;
+        if (tradeModel.getUserManager().isFrozen(username)){
+            success = false;
         }
         if (tradeModel.getUserManager().getOnVacation().contains(username)){
-            presenter.onVacation();
-            return success;
+            success = false;
         }
-        String itemId = getItemIdChoice();
-        if (itemId == null) {
-            return success;
-        }
-        success = createTrade(itemId);
-        presenter.successful(success);
         return success;
     }
 
@@ -221,38 +232,22 @@ public class InitiateTradeController implements RunnableController {
     }
 
 //    private String getItemIdChoice() throws IOException {
-//        // Show items available not owned by user and owned by users in same city
-//        // TODO: consider using a filter system with filter classes that implement interface (check method under)
 //        String userRank = tradeModel.getUserManager().getRankByUsername(username);
-//        Set<String> itemsAvailable = tradeModel.getItemManager().getAvailableItems(userRank);
-//
+//        Set<String> itemsAvailable = new HashSet<>();
 //        if (tradeModel.getUserManager().getPrivateUser().contains(username)) { // if private user
-//            Set<String> privateAccounts = tradeModel.getUserManager().getFriendList(username); // get friend not on vacation
-//            privateAccounts.removeIf(user -> tradeModel.getUserManager().getOnVacation().contains(user));
-//            itemsAvailable.removeIf(item -> !privateAccounts.contains(tradeModel.getItemManager().getOwner(item)));
+//            itemsAvailable.addAll(getAvailableItemsPrivateAccount(tradeModel.getItemManager().getAvailableItems(userRank)));
 //        } else {  //public user
-//            Set<String> privateAccounts = tradeModel.getUserManager().getPrivateUser();
-//            privateAccounts.removeAll(tradeModel.getUserManager().getFriendList(username));
-//            privateAccounts.addAll(tradeModel.getUserManager().getOnVacation()); // remove not friend & vacation
-//            itemsAvailable.removeIf(item -> privateAccounts.contains(tradeModel.getItemManager().getOwner(item)));
+//            itemsAvailable.addAll(getAvailableItemsPublicAccount(tradeModel.getItemManager().getAvailableItems(userRank)));
 //        }
-//        List<String> itemsToShow = new ArrayList<>();
-//
-//        for (String itemId : itemsAvailable) {
-//            String otherUsername = tradeModel.getItemManager().getOwner(itemId);
-//            String thisUserCity = tradeModel.getUserManager().getCityByUsername(username);
-//            String otherUserCity = tradeModel.getUserManager().getCityByUsername(otherUsername);
-//            if (!otherUsername.equals(username) && thisUserCity.equals(otherUserCity)) {
-//                itemsToShow.add(tradeModel.getItemManager().getItemInfo(itemId));
-//            }
-//        }
+//        List<String> itemsToShow = new ArrayList<>(itemsAvailable);
+
 //        if (itemsToShow.size() == 0) {
 //            presenter.noItemsToTrade();
 //            return null;
 //        }
 //        presenter.availableItemsMenu(itemsToShow);
 //        String itemId = br.readLine();
-//        while (!itemsAvailable.contains(itemId) && !itemId.equals("back")) { //what if they enter available item not shown
+//        while (!itemsToShow.contains(itemId) && !itemId.equals("back")) {
 //            // Validate input
 //            presenter.tryAgain();
 //            itemId = br.readLine();
@@ -263,7 +258,8 @@ public class InitiateTradeController implements RunnableController {
 //        return itemId;
 //    }
 
-    private String getItemIdChoice() throws IOException {
+    protected Map<String, String> getAvailableItems(){
+        Map<String, String> infoToId = new HashMap<>();
         String userRank = tradeModel.getUserManager().getRankByUsername(username);
         Set<String> itemsAvailable = new HashSet<>();
         if (tradeModel.getUserManager().getPrivateUser().contains(username)) { // if private user
@@ -271,23 +267,10 @@ public class InitiateTradeController implements RunnableController {
         } else {  //public user
             itemsAvailable.addAll(getAvailableItemsPublicAccount(tradeModel.getItemManager().getAvailableItems(userRank)));
         }
-        List<String> itemsToShow = new ArrayList<>(itemsAvailable);
-
-        if (itemsToShow.size() == 0) {
-            presenter.noItemsToTrade();
-            return null;
+        for (String item: itemsAvailable){
+            infoToId.put(tradeModel.getItemManager().getItemInfo(item), item);
         }
-        presenter.availableItemsMenu(itemsToShow);
-        String itemId = br.readLine();
-        while (!itemsToShow.contains(itemId) && !itemId.equals("back")) {
-            // Validate input
-            presenter.tryAgain();
-            itemId = br.readLine();
-        }
-        if (itemId.equals("back")) {
-            itemId = null;
-        }
-        return itemId;
+        return infoToId;
     }
 
     private Set<String> getAvailableItemsPrivateAccount(Set<String> allItems){
@@ -309,7 +292,7 @@ public class InitiateTradeController implements RunnableController {
         return allItems;
     }
 
-    private void unfreezeRequest() throws IOException {
+    private void unfreezeRequest() throws IOException { //TODO: move to another gui
         presenter.frozenAccount();
         String input = br.readLine();
         while (!input.equals("0") && !input.equals("1")){
@@ -328,4 +311,5 @@ public class InitiateTradeController implements RunnableController {
         }
         return itemsInfo;
     }
+
 }
