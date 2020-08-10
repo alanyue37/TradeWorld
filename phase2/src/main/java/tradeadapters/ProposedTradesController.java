@@ -94,7 +94,7 @@ public class ProposedTradesController implements RunnableController {
      *
      * @param tradeId id of the trade
      */
-    private void confirmMeetingTime(String tradeId) {
+    protected void confirmMeetingTime(String tradeId) {
         if (tradeModel.getMeetingManager().canChangeMeeting(tradeId, username)) {
             String meetingId = tradeModel.getTradeManager().getMeetingOfTrade(tradeId).get(tradeModel.getTradeManager().getMeetingOfTrade(tradeId).size() - 1);
             tradeModel.getMeetingManager().confirmAgreement(meetingId);
@@ -149,21 +149,21 @@ public class ProposedTradesController implements RunnableController {
     }
 
 
-    private void editMeetingTime(String tradeId, List<String> details) {
+    protected void editMeetingTime(String tradeId, List<String> details) {
         try {
             DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
             Date time = format.parse(details.get(1));
             String meetingId = tradeModel.getTradeManager().getMeetingOfTrade(tradeId).get(tradeModel.getTradeManager().getMeetingOfTrade(tradeId).size() - 1);
             tradeModel.getMeetingManager().changeMeeting(meetingId, details.get(0), time, username);
-            presenter.editedMeeting();
+//            presenter.editedMeeting();
         } catch (ParseException e) {
-            System.out.println("Invalid date and time!");
+//            System.out.println("Invalid date and time!");
         }
     }
 
-    private void declineTrade(String tradeId){
+    protected void declineTrade(String tradeId){
         tradeModel.getTradeManager().cancelTrade(tradeId);
         tradeModel.getMeetingManager().cancelMeetingsOfTrade(tradeId);
-        presenter.canceledTrade();
+//        presenter.canceledTrade();
     }
 }
