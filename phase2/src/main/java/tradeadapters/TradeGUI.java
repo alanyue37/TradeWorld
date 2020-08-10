@@ -1,13 +1,21 @@
 package tradeadapters;
 
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+import javafx.beans.binding.ListBinding;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.beans.value.ObservableStringValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -19,10 +27,9 @@ import trademisc.RunnableGUI;
 import useradapters.ProfileController;
 import viewingadapters.ViewingTradesController;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TradeGUI implements RunnableGUI {
     private final Stage stage;
@@ -35,21 +42,23 @@ public class TradeGUI implements RunnableGUI {
     private final ProposedTradesController proposedTradesController;
     private final ViewingTradesController viewingTradesController;
     private final ProfileController profileController;
+    private final String username;
     private DatePicker datePicker;
-
 
     public TradeGUI(Stage stage, int width, int height, TradeModel tradeModel, String username) {
         this.stage = stage;
         this.width = width;
         this.height = height;
         this.tradeModel = tradeModel;
-        // this.username = username; if we remove username from the controller constructors
+//        this.username = tradeModel.getCurrentUser();
+        this.username = username;
         this.initiateTradeController = new InitiateTradeController(tradeModel, username);
         this.confirmTradesController = new ConfirmTradesController(tradeModel, username);
         this.proposedTradesController = new ProposedTradesController(tradeModel, username);
         this.viewingTradesController = new ViewingTradesController(tradeModel, username);
         this.profileController = new ProfileController(tradeModel, username);
         this.datePicker = new DatePicker();
+
 
     }
 
@@ -58,17 +67,17 @@ public class TradeGUI implements RunnableGUI {
         tradeInitialScreen();
     }
 
-    public void tradeInitialScreen() {
+    public void tradeInitialScreen(){
         stage.setTitle("Trade Menu Options");
 
         Text title = new Text("What would you like to do?");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
-        Button initiateTrade = new Button("Initiate trade");
-        Button proposedTrades = new Button("Manage proposed trades");
-        Button confirmTrades = new Button("Confirm real life meeting of trades");
-        Button viewTrades = new Button("View ongoing and completed trades");
-        Button backButton = new Button("Go back");
+        Button initiateTradeBtn = new Button("Initiate trade");
+        Button proposedTradesBtn = new Button("Manage proposed trades");
+        Button confirmTradesBtn = new Button("Confirm real life meeting of trades");
+        Button viewTradesBtn = new Button("View ongoing and completed trades");
+        Button backButtonBtn = new Button("Go back");
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -77,16 +86,19 @@ public class TradeGUI implements RunnableGUI {
         grid.setPadding(new Insets(25, 25, 25, 25));
 
         grid.add(title, 0, 0, 2, 1);
-        grid.add(initiateTrade, 0, 1, 2, 1);
-        grid.add(proposedTrades, 0, 2, 2, 1);
-        grid.add(confirmTrades, 0, 3, 2, 1);
-        grid.add(viewTrades, 0, 4, 2, 1);
-        grid.add(backButton, 0, 5, 2, 1);
+        grid.add(initiateTradeBtn, 0, 1, 2, 1);
+        grid.add(proposedTradesBtn, 0, 2, 2, 1);
+        grid.add(confirmTradesBtn, 0, 3, 2, 1);
+        grid.add(viewTradesBtn, 0,4 , 2, 1);
+        grid.add(backButtonBtn, 0, 5, 2, 1);
+
+        if (!initiateTradeController.initiateTrade()){
+            initiateTradeBtn.setDisable(true);
+        } else{initiateTradeBtn.setOnAction(actionEvent -> getAvailableItems());}
 
         scene = new Scene(grid, width, height);
         stage.setScene(scene);
         stage.show();
-
     }
 
     public void viewProposedTrades(String username) throws JSONException {
@@ -275,5 +287,77 @@ public class TradeGUI implements RunnableGUI {
         stage.setScene(scenes.get(0));
         stage.show();
     }
-}
 
+    public void getAvailableItems(){
+        Text title = new Text("Available items");
+        title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+
+        Map<String, String> infoToId = initiateTradeController.getAvailableItems();
+
+        //Vbox
+        VBox mainLayout = new VBox();
+        mainLayout.setPrefWidth(300);
+        mainLayout.setSpacing(20);
+        mainLayout.setPadding(new Insets(25, 25, 25, 25));
+
+        ListView<String> list = new ListView<>();
+        ObservableList<String> availableItems = FXCollections.observableArrayList();
+        availableItems.addAll(infoToId.keySet());
+        list.setItems(availableItems);
+        list.setPlaceholder(new Label("There are no available items for trading."));
+
+        ToggleGroup item = new ToggleGroup();
+        for (String info: availableItems){
+            RadioButton radioBtn = new RadioButton(info);
+            radioBtn.setToggleGroup(item);
+            mainLayout.getChildren().add(radioBtn);
+        }
+
+        //button
+
+        Button chooseButton = new Button("Select this item to trade");
+        HBox chooseBox = new HBox(10);
+        Button backButton = new Button("Back");
+        HBox backBox = new HBox(10);
+
+        chooseButton.setAlignment(Pos.TOP_LEFT);
+        chooseBox.getChildren().add(chooseButton);
+        backButton.setAlignment(Pos.BOTTOM_LEFT);
+        backBox.getChildren().add(backButton);
+
+        mainLayout.getChildren().addAll(chooseButton, backButton);
+
+        backButton.setOnAction(actionEvent -> tradeInitialScreen());
+
+        RadioButton selectedRatioButton = (RadioButton) item.getSelectedToggle();
+//        if (selectedRatioButton() == null) {
+//            chooseButton.setDisable(true);
+//        } else{
+//            chooseButton.setOnAction(actionEvent -> initiateTradeInfo());}
+//        chooseButton.setOnAction(actionEvent -> initiateTradeInfo());
+
+        scene = new Scene(mainLayout, width, height);
+        stage.setScene(scene);
+        stage.show();
+
+    }
+
+//    public void initiateTradeInfo(){
+//        Text title = new Text("hi");
+//        title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+//
+//
+//        GridPane grid = new GridPane();
+//        grid.setAlignment(Pos.CENTER);
+//        grid.setHgap(10);
+//        grid.setVgap(10);
+//        grid.setPadding(new Insets(25, 25, 25, 25));
+//
+//        grid.add(title, 0, 0, 2, 1);
+//
+//        scene = new Scene(grid, width, height);
+//        stage.setScene(scene);
+//        stage.show();
+//
+//    }
+}

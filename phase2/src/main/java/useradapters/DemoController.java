@@ -23,7 +23,7 @@ public class DemoController extends UserController implements RunnableController
      */
     @Override
     protected boolean selectMenu() throws IOException {
-        presenter.startMenu(username);
+        // presenter.startMenu(username);
         boolean validInput = false;
         do {
             String input = br.readLine();
