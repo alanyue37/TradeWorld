@@ -51,7 +51,8 @@ public class UserController implements RunnableController {
      * trademisc.Main menu to run the UserController
      */
     protected boolean selectMenu() throws IOException {
-        presenter.startMenu(username);
+        // presenter.startMenu(username);
+        // presenter.startMenu();
         boolean validInput = false;
         do {
             String input = br.readLine();
@@ -107,10 +108,6 @@ public class UserController implements RunnableController {
      * Allows user to create an item
      */
     protected void createItem(String username, String itemName, String itemDescription){
-//        presenter.printInputItemName();             // enter name of the item
-//        String itemName = br.readLine();
-//        presenter.printInputItemDescription();      // enter description of the item
-//        String itemDescription = br.readLine();
         tradeModel.getItemManager().addItem(itemName, username, itemDescription);
     }
 
