@@ -342,22 +342,22 @@ public class TradeGui implements RunnableGUI {
 
     }
 
-//    public void initiateTradeInfo(){
-//        Text title = new Text("hi");
-//        title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-//
-//
-//        GridPane grid = new GridPane();
-//        grid.setAlignment(Pos.CENTER);
-//        grid.setHgap(10);
-//        grid.setVgap(10);
-//        grid.setPadding(new Insets(25, 25, 25, 25));
-//
-//        grid.add(title, 0, 0, 2, 1);
-//
-//        scene = new Scene(grid, width, height);
-//        stage.setScene(scene);
-//        stage.show();
-//
-//    }
+    public void initiateTradeInfo(){
+        Text title = new Text("hi");
+        title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+
+
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(25, 25, 25, 25));
+
+        grid.add(title, 0, 0, 2, 1);
+
+        scene = new Scene(grid, width, height);
+        stage.setScene(scene);
+        stage.show();
+    }
+
 }
