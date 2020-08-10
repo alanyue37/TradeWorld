@@ -72,7 +72,7 @@ public class ConfirmTradesController implements RunnableController {
         return true;
     }
 
-    private Map<String, String> getToBeConfirmedTrades(String username){
+    protected Map<String, String> getToBeConfirmedTrades(String username){
         List<String> userOngoing = tradeModel.getTradeManager().getTradesOfUser(username, "ongoing");
         List<String> userToBeConfirmed = tradeModel.getMeetingManager().getToCheckTrades(userOngoing, "needConfirm");
         return tradeModel.getTradeManager().getType(userToBeConfirmed);
@@ -82,7 +82,7 @@ public class ConfirmTradesController implements RunnableController {
      * Allows the user to confirm that the real life meeting happened.
      * @param tradeId id of the trade
      */
-    private void confirmTradeHappened(String tradeId, String type) throws IOException {
+    protected void confirmTradeHappened(String tradeId, String type) {
         if (tradeModel.getMeetingManager().canChangeMeeting(tradeId, username)) {
             changeToConfirmed(tradeId, username);
             presenter.confirmedTrade();
