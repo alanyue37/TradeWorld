@@ -20,13 +20,15 @@ public class UserGUI{
     private final Stage stage;
     private Scene scene;
     private final UserController controller;
+    private final UserPresenter presenter;
     private final int width;
     private final int height;
     protected String username;
 
-    public UserGUI(String username, Stage stage, int width, int height, UserController controller) {
+    public UserGUI(String username, Stage stage, int width, int height, UserController controller, UserPresenter presenter) {
         this.stage = stage;
         this.controller = controller;
+        this.presenter = presenter;
         this.width = width;
         this.height = height;
         this.username = username;
@@ -85,9 +87,9 @@ public class UserGUI{
 
         grid.add(title, 0, 0, 2, 1);
 
-        Label itemNameLabel = new Label("Enter item's name: ");
+        Label itemNameLabel = new Label(presenter.printInputItemName());
         TextField itemNameField = new TextField();
-        Label itemDescriptionLabel = new Label("Enter item's description: ");
+        Label itemDescriptionLabel = new Label(presenter.printInputItemDescription());
         TextField itemDescriptionField = new TextField();
 
         Button createItemButton = new Button("Create Item");
@@ -149,7 +151,7 @@ public class UserGUI{
 
         addItemButton.setOnAction(actionEvent -> {
             if(controller.addItemsToWishlist(itemIdField.getText())) {
-                System.out.println("Success");
+                itemAdded();
             }
         });
 
@@ -157,6 +159,14 @@ public class UserGUI{
 
         stage.setScene(scene);
 
+    }
+
+    private void itemAdded() {
+        GridPane grid = (GridPane) scene.getRoot();
+        Text message = new Text("Item was added successfully");
+        if (!grid.getChildren().contains(message)) {
+            grid.add(message, 0, 6, 2, 1);
+        }
     }
 }
 

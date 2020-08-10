@@ -31,15 +31,15 @@ public class UserPresenter extends TextPresenter {
     /**
      * Print statement to input item name
      */
-    public void printInputItemName(){
-        System.out.println("Enter item's name: ");
+    public String printInputItemName(){
+        return "Enter item's name: ";
     }
 
     /**
      * Print statement to input item description
      */
-    public void printInputItemDescription(){
-        System.out.println("Enter item's description: ");
+    public String printInputItemDescription(){
+        return "Enter item's description: ";
     }
 
     /**
