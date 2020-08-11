@@ -32,15 +32,19 @@ public class ProfileGUI implements RunnableGUI {
     private String userProfile;
     private Gson gson;
     private VBox containerColumn;
+    private ObservableList<String> friends;
+    private ObservableList<String> reviews;
 
     public ProfileGUI(Stage stage, int width, int height, TradeModel tradeModel, String userProfile) {
         this.stage = stage;
         this.tradeModel = tradeModel;
-        this.controller = new ProfileController(tradeModel, "u1"); // TODO: change username
+        this.controller = new ProfileController(tradeModel, "u1"); // TODO: delete username once controller constructor is changed
         this.width = width;
         this.height = height;
         this.userProfile = userProfile;
         this.containerColumn = new VBox();
+        friends = FXCollections.observableArrayList();
+        reviews = FXCollections.observableArrayList();
     }
 
     public void initialScreen() {
@@ -101,45 +105,33 @@ public class ProfileGUI implements RunnableGUI {
 
 
     protected ListView<String> getFriendsListView() {
-        // TODO: TESTING CODE - DELETE LATER
+        // TODO: TESTING CODE - UNCOMMENT IF NECESSARY - DELETE LATER
         UserManager userManager = tradeModel.getUserManager();
         userManager.sendFriendRequest("u1", "u2");
-        userManager.sendFriendRequest("u3", "u1");
+        userManager.sendFriendRequest("u1", "u3");
+        //userManager.sendFriendRequest("u3", "u1");
         //userManager.setFriendRequest("u1", "u2", true);
-        userManager.setFriendRequest("u3", "u1", true);
+        //userManager.setFriendRequest("u3", "u1", true);
 
         ListView<String> list = new ListView<>();
-        String json = controller.getFriends(userProfile);
-        Gson gson = new Gson();
-        Type type = new TypeToken<List<String>>(){}.getType();
-        List<String> friendsList = gson.fromJson(json, type);
-        ObservableList<String> items = FXCollections.observableArrayList(friendsList);
-        list.setItems(items);
+        list.setPlaceholder(new Label("No friends"));
+        updateFriendsObservableList();
+        list.setItems(friends);
         list.setPrefWidth(300);
         list.setPrefHeight(200);
         return list;
     }
 
     protected ListView<String> getReviewsListView() {
-        // TODO: TESTING CODE - DELETE LATER
-        ReviewManager reviewManager = tradeModel.getReviewManager();
-        reviewManager.addReview(3, "Amazing guy", "3", "u2", "u1");
+        // TODO: TESTING CODE - UNCOMMENT IF NECESSARY - DELETE LATER
+        // ReviewManager reviewManager = tradeModel.getReviewManager();
+        // reviewManager.addReview(3, "Amazing guy", "3", "u2", "u1");
 
-        String json = controller.getReviews(userProfile);
-        Gson gson = new Gson();
-        Type type = new TypeToken<List<Map<String, String>>>(){}.getType();
-        List<Map<String, String>> reviewMaps = gson.fromJson(json, type);
-        List<String> reviewStrings = new ArrayList<>();
-
-        for (Map<String, String> reviewMap : reviewMaps) {
-            String r = "Author: " + reviewMap.get("author") + "\nRating: " + reviewMap.get("rating") + "\n" + reviewMap.get("comment");
-            reviewStrings.add(r);
-        }
-
-        ObservableList<String> items = FXCollections.observableArrayList(reviewStrings);
+        updateReviewsObservableList();
         ListView<String> list = new ListView<>();
+        list.setPlaceholder(new Label("No reviews"));
         List<String> l = new ArrayList<>();
-        list.setItems(items);
+        list.setItems(reviews);
         list.setPrefWidth(300);
         list.setPrefHeight(200);
         return list;
@@ -148,11 +140,11 @@ public class ProfileGUI implements RunnableGUI {
     protected HBox getAccountStandingRow() {
         HBox row = new HBox();
         Label standingLabel;
-        if (controller.getStanding(userProfile)) {
-            standingLabel = new Label("Account Standing: Good");
+        if (controller.getFrozenStatus(userProfile)) {
+            standingLabel = new Label("Account Standing: Frozen");
         }
         else {
-            standingLabel = new Label("Account Standing: Frozen");
+            standingLabel = new Label("Account Standing: Good");
         }
         row.getChildren().add(standingLabel);
         return row;
@@ -190,6 +182,30 @@ public class ProfileGUI implements RunnableGUI {
 
     protected ProfileController getController() {
         return controller;
+    }
+
+    protected void updateFriendsObservableList() {
+        String json = controller.getFriends(userProfile);
+        Gson gson = new Gson();
+        Type type = new TypeToken<List<String>>(){}.getType();
+        List<String> friendsList = gson.fromJson(json, type);
+        friends.clear();
+        friends.addAll(friendsList);
+    }
+
+    protected void updateReviewsObservableList() {
+        String json = controller.getReviews(userProfile);
+        Gson gson = new Gson();
+        Type type = new TypeToken<List<Map<String, String>>>(){}.getType();
+        List<Map<String, String>> reviewMaps = gson.fromJson(json, type);
+        List<String> reviewStrings = new ArrayList<>();
+
+        for (Map<String, String> reviewMap : reviewMaps) {
+            String r = "Author: " + reviewMap.get("author") + "\nRating: " + reviewMap.get("rating") + "\n" + reviewMap.get("comment");
+            reviewStrings.add(r);
+        }
+        reviews.clear();
+        reviews.addAll(reviewStrings);
     }
 
 }
