@@ -39,7 +39,7 @@ public class DemoTradeSystem {
            //LoginGUI gui = new LoginGUI(stage, 500, 500, tradeModel);
            //gui.initialScreen();
            AdminGUI adminGUI = new AdminGUI(stage, 500, 500, tradeModel);
-           adminGUI.adminUserInitialScreen();
+           adminGUI.initialScreen();
         } catch (IOException ex)  {// | ClassNotFoundException ex) {
             ex.printStackTrace();
         }

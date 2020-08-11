@@ -183,6 +183,13 @@ public class AdminPresenter extends TextPresenter {
         return "What is the maximum number of times the proposed meeting time for a trade can be edited? \nEnter a whole number (minimum 0) for the new limit: ";
     }
 
+    public String goldThreshold() {
+        return "What is the credit limit that ranks users gold? \nEnter a whole number (minimum 0) for the new limit: ";
+    }
+
+    public String silverThreshold() {
+        return "What is the credit limit that ranks users silver? \nEnter a whole number (minimum 0) for the new limit: ";
+    }
     /**
      * This method informs the admin user that the input is not accepted by the program.
      */

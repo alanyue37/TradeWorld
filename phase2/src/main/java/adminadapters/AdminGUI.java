@@ -2,12 +2,9 @@ package adminadapters;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
@@ -19,7 +16,6 @@ import tradegateway.TradeModel;
 import trademisc.RunnableGUI;
 import undocomponent.NoLongerUndoableException;
 
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -41,8 +37,6 @@ public class AdminGUI implements RunnableGUI {
     private final AdminController controller;
     private final TradeModel model;
 
-    // TODO: I still need to make changes to the screen displays and have to TEST!
-
     /**
      * A constructor for AdminGUI class.
      * @param stage The stage of the screen.
@@ -59,17 +53,13 @@ public class AdminGUI implements RunnableGUI {
         this.model = model;
     }
 
-    @Override
-    public void initialScreen() {
-        adminUserInitialScreen();
-    }
-
     /**
      * This method presents a list on the screen and asks the Admin user to select one. The selected determines
      * which method to call in the AdminGUI. This screen is displayed again, if the Admin does not select an
      * option.
      */
-    public void adminUserInitialScreen() {
+    @Override
+    public void initialScreen() {
         stage.setTitle("Admin Menu Options");
 
         Text title = new Text("Menu Options");
@@ -341,10 +331,10 @@ public class AdminGUI implements RunnableGUI {
                 controller.askAdminToUnfreezeUsers(selected);
                 // accountsSelectedToUnfreeze();
             }
+        });
         scene = new Scene(grid, width, height);
         stage.setScene(scene);
         stage.show();
-        });
     }
 
     /**
@@ -675,7 +665,7 @@ public class AdminGUI implements RunnableGUI {
         text.setX(70);
         text.setY(70);
 
-        Label limitThresholdLabel = new Label(presenter.lendingThreshold());
+        Label limitThresholdLabel = new Label(presenter.goldThreshold());
         TextField limitThresholdField = new TextField();
 
         Button setThresholdButton = new Button("Set Threshold");
@@ -720,7 +710,7 @@ public class AdminGUI implements RunnableGUI {
         text.setX(70);
         text.setY(70);
 
-        Label limitThresholdLabel = new Label(presenter.lendingThreshold());
+        Label limitThresholdLabel = new Label(presenter.silverThreshold());
         TextField limitThresholdField = new TextField();
 
         Button setThresholdButton = new Button("Set Threshold");
