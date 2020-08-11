@@ -12,6 +12,7 @@ import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 
 public class InitiateTradeController implements RunnableController {
@@ -22,8 +23,9 @@ public class InitiateTradeController implements RunnableController {
 
     /**
      * Initiates the InitiateTradeController
-     * @param tradeModel    The tradeModel
-     * @param username  The name of the User
+     *
+     * @param tradeModel The tradeModel
+     * @param username   The name of the User
      */
     public InitiateTradeController(TradeModel tradeModel, String username) {
         this.tradeModel = tradeModel;
@@ -63,98 +65,109 @@ public class InitiateTradeController implements RunnableController {
 //        return success;
 //    }
 
-    protected boolean initiateTrade(){
+    protected boolean initiateTrade() {
         boolean success = true;
-        if (tradeModel.getUserManager().isFrozen(username)){
+        if (tradeModel.getUserManager().isFrozen(username)) {
             success = false;
         }
-        if (tradeModel.getUserManager().getOnVacation().contains(username)){
+        if (tradeModel.getUserManager().getOnVacation().contains(username)) {
             success = false;
         }
         return success;
     }
 
-    private boolean createTrade(String itemId) throws IOException {
-        String otherUsername = tradeModel.getItemManager().getOwner(itemId);
-        String tradeId;
-        String thisUserItemId;
+//    private boolean createTrade(String itemId) throws IOException {  //TODO
+//        String otherUsername = tradeModel.getItemManager().getOwner(itemId);
+//        String tradeId;
+//        String thisUserItemId;
+//
+//        // Ask for trade type
+//        presenter.tradeTypesMenu();
+//        String permanentOrTemporary = null;
+//        boolean twoWay = false;
+//        boolean validTradeType = false;
+//        do {
+//        String tradeType = br.readLine();
+//            switch(tradeType) {
+//                case "1":
+//                    permanentOrTemporary = "temporary";
+//                    twoWay = false;
+//                    validTradeType = true;
+//                    break;
+//                case "2":
+//                    permanentOrTemporary = "permanent";
+//                    twoWay = false;
+//                    validTradeType = true;
+//                    break;
+//                case "3":
+//                    permanentOrTemporary = "temporary";
+//                    twoWay = true;
+//                    validTradeType = true;
+//                    break;
+//                case "4":
+//                    permanentOrTemporary = "permanent";
+//                    twoWay = true;
+//                    validTradeType = true;
+//                    break;
+//                case "back":
+//                    return false;
+//                default:
+//                    presenter.tryAgain();
+//            }
+//        } while (!validTradeType);
+//
+//        if (twoWay) {
+//            // Need to offer an item in return if two way
+//            thisUserItemId = getItemToOffer(otherUsername);
+//            if (thisUserItemId == null) {
+//                return false;
+//            }
+////            List<String> details = new ArrayList<>(Arrays.asList(username, otherUsername, thisUserItemId, itemId));
+////            tradeId = tradeModel.getTradeManager().addTrade("twoWay", permanentOrTemporary, details);
+//        }
+//        else {
+//            int credit = tradeModel.getUserManager().getCreditByUsername(username);
+//            if (credit < 0) {
+//                presenter.notEnoughCredits(Math.abs(credit));
+//                return false;
+//            }
+//            int numOngoing = tradeModel.getTradeManager().getTradesOfUser(username, "ongoing").size();
+//            int numCompleted = tradeModel.getTradeManager().getTradesOfUser(username, "completed").size();
+//            if (numOngoing == 0 && numCompleted == 0) {
+//                presenter.newAccount();
+//                return false;
+//            }
+//            List<String> details = new ArrayList<>(Arrays.asList(otherUsername, username, itemId));
+//            tradeId = tradeModel.getTradeManager().addTrade("oneWay", permanentOrTemporary, details);
+//        }
+//
+//        List<String> meetingDetails = getMeetingDetails();
+//        try {
+//            String meetingId = tradeModel.getMeetingManager().createMeeting(meetingDetails.get(0), parseDateString(meetingDetails.get(1)), username, tradeId);
+//            tradeModel.getTradeManager().addMeetingToTrade(tradeId, meetingId);
+//        } catch (ParseException e) {
+//            // This shouldn't happen because date parsing was already checked
+//            System.out.println("Invalid date and time!");
+//            return false;
+//        }
+//
+//        UndoableOperation undoableOperation = new UndoAddProposedTrade(this.tradeModel.getTradeManager(), tradeModel.getMeetingManager(), tradeId);
+//        this.tradeModel.getUndoManager().add(undoableOperation);
+//        return true;
+//    }
 
-        // Ask for trade type
-        presenter.tradeTypesMenu();
-        String permanentOrTemporary = null;
-        boolean twoWay = false;
-        boolean validTradeType = false;
-        do {
-        String tradeType = br.readLine();
-            switch(tradeType) {
-                case "1":
-                    permanentOrTemporary = "temporary";
-                    twoWay = false;
-                    validTradeType = true;
-                    break;
-                case "2":
-                    permanentOrTemporary = "permanent";
-                    twoWay = false;
-                    validTradeType = true;
-                    break;
-                case "3":
-                    permanentOrTemporary = "temporary";
-                    twoWay = true;
-                    validTradeType = true;
-                    break;
-                case "4":
-                    permanentOrTemporary = "permanent";
-                    twoWay = true;
-                    validTradeType = true;
-                    break;
-                case "back":
-                    return false;
-                default:
-                    presenter.tryAgain();
-            }
-        } while (!validTradeType);
-
-        if (twoWay) {
-            // Need to offer an item in return if two way
-            thisUserItemId = getItemToOffer(otherUsername);
-            if (thisUserItemId == null) {
-                return false;
-            }
-            List<String> details = new ArrayList<>(Arrays.asList(username, otherUsername, thisUserItemId, itemId));
-            tradeId = tradeModel.getTradeManager().addTrade("twoWay", permanentOrTemporary, details);
-        }
-        else {
-            int credit = tradeModel.getUserManager().getCreditByUsername(username);
-            if (credit < 0) {
-                presenter.notEnoughCredits(Math.abs(credit));
-                return false;
-            }
-            int numOngoing = tradeModel.getTradeManager().getTradesOfUser(username, "ongoing").size();
-            int numCompleted = tradeModel.getTradeManager().getTradesOfUser(username, "completed").size();
-            if (numOngoing == 0 && numCompleted == 0) {
-                presenter.newAccount();
-                return false;
-            }
-            List<String> details = new ArrayList<>(Arrays.asList(otherUsername, username, itemId));
-            tradeId = tradeModel.getTradeManager().addTrade("oneWay", permanentOrTemporary, details);
-        }
-
-        List<String> meetingDetails = getMeetingDetails();
-        try {
-            String meetingId = tradeModel.getMeetingManager().createMeeting(meetingDetails.get(0), parseDateString(meetingDetails.get(1)), username, tradeId);
-            tradeModel.getTradeManager().addMeetingToTrade(tradeId, meetingId);
-        } catch (ParseException e) {
-            // This shouldn't happen because date parsing was already checked
-            System.out.println("Invalid date and time!");
-            return false;
-        }
-
-        UndoableOperation undoableOperation = new UndoAddProposedTrade(this.tradeModel.getTradeManager(), tradeModel.getMeetingManager(), tradeId);
-        this.tradeModel.getUndoManager().add(undoableOperation);
-        return true;
+    protected boolean isNewAccount(String username){
+        int numOngoing = tradeModel.getTradeManager().getTradesOfUser(username, "ongoing").size();
+        int numCompleted = tradeModel.getTradeManager().getTradesOfUser(username, "completed").size();
+        return numOngoing == 0 && numCompleted == 0;
     }
 
-    private String getItemToOffer(String otherUsername) throws IOException {
+    protected boolean canOneWay(String username){
+        int credit = tradeModel.getUserManager().getCreditByUsername(username);
+        return credit >= 0;
+    }
+
+    protected List<String> getItemsToOffer(String otherUsername) {
         // two way requires user to propose item from other user's wishlist
         Set<String> otherWishlist = tradeModel.getUserManager().getWishlistByUsername(otherUsername);
         List<String> userItemsAvailable = getUserAvailableItems(username);
@@ -164,29 +177,31 @@ public class InitiateTradeController implements RunnableController {
                 overlappingItems.add(s);
             }
         }
-        String thisUserItemId = null;
+//        String thisUserItemId = null;
         if (overlappingItems.size() > 0) {
             // if there are overlapping items, show those to choose from
-            presenter.itemsToOffer(getItemsInfo(overlappingItems), true);
-            thisUserItemId = br.readLine();
-            while (!overlappingItems.contains(thisUserItemId)) {
-                presenter.tryAgain();
-                thisUserItemId = br.readLine();
-            }
-        } else if (userItemsAvailable.size() > 0) {
+//            presenter.itemsToOffer(getItemsInfo(overlappingItems), true);
+//            thisUserItemId = br.readLine();
+//            while (!overlappingItems.contains(thisUserItemId)) {
+//                presenter.tryAgain();
+//                thisUserItemId = br.readLine();
+//            }
+            return overlappingItems; }
+//        else if (userItemsAvailable.size() > 0) {
             // if not let user choose any item from their available list
-            presenter.itemsToOffer(getItemsInfo(userItemsAvailable), false);
-            thisUserItemId = br.readLine();
-            while (!userItemsAvailable.contains(thisUserItemId)) {
-                presenter.tryAgain();
-                thisUserItemId = br.readLine();
-            }
-        } else {
+//            presenter.itemsToOffer(getItemsInfo(userItemsAvailable), false);
+//            thisUserItemId = br.readLine();
+//            while (!userItemsAvailable.contains(thisUserItemId)) {
+//                presenter.tryAgain();
+//                thisUserItemId = br.readLine();
+            else{return userItemsAvailable;}
+//            }
+//        } else {
             // they have no items available so let them know this trade is not possible
-            presenter.noItemsToOffer();
-        }
-        return thisUserItemId;
+//            presenter.noItemsToOffer();
+//        }
     }
+
     private List<String> getMeetingDetails() throws IOException {
         List<String> meetingDetails = new ArrayList<>();
 
@@ -310,6 +325,32 @@ public class InitiateTradeController implements RunnableController {
                 itemsInfo.add(tradeModel.getItemManager().getItemInfo(itemId));
         }
         return itemsInfo;
+    }
+
+    protected void createTrade(Map<String, String> otherInfo, LocalDate date){
+        String way = otherInfo.get("way");
+        String type = otherInfo.get("type");
+        List<String> details = new ArrayList<>();
+        String itemId = otherInfo.get("chosen");
+        if (way.equals("oneWay")){
+            details.add(tradeModel.getItemManager().getOwner(itemId));
+            details.add(username);
+            details.add(itemId);
+        } else{
+            details.add(username);
+            details.add(tradeModel.getItemManager().getOwner(itemId));
+            details.add(otherInfo.get("giving"));
+            details.add(itemId);
+        }
+        String location = otherInfo.get("location");
+        //Time and date?
+        Date time = new Date(); //TODO: come back
+        String tradeId = tradeModel.getTradeManager().addTrade(way, type, details);
+        String meetingId = tradeModel.getMeetingManager().createMeeting(location, time, username, tradeId);
+        tradeModel.getTradeManager().addMeetingToTrade(tradeId, meetingId);
+        UndoableOperation undoableOperation = new UndoAddProposedTrade(this.tradeModel.getTradeManager(), tradeModel.getMeetingManager(), tradeId);
+        this.tradeModel.getUndoManager().add(undoableOperation);
+
     }
 
 }
