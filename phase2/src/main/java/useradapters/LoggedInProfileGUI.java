@@ -29,6 +29,8 @@ public class LoggedInProfileGUI extends ProfileGUI {
     public void initialScreen() {
         initializeBasicView();
 
+        // TODO: Override getAccountStandingRow to have unfreeze button if necessary
+
         // Additional rows
         HBox statusesRow;
         HBox friendsRow;
