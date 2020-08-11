@@ -69,10 +69,10 @@ public class ViewingTradesController implements RunnableController {
         } while (!validInput);
     }
 
-    private void viewTradeIds(){
+    protected void viewTradeIds(){
         List<String> ongoingTradeIds = tradeModel.getTradeManager().getTradesOfUser(username, "ongoing");
         List<String> completedTradeIds = tradeModel.getTradeManager().getTradesOfUser(username, "completed");
-        presenter.showTrade(ongoingTradeIds, completedTradeIds);
+//        presenter.showTrade(ongoingTradeIds, completedTradeIds);
     }
 
     private void viewTradeInfo() throws IOException, JSONException {
