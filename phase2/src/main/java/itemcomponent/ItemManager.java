@@ -75,6 +75,18 @@ public class ItemManager implements Serializable {
     }
 
     /**
+     * Returns the name of the item
+     * Precondition: An item with the given ID must exist.
+     *
+     * @param itemId    The id of the item
+     * @return  The name of the item
+     */
+    public String getName(String itemId) {
+        Item item = items.get(itemId);
+        return item.getName();
+    }
+
+    /**
      * Returns the owner of the item
      * Precondition: An item with the given ID must exist.
      *
@@ -96,6 +108,18 @@ public class ItemManager implements Serializable {
     public void setOwner(String itemId, String username) {
         Item item = items.get(itemId);
         item.setOwner(username);
+    }
+
+    /**
+     * Returns the description of the item
+     * Precondition: An item with the given ID must exist.
+     *
+     * @param itemId    The id of the item
+     * @return  The name of the item
+     */
+    public String getDescription(String itemId) {
+        Item item = items.get(itemId);
+        return item.getDescription();
     }
 
     /**
@@ -137,8 +161,6 @@ public class ItemManager implements Serializable {
             throw new NoLongerUndoableException();
         }
     }
-
-
 
     /**
      * Sets the availability of an item

@@ -31,7 +31,7 @@ public class UserGUI implements RunnableGUI {
     public UserGUI(String username, Stage stage, int width, int height, TradeModel model) {
         this.stage = stage;
         controller = new UserController(model, username);
-        presenter = new UserPresenter();
+        presenter = new UserPresenter(model);
         this.width = width;
         this.height = height;
         this.username = username;

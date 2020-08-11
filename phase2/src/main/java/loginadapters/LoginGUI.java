@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import tradegateway.TradeModel;
 import trademisc.RunnableGUI;
 import useradapters.UserGUI;
+import useradapters.UserGUI2;
 
 public class LoginGUI implements RunnableGUI {
     private final Stage stage;
@@ -124,7 +125,7 @@ public class LoginGUI implements RunnableGUI {
                 if (isAdmin){
                     nextGUI = new AdminGUI(stage, width, height, model);
                 } else {
-                    nextGUI = new UserGUI(usernameField.getText(), stage, width, height, model);
+                    nextGUI = new UserGUI2(usernameField.getText(), stage, width, height, model);
                 }
                 nextGUI.initialScreen();
             } else {
