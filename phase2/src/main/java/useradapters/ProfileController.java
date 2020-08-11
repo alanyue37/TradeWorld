@@ -60,9 +60,9 @@ public class ProfileController implements RunnableController {
             case "6": // view account setting: privacy, vacation, city
                 viewAccountSetting();
                 break;
-            case "7": // add review after trade is complete
-                addReview();
-                break;
+//            case "7": // add review after trade is complete
+//                addReview();
+//                break;
             case "exit":
                 return false;
             default:
@@ -141,27 +141,36 @@ public class ProfileController implements RunnableController {
         presenter.printViewFriends(friends);
     }
 
-    private void addReview() throws IOException{
-        List<String> userTrades = tradeModel.getTradeManager().getTradesOfUser(username, "completed");
-        presenter.printEnterTradeIdForReview();
-        String tradeId = br.readLine();
-        if (!userTrades.contains(tradeId)) {
-            presenter.printInvalidTradeId();
-        } else{
-            String receiver = "";
-            for (List<String> users: tradeModel.getTradeManager().itemToUsers(tradeId).values()){
-                users.remove(username);
-                receiver = users.get(0);
-            }
-            if (tradeModel.getReviewManager().alreadyWroteReview(username, receiver, tradeId)){
-                presenter.alreadyWroteReview(receiver, tradeId);
-            } else{
-                List<String> reviewInfo = getReviewInfo();
-                String reviewId = tradeModel.getReviewManager().addReview(Integer.parseInt(reviewInfo.get(0)), reviewInfo.get(1), tradeId, username, receiver);
-                UndoableOperation undoableOperation = new UndoAddReview(this.tradeModel.getReviewManager(), reviewId);
-                tradeModel.getUndoManager().add(undoableOperation);
-            }
+//    protected void addReview(String tradeId) throws IOException{
+//        List<String> userTrades = tradeModel.getTradeManager().getTradesOfUser(username, "completed");
+//        presenter.printEnterTradeIdForReview();
+//        String tradeId = br.readLine();
+//        if (!userTrades.contains(tradeId)) {
+//            presenter.printInvalidTradeId();
+//        } else{
+//            String receiver = "";
+//            for (List<String> users: tradeModel.getTradeManager().itemToUsers(tradeId).values()){
+//                users.remove(username);
+//                receiver = users.get(0);
+//            }
+//            if (tradeModel.getReviewManager().alreadyWroteReview(username, receiver, tradeId)){
+//                presenter.alreadyWroteReview(receiver, tradeId);
+//            }
+//            List<String> reviewInfo = getReviewInfo();
+//            String reviewId = tradeModel.getReviewManager().addReview(Integer.parseInt(reviewInfo.get(0)), reviewInfo.get(1), tradeId, username, receiver);
+//            UndoableOperation undoableOperation = new UndoAddReview(this.tradeModel.getReviewManager(), reviewId);
+//            tradeModel.getUndoManager().add(undoableOperation);
+//        }
+
+    public void addReview(String tradeId, int rating, String comment){
+        String receiver = "";
+        for (List<String> users: tradeModel.getTradeManager().itemToUsers(tradeId).values()){
+            users.remove(username);
+            receiver = users.get(0);
         }
+        String reviewId = tradeModel.getReviewManager().addReview(rating, comment, tradeId, username, receiver);
+        UndoableOperation undoableOperation = new UndoAddReview(this.tradeModel.getReviewManager(), reviewId);
+        tradeModel.getUndoManager().add(undoableOperation);
     }
 
     private List<String> getReviewInfo() throws IOException {
