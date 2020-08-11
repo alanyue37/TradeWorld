@@ -12,10 +12,12 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
+import loginadapters.LoginGUI;
 import tradegateway.TradeModel;
 import trademisc.RunnableGUI;
 import undocomponent.NoLongerUndoableException;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -89,6 +91,7 @@ public class AdminGUI implements RunnableGUI {
         Button goldThreshold = new Button("Set gold threshold");
         Button silverThreshold = new Button("Set silver threshold");
         Button undoOperations = new Button("Undo Actions");
+        Button exit = new Button("Exit");
 
 
         grid.add(addNewAdmins, 0, 1, 2, 1);
@@ -102,6 +105,7 @@ public class AdminGUI implements RunnableGUI {
         grid.add(goldThreshold, 0, 9, 2, 1);
         grid.add(silverThreshold, 0, 10, 2, 1);
         grid.add(undoOperations, 0, 11, 2, 1);
+        grid.add(exit, 0, 12, 2, 1);
 
         addNewAdmins.setOnAction(actionEvent -> addNewAdmin());
         freezeUsers.setOnAction(actionEvent -> freezeUsers());
@@ -114,10 +118,25 @@ public class AdminGUI implements RunnableGUI {
         goldThreshold.setOnAction(actionEvent -> setGoldThreshold());
         silverThreshold.setOnAction(actionEvent -> setSilverThreshold());
         undoOperations.setOnAction(actionEvent -> undoOperations());
+        exit.setOnAction(actionEvent -> {
+            grid.getChildren().clear();
+            exitScreen();
+        }); // should we have an exit or logout or for other screens back to menu?
 
         scene = new Scene(grid, width, height);
         stage.setScene(scene);
         stage.show();
+    }
+
+    /**
+     * This method informs the admin that they have logout/ exited successfully.
+     */
+    public void exitScreen() {
+        GridPane grid = (GridPane) scene.getRoot();
+        Text message = new Text(presenter.exit());
+        if (!grid.getChildren().contains(message)){
+            grid.add(message, 0, 3, 1, 1);
+        }
     }
 
     /**
@@ -145,6 +164,10 @@ public class AdminGUI implements RunnableGUI {
         HBox hBoxCreateAdmin = new HBox(10);
         hBoxCreateAdmin.setAlignment(Pos.BOTTOM_RIGHT);
         hBoxCreateAdmin.getChildren().add(createButton);
+        Button mainMenuButton = new Button("Main Menu");
+        HBox hBoxMainMenu = new HBox(10);
+        hBoxMainMenu.setAlignment(Pos.BOTTOM_RIGHT);
+        hBoxMainMenu.getChildren().add(mainMenuButton);
 
         grid.add(newNameLabel, 0, 1);
         grid.add(nameField, 0, 2);
@@ -153,6 +176,7 @@ public class AdminGUI implements RunnableGUI {
         grid.add(newPasswordLabel, 0, 5);
         grid.add(passwordField, 0, 6);
         grid.add(hBoxCreateAdmin, 0, 7);
+        grid.add(mainMenuButton, 0 , 9);
         
         createButton.setOnAction(actionEvent -> {
             if (nameField.getText().isBlank() || usernameField.getText().isBlank() || passwordField.getText().isBlank()) {
@@ -164,6 +188,8 @@ public class AdminGUI implements RunnableGUI {
                 addNewAdmin();
             }
         });
+        mainMenuButton.setOnAction(action -> initialScreen());
+
         scene = new Scene(grid, width, height);
         stage.setScene(scene);
         stage.show();
@@ -200,7 +226,7 @@ public class AdminGUI implements RunnableGUI {
         GridPane grid = (GridPane) scene.getRoot();
         Text message = new Text("Please try again!");
         if (!grid.getChildren().contains(message)){
-            grid.add(message, 0, 9, 1, 1);
+            grid.add(message, 0, 10, 1, 1);
         }
     }
 
@@ -246,7 +272,14 @@ public class AdminGUI implements RunnableGUI {
         freezeHBox.setAlignment(Pos.BOTTOM_RIGHT);
         freezeHBox.getChildren().add(freezeButton);
 
+        Button backButton = new Button("Back");
+        HBox hBoxMainMenu = new HBox(10);
+        hBoxMainMenu.setAlignment(Pos.BOTTOM_LEFT);
+        hBoxMainMenu.getChildren().add(backButton);
+        grid.add(backButton, 0 , 9);
+
         grid.add(freezeHBox, 0, 1);
+        grid.add(hBoxMainMenu, 0, 2);
 
         ObservableList<String> selectedItems =  list.getSelectionModel().getSelectedItems();
         ArrayList<String> selected = new ArrayList<>(selectedItems);
@@ -258,6 +291,9 @@ public class AdminGUI implements RunnableGUI {
                 accountsSelectedToFreeze();
             }
         });
+
+        backButton.setOnAction(actionEvent -> initialScreen());
+
         scene = new Scene(grid, width, height);
         stage.setScene(scene);
         stage.show();
@@ -307,19 +343,25 @@ public class AdminGUI implements RunnableGUI {
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
-        grid.setPadding(new Insets(25, 25, 25, 25));
-        grid.add(title, 0, 0, 2, 1);
+        grid.setPadding(new Insets(35, 35, 35, 35));
+        grid.add(title, 0, 0, 1, 1);
         grid.getChildren().add(list);
-        list.setPrefHeight(height - 50); // we could change this
+        list.setPrefHeight(height - 70); // we could change this
         list.setPrefWidth(width - 50);   // we could change this
 
         Button unfreezeButton = new Button("Unfreeze these Accounts");
         HBox unfreezeHBox = new HBox(10);
-
         unfreezeButton.setAlignment(Pos.BOTTOM_RIGHT);
         unfreezeHBox.getChildren().add(unfreezeButton);
 
+
+        Button backButton = new Button("Back");
+        HBox hBoxMainMenu = new HBox(10);
+        hBoxMainMenu.setAlignment(Pos.BOTTOM_LEFT);
+        hBoxMainMenu.getChildren().add(backButton);
+
         grid.add(unfreezeHBox, 0, 1);
+        grid.add(hBoxMainMenu, 0, 2);
 
         ObservableList<String> selectedItems = list.getSelectionModel().getSelectedItems();
         ArrayList<String> selected = new ArrayList<>(selectedItems);
@@ -332,6 +374,8 @@ public class AdminGUI implements RunnableGUI {
                 // accountsSelectedToUnfreeze();
             }
         });
+        backButton.setOnAction(actionEvent -> freezeUsers());
+
         scene = new Scene(grid, width, height);
         stage.setScene(scene);
         stage.show();
@@ -397,6 +441,12 @@ public class AdminGUI implements RunnableGUI {
 
         hBoxAddItemsButton.setAlignment(Pos.BOTTOM_RIGHT);
         hBoxAddItemsButton.getChildren().add(addItemsButton);
+        Button backButton = new Button("Back");
+        HBox hBoxMainMenu = new HBox(10);
+        hBoxMainMenu.setAlignment(Pos.BOTTOM_LEFT);
+        hBoxMainMenu.getChildren().add(backButton);
+        grid.add(backButton, 0 , 9);
+        grid.add(hBoxMainMenu, 0, 2);
 
         grid.add(hBoxAddItemsButton, 1, 4);
 
@@ -428,6 +478,9 @@ public class AdminGUI implements RunnableGUI {
                 reviewItems();
             }
         });
+
+        backButton.setOnAction(actionEvent -> unfreezeUsers());
+
         scene = new Scene(grid, width, height);
         stage.setScene(scene);
         stage.show();
@@ -480,7 +533,7 @@ public class AdminGUI implements RunnableGUI {
 
         grid.add(lendingThresholdLabel, 0, 1);
         grid.add(lendingThresholdField, 0, 2);
-        grid.add(hBoxSetThreshold, 0, 3);
+        grid.add(hBoxSetThreshold, 0, 2);
 
         setThresholdButton.setOnAction(actionEvent -> {
             if (controller.IsAnIntegerOrZero(lendingThresholdField.getText())) {
@@ -805,7 +858,7 @@ public class AdminGUI implements RunnableGUI {
         hBoxConfirmToUndo.setAlignment(Pos.BOTTOM_RIGHT);
         hBoxConfirmToUndo.getChildren().add(confirmToUndo);
 
-        grid.add(hBoxConfirmToUndo, 1, 4);
+        grid.add(hBoxConfirmToUndo, 0, 4);
 
         confirmToUndo.setOnAction(actionEvent -> {
             try {

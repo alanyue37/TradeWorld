@@ -154,7 +154,7 @@ public class AdminPresenter extends TextPresenter {
      * a non-lending transaction (i.e., just borrow and not lend).
      */
     public String lendingThreshold() {
-        return "How much does the user have to (at least) lend than they borrow in order \nto make a non-lending transaction? \nEnter a whole " +
+        return "How much does the user have to (at least) lend than they \nborrow in order to make a non-lending transaction? \nEnter a whole " +
                 "number (minimum 0) for the Lending Threshold: ";
     }
 
@@ -180,7 +180,7 @@ public class AdminPresenter extends TextPresenter {
      * @param current   The current threshold set for the number of edits allowed by the user
      */
     public String limitOfEdits() {
-        return "What is the maximum number of times the proposed meeting time for a trade can be edited? \nEnter a whole number (minimum 0) for the new limit: ";
+        return "What is the maximum number of times the proposed \nmeeting time for a trade can be edited? \nEnter a whole number (minimum 0) for the new limit: ";
     }
 
     public String goldThreshold() {
@@ -190,13 +190,6 @@ public class AdminPresenter extends TextPresenter {
     public String silverThreshold() {
         return "What is the credit limit that ranks users silver? \nEnter a whole number (minimum 0) for the new limit: ";
     }
-    /**
-     * This method informs the admin user that the input is not accepted by the program.
-     */
-    public void invalidInput() {
-        System.out.println("This is an invalid input.\n Please try again!");
-    }
-
 
     public String enterAtLeastZero() {
         return "Not an integer or is a number less than zero. \n Please try again";
@@ -213,8 +206,8 @@ public class AdminPresenter extends TextPresenter {
     /**
      * This method prints to the screen and signals to the user that the system has successfully ended.
      */
-    public void end() {
-        System.out.println("See you soon!");
+    public String exit() {
+        return "See you soon!";
     }
 
 
