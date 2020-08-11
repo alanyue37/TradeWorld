@@ -38,12 +38,16 @@ public class LoggedInProfileGUI extends ProfileGUI {
         statusesRow = getStatusesRow();
         addRow(statusesRow);
 
-        // Add friends requests list row if own profile
-
-        // Add friend status / send friend request button if not own profile
         if (getController().isOwnProfile(getUserProfile())) {
-            int i = 1+1;
+            // Add friends requests list row if own profile
+            friendsRow = getFriendsRequestsRow();
         }
+        else {
+            // Add friend status / send friend request button if not own profile
+            friendsRow = getFriendStatusRow();
+        }
+        addRow(friendsRow);
+
         showStage();
     }
 
@@ -107,6 +111,8 @@ public class LoggedInProfileGUI extends ProfileGUI {
     protected HBox getFriendsRequestsRow() {
         // TODO: complete
         HBox row = new HBox();
+        VBox requestsColumn = new VBox();
+        Label requestsLabel = new Label("Friend Requests");
         String json = getController().getFriendRequests();
         Gson gson = new Gson();
         Type type = new TypeToken<List<String>>(){}.getType();
@@ -116,6 +122,16 @@ public class LoggedInProfileGUI extends ProfileGUI {
         list.setItems(items);
         list.setPrefWidth(300);
         list.setPrefHeight(200);
+
+        requestsColumn.getChildren().addAll(requestsLabel, list);
+        row.getChildren().add(requestsColumn);
+        return row;
+    }
+
+    protected HBox getFriendStatusRow() {
+        //TODO: Complete
+        // Show add friend button if not friends. Otherwise indicate friendship status
+        HBox row = new HBox();
         return row;
     }
 

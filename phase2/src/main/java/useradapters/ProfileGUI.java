@@ -101,11 +101,11 @@ public class ProfileGUI implements RunnableGUI {
 
 
     protected ListView<String> getFriendsListView() {
-        //TEST CODE - DELETE LATER
+        // TODO: TESTING CODE - DELETE LATER
         UserManager userManager = tradeModel.getUserManager();
         userManager.sendFriendRequest("u1", "u2");
         userManager.sendFriendRequest("u3", "u1");
-        userManager.setFriendRequest("u1", "u2", true);
+        //userManager.setFriendRequest("u1", "u2", true);
         userManager.setFriendRequest("u3", "u1", true);
 
         ListView<String> list = new ListView<>();
@@ -121,7 +121,7 @@ public class ProfileGUI implements RunnableGUI {
     }
 
     protected ListView<String> getReviewsListView() {
-        //TEST CODE - DELETE LATER
+        // TODO: TESTING CODE - DELETE LATER
         ReviewManager reviewManager = tradeModel.getReviewManager();
         reviewManager.addReview(3, "Amazing guy", "3", "u2", "u1");
 
