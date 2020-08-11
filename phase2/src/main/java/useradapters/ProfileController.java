@@ -1,5 +1,8 @@
 package useradapters;
 
+import com.google.gson.Gson;
+import org.json.JSONException;
+import org.json.JSONObject;
 import tradegateway.TradeModel;
 import trademisc.RunnableController;
 import undocomponent.UndoAddReview;
@@ -179,4 +182,67 @@ public class ProfileController implements RunnableController {
         return reviewInfo;
     }
 
+    /**
+     * Get reviews written for user with username
+     * Precondition: valid username
+     *
+     * @param username user's reviews to get
+     * @return JSON representation of reviews
+     */
+    public String getReviews(String username) {
+            return tradeModel.getReviewManager().getReviews(username);
+        }
+
+    /**
+     * Get friends of user with username
+     * Precondition: valid username
+     *
+     * @param username user's friends to get
+     * @return JSON representation of friends list
+     */
+    public String getFriends(String username) {
+        List<String> friendsList = new ArrayList<>(tradeModel.getUserManager().getFriendList(username));
+        Gson gson = new Gson();
+        String json = gson.toJson(friendsList);
+        return json;
+    }
+
+    /**
+     * Get rank of user with username
+     * Precondition: valid username
+     *
+     * @param username user's rank to get
+     * @return user's rank
+     */
+    public String getRank(String username) {
+        return tradeModel.getUserManager().getRankByUsername(username);
+    }
+
+    public String getCity(String username) {
+        return tradeModel.getUserManager().getCityByUsername(username);
+    }
+
+    public boolean getStanding(String username) {
+        return tradeModel.getUserManager().isFrozen(username);
+    }
+
+    public boolean getVacationMode(String username) {
+        return tradeModel.getUserManager().getOnVacation().contains(username);
+    }
+
+    public boolean getPrivacyMode(String username) {
+        return tradeModel.getUserManager().getPrivateUser().contains(username);
+    }
+
+    public boolean isOwnProfile(String username) {
+        return tradeModel.getCurrentUser().equals(username);
+    }
+
+    public String getFriendRequests() {
+        List<String> friendsRequestsList = new ArrayList<>(tradeModel.getUserManager().getFriendRequests(username));
+        Gson gson = new Gson();
+        String json = gson.toJson(friendsRequestsList);
+        return json;
+    }
 }
+
