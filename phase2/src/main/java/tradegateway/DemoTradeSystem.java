@@ -5,6 +5,7 @@ import javafx.stage.Stage;
 import loginadapters.LogInController;
 import loginadapters.LoginGUI;
 import trademisc.RunnableController;
+import trademisc.RunnableGUI;
 
 import java.io.IOException;
 import java.util.Observable;
@@ -20,7 +21,7 @@ public class DemoTradeSystem {
     private final String tradeModelFile = "serializedobjects.ser";
     private DataManager dataManager;
     private TradeModel tradeModel;
-    private LoginGUI gui;
+    private RunnableGUI gui;
 
     /**
      * Run the trading system.
