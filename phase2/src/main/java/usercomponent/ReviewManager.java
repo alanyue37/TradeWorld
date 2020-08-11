@@ -1,6 +1,9 @@
 package usercomponent;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import undocomponent.NoLongerUndoableException;
+import com.google.gson.Gson;
 
 import java.io.Serializable;
 import java.util.*;
@@ -112,5 +115,27 @@ public class ReviewManager implements Serializable {
             throw new NoLongerUndoableException();
         }
         userToReviews.get(username).remove(reviewToBeDeleted);
+    }
+
+    public String getReviews(String receiverUsername) {
+        Gson gson = new Gson();
+        List<Review> reviews = userToReviews.get(receiverUsername);
+        List<Map<String, String>> reviewMaps = new ArrayList<>();
+        String json;
+        if (reviews == null) {
+            json = gson.toJson(reviewMaps);
+            return json;
+        }
+        for (Review r: reviews) {
+            Map<String, String> reviewMap = new HashMap<>();
+            reviewMap.put("id", r.getId());
+            reviewMap.put("comment", r.getComment());
+            reviewMap.put("rating", String.valueOf(r.getRating()));
+            reviewMap.put("author", r.getAuthor());
+            reviewMap.put("tradeId", r.getTradeId());
+            reviewMaps.add(reviewMap);
+        }
+        json = gson.toJson(reviewMaps);
+        return json;
     }
 }

@@ -1,5 +1,6 @@
 package useradapters;
 
+import com.google.gson.Gson;
 import tradegateway.TradeModel;
 import trademisc.RunnableController;
 import undocomponent.UndoAddReview;
@@ -14,6 +15,8 @@ import java.util.List;
 import java.util.Set;
 
 public class ProfileController implements RunnableController {
+    // TODO: Clean up unnecessary methods
+    // TODO: Combine some getters for profileGUI into one or more JSON replies time permitting
     private final BufferedReader br;
     private final TradeModel tradeModel;
     private final ProfilePresenter presenter;
@@ -57,9 +60,9 @@ public class ProfileController implements RunnableController {
             case "6": // view account setting: privacy, vacation, city
                 viewAccountSetting();
                 break;
-            case "7": // add review after trade is complete
-                addReview();
-                break;
+//            case "7": // add review after trade is complete
+//                addReview();
+//                break;
             case "exit":
                 return false;
             default:
@@ -138,27 +141,36 @@ public class ProfileController implements RunnableController {
         presenter.printViewFriends(friends);
     }
 
-    private void addReview() throws IOException{
-        List<String> userTrades = tradeModel.getTradeManager().getTradesOfUser(username, "completed");
-        presenter.printEnterTradeIdForReview();
-        String tradeId = br.readLine();
-        if (!userTrades.contains(tradeId)) {
-            presenter.printInvalidTradeId();
-        } else{
-            String receiver = "";
-            for (List<String> users: tradeModel.getTradeManager().itemToUsers(tradeId).values()){
-                users.remove(username);
-                receiver = users.get(0);
-            }
-            if (tradeModel.getReviewManager().alreadyWroteReview(username, receiver, tradeId)){
-                presenter.alreadyWroteReview(receiver, tradeId);
-            } else{
-                List<String> reviewInfo = getReviewInfo();
-                String reviewId = tradeModel.getReviewManager().addReview(Integer.parseInt(reviewInfo.get(0)), reviewInfo.get(1), tradeId, username, receiver);
-                UndoableOperation undoableOperation = new UndoAddReview(this.tradeModel.getReviewManager(), reviewId);
-                tradeModel.getUndoManager().add(undoableOperation);
-            }
+//    protected void addReview(String tradeId) throws IOException{
+//        List<String> userTrades = tradeModel.getTradeManager().getTradesOfUser(username, "completed");
+//        presenter.printEnterTradeIdForReview();
+//        String tradeId = br.readLine();
+//        if (!userTrades.contains(tradeId)) {
+//            presenter.printInvalidTradeId();
+//        } else{
+//            String receiver = "";
+//            for (List<String> users: tradeModel.getTradeManager().itemToUsers(tradeId).values()){
+//                users.remove(username);
+//                receiver = users.get(0);
+//            }
+//            if (tradeModel.getReviewManager().alreadyWroteReview(username, receiver, tradeId)){
+//                presenter.alreadyWroteReview(receiver, tradeId);
+//            }
+//            List<String> reviewInfo = getReviewInfo();
+//            String reviewId = tradeModel.getReviewManager().addReview(Integer.parseInt(reviewInfo.get(0)), reviewInfo.get(1), tradeId, username, receiver);
+//            UndoableOperation undoableOperation = new UndoAddReview(this.tradeModel.getReviewManager(), reviewId);
+//            tradeModel.getUndoManager().add(undoableOperation);
+//        }
+
+    public void addReview(String tradeId, int rating, String comment){
+        String receiver = "";
+        for (List<String> users: tradeModel.getTradeManager().itemToUsers(tradeId).values()){
+            users.remove(username);
+            receiver = users.get(0);
         }
+        String reviewId = tradeModel.getReviewManager().addReview(rating, comment, tradeId, username, receiver);
+        UndoableOperation undoableOperation = new UndoAddReview(this.tradeModel.getReviewManager(), reviewId);
+        tradeModel.getUndoManager().add(undoableOperation);
     }
 
     private List<String> getReviewInfo() throws IOException {
@@ -179,4 +191,103 @@ public class ProfileController implements RunnableController {
         return reviewInfo;
     }
 
+    /**
+     * Get reviews written for user with username
+     * Precondition: valid username
+     *
+     * @param username user's reviews to get
+     * @return JSON representation of reviews
+     */
+    public String getReviews(String username) {
+            return tradeModel.getReviewManager().getReviews(username);
+        }
+
+    /**
+     * Get friends of user with username
+     * Precondition: valid username
+     *
+     * @param username user's friends to get
+     * @return JSON representation of friends list
+     */
+    public String getFriends(String username) {
+        List<String> friendsList = new ArrayList<>(tradeModel.getUserManager().getFriendList(username));
+        Gson gson = new Gson();
+        return gson.toJson(friendsList);
+    }
+
+    /**
+     * Get rank of user with username
+     * Precondition: valid username
+     *
+     * @param username user's rank to get
+     * @return user's rank
+     */
+    public String getRank(String username) {
+        return tradeModel.getUserManager().getRankByUsername(username);
+    }
+
+    public String getCity(String username) {
+        return tradeModel.getUserManager().getCityByUsername(username);
+    }
+
+    public boolean getFrozenStatus(String username) {
+        return tradeModel.getUserManager().isFrozen(username);
+    }
+
+    public boolean getVacationMode(String username) {
+        return tradeModel.getUserManager().getOnVacation().contains(username);
+    }
+
+    public boolean getPrivacyMode(String username) {
+        return tradeModel.getUserManager().getPrivateUser().contains(username);
+    }
+
+    public void setVacationMode(boolean vacation) {
+        tradeModel.getUserManager().setOnVacation(tradeModel.getCurrentUser(), vacation);
+    }
+
+    public void setPrivacyMode(boolean privacy) {
+        tradeModel.getUserManager().setPrivate(tradeModel.getCurrentUser(), privacy);
+    }
+
+    public void requestUnfreeze() {
+        tradeModel.getUserManager().markUserForUnfreezing(tradeModel.getCurrentUser());
+    }
+
+    public boolean isOwnProfile(String username) {
+        return tradeModel.getCurrentUser().equals(username);
+    }
+
+    public String getFriendRequests() {
+        List<String> friendsRequestsList = new ArrayList<>(tradeModel.getUserManager().getFriendRequests(tradeModel.getCurrentUser()));
+        Gson gson = new Gson();
+        return gson.toJson(friendsRequestsList);
+    }
+
+    public String getFriendshipStatus(String otherUsername) {
+        if (tradeModel.getUserManager().getFriendList(tradeModel.getCurrentUser()).contains(otherUsername)) {
+            return "friends";
+        }
+        else if(tradeModel.getUserManager().getFriendRequests(otherUsername).contains(tradeModel.getCurrentUser())) {
+            return "sent";
+        }
+        else if(tradeModel.getUserManager().getFriendRequests(tradeModel.getCurrentUser()).contains(otherUsername)) {
+            return "received";
+        }
+        else {
+            return "none";
+        }
+    }
+
+    public void sendFriendRequest(String otherUsername) {
+        tradeModel.getUserManager().sendFriendRequest(otherUsername, tradeModel.getCurrentUser());
+    }
+
+    public void acceptOrIgnoreFriendsRequests(List<String> usernames, boolean accept) {
+        for (String u : usernames) {
+            tradeModel.getUserManager().setFriendRequest(tradeModel.getCurrentUser(), u, accept);
+        }
+    }
+
 }
+
