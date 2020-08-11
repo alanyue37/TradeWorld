@@ -162,7 +162,7 @@ public class ProfileController implements RunnableController {
 //            tradeModel.getUndoManager().add(undoableOperation);
 //        }
 
-    public String addReview(String tradeId, int rating, String comment){
+    public void addReview(String tradeId, int rating, String comment){
         String receiver = "";
         for (List<String> users: tradeModel.getTradeManager().itemToUsers(tradeId).values()){
             users.remove(username);
@@ -171,7 +171,6 @@ public class ProfileController implements RunnableController {
         String reviewId = tradeModel.getReviewManager().addReview(rating, comment, tradeId, username, receiver);
         UndoableOperation undoableOperation = new UndoAddReview(this.tradeModel.getReviewManager(), reviewId);
         tradeModel.getUndoManager().add(undoableOperation);
-        return reviewId;
     }
 
     private List<String> getReviewInfo() throws IOException {
