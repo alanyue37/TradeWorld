@@ -96,6 +96,10 @@ public class AdminGUI implements RunnableGUI {
         Button weeklyThreshold = new Button("Set weekly threshold");
         Button incompleteThreshold = new Button("Set incomplete transactions threshold");
         Button editThreshold = new Button("Set edit threshold");
+        Button goldThreshold = new Button("Set gold threshold");
+        Button silverThreshold = new Button("Set silver threshold");
+        Button undoOperations = new Button("Undo Actions");
+
 
         grid.add(addNewAdmins, 0, 1, 2, 1);
         grid.add(freezeUsers, 0, 2, 2, 1);
@@ -105,6 +109,9 @@ public class AdminGUI implements RunnableGUI {
         grid.add(weeklyThreshold, 0, 6, 2, 1);
         grid.add(incompleteThreshold, 0, 7, 2, 1);
         grid.add(editThreshold, 0, 8, 2, 1);
+        grid.add(goldThreshold, 0, 9, 2, 1);
+        grid.add(silverThreshold, 0, 10, 2, 1);
+        grid.add(undoOperations, 0, 11, 2, 1);
 
         addNewAdmins.setOnAction(actionEvent -> addNewAdmin());
         freezeUsers.setOnAction(actionEvent -> freezeUsers());
@@ -114,6 +121,9 @@ public class AdminGUI implements RunnableGUI {
         weeklyThreshold.setOnAction(actionEvent -> setLimitOfTransactionsThreshold());
         incompleteThreshold.setOnAction(actionEvent -> setLimitOfIncompleteTrades());
         editThreshold.setOnAction(actionEvent -> setLimitOfEdits());
+        goldThreshold.setOnAction(actionEvent -> setGoldThreshold());
+        silverThreshold.setOnAction(actionEvent -> setSilverThreshold());
+        undoOperations.setOnAction(actionEvent -> undoOperations());
 
         scene = new Scene(grid, width, height);
         stage.setScene(scene);
@@ -295,6 +305,7 @@ public class AdminGUI implements RunnableGUI {
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
         ListView<String> list = new ListView<>();
+        list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         ObservableList<String> unfreezeAccounts = FXCollections.observableArrayList();
 
         Set<String> accounts = model.getUserManager().getUnfreezeRequests();
@@ -320,12 +331,10 @@ public class AdminGUI implements RunnableGUI {
 
         grid.add(unfreezeHBox, 0, 1);
 
-        list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-
+        ObservableList<String> selectedItems = list.getSelectionModel().getSelectedItems();
+        ArrayList<String> selected = new ArrayList<>(selectedItems);
+        selected.addAll(selectedItems);
         unfreezeButton.setOnAction(EventHandler -> {
-            ObservableList<String> selectedItems = list.getSelectionModel().getSelectedItems();
-            ArrayList<String> selected = new ArrayList<>(selectedItems);
-            selected.addAll(selectedItems);
             if (selected.isEmpty()) {
                 noAccountsSelectedToUnfreeze();
             } else {
@@ -455,9 +464,10 @@ public class AdminGUI implements RunnableGUI {
         Text title = new Text("Set Lending Threshold");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
-        Text text = new Text();
+
         int currentLimit = model.getUserManager().getThreshold("trading");
-        text.setText(Integer.toString(currentLimit));
+        Text text = new Text();
+        text.setText("Current threshold: " + currentLimit);
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -465,7 +475,7 @@ public class AdminGUI implements RunnableGUI {
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
         grid.add(title, 0, 0, 2, 1);
-        grid.add(text, 1, 1, 3, 4);
+        grid.add(text, 0, 3, 1, 1);
         text.setX(70);
         text.setY(70);
 
@@ -479,7 +489,8 @@ public class AdminGUI implements RunnableGUI {
         hBoxSetThreshold.getChildren().add(setThresholdButton);
 
         grid.add(lendingThresholdLabel, 0, 1);
-        grid.add(lendingThresholdField, 0, 3);
+        grid.add(lendingThresholdField, 0, 2);
+        grid.add(hBoxSetThreshold, 0, 3);
 
         setThresholdButton.setOnAction(actionEvent -> {
             if (controller.IsAnIntegerOrZero(lendingThresholdField.getText())) {
@@ -501,12 +512,13 @@ public class AdminGUI implements RunnableGUI {
      */
     public void setLimitOfTransactionsThreshold() {
         stage.setTitle("Admin User");
-        Text title = new Text("Set A Limit for Transactions");
+        Text title = new Text("Set Transactions Threshold");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
-        Text text = new Text();
+
         int currentLimit = model.getTradeManager().getLimitTransactionPerWeek();
-        text.setText(Integer.toString(currentLimit));
+        Text text = new Text();
+        text.setText("Current threshold: " + currentLimit);
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -514,11 +526,11 @@ public class AdminGUI implements RunnableGUI {
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
         grid.add(title, 0, 0, 2, 1);
-        grid.add(text, 1, 1, 3, 4);
+        grid.add(text, 0, 3, 1, 1);
         text.setX(70);
         text.setY(70);
 
-        Label limitThresholdLabel = new Label(presenter.lendingThreshold());
+        Label limitThresholdLabel = new Label(presenter.limitOfTransactions());
         TextField limitThresholdField = new TextField();
 
         Button setThresholdButton = new Button("Set Threshold");
@@ -527,7 +539,9 @@ public class AdminGUI implements RunnableGUI {
         hBoxSetThreshold.getChildren().add(setThresholdButton);
 
         grid.add(limitThresholdLabel, 0, 1);
-        grid.add(limitThresholdField, 0, 3);
+        grid.add(limitThresholdField, 0, 2);
+        grid.add(hBoxSetThreshold, 0, 3);
+
 
         setThresholdButton.setOnAction(actionEvent -> {
             if (controller.IsAnIntegerOrOne(limitThresholdField.getText())) {
@@ -549,12 +563,12 @@ public class AdminGUI implements RunnableGUI {
      */
     public void setLimitOfIncompleteTrades() {
         stage.setTitle("Admin User");
-        Text title = new Text("Set Lending Threshold");
+        Text title = new Text("Set Incomplete Trade Threshold");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
-        Text text = new Text();
         int currentLimit = model.getTradeManager().getLimitIncomplete();
-        text.setText(Integer.toString(currentLimit));
+        Text text = new Text();
+        text.setText("Current threshold: " + currentLimit);
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -562,11 +576,11 @@ public class AdminGUI implements RunnableGUI {
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
         grid.add(title, 0, 0, 2, 1);
-        grid.add(text, 1, 1, 3, 4);
+        grid.add(text, 0, 3, 1, 1);
         text.setX(70);
         text.setY(70);
 
-        Label limitThresholdLabel = new Label(presenter.lendingThreshold());
+        Label limitThresholdLabel = new Label(presenter.limitOfIncompleteTransactions());
         TextField limitThresholdField = new TextField();
 
         Button setThresholdButton = new Button("Set Threshold");
@@ -575,7 +589,8 @@ public class AdminGUI implements RunnableGUI {
         hBoxSetThreshold.getChildren().add(setThresholdButton);
 
         grid.add(limitThresholdLabel, 0, 1);
-        grid.add(limitThresholdField, 0, 3);
+        grid.add(limitThresholdField, 0, 2);
+        grid.add(hBoxSetThreshold, 0, 3);
 
         setThresholdButton.setOnAction(actionEvent -> {
             if (controller.IsAnIntegerOrOne(limitThresholdField.getText())) {
@@ -598,12 +613,12 @@ public class AdminGUI implements RunnableGUI {
      */
     public void setLimitOfEdits() {
         stage.setTitle("Admin User");
-        Text title = new Text("Set Threshold");
+        Text title = new Text("Set Edit Threshold");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
-        Text text = new Text();
         int currentLimit = model.getMeetingManager().getLimitEdits();
-        text.setText(Integer.toString(currentLimit));
+        Text text = new Text();
+        text.setText("Current threshold: " + currentLimit);
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -611,11 +626,11 @@ public class AdminGUI implements RunnableGUI {
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
         grid.add(title, 0, 0, 2, 1);
-        grid.add(text, 1, 1, 3, 4);
+        grid.add(text, 0, 3, 1, 1);
         text.setX(70);
         text.setY(70);
 
-        Label limitThresholdLabel = new Label(presenter.lendingThreshold());
+        Label limitThresholdLabel = new Label(presenter.limitOfEdits());
         TextField limitThresholdField = new TextField();
 
         Button setThresholdButton = new Button("Set Threshold");
@@ -624,7 +639,8 @@ public class AdminGUI implements RunnableGUI {
         hBoxSetThreshold.getChildren().add(setThresholdButton);
 
         grid.add(limitThresholdLabel, 0, 1);
-        grid.add(limitThresholdField, 0, 3);
+        grid.add(limitThresholdField, 0, 2);
+        grid.add(hBoxSetThreshold, 0, 3);
 
         setThresholdButton.setOnAction(actionEvent -> {
             if (controller.IsAnIntegerOrZero(limitThresholdField.getText())) {
@@ -645,9 +661,9 @@ public class AdminGUI implements RunnableGUI {
         Text title = new Text("Set Gold Threshold");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
-        Text text = new Text();
         int currentLimit = model.getUserManager().getThreshold("gold");
-        text.setText(Integer.toString(currentLimit));
+        Text text = new Text();
+        text.setText("Current threshold: " + currentLimit);
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -655,7 +671,7 @@ public class AdminGUI implements RunnableGUI {
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
         grid.add(title, 0, 0, 2, 1);
-        grid.add(text, 1, 1, 3, 4);
+        grid.add(text, 0, 3, 1, 1);
         text.setX(70);
         text.setY(70);
 
@@ -668,7 +684,8 @@ public class AdminGUI implements RunnableGUI {
         hBoxSetThreshold.getChildren().add(setThresholdButton);
 
         grid.add(limitThresholdLabel, 0, 1);
-        grid.add(limitThresholdField, 0, 3);
+        grid.add(limitThresholdField, 0, 2);
+        grid.add(hBoxSetThreshold, 0, 3);
 
         setThresholdButton.setOnAction(actionEvent -> {
             if (controller.IsAnIntegerOrZero(limitThresholdField.getText())) {
@@ -689,9 +706,9 @@ public class AdminGUI implements RunnableGUI {
         Text title = new Text("Set Silver Threshold");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
-        Text text = new Text();
         int currentLimit = model.getUserManager().getThreshold("silver");
-        text.setText(Integer.toString(currentLimit));
+        Text text = new Text();
+        text.setText("Current threshold: " + currentLimit);
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -699,7 +716,7 @@ public class AdminGUI implements RunnableGUI {
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
         grid.add(title, 0, 0, 2, 1);
-        grid.add(text, 1, 1, 3, 4);
+        grid.add(text, 0, 3, 1, 1);
         text.setX(70);
         text.setY(70);
 
@@ -712,7 +729,8 @@ public class AdminGUI implements RunnableGUI {
         hBoxSetThreshold.getChildren().add(setThresholdButton);
 
         grid.add(limitThresholdLabel, 0, 1);
-        grid.add(limitThresholdField, 0, 3);
+        grid.add(limitThresholdField, 0, 2);
+        grid.add(hBoxSetThreshold, 0, 3);
 
         setThresholdButton.setOnAction(actionEvent -> {
             if (controller.IsAnIntegerOrZero(limitThresholdField.getText())) {

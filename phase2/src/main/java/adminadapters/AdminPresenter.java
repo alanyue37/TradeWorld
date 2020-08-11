@@ -152,34 +152,26 @@ public class AdminPresenter extends TextPresenter {
     /**
      * This method prompts the admin user to set a threshold for how much a user has to lend than borrow to make
      * a non-lending transaction (i.e., just borrow and not lend).
-     * @param current   The current threshold set for how much the user has to lend than borrow to make a non-lending
-     *                  transaction.
      */
     public String lendingThreshold() {
-        return "How many more times (at least) does the user have to lend than they borrow in order to make " +
-                "a non-lending transaction? " + "Enter a whole number (minimum 0) for the Lending Threshold: ";
+        return "How much does the user have to (at least) lend than they borrow in order \nto make a non-lending transaction? \nEnter a whole " +
+                "number (minimum 0) for the Lending Threshold: ";
     }
 
     /**
      * This method prompts the admin user to set a threshold for the number of transaction that a use can make in one
      * week (i.e., 7 days).
-     * @param current   The current threshold set for the number of transactions a user can conduct in a week.
      */
-    public void limitOfTransactions(int current) {
-        System.out.println("What is the maximum number of transactions a user can conduct in a week?");
-        System.out.println("The current limit is: " + current);
-        System.out.println("Enter a whole number (minimum 1) for the new limit: ");
+    public String limitOfTransactions() {
+        return "What is the maximum number of transactions a user can conduct in a week? \nEnter a whole number (minimum 1) for the new limit: ";
     }
 
     /**
      * This method prompts the admin user to set a threshold for the number of incomplete transactions a user can have
      * before the account gets frozen.
-     * @param current   The current threshold set for incomplete transactions.
      */
-    public void limitOfIncompleteTransactions(int current) {
-        System.out.println("After how many incomplete transactions should a user be flagged for freezing?");
-        System.out.println("The current threshold is: " + current);
-        System.out.println("Enter a whole number (minimum 1) for the new threshold: ");
+    public String limitOfIncompleteTransactions() {
+        return "After how many incomplete transactions should a user be flagged for freezing? \nEnter a whole number (minimum 1) for the new threshold: ";
     }
 
     /**
@@ -187,10 +179,8 @@ public class AdminPresenter extends TextPresenter {
      * meeting place and time. The limit of edits should remain 3.
      * @param current   The current threshold set for the number of edits allowed by the user
      */
-    public void limitOfEdits(int current) {
-        System.out.println("What is the maximum number of times the proposed meeting time for a trade can be edited?");
-        System.out.println("The current limit is: " + current);
-        System.out.println("Enter a whole number (minimum 0) for the new limit: ");
+    public String limitOfEdits() {
+        return "What is the maximum number of times the proposed meeting time for a trade can be edited? \nEnter a whole number (minimum 0) for the new limit: ";
     }
 
     /**
