@@ -124,6 +124,7 @@ public class ViewingMenuController implements RunnableController {
     }
 
     public void viewUsersProfile() throws IOException {
+        // TODO: DELETE AFTER MOVING TO PROFILECONTROLLER
         presenter.printEnterUsername();
         String user = br.readLine();
         if (!tradeModel.getUserManager().containsTradingUser(user)){

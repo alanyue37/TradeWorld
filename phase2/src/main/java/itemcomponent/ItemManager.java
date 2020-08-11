@@ -133,11 +133,12 @@ public class ItemManager implements Serializable {
     public void deleteItem(String itemId) throws NoLongerUndoableException {
         if (items.get(itemId).isAvailable() || items.get(itemId).getStage().equals("pending")) {
             items.remove(itemId);
-        }
-        else {
+        } else {
             throw new NoLongerUndoableException();
         }
     }
+
+
 
     /**
      * Sets the availability of an item

@@ -13,10 +13,13 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import tradegateway.TradeModel;
+import trademisc.RunnableGUI;
 
+import java.io.IOException;
 import java.util.List;
 
-public class UserGUI{
+public class UserGUI implements RunnableGUI {
     private final Stage stage;
     private Scene scene;
     private final UserController controller;
@@ -25,16 +28,17 @@ public class UserGUI{
     private final int height;
     protected String username;
 
-    public UserGUI(String username, Stage stage, int width, int height, UserController controller, UserPresenter presenter) {
+    public UserGUI(String username, Stage stage, int width, int height, TradeModel model) {
         this.stage = stage;
-        this.controller = controller;
-        this.presenter = presenter;
+        controller = new UserController(model, username);
+        presenter = new UserPresenter();
         this.width = width;
         this.height = height;
         this.username = username;
     }
 
-    public void tradingUserInitialScreen(){
+    @Override
+    public void initialScreen(){
         stage.setTitle("Trading User - Options");
 
         Text title = new Text("Trading User");
@@ -52,7 +56,13 @@ public class UserGUI{
         Button manageAccount = new Button(options.get(7));
 
         addInventory.setOnAction(actionEvent -> createItem());
-        addWishlist.setOnAction(actionEvent -> viewItemsToAddToWishlist());
+        addWishlist.setOnAction(actionEvent -> {
+            try {
+                viewItemsToAddToWishlist();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -111,7 +121,7 @@ public class UserGUI{
         stage.setScene(scene);
     }
 
-    private void viewItemsToAddToWishlist(){
+    private void viewItemsToAddToWishlist() throws IOException {
         Text title = new Text("Add items to Wishlist");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 

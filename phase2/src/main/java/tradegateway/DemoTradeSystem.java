@@ -4,6 +4,7 @@ import javafx.stage.Stage;
 import loginadapters.LogInController;
 import loginadapters.LoginGUI;
 import trademisc.RunnableController;
+import trademisc.RunnableGUI;
 
 import java.io.IOException;
 import java.util.Observable;
@@ -13,12 +14,12 @@ import java.util.Observer;
  * DEMO trading system with pre-inserted users, items, etc. solely for internal testing
  * INTENTIONALLY DOES NOT TEST PERSISTENCE
  */
-public class DemoTradeSystem implements Observer {
+public class DemoTradeSystem {
 
     private final String tradeModelFile = "serializedobjects.ser";
-    private LogInController controller;
     private DataManager dataManager;
     private TradeModel tradeModel;
+    private RunnableGUI gui;
 
     /**
      * Run the trading system.
@@ -31,10 +32,9 @@ public class DemoTradeSystem implements Observer {
             // INITIALIZE TRADEMODEL FOR DEMO
             initializeTradeModel(tradeModel);
 
-            controller = new LogInController(tradeModel);
-            controller.addObserver(this);
-            LoginGUI gui = new LoginGUI(stage, 275, 300, controller);
-            gui.loginInitialScreen();
+            gui = new LoginGUI(stage, 275, 300, tradeModel);
+            gui.initialScreen();
+            dataManager.saveToFile(tradeModel);
         } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
@@ -91,18 +91,5 @@ public class DemoTradeSystem implements Observer {
             tradeModel.getItemManager().confirmItem(itemId);
         }
         // DEMO  --- END
-    }
-
-    @Override
-    public void update(Observable observable, Object o) {
-        try {
-            RunnableController mainController = controller.getNextController();
-            if (mainController != null) {
-                mainController.run(); // This could be either UserController or AdminController
-            }
-            dataManager.saveToFile(tradeModel);
-        } catch (IOException e){
-            e.printStackTrace();
-        }
     }
 }
