@@ -21,6 +21,8 @@ import useradapters.ProfileController;
 import useradapters.UserGUI;
 import viewingadapters.ViewingTradesController;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -112,10 +114,7 @@ public class TradeGUI implements RunnableGUI {
             }
         });
 
-        backButtonBtn.setOnAction(actionEvent -> {
-            new UserGUI(username, stage, width, height, tradeModel).initialScreen();
-
-        });
+        backButtonBtn.setOnAction(actionEvent -> new UserGUI(username, stage, width, height, tradeModel).initialScreen());
 
 
         scene = new Scene(grid, width, height);
@@ -180,17 +179,23 @@ public class TradeGUI implements RunnableGUI {
             if (!tradeModel.getMeetingManager().canChangeMeeting(tradeId, username)) {
                 confirmBtn.setDisable(true);
                 editBtn.setDisable(true);
-            } else {
-                confirmBtn.setOnAction(actionEvent -> proposedTradesController.confirmMeetingTime(tradeId));
-                editBtn.setOnAction(actionEvent -> editTrade(tradeId));
             }
+
             declineBtn.setOnAction(actionEvent -> proposedTradesController.declineTrade(tradeId));
 
             int ii = i;
             if (ii + 1 > trades.size() - 1) {
                 skipBtn.setOnAction(actionEvent -> stage.setScene(sceneFinal));
+                confirmBtn.setOnAction(actionEvent -> { proposedTradesController.confirmMeetingTime(tradeId);
+                    stage.setScene(sceneFinal); });
+                editBtn.setOnAction(actionEvent -> { editTrade(tradeId); stage.setScene(sceneFinal); });
+                declineBtn.setOnAction(actionEvent -> { proposedTradesController.declineTrade(tradeId); stage.setScene(sceneFinal); });
             } else {
                 skipBtn.setOnAction(actionEvent -> stage.setScene(scenes.get(ii + 1)));
+                confirmBtn.setOnAction(actionEvent -> { proposedTradesController.confirmMeetingTime(tradeId);
+                    stage.setScene(scenes.get(ii + 1)); });
+                editBtn.setOnAction(actionEvent -> { editTrade(tradeId); stage.setScene(scenes.get(ii + 1)); });
+                declineBtn.setOnAction(actionEvent -> { proposedTradesController.declineTrade(tradeId); stage.setScene(scenes.get(ii + 1)); });
             }
 
             i--;
@@ -211,33 +216,34 @@ public class TradeGUI implements RunnableGUI {
 
         Label locationLabel = new Label("Location: ");
         TextField locationField = new TextField();
+        Label timeLabel = new Label("Time (hh:mm): ");
+        TextField timeField = new TextField();
 
-        Button dateBtn = new Button("Date");
         Button editBtn = new Button("Edit Meeting");
 
         grid.add(datePicker, 0, 1, 2, 1);
         grid.add(locationLabel, 0, 0);
         grid.add(locationField, 1, 0);
-
-        if (locationField.getText().isEmpty()) { // while loop?
-            editBtn.setDisable(true);
-        }
-
-        dateBtn.setOnAction(actionEvent -> {
-            LocalDate date = datePicker.getValue();
-            if (date == null) {
-                editBtn.setDisable(true);
-            }
-        });
-
-        // get time and combine with date in Date format
-        // check if time is empty
+        grid.add(timeLabel, 0, 2);
+        grid.add(timeField, 1, 2);
 
         List<String> details = new ArrayList<>();
-        details.add(locationField.getText());
-        // details.add(date); // don't know how to save date value outside of dateBtn.setOnAction method
 
-        editBtn.setOnAction(actionEvent -> proposedTradesController.editMeetingTime(tradeId, details));
+        editBtn.setOnAction(actionEvent -> {
+            LocalDate date = datePicker.getValue();
+            String location = locationField.getText();
+            String time = timeField.getText();
+            if (date == null || location == null || time == null) {
+                editBtn.setDisable(true);
+            } else if (!time.matches("^([0-1][0-9]|[2][0-3]):([0-5][0-9])$")) {
+                AlertBox.display("You have an incorrect field. Please review your inputs.");
+            } else {
+                details.add(location);
+                DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                String strDate = dateFormat.format(date);
+                details.add(strDate + time);
+                proposedTradesController.editMeetingTime(tradeId, details);
+            }});
 
         Scene scene = new Scene(grid);
         stage.setScene(scene);
@@ -293,16 +299,17 @@ public class TradeGUI implements RunnableGUI {
             grid.add(skipBtn, 0, 2, 2, 1);
 
             if (!tradeModel.getMeetingManager().canChangeMeeting(tradeId, username)) {
-                confirmBtn.setDisable(true);
-            } else {
-                confirmBtn.setOnAction(actionEvent -> confirmTradesController.confirmTradeHappened(tradeId, trades.get(tradeId)));
-            }
+                confirmBtn.setDisable(true); }
 
-            int ii = i; // revisit later, might not work for buttons besides skip
+            int ii = i;
             if (ii + 1 > trades.size() - 1) {
                 skipBtn.setOnAction(actionEvent -> stage.setScene(sceneFinal));
+                confirmBtn.setOnAction(actionEvent -> { confirmTradesController.confirmTradeHappened(tradeId, trades.get(tradeId));
+                    stage.setScene(sceneFinal);});
             } else {
                 skipBtn.setOnAction(actionEvent -> stage.setScene(scenes.get(ii + 1)));
+                confirmBtn.setOnAction(actionEvent -> { confirmTradesController.confirmTradeHappened(tradeId, trades.get(tradeId));
+                    stage.setScene(scenes.get(ii + 1));});
             }
 
             i--;
@@ -404,7 +411,7 @@ public class TradeGUI implements RunnableGUI {
                 messageBox.setText("Choose an item to trade.");
             }
             else if (initiateTradeController.getItemsToOffer(tradeModel.getItemManager().getOwner(itemSelectedId)).size() == 0){
-                messageBox.setText("You cannot make any two way trades. Your inventory is empty");
+                messageBox.setText("You cannot make any two way trades. Your inventory is empty.");
             } else{
                 tradeInfo.put("way", "twoWay");
                 tradeInfo.put("term", "temporary");
@@ -436,7 +443,7 @@ public class TradeGUI implements RunnableGUI {
 
 
     public void selectItemTwoWayPage(List<String> itemsToOffer, Map<String, String> initiateTradeInfo){
-        Text title = new Text("Select an item to exchange");
+        Text title = new Text("Select an item to exchange.");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
         Map<String, String> idToInfo = new HashMap<>();
@@ -496,7 +503,7 @@ public class TradeGUI implements RunnableGUI {
         Label tradeDate = new Label("Pick a date for the real life meeting.");
         DatePicker pickDate = new DatePicker();
         pickDate.setMaxWidth(150);
-        Label timeInput = new Label("input time as hh:mm");
+        Label timeInput = new Label("Input time as hh:mm");
         TextField userInputHour = new TextField();
         userInputHour.setMaxWidth(150);
 
