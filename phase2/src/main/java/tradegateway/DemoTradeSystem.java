@@ -3,8 +3,11 @@ package tradegateway;
 import javafx.stage.Stage;
 import loginadapters.LogInController;
 import loginadapters.LoginGUI;
+import sun.java2d.cmm.Profile;
 import trademisc.RunnableController;
 import trademisc.RunnableGUI;
+import useradapters.LoggedInProfileGUI;
+import useradapters.ProfileGUI;
 
 import java.io.IOException;
 import java.util.Observable;
@@ -31,12 +34,23 @@ public class DemoTradeSystem {
 
             // INITIALIZE TRADEMODEL FOR DEMO
             initializeTradeModel(tradeModel);
+            tradeModel.setCurrentUser("u1");
 
-            gui = new LoginGUI(stage, 275, 300, tradeModel);
+            //gui = new LoginGUI(stage, 275, 300, tradeModel);
+            //gui = new ProfileGUI(stage, 720, 600, tradeModel, "u1");
+            gui = new LoggedInProfileGUI(stage, 720, 600, tradeModel, "u1");
             gui.initialScreen();
-            dataManager.saveToFile(tradeModel);
+
         } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
+        }
+    }
+
+    public void persist() {
+        try {
+            dataManager.saveToFile(tradeModel);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
