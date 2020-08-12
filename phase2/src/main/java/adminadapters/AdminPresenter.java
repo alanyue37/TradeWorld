@@ -39,7 +39,7 @@ public class AdminPresenter extends TextPresenter {
      * @return Returns a string to inform that a new Admin has been created.
      */
     public String newAccountCreated(String username) {
-        return "New admin account " + username + " created.\n";
+        return "New admin account created: " + username;
     }
 
     /**
@@ -75,7 +75,6 @@ public class AdminPresenter extends TextPresenter {
     /**
      * Prints relevant heading for unfreeze account view.
      * Prints no accounts to be unfrozen if empty is true. Otherwise prints instructions.
-     * @param empty True iff no accounts have requested to be unfrozen.
      */
     public String unfreezeAccountsHeading(boolean selected) {
         if (selected) {
@@ -151,7 +150,6 @@ public class AdminPresenter extends TextPresenter {
     /**
      * This method prompts the admin user to set a threshold for the number of edits allowed by the user to change the
      * meeting place and time. The limit of edits should remain 3.
-     * @param current   The current threshold set for the number of edits allowed by the user
      */
     public String limitOfEdits() {
         return "What is the maximum number of times the proposed \nmeeting time for a trade can be edited? \nEnter a whole number (minimum 0) for the new limit: ";
