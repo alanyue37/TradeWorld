@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -12,7 +13,6 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
-import tradeadapters.AlertBox;
 import tradegateway.TradeModel;
 import trademisc.RunnableGUI;
 import undocomponent.NoLongerUndoableException;
@@ -52,6 +52,16 @@ public class AdminGUI implements RunnableGUI {
         this.presenter = new AdminPresenter();
         this.controller = new AdminController(model);
         this.model = model;
+    }
+
+    @Override
+    public void showScreen() {
+
+    }
+
+    @Override
+    public Parent getRoot() {
+        return null;
     }
 
     /**
@@ -176,9 +186,10 @@ public class AdminGUI implements RunnableGUI {
         grid.add(passwordField, 0, 6);
         grid.add(hBoxCreateAdmin, 0, 7);
         grid.add(hBoxMainMenu, 0 , 9);
-        
+
+
         createButton.setOnAction(actionEvent -> {
-            if (nameField.getText().isBlank() || usernameField.getText().isBlank() || passwordField.getText().isBlank()) {
+            if (nameField.getText().isEmpty() || usernameField.getText().isEmpty() || passwordField.getText().isEmpty()) {
                 tryAgain();
 
             } else if (controller.askAdminToAddNewAdmin(nameField.getText(), usernameField.getText(), passwordField.getText())) {
@@ -188,6 +199,8 @@ public class AdminGUI implements RunnableGUI {
                 addNewAdmin();
             }
         });
+
+
         mainMenuButton.setOnAction(action -> initialScreen());
 
         scene = new Scene(grid, width, height);

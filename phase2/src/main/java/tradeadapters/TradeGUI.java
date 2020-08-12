@@ -1,12 +1,10 @@
 package tradeadapters;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -20,7 +18,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import tradegateway.TradeModel;
@@ -29,8 +26,6 @@ import useradapters.ProfileController;
 import useradapters.UserMenuGUI;
 import viewingadapters.ViewingTradesController;
 
-import javax.swing.*;
-import java.awt.*;
 import java.text.ParseException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -52,6 +47,7 @@ public class TradeGUI implements RunnableGUI {
     private final ProfileController profileController;
     private final String username;
     private DatePicker datePicker;
+    private GridPane grid;
 
     public TradeGUI(Stage stage, int width, int height, TradeModel tradeModel, String username) {
         this.stage = stage;
@@ -72,6 +68,24 @@ public class TradeGUI implements RunnableGUI {
 
     @Override
     public void initialScreen() {
+        initializeScreen();
+        showScreen();
+    }
+
+    @Override
+    public Parent getRoot() {
+        initializeScreen();
+        return grid;
+    }
+
+    @Override
+    public void showScreen() {
+        scene = new Scene(grid, width, height);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void initializeScreen() {
         stage.setTitle("Trade Menu Options");
 
         Text title = new Text("What would you like to do?");
@@ -89,8 +103,7 @@ public class TradeGUI implements RunnableGUI {
         viewTradesBtn.setMaxWidth(500);
         backButtonBtn.setMaxWidth(500);
 
-
-        GridPane grid = new GridPane();
+        grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
@@ -134,11 +147,6 @@ public class TradeGUI implements RunnableGUI {
         });
 
         backButtonBtn.setOnAction(actionEvent -> new UserMenuGUI(stage, width, height, tradeModel, username).initialScreen());
-
-
-        scene = new Scene(grid, width, height);
-        stage.setScene(scene);
-        stage.show();
     }
 
     public void viewProposedTrades(String username) throws JSONException {

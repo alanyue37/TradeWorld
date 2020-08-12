@@ -3,6 +3,7 @@ package loginadapters;
 import adminadapters.AdminGUI;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -56,6 +57,16 @@ public class LoginGUI implements RunnableGUI {
         if(!grid.getChildren().contains(message)){
             grid.add(message, 0, 5, 2, 1);
         }
+    }
+
+    @Override
+    public void showScreen() {
+
+    }
+
+    @Override
+    public Parent getRoot() {
+        return null;
     }
 
     @Override

@@ -2,6 +2,7 @@ package useradapters;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -38,6 +39,16 @@ public class UserMenuGUI implements RunnableGUI {
     }
 
     @Override
+    public void showScreen() {
+
+    }
+
+    @Override
+    public Parent getRoot() {
+        return null;
+    }
+
+    @Override
     public void initialScreen(){
         presenter.menuScreen();
         stage.setTitle(presenter.next());
@@ -68,7 +79,7 @@ public class UserMenuGUI implements RunnableGUI {
             nextGUI.initialScreen();
         });
         buttons.get(3).setOnAction(actionEvent -> {
-            nextGUI = new ProfileGUI(stage, width, height, tradeModel, username);
+            nextGUI = new ProfileGUI(stage, 800, 800, tradeModel, username);
             nextGUI.initialScreen();
         });
 

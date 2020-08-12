@@ -30,8 +30,8 @@ public class LoggedInProfileGUI extends ProfileGUI {
     }
 
     @Override
-    public void initialScreen() {
-        initializeBasicView();
+    protected void initializeScreen() {
+        super.initializeScreen();
 
         // Additional rows
         HBox statusesRow;
@@ -52,7 +52,7 @@ public class LoggedInProfileGUI extends ProfileGUI {
         }
         addRow(friendsRow);
 
-        showStage();
+        showScreen();
     }
 
     @Override

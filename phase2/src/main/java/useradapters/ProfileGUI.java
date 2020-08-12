@@ -4,6 +4,7 @@ import com.google.gson.reflect.TypeToken;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -12,9 +13,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import tradegateway.TradeModel;
-import trademisc.RunnableGUI;
-import usercomponent.ReviewManager;
 import com.google.gson.Gson;
+import trademisc.RunnableGUI;
 import usercomponent.UserManager;
 
 import java.lang.reflect.Type;
@@ -31,7 +31,7 @@ public class ProfileGUI implements RunnableGUI {
     private final int height;
     private String userProfile;
     private Gson gson;
-    private VBox containerColumn;
+    private VBox root;
     private ObservableList<String> friends;
     private ObservableList<String> reviews;
 
@@ -42,25 +42,33 @@ public class ProfileGUI implements RunnableGUI {
         this.width = width;
         this.height = height;
         this.userProfile = userProfile;
-        this.containerColumn = new VBox();
+        this.root = new VBox();
         friends = FXCollections.observableArrayList();
         reviews = FXCollections.observableArrayList();
     }
 
+    @Override
     public void initialScreen() {
-        initializeBasicView();
-        showStage();
+        initializeScreen();
+        showScreen();
     }
 
-    protected void showStage() {
-        scene = new Scene(containerColumn, width, height);
+    @Override
+    public Parent getRoot() {
+        initializeScreen();
+        return root;
+    }
+
+    @Override
+    public void showScreen() {
+        scene = new Scene(root, width, height);
         stage.setScene(scene);
         stage.show();
     }
 
-    protected void initializeBasicView() {
-        containerColumn.setSpacing(20);
-        containerColumn.setPadding(new Insets(25, 25, 25, 25));
+    protected void initializeScreen() {
+        root.setSpacing(20);
+        root.setPadding(new Insets(25, 25, 25, 25));
 
         stage.setTitle("Profile");
 
@@ -99,7 +107,7 @@ public class ProfileGUI implements RunnableGUI {
 
         //HBox rankHBox = getUserRankBox();
 
-        containerColumn.getChildren().addAll(titleRow, profileInfoRow, accountStandingRow, friendsAndReviewsRow);
+        root.getChildren().addAll(titleRow, profileInfoRow, accountStandingRow, friendsAndReviewsRow);
     }
 
 
@@ -125,7 +133,7 @@ public class ProfileGUI implements RunnableGUI {
     protected ListView<String> getReviewsListView() {
         // TODO: TESTING CODE - UNCOMMENT IF NECESSARY - DELETE LATER
         // ReviewManager reviewManager = tradeModel.getReviewManager();
-        // reviewManager.addReview(3, "Amazing guy", "3", "u2", "u1");
+        // reviewManager.addReview(3, "Amazing guy", "3", "u1", "u2");
 
         updateReviewsObservableList();
         ListView<String> list = new ListView<>();
@@ -177,7 +185,7 @@ public class ProfileGUI implements RunnableGUI {
     }
 
     protected void addRow(HBox row) {
-        containerColumn.getChildren().add(row);
+        root.getChildren().add(row);
     }
 
     protected ProfileController getController() {

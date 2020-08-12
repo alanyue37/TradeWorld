@@ -3,6 +3,7 @@ package useradapters;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -38,6 +39,23 @@ public class AddItemGUI implements RunnableGUI {
 
     @Override
     public void initialScreen(){
+        initializeScreen();
+        showScreen();
+    }
+
+    @Override
+    public Parent getRoot() {
+        initializeScreen();
+        return grid;
+    }
+
+    @Override
+    public void showScreen() {
+        scene = new Scene(grid, width, height);
+        stage.setScene(scene);
+    }
+
+    public void initializeScreen() {
         grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
@@ -82,9 +100,6 @@ public class AddItemGUI implements RunnableGUI {
         });
 
         backButton();
-
-        scene = new Scene(grid, width, height);
-        stage.setScene(scene);
     }
 
     private void backButton() {
