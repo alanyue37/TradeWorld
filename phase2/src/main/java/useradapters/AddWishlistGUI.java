@@ -39,8 +39,7 @@ public class AddWishlistGUI implements RunnableGUI {
 
     @Override
     public void initialScreen(){
-        initializeScreen();
-        showScreen();
+
     }
 
     @Override
@@ -51,6 +50,7 @@ public class AddWishlistGUI implements RunnableGUI {
 
     @Override
     public void showScreen() {
+        initializeScreen();
         scene = new Scene(grid, width, height);
         stage.setScene(scene);
     }

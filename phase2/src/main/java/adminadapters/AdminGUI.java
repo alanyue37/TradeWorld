@@ -37,6 +37,7 @@ public class AdminGUI implements RunnableGUI {
     private final AdminPresenter presenter;
     private final AdminController controller;
     private final TradeModel model;
+    private GridPane grid;
 
     /**
      * A constructor for AdminGUI class.
@@ -56,12 +57,16 @@ public class AdminGUI implements RunnableGUI {
 
     @Override
     public void showScreen() {
-
+        initializeScreen();
+        scene = new Scene(grid, width, height);
+        stage.setScene(scene);
+        stage.show();
     }
 
     @Override
     public Parent getRoot() {
-        return null;
+        initializeScreen();
+        return grid;
     }
 
     /**
@@ -71,8 +76,12 @@ public class AdminGUI implements RunnableGUI {
      */
     @Override
     public void initialScreen() {
-        stage.setTitle("Admin Menu Options");
 
+
+
+    }
+
+    private void initializeScreen() {
         Text title = new Text("Menu Options");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -82,7 +91,7 @@ public class AdminGUI implements RunnableGUI {
         hBoxGo.setAlignment(Pos.BOTTOM_RIGHT);
         hBoxGo.getChildren().add(goButton);
 
-        GridPane grid = new GridPane();
+        grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
@@ -131,17 +140,12 @@ public class AdminGUI implements RunnableGUI {
             grid.getChildren().clear();
             logOutScreen();
         });
-
-        scene = new Scene(grid, width, height);
-        stage.setScene(scene);
-        stage.show();
     }
 
     /**
      * This method informs the admin that they have logout/ exited successfully.
      */
     public void logOutScreen() {
-        GridPane grid = (GridPane) scene.getRoot();
         Text message = new Text(presenter.loggedOut());
         if (!grid.getChildren().contains(message)){
             grid.add(message, 0, 3, 1, 1);
@@ -156,7 +160,7 @@ public class AdminGUI implements RunnableGUI {
         Text title = new Text("Create a New Admin");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
-        GridPane grid = new GridPane();
+        grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
@@ -212,7 +216,6 @@ public class AdminGUI implements RunnableGUI {
      * @param username The username of the new admin created.
      */
     public void newAdminCreated(String username) {
-        GridPane grid = (GridPane) scene.getRoot();
         Text message = new Text(presenter.newAccountCreated(username));
         if (!grid.getChildren().contains(message)){
             grid.add(message, 0, 11, 1, 1);
@@ -224,7 +227,6 @@ public class AdminGUI implements RunnableGUI {
      * @param username The username of the new admin created.
      */
     public void usernameTaken(String username) {
-        GridPane grid = (GridPane) scene.getRoot();
         Text message = new Text(presenter.usernameTaken(username));
         if (!grid.getChildren().contains(message)){
             grid.add(message, 0, 12, 1, 1);
@@ -235,7 +237,6 @@ public class AdminGUI implements RunnableGUI {
      * This method tells the Admin User to try again for various reasons, such as the input was an empty string.
      */
     public void tryAgain() {
-        GridPane grid = (GridPane) scene.getRoot();
         Text message = new Text("Please try again!");
         if (!grid.getChildren().contains(message)) {
             grid.add(message, 0, 10, 1, 1);
@@ -266,7 +267,7 @@ public class AdminGUI implements RunnableGUI {
         list.setPlaceholder(new Label("There are no accounts to be frozen"));
         Text selectMultiple = new Text("These accounts have reached the limits.\nHold down shift to freeze multiple accounts.");
 
-        GridPane grid = new GridPane();
+        grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
@@ -314,7 +315,6 @@ public class AdminGUI implements RunnableGUI {
      * This method informs the Admin user that they have not selected any accounts to be frozen.
      */
     public void noAccountsSelectedToFreeze() {
-        GridPane grid = (GridPane) scene.getRoot();
         Text message = new Text(presenter.freezeAccountsHeading(false));
         if (!grid.getChildren().contains(message)) {
             grid.add(message, 0, 6, 2, 1);
@@ -325,7 +325,6 @@ public class AdminGUI implements RunnableGUI {
      * This method informs the Admin user that the selected accounts have been frozen.
      */
     public void accountsSelectedToFreeze() {
-        GridPane grid = (GridPane) scene.getRoot();
         Text message = new Text(presenter.freezeAccountsHeading(true));
         if (!grid.getChildren().contains(message)) {
             grid.add(message, 0, 6, 2, 1);
@@ -351,7 +350,7 @@ public class AdminGUI implements RunnableGUI {
         list.setPlaceholder(new Label("There are no accounts to be unfrozen"));
         Text selectMultiple = new Text("These users have their account frozen and are requesting to unfreeze.\nHold down shift to unfreeze multiple accounts.");
 
-        GridPane grid = new GridPane();
+        grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
@@ -401,7 +400,6 @@ public class AdminGUI implements RunnableGUI {
      * This method informs the Admin user that they have not selected any accounts to be unfrozen.
      */
     public void noAccountsSelectedToUnfreeze() {
-        GridPane grid = (GridPane) scene.getRoot();
         Text message = new Text(presenter.unfreezeAccountsHeading(false));
         if (!grid.getChildren().contains(message)) {
             grid.add(message, 0, 6, 1, 1);
@@ -412,7 +410,6 @@ public class AdminGUI implements RunnableGUI {
      * This method informs the Admin user that the selected accounts have been unfrozen.
      */
     public void accountsSelectedToUnfreeze() {
-        GridPane grid = (GridPane) scene.getRoot();
         Text message = new Text(presenter.unfreezeAccountsHeading(true));
         if (!grid.getChildren().contains(message)) {
             grid.add(message, 0, 8, 1, 1);
@@ -441,7 +438,7 @@ public class AdminGUI implements RunnableGUI {
         list.setPlaceholder(new Label ("There are no items to be reviewed."));
         Text selectMultiple = new Text("These items are pending to be added. Unselected items will be deleted.\n Hold down shift to add multiple items to the system.");
 
-        GridPane grid = new GridPane();
+        grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
@@ -505,7 +502,6 @@ public class AdminGUI implements RunnableGUI {
      * are deleted.
      */
     public void itemReviewed() {
-        GridPane grid = (GridPane) scene.getRoot();
         Text message = new Text(presenter.reviewItemsHeading(true));
         if (!grid.getChildren().contains(message)) {
             grid.add(message, 0, 6, 2, 1);
@@ -526,7 +522,7 @@ public class AdminGUI implements RunnableGUI {
         Text text = new Text();
         text.setText("Current threshold: " + currentLimit);
 
-        GridPane grid = new GridPane();
+        grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
@@ -583,7 +579,7 @@ public class AdminGUI implements RunnableGUI {
         Text text = new Text();
         text.setText("Current threshold: " + currentLimit);
 
-        GridPane grid = new GridPane();
+        grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
@@ -639,7 +635,7 @@ public class AdminGUI implements RunnableGUI {
         Text text = new Text();
         text.setText("Current threshold: " + currentLimit);
 
-        GridPane grid = new GridPane();
+        grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
@@ -695,7 +691,7 @@ public class AdminGUI implements RunnableGUI {
         Text text = new Text();
         text.setText("Current threshold: " + currentLimit);
 
-        GridPane grid = new GridPane();
+        grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
@@ -746,7 +742,7 @@ public class AdminGUI implements RunnableGUI {
         Text text = new Text();
         text.setText("Current threshold: " + currentLimit);
 
-        GridPane grid = new GridPane();
+        grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
@@ -797,7 +793,7 @@ public class AdminGUI implements RunnableGUI {
         Text text = new Text();
         text.setText("Current threshold: " + currentLimit);
 
-        GridPane grid = new GridPane();
+        grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
@@ -843,7 +839,6 @@ public class AdminGUI implements RunnableGUI {
      * This method informs that Admin user that the number entered to set the threshold is not an integer or zero.
      */
     public void enterAtLeastZero() {
-        GridPane grid = (GridPane) scene.getRoot();
         Text message = new Text(presenter.enterAtLeastZero());
         if (!grid.getChildren().contains(message)) {
             grid.add(message, 0, 6, 2, 1);
@@ -854,7 +849,6 @@ public class AdminGUI implements RunnableGUI {
      * This method informs that Admin user that the number entered to set the threshold is not an integer or one.
      */
     public void enterAtLeastOne() {
-        GridPane grid = (GridPane) scene.getRoot();
         Text message = new Text(presenter.enterAtLeastOne());
         if (!grid.getChildren().contains(message)) {
             grid.add(message, 0, 6, 2, 1);
@@ -865,7 +859,6 @@ public class AdminGUI implements RunnableGUI {
      * This method informs that Admin user that the threshold has been set.
      */
     public void thresholdSet() {
-        GridPane grid = (GridPane) scene.getRoot();
         Text message = new Text(presenter.confirmationOfThreshold());
         if (!grid.getChildren().contains(message)) {
             grid.add(message, 0, 6, 2, 1);
@@ -892,7 +885,7 @@ public class AdminGUI implements RunnableGUI {
         list.setItems(reviewItems);
         list.setPlaceholder(new Label ("There are no undo operations."));
 
-        GridPane grid = new GridPane();
+        grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);

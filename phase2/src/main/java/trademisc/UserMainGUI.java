@@ -33,8 +33,7 @@ public class UserMainGUI implements RunnableGUI {
 
     @Override
     public void initialScreen() {
-        initializeScreen();
-        showScreen();
+
     }
 
     @Override
