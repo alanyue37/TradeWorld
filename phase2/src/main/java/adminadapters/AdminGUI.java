@@ -100,7 +100,7 @@ public class AdminGUI implements RunnableGUI {
         Button goldThreshold = new Button("Set gold threshold");
         Button silverThreshold = new Button("Set silver threshold");
         Button undoOperations = new Button("Undo Actions");
-        Button logOut = new Button("Exit");
+        Button logOut = new Button("Log Out");
 
 
         grid.add(addNewAdmins, 0, 1, 2, 1);
@@ -130,7 +130,7 @@ public class AdminGUI implements RunnableGUI {
         logOut.setOnAction(actionEvent -> {
             grid.getChildren().clear();
             logOutScreen();
-        }); // should we have an exit or logout or for other screens back to menu?
+        });
 
         scene = new Scene(grid, width, height);
         stage.setScene(scene);
@@ -196,7 +196,6 @@ public class AdminGUI implements RunnableGUI {
                 newAdminCreated(usernameField.getText());
             } else {
                 usernameTaken(usernameField.getText());
-                addNewAdmin();
             }
         });
 
@@ -228,7 +227,7 @@ public class AdminGUI implements RunnableGUI {
         GridPane grid = (GridPane) scene.getRoot();
         Text message = new Text(presenter.usernameTaken(username));
         if (!grid.getChildren().contains(message)){
-            grid.add(message, 0, 9, 1, 1);
+            grid.add(message, 0, 12, 1, 1);
         }
     }
 
@@ -299,6 +298,7 @@ public class AdminGUI implements RunnableGUI {
             if (selected.isEmpty()) {
                 noAccountsSelectedToFreeze();
             } else {
+                controller.askAdminToFreezeUsers(selected);
                 accountsSelectedToFreeze();
             }
         });
@@ -383,8 +383,8 @@ public class AdminGUI implements RunnableGUI {
             if (selected.isEmpty()) {
                 noAccountsSelectedToUnfreeze();
             } if (!selected.isEmpty()){
-                controller.askAdminToUnfreezeUsers(selected);
-                accountsSelectedToUnfreeze();
+                controller.askAdminToUnfreezeUsers(selectedItems);
+               accountsSelectedToUnfreeze();
             }
         });
 
