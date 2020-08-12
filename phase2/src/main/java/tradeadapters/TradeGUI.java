@@ -657,9 +657,19 @@ public class TradeGUI implements RunnableGUI {
             jsonInfo.add(tradeModel.getTradeManager().getTradeInfo(id));
         }
         List<String> tradeInfo = new ArrayList<>();
+
         for (JSONObject info : jsonInfo){
-            String allInfo = info.toString(3).replace("\"", "");
-            tradeInfo.add(allInfo);
+            StringBuilder allInfo = new StringBuilder(info.toString(0).replace("\"", ""));
+            for (JSONObject meetingInfo: tradeModel.getMeetingManager().getMeetingsInfo(info.getString("Trade ID"))){
+                allInfo.append(meetingInfo.toString(0).replace("\"", ""));
+            }
+            allInfo = new StringBuilder(allInfo.toString().replace("{", ""));
+            allInfo = new StringBuilder(allInfo.toString().replace("}", ""));
+            allInfo = new StringBuilder(allInfo.toString().replace("[", ""));
+            allInfo = new StringBuilder(allInfo.toString().replace("],\n", ""));
+            System.out.println(allInfo);
+
+            tradeInfo.add(allInfo.toString());
         }
 
         ListView<String> list = new ListView<>();
@@ -670,8 +680,8 @@ public class TradeGUI implements RunnableGUI {
         list.setPrefWidth(width - 50);   // we could change this
 
 
-        list.setPrefWidth(300);
-        list.setPrefHeight(200);
+        list.setPrefWidth(600);
+        list.setPrefHeight(400);
         return list;
     }
 
