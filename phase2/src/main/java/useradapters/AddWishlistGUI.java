@@ -38,24 +38,17 @@ public class AddWishlistGUI implements RunnableGUI {
     }
 
     @Override
-    public void initialScreen(){
-        initializeScreen();
-        showScreen();
+    public void showScreen() {
+
     }
 
     @Override
     public Parent getRoot() {
-        initializeScreen();
-        return grid;
+        return null;
     }
 
     @Override
-    public void showScreen() {
-        scene = new Scene(grid, width, height);
-        stage.setScene(scene);
-    }
-
-    private void initializeScreen() {
+    public void initialScreen(){
         grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
@@ -106,6 +99,9 @@ public class AddWishlistGUI implements RunnableGUI {
         });
 
         backButton();
+
+        scene = new Scene(grid, width, height);
+        stage.setScene(scene);
     }
 
     private void backButton() {
