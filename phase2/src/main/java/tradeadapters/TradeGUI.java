@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -41,6 +42,7 @@ public class TradeGUI implements RunnableGUI {
     private final ProfileController profileController;
     private final String username;
     private DatePicker datePicker;
+    private GridPane grid;
 
     public TradeGUI(Stage stage, int width, int height, TradeModel tradeModel, String username) {
         this.stage = stage;
@@ -61,8 +63,24 @@ public class TradeGUI implements RunnableGUI {
 
     @Override
     public void initialScreen() {
-        stage.setTitle("Trade Menu Options");
 
+    }
+
+    @Override
+    public Parent getRoot() {
+        initializeScreen();
+        return grid;
+    }
+
+    @Override
+    public void showScreen() {
+        initializeScreen();
+        scene = new Scene(grid, width, height);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    private void initializeScreen() {
         Text title = new Text("What would you like to do?");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -79,7 +97,7 @@ public class TradeGUI implements RunnableGUI {
         backButtonBtn.setMaxWidth(500);
 
 
-        GridPane grid = new GridPane();
+        grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
@@ -123,12 +141,8 @@ public class TradeGUI implements RunnableGUI {
         });
 
         backButtonBtn.setOnAction(actionEvent -> new UserMenuGUI(stage, width, height, tradeModel, username).initialScreen());
-
-
-        scene = new Scene(grid, width, height);
-        stage.setScene(scene);
-        stage.show();
     }
+
 
     public void viewProposedTrades(String username) throws JSONException {
         List<Scene> scenes = new ArrayList<>();
