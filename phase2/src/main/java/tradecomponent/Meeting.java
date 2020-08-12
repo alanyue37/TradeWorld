@@ -153,9 +153,9 @@ class Meeting implements Serializable {
             info.put("Status", "need to agree on meeting details");
         }
         info.put("Location", location);
-        info.put("Time", meetingTime);
+        info.put("Time", meetingTime.toString());
         info.put ("Number of Edits", numOfEdits);
-        info.put("Number of Confirmations", numConfirmations);
+        info.put("Number of Confirmations", String.valueOf(numConfirmations));
         info.put("Last user who modified the meeting", lastEditUser);
         return info;
     }

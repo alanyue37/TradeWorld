@@ -3,6 +3,7 @@ package loginadapters;
 import adminadapters.AdminGUI;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -17,6 +18,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import tradegateway.TradeModel;
 import trademisc.RunnableGUI;
+import trademisc.UserMainGUI;
 import useradapters.UserMenuGUI;
 
 import java.util.ArrayList;
@@ -60,6 +62,24 @@ public class LoginGUI implements RunnableGUI {
 
     @Override
     public void initialScreen() {
+
+    }
+
+    @Override
+    public Parent getRoot() {
+        initializeScreen();
+        return grid;
+    }
+
+    @Override
+    public void showScreen() {
+        initializeScreen();
+        scene = new Scene(grid, width, height);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    private void initializeScreen() {
         presenter.initialScreen();
         stage.setTitle(presenter.next());
 
@@ -110,10 +130,6 @@ public class LoginGUI implements RunnableGUI {
         for (int i = 0; i < buttons.size(); i++) {
             grid.add(buttons.get(i), 0, i+1, 2, 1);
         }
-
-        scene = new Scene(grid, width, height);
-        stage.setScene(scene);
-        stage.show();
     }
 
     private void logIn(boolean isAdmin){
@@ -244,11 +260,11 @@ public class LoginGUI implements RunnableGUI {
         if(controller.logIn(isAdmin, username, password)){
             model.setCurrentUser(username);
             if (isAdmin){
-                nextGUI = new AdminGUI(stage, width, height, model);
+                nextGUI = new AdminGUI(stage, 800, 800, model);
             } else {
-                nextGUI = new UserMenuGUI(stage, width, height, model, username);
+                nextGUI = new UserMainGUI(stage, 800, 800, model, username);
             }
-            nextGUI.initialScreen();
+            nextGUI.showScreen();
         } else {
             invalidAccount();
         }

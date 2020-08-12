@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
@@ -30,8 +31,16 @@ public class LoggedInProfileGUI extends ProfileGUI {
     }
 
     @Override
-    public void initialScreen() {
-        initializeBasicView();
+    public void showScreen() {
+        initializeScreen();
+        Scene scene = new Scene(getRoot(), getWidth(), getHeight());
+        getStage().setScene(scene);
+        getStage().show();
+    }
+
+    @Override
+    protected void initializeScreen() {
+        super.initializeScreen();
 
         // Additional rows
         HBox statusesRow;
@@ -51,8 +60,6 @@ public class LoggedInProfileGUI extends ProfileGUI {
             friendsRow = getFriendStatusRow();
         }
         addRow(friendsRow);
-
-        showStage();
     }
 
     @Override

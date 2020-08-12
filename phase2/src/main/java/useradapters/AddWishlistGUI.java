@@ -3,6 +3,7 @@ package useradapters;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -38,6 +39,23 @@ public class AddWishlistGUI implements RunnableGUI {
 
     @Override
     public void initialScreen(){
+
+    }
+
+    @Override
+    public Parent getRoot() {
+        initializeScreen();
+        return grid;
+    }
+
+    @Override
+    public void showScreen() {
+        initializeScreen();
+        scene = new Scene(grid, width, height);
+        stage.setScene(scene);
+    }
+
+    private void initializeScreen() {
         grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
@@ -88,9 +106,6 @@ public class AddWishlistGUI implements RunnableGUI {
         });
 
         backButton();
-
-        scene = new Scene(grid, width, height);
-        stage.setScene(scene);
     }
 
     private void backButton() {
