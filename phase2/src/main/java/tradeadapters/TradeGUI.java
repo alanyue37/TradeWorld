@@ -1,5 +1,7 @@
 package tradeadapters;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -152,7 +154,7 @@ public class TradeGUI implements RunnableGUI {
             allTrade.addAll(tradeModel.getMeetingManager().getMeetingsInfo(trades.get(i)));
             StringBuilder allTradeInfo = new StringBuilder();
             for (JSONObject details : allTrade) {
-                allTradeInfo.append(details.toString(4));
+                allTradeInfo.append(details.toString(3).replace("\"", ""));
             }
 
             String tradeId = allTrade.get(0).get("Trade ID").toString();
@@ -242,7 +244,7 @@ public class TradeGUI implements RunnableGUI {
                 details.add(location);
                 DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                 String strDate = dateFormat.format(date);
-                details.add(strDate + time);
+                details.add(strDate + " " + time);
                 proposedTradesController.editMeetingTime(tradeId, details);
             }});
 
@@ -280,7 +282,7 @@ public class TradeGUI implements RunnableGUI {
             allTrade.addAll(tradeModel.getMeetingManager().getMeetingsInfo(tradeId));
             StringBuilder allTradeInfo = new StringBuilder();
             for (JSONObject details : allTrade) {
-                allTradeInfo.append(details.toString(4));
+                allTradeInfo.append(details.toString(3).replace("\"", ""));
             }
 
             GridPane grid = new GridPane();
@@ -429,7 +431,7 @@ public class TradeGUI implements RunnableGUI {
             }
         });
 
-        mainLayout.getChildren().addAll(messageBox, backButton, selectType, oneWayTemporary, oneWayPermanent,  twoWayTemporary, twoWayPermanent);
+        mainLayout.getChildren().addAll(messageBox, selectType, oneWayTemporary, oneWayPermanent,  twoWayTemporary, twoWayPermanent, backButton);
         backButton.setOnAction(actionEvent -> initialScreen());
 
 
@@ -562,7 +564,7 @@ public class TradeGUI implements RunnableGUI {
         TextField ratingInput = new TextField();
         ratingInput.setPromptText("Rating you want to give (1-5)");
         TextField tradeIdInput = new TextField();
-        tradeIdInput.setPromptText("Trade Id");
+        tradeIdInput.setPromptText("Trade ID");
 
         Label messageBox = new Label();
 
@@ -609,23 +611,22 @@ public class TradeGUI implements RunnableGUI {
 
         //trades
         List<JSONObject> jsonInfo = new ArrayList<>();
-        for (String id :tradeModel.getTradeManager().getTradesOfUser(username, "ongoing")) {
+        for (String id : tradeModel.getTradeManager().getTradesOfUser(username, "ongoing")) {
             jsonInfo.add(tradeModel.getTradeManager().getTradeInfo(id));
         }
-        for (String id: tradeModel.getTradeManager().getTradesOfUser(username, "completed")){
+        for (String id : tradeModel.getTradeManager().getTradesOfUser(username, "completed")){
             jsonInfo.add(tradeModel.getTradeManager().getTradeInfo(id));
         }
         List<String> tradeInfo = new ArrayList<>();
-        for (JSONObject info: jsonInfo){
-            String allInfo = "Trade ID: " + info.getString("Trade ID") + "\nType: " + info.getString("Type") +
-                    "\nStatus: " + info.getString("Status");
+        for (JSONObject info : jsonInfo){
+            String allInfo = info.toString(3).replace("\"", "");
             tradeInfo.add(allInfo);
         }
 
         ListView<String> list = new ListView<>();
         ObservableList<String> trades = FXCollections.observableArrayList(tradeInfo);
         list.setItems(trades);
-        list.setPlaceholder(new Label("There are no trades to be viewed"));
+        list.setPlaceholder(new Label("There are no trades to be viewed."));
         list.setPrefHeight(height - 50); // we could change this
         list.setPrefWidth(width - 50);   // we could change this
 
