@@ -13,13 +13,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.json.JSONException;
 import org.json.JSONObject;
 import tradegateway.TradeModel;
 import trademisc.RunnableGUI;
 import useradapters.ProfileController;
-import useradapters.UserMenuGUI;
 import viewingadapters.ViewingTradesController;
 
 import java.text.DateFormat;
@@ -42,7 +42,11 @@ public class TradeGUI implements RunnableGUI {
     private final ProfileController profileController;
     private final String username;
     private DatePicker datePicker;
-    private GridPane grid;
+    private TabPane root;
+    private ObservableList<String> proposedTradesIDObservableList;
+    private ObservableList<String> proposedTradesInfoObservableList;
+    private ObservableList<String> confirmTradesIDObservableList;
+    private ObservableList<String> confirmTradesInfoObservableList;
 
     public TradeGUI(Stage stage, int width, int height, TradeModel tradeModel, String username) {
         this.stage = stage;
@@ -57,8 +61,10 @@ public class TradeGUI implements RunnableGUI {
         this.viewingTradesController = new ViewingTradesController(tradeModel, username);
         this.profileController = new ProfileController(tradeModel, username);
         this.datePicker = new DatePicker();
-
-
+        this.proposedTradesIDObservableList = FXCollections.observableArrayList();
+        this.proposedTradesInfoObservableList = FXCollections.observableArrayList();
+        this.confirmTradesIDObservableList = FXCollections.observableArrayList();
+        this.confirmTradesInfoObservableList = FXCollections.observableArrayList();
     }
 
     @Override
@@ -69,294 +75,41 @@ public class TradeGUI implements RunnableGUI {
     @Override
     public Parent getRoot() {
         initializeScreen();
-        return grid;
+        return root;
     }
 
     @Override
     public void showScreen() {
         initializeScreen();
-        scene = new Scene(grid, width, height);
+        scene = new Scene(root, width, height);
         stage.setScene(scene);
         stage.show();
     }
 
     private void initializeScreen() {
-        Text title = new Text("What would you like to do?");
-        title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        updateProposedObservableLists();
+        root = new TabPane();
+        root.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
-        Button initiateTradeBtn = new Button("Initiate trade");
-        Button proposedTradesBtn = new Button("Manage proposed trades");
-        Button confirmTradesBtn = new Button("Confirm real life meeting of trades");
-        Button viewTradesBtn = new Button("View ongoing and completed trades");
-        Button backButtonBtn = new Button("Go back");
-
-        initiateTradeBtn.setMaxWidth(500);
-        proposedTradesBtn.setMaxWidth(500);
-        confirmTradesBtn.setMaxWidth(500);
-        viewTradesBtn.setMaxWidth(500);
-        backButtonBtn.setMaxWidth(500);
+        Parent initiateParent = viewInitiateTrades();
+        Tab initiateTab = new Tab("Initiate", initiateParent);
 
 
-        grid = new GridPane();
-        grid.setAlignment(Pos.CENTER);
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(25, 25, 25, 25));
+        Parent proposedParent = viewProposedTrades();
+        Tab proposedTab = new Tab("Proposed Trades", proposedParent);
 
-        grid.add(title, 0, 0, 2, 1);
-        grid.add(initiateTradeBtn, 0, 1, 2, 1);
-        grid.add(proposedTradesBtn, 0, 2, 2, 1);
-        grid.add(confirmTradesBtn, 0, 3, 2, 1);
-        grid.add(viewTradesBtn, 0, 4, 2, 1);
-        grid.add(backButtonBtn, 0, 5, 2, 1);
+        Parent confirmParent = viewConfirmTrades(username);
+        Tab confirmTab = new Tab("Confirm Trades", confirmParent);
 
-        if (!initiateTradeController.initiateTrade()) {
-            initiateTradeBtn.setDisable(true);
-        } else {
-            initiateTradeBtn.setOnAction(actionEvent -> getAvailableItems());
-        }
+        Parent viewParent = viewAllTrades();
+        Tab viewTab = new Tab("View Trades", viewParent);
 
-        proposedTradesBtn.setOnAction(actionEvent -> {
-            try {
-                viewProposedTrades(username);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        });
-
-        confirmTradesBtn.setOnAction(actionEvent -> {
-            try {
-                viewConfirmTrades(username);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        });
-
-        viewTradesBtn.setOnAction(actionEvent -> {
-            try {
-                viewAllTrades();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        });
-
-        backButtonBtn.setOnAction(actionEvent -> new UserMenuGUI(stage, width, height, tradeModel, username).initialScreen());
+        root.getTabs().addAll(initiateTab, proposedTab, confirmTab, viewTab);
     }
 
+    // Main tab methods
 
-    public void viewProposedTrades(String username) throws JSONException {
-        List<Scene> scenes = new ArrayList<>();
-        List<String> trades = tradeModel.getMeetingManager().getToCheckTrades(tradeModel.getTradeManager().getTradesOfUser(username, "ongoing"), "proposed");
-
-        GridPane gridFinal = new GridPane();
-        gridFinal.setAlignment(Pos.CENTER);
-        gridFinal.setHgap(10);
-        gridFinal.setVgap(10);
-        gridFinal.setPadding(new Insets(25, 25, 25, 25));
-
-        Text done = new Text("No more proposed trades.");
-        done.setFont(Font.font("Tahoma", FontWeight.NORMAL, 17));
-
-        Button buttonFinal = new Button("Done");
-
-        gridFinal.add(done, 0, 0, 2, 1);
-        gridFinal.add(buttonFinal, 0, 1, 2, 1);
-
-        buttonFinal.setOnAction(actionEvent -> initialScreen());
-
-        Scene sceneFinal = new Scene(gridFinal);
-
-        List<String> removeChar = new ArrayList<String>(
-                Arrays.asList("\"", "{", "}", "[", ",", "]\n"));
-        int i = trades.size() - 1;
-        while (i >= 0) {
-            List<JSONObject> allTrade = new ArrayList<>();
-            allTrade.add(tradeModel.getTradeManager().getTradeInfo(trades.get(i)));
-            allTrade.addAll(tradeModel.getMeetingManager().getMeetingsInfo(trades.get(i)));
-            StringBuilder allTradeInfo = new StringBuilder();
-            for (JSONObject details : allTrade) {
-                String strTradeInfo = details.toString(0);
-                for (String ch : removeChar) {
-                    strTradeInfo = strTradeInfo.replace(ch, "");
-                }
-                allTradeInfo.append(strTradeInfo);
-            }
-
-            String tradeId = allTrade.get(0).get("Trade ID").toString();
-
-            GridPane grid = new GridPane();
-            grid.setAlignment(Pos.CENTER);
-            grid.setHgap(10);
-            grid.setVgap(10);
-            grid.setPadding(new Insets(25, 25, 25, 25));
-
-            Text trade = new Text(allTradeInfo.toString());
-            trade.setFont(Font.font("Tahoma", FontWeight.NORMAL, 15));
-
-            Button confirmBtn = new Button("Confirm");
-            Button editBtn = new Button("Edit");
-            Button declineBtn = new Button("Decline");
-            Button skipBtn = new Button("Skip");
-
-            grid.add(trade, 0, 0, 2, 1);
-            grid.add(confirmBtn, 0, 1, 2, 1);
-            grid.add(editBtn, 0, 2, 2, 1);
-            grid.add(declineBtn, 0, 3, 2, 1);
-            grid.add(skipBtn, 0, 4, 2, 1);
-
-            if (!tradeModel.getMeetingManager().canChangeMeeting(tradeId, username)) {
-                confirmBtn.setDisable(true);
-                editBtn.setDisable(true);
-            }
-
-            declineBtn.setOnAction(actionEvent -> proposedTradesController.declineTrade(tradeId));
-
-            int ii = i;
-            if (ii + 1 > trades.size() - 1) {
-                skipBtn.setOnAction(actionEvent -> stage.setScene(sceneFinal));
-                confirmBtn.setOnAction(actionEvent -> { proposedTradesController.confirmMeetingTime(tradeId);
-                    stage.setScene(sceneFinal); });
-                editBtn.setOnAction(actionEvent -> { editTrade(tradeId); stage.setScene(sceneFinal); });
-                declineBtn.setOnAction(actionEvent -> { proposedTradesController.declineTrade(tradeId); stage.setScene(sceneFinal); });
-            } else {
-                skipBtn.setOnAction(actionEvent -> stage.setScene(scenes.get(ii + 1)));
-                confirmBtn.setOnAction(actionEvent -> { proposedTradesController.confirmMeetingTime(tradeId);
-                    stage.setScene(scenes.get(ii + 1)); });
-                editBtn.setOnAction(actionEvent -> { editTrade(tradeId); stage.setScene(scenes.get(ii + 1)); });
-                declineBtn.setOnAction(actionEvent -> { proposedTradesController.declineTrade(tradeId); stage.setScene(scenes.get(ii + 1)); });
-            }
-
-            i--;
-            scenes.add(0, new Scene(grid));
-        }
-        if (trades.size() == 0) {
-            stage.setScene(sceneFinal);
-        } else { stage.setScene(scenes.get(0)); }
-        stage.show();
-    }
-
-    public void editTrade(String tradeId) {
-        GridPane grid = new GridPane();
-        grid.setAlignment(Pos.CENTER);
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(25, 25, 25, 25));
-
-        Label locationLabel = new Label("Location: ");
-        TextField locationField = new TextField();
-        Label timeLabel = new Label("Time (hh:mm): ");
-        TextField timeField = new TextField();
-
-        Button editBtn = new Button("Edit Meeting");
-
-        grid.add(datePicker, 0, 1, 2, 1);
-        grid.add(locationLabel, 0, 0);
-        grid.add(locationField, 1, 0);
-        grid.add(timeLabel, 0, 2);
-        grid.add(timeField, 1, 2);
-
-        List<String> details = new ArrayList<>();
-
-        editBtn.setOnAction(actionEvent -> {
-            LocalDate date = datePicker.getValue();
-            String location = locationField.getText();
-            String time = timeField.getText();
-            if (date == null || location == null || time == null) {
-                editBtn.setDisable(true);
-            } else if (!time.matches("^([0-1][0-9]|[2][0-3]):([0-5][0-9])$")) {
-                AlertBox.display("You have an incorrect field. Please review your inputs.");
-            } else {
-                details.add(location);
-                DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-                String strDate = dateFormat.format(date);
-                details.add(strDate + " " + time);
-                proposedTradesController.editMeetingTime(tradeId, details);
-            }});
-
-        Scene scene = new Scene(grid);
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    public void viewConfirmTrades(String username) throws JSONException {
-        List<Scene> scenes = new ArrayList<>();
-        Map<String, String> trades = confirmTradesController.getToBeConfirmedTrades(username);
-
-        GridPane gridFinal = new GridPane();
-        gridFinal.setAlignment(Pos.CENTER);
-        gridFinal.setHgap(10);
-        gridFinal.setVgap(10);
-        gridFinal.setPadding(new Insets(25, 25, 25, 25));
-
-        Text done = new Text("No more trades to confirm.");
-        done.setFont(Font.font("Tahoma", FontWeight.NORMAL, 17));
-
-        Button buttonFinal = new Button("Done");
-
-        gridFinal.add(done, 0, 0, 2, 1);
-        gridFinal.add(buttonFinal, 0, 1, 2, 1);
-
-        buttonFinal.setOnAction(actionEvent -> initialScreen());
-
-        Scene sceneFinal = new Scene(gridFinal);
-
-        int i = trades.size() - 1;
-
-        List<String> removeChar = new ArrayList<String>(
-                Arrays.asList("\"", "{", "}", "[", ",", "]\n"));
-        for (String tradeId : trades.keySet()) {
-            List<JSONObject> allTrade = new ArrayList<>();
-            allTrade.add(tradeModel.getTradeManager().getTradeInfo(tradeId));
-            allTrade.addAll(tradeModel.getMeetingManager().getMeetingsInfo(tradeId));
-            StringBuilder allTradeInfo = new StringBuilder();
-            for (JSONObject details : allTrade) {
-                String strTradeInfo = details.toString(0);
-                for (String ch : removeChar) {
-                    strTradeInfo = strTradeInfo.replace(ch, "");
-                }
-                allTradeInfo.append(strTradeInfo);
-            }
-
-            GridPane grid = new GridPane();
-            grid.setAlignment(Pos.CENTER);
-            grid.setHgap(10);
-            grid.setVgap(10);
-            grid.setPadding(new Insets(25, 25, 25, 25));
-
-            Text trade = new Text(allTradeInfo.toString());
-            trade.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-
-            Button confirmBtn = new Button("Confirm");
-            Button skipBtn = new Button("Skip");
-
-            grid.add(trade, 0, 0, 2, 1);
-            grid.add(confirmBtn, 0, 1, 2, 1);
-            grid.add(skipBtn, 0, 2, 2, 1);
-
-            if (!tradeModel.getMeetingManager().canChangeMeeting(tradeId, username)) {
-                confirmBtn.setDisable(true); }
-
-            int ii = i;
-            if (ii + 1 > trades.size() - 1) {
-                skipBtn.setOnAction(actionEvent -> stage.setScene(sceneFinal));
-                confirmBtn.setOnAction(actionEvent -> { confirmTradesController.confirmTradeHappened(tradeId, trades.get(tradeId));
-                    stage.setScene(sceneFinal);});
-            } else {
-                skipBtn.setOnAction(actionEvent -> stage.setScene(scenes.get(ii + 1)));
-                confirmBtn.setOnAction(actionEvent -> { confirmTradesController.confirmTradeHappened(tradeId, trades.get(tradeId));
-                    stage.setScene(scenes.get(ii + 1));});
-            }
-
-            i--;
-            scenes.add(0, new Scene(grid));
-        }
-        if (trades.size() == 0) {
-            stage.setScene(sceneFinal);
-        } else { stage.setScene(scenes.get(0)); }
-        stage.show();
-    }
-
-    public void getAvailableItems() {
+    private Parent viewInitiateTrades() {
         Text title = new Text("Available items");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 15));
 
@@ -412,54 +165,55 @@ public class TradeGUI implements RunnableGUI {
         backButton.setOnAction(actionEvent -> initialScreen());
 
         oneWayTemporary.setOnAction(actionEvent ->{
-            if (selected.toString().equals("")){
-                messageBox.setText("Choose an item to trade.");
-            } else if (initiateTradeController.isNewAccount(username)){
-                messageBox.setText("Your first trade must be Two-Way or Lending.");
-            } else if (!initiateTradeController.canOneWay(username)){
-                messageBox.setText("You have insufficient credit to borrow. You may not initiate a one-way " +
-                        "trade until you have loaned enough.");
-            } else{
-                Map<String, String> tradeInfo = new HashMap<>();
-                tradeInfo.put("chosen", infoToId.get(selected.toString()));
-                tradeInfo.put("way", "oneWay");
-                tradeInfo.put("term", "temporary");
-                initiateTradeMeetingInfo(tradeInfo);
-            }
+                    if (selected.toString().equals("")){
+                        messageBox.setText("Choose an item to trade.");
+                    } else if (initiateTradeController.isNewAccount(username)){
+                        messageBox.setText("Your first trade must be Two-Way or Lending.");
+                    } else if (!initiateTradeController.canOneWay(username)){
+                        messageBox.setText("You have insufficient credit to borrow. You may not initiate a one-way " +
+                                "trade until you have loaned enough.");
+                    } else{
+                        Map<String, String> tradeInfo = new HashMap<>();
+                        tradeInfo.put("chosen", infoToId.get(selected.toString()));
+                        tradeInfo.put("way", "oneWay");
+                        tradeInfo.put("term", "temporary");
+                        initiateTradeMeetingInfo(tradeInfo);
+                    }
                 }
         );
         oneWayPermanent.setOnAction(actionEvent ->{
-            if (selected.toString().equals("")){
-                messageBox.setText("Choose an item to trade.");
-            }
-            else if (initiateTradeController.isNewAccount(username)){
-                messageBox.setText("Your first trade must be Two-Way or Lending.");
-            } else if (!initiateTradeController.canOneWay(username)){
-                messageBox.setText("You have insufficient credit to borrow. You may not initiate a one-way " +
-                        "trade until you have loaned enough.");
-            } else{
-                Map<String, String> tradeInfo = new HashMap<>();
-                tradeInfo.put("chosen", infoToId.get(selected.toString()));
-                tradeInfo.put("way", "oneWay");
-                tradeInfo.put("term", "permanent");
-                initiateTradeMeetingInfo(tradeInfo);
-            }
-        }
+                    if (selected.toString().equals("")){
+                        messageBox.setText("Choose an item to trade.");
+                    }
+                    else if (initiateTradeController.isNewAccount(username)){
+                        messageBox.setText("Your first trade must be Two-Way or Lending.");
+                    } else if (!initiateTradeController.canOneWay(username)){
+                        messageBox.setText("You have insufficient credit to borrow. You may not initiate a one-way " +
+                                "trade until you have loaned enough.");
+                    } else{
+                        Map<String, String> tradeInfo = new HashMap<>();
+                        tradeInfo.put("chosen", infoToId.get(selected.toString()));
+                        tradeInfo.put("way", "oneWay");
+                        tradeInfo.put("term", "permanent");
+                        initiateTradeMeetingInfo(tradeInfo);
+                    }
+                }
         );
 
         twoWayTemporary.setOnAction(actionEvent -> {
-            if (selected.toString().equals("")){
-                messageBox.setText("Choose an item to trade.");
-            }
-            else if (initiateTradeController.getItemsToOffer(tradeModel.getItemManager().getOwner(infoToId.get(selected.toString()))).size() == 0){
-                messageBox.setText("You cannot make any two way trades. Your inventory is empty");}
-            else{
-                Map<String, String> tradeInfo = new HashMap<>();
-                tradeInfo.put("chosen", infoToId.get(selected.toString()));
-                tradeInfo.put("way", "twoWay");
-                tradeInfo.put("term", "temporary");
-                selectItemTwoWayPage(initiateTradeController.getItemsToOffer(tradeModel.getItemManager().getOwner(infoToId.get(selected.toString()))), tradeInfo);
-            }
+                    if (selected.toString().equals("")){
+                        messageBox.setText("Choose an item to trade.");
+                    }
+                    else if (initiateTradeController.getItemsToOffer(tradeModel.getItemManager().getOwner(infoToId.get(selected.toString()))).size() == 0){
+                        messageBox.setText("You cannot make any two way trades. Your inventory is empty");}
+                    else{
+                        Map<String, String> tradeInfo = new HashMap<>();
+                        tradeInfo.put("chosen", infoToId.get(selected.toString()));
+                        tradeInfo.put("way", "twoWay");
+                        tradeInfo.put("term", "temporary");
+                        selectItemTwoWayPage(initiateTradeController.getItemsToOffer(tradeModel.getItemManager().getOwner(infoToId.get(selected.toString()))), tradeInfo);
+                        //stage.hide();
+                    }
                 }
         );
         twoWayPermanent.setOnAction(actionEvent -> {
@@ -481,13 +235,234 @@ public class TradeGUI implements RunnableGUI {
         backButton.setOnAction(actionEvent -> initialScreen());
 
 
-        scene = new Scene(mainLayout, width, height);
-        stage.setScene(scene);
-        stage.show();
+        return mainLayout;
     }
 
+    private Parent viewProposedTrades() {
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(25, 25, 25, 25));
+
+        ListView<String> proposedTradesListView = new ListView<>();
+        proposedTradesListView.setPlaceholder(new Label("No proposed trades"));
+        proposedTradesListView.setItems(proposedTradesInfoObservableList);
+        Button confirmBtn = new Button("Confirm");
+        Button editBtn = new Button("Edit");
+        Button declineBtn = new Button("Decline");
+
+        grid.add(proposedTradesListView, 0, 0, 2, 1);
+        grid.add(confirmBtn, 0, 1, 2, 1);
+        grid.add(editBtn, 0, 2, 2, 1);
+        grid.add(declineBtn, 0, 3, 2, 1);
+
+        confirmBtn.setOnAction(actionEvent -> {
+            String tradeId = proposedTradesIDObservableList.get(proposedTradesListView.getSelectionModel().getSelectedIndex());
+            proposedTradesController.confirmMeetingTime(tradeId);
+            updateProposedObservableLists();
+        });
+        editBtn.setOnAction(actionEvent -> {
+            String tradeId = proposedTradesIDObservableList.get(proposedTradesListView.getSelectionModel().getSelectedIndex());
+            editProposedTrade(tradeId);
+            updateProposedObservableLists();
+        });
+        declineBtn.setOnAction(actionEvent -> {
+            String tradeId = proposedTradesIDObservableList.get(proposedTradesListView.getSelectionModel().getSelectedIndex());
+            proposedTradesController.declineTrade(tradeId);
+            updateProposedObservableLists();
+        });
+
+        return grid;
+    }
+
+    private Parent viewConfirmTrades(String username) {
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(25, 25, 25, 25));
+
+        ListView<String> confirmTradesListView = new ListView<>();
+        Map<String, String> trades = confirmTradesController.getToBeConfirmedTrades(username);
+        confirmTradesListView.setPlaceholder(new Label("No trades to confirm"));
+        confirmTradesListView.setItems(confirmTradesInfoObservableList);
+        Button confirmBtn = new Button("Confirm");
+
+        grid.add(confirmTradesListView, 0, 0, 2, 1);
+        grid.add(confirmBtn, 0, 1, 2, 1);
+
+        confirmBtn.setOnAction(actionEvent -> {
+            String tradeId = confirmTradesIDObservableList.get(confirmTradesListView.getSelectionModel().getSelectedIndex());
+            confirmTradesController.confirmTradeHappened(tradeId, trades.get(tradeId));
+            updateToBeConfirmedObservableLists();
+        });
+
+        return grid;
+    }
+
+    public Parent viewAllTrades() {
+
+        TextField commentInput = new TextField();
+        commentInput.setPromptText("Leave a comment");
+        TextField ratingInput = new TextField();
+        ratingInput.setPromptText("Rating you want to give (1-5)");
+        TextField tradeIdInput = new TextField();
+        tradeIdInput.setPromptText("Trade Id");
+
+        Label messageBox = new Label();
+
+        Button addReview = new Button("Add Review");
+
+        HBox backBox = new HBox(10);
+        Button backButton = new Button("Back");
+        backButton.setOnAction(actionEvent -> initialScreen());
+        backBox.getChildren().addAll(backButton);
+
+        HBox hBox = new HBox();
+        hBox.setPadding(new Insets(25, 25, 25, 25));
+        hBox.setSpacing(10);
+        hBox.getChildren().addAll(tradeIdInput, ratingInput, commentInput,addReview, backBox);
+
+        HBox hbox2 = new HBox();
+        hbox2.setPadding(new Insets(25, 25, 25, 25));
+        hbox2.setSpacing(10);
+
+        try {
+            hbox2.getChildren().addAll(getTradeListView());
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        VBox vbox = new VBox();
+        vbox.getChildren().addAll(hBox, messageBox, hbox2);
+
+
+        addReview.setOnAction(e -> {
+            if (!ratingInput.getText().matches("[12345]")) {
+                messageBox.setText("Invalid input. Please review your inputs.");
+            } else if (!canAddReview(tradeIdInput.getText(), username)) {
+                messageBox.setText("You cannot leave a review for this trade");
+            } else {
+                profileController.addReview(tradeIdInput.getText(), Integer.parseInt(ratingInput.getText()), commentInput.getText());
+                messageBox.setText("Review for trade " + tradeIdInput.getText() + " added successfully!");
+            }
+        });
+
+
+        return vbox;
+    }
+
+    // Helper methods used by different tabs
+
+    private void updateProposedObservableLists() {
+        proposedTradesIDObservableList.clear();
+        proposedTradesInfoObservableList.clear();
+        List<String> trades = tradeModel.getMeetingManager().getToCheckTrades(tradeModel.getTradeManager().getTradesOfUser(tradeModel.getCurrentUser(), "ongoing"), "proposed");
+        proposedTradesIDObservableList.addAll(trades);
+        List<String> removeChar = new ArrayList<String>(
+                Arrays.asList("\"", "{", "}", "[", ",", "]\n"));
+        try {
+            for (String tradeId : trades) {
+                List<JSONObject> allTrade = new ArrayList<>();
+                allTrade.add(tradeModel.getTradeManager().getTradeInfo(tradeId));
+                allTrade.addAll(tradeModel.getMeetingManager().getMeetingsInfo(tradeId));
+                StringBuilder allTradeInfo = new StringBuilder();
+                for (JSONObject details : allTrade) {
+                    String strTradeInfo = details.toString(0);
+                    for (String ch : removeChar) {
+                        strTradeInfo = strTradeInfo.replace(ch, "");
+                    }
+                    allTradeInfo.append(strTradeInfo);
+                }
+
+                proposedTradesInfoObservableList.add(allTradeInfo.toString());
+            }
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void editProposedTrade(String tradeId) {
+        Stage stage2 = new Stage();
+        GridPane grid = new GridPane();
+        Scene scene = new Scene(grid, width, height);
+        stage2.setScene(scene);
+        grid.setAlignment(Pos.CENTER);
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(25, 25, 25, 25));
+
+        Label locationLabel = new Label("Location: ");
+        TextField locationField = new TextField();
+        Label timeLabel = new Label("Time (hh:mm): ");
+        TextField timeField = new TextField();
+
+        Button editBtn = new Button("Edit Meeting");
+
+        grid.add(datePicker, 0, 1, 2, 1);
+        grid.add(locationLabel, 0, 0);
+        grid.add(locationField, 1, 0);
+        grid.add(timeLabel, 0, 2);
+        grid.add(timeField, 1, 2);
+        grid.add(editBtn, 1, 5);
+
+        List<String> details = new ArrayList<>();
+
+        editBtn.setOnAction(actionEvent -> {
+            LocalDate date = datePicker.getValue();
+            String location = locationField.getText();
+            String time = timeField.getText();
+            if (date == null || location == null || time == null) {
+                AlertBox.display("You have an incorrect field. Please review your inputs.");
+            } else if (!time.matches("^([0-1][0-9]|[2][0-3]):([0-5][0-9])$")) {
+                AlertBox.display("You have an incorrect field. Please review your inputs.");
+            } else {
+                details.add(location);
+                DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                String strDate = dateFormat.format(date);
+                details.add(strDate + " " + time);
+                proposedTradesController.editMeetingTime(tradeId, details);
+                updateProposedObservableLists();
+                stage2.close();
+            }});
+
+        stage2.initModality(Modality.APPLICATION_MODAL);
+        stage2.showAndWait();
+    }
+
+    private void updateToBeConfirmedObservableLists() {
+        confirmTradesIDObservableList.clear();
+        confirmTradesInfoObservableList.clear();
+        Map<String, String> trades = confirmTradesController.getToBeConfirmedTrades(username);
+        confirmTradesIDObservableList.addAll(trades.keySet());
+        List<String> removeChar = new ArrayList<String>(Arrays.asList("\"", "{", "}", "[", ",", "]\n"));
+        try {
+            for (String tradeId : trades.keySet()) {
+                List<JSONObject> allTrade = new ArrayList<>();
+                allTrade.add(tradeModel.getTradeManager().getTradeInfo(tradeId));
+                allTrade.addAll(tradeModel.getMeetingManager().getMeetingsInfo(tradeId));
+                StringBuilder allTradeInfo = new StringBuilder();
+                for (JSONObject details : allTrade) {
+                    String strTradeInfo = details.toString(0);
+                    for (String ch : removeChar) {
+                        strTradeInfo = strTradeInfo.replace(ch, "");
+                    }
+                    allTradeInfo.append(strTradeInfo);
+                }
+                confirmTradesInfoObservableList.add(allTradeInfo.toString());
+            }
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void selectItemTwoWayPage(List<String> itemsToOffer, Map<String, String> initiateTradeInfo){
+        Stage stage2 = new Stage();
         Text title = new Text("Select an item to exchange.");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -537,17 +512,21 @@ public class TradeGUI implements RunnableGUI {
             } else {
                 initiateTradeInfo.put("giving", infoToId.get(selected.toString()));
                 initiateTradeMeetingInfo(initiateTradeInfo);
+                stage2.hide();
             }
         });
 
         mainLayout.getChildren().addAll(scrollPane, messageText, confirmBtn);
 
-        scene = new Scene(mainLayout, width, height);
-        stage.setScene(scene);
-        stage.show();
+
+        Scene scene2 = new Scene(mainLayout, width, height);
+        stage2.setScene(scene2);
+        stage2.initModality(Modality.APPLICATION_MODAL);
+        stage2.showAndWait();
     }
 
-    public void initiateTradeMeetingInfo(Map<String, String> initiateTradeInfo) {
+    private void initiateTradeMeetingInfo(Map<String, String> initiateTradeInfo) {
+        Stage stage2 = new Stage();
         Text title = new Text("Meeting details");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -607,63 +586,14 @@ public class TradeGUI implements RunnableGUI {
         });
 
 
-        scene = new Scene(grid, width, height);
-        stage.setScene(scene);
-        stage.show();
+        Scene scene = new Scene(grid, width, height);
+        stage2.setScene(scene);
+        stage2.initModality(Modality.APPLICATION_MODAL);
+        stage2.showAndWait();
     }
 
-    public void viewAllTrades() throws JSONException {
-
-        TextField commentInput = new TextField();
-        commentInput.setPromptText("Leave a comment");
-        TextField ratingInput = new TextField();
-        ratingInput.setPromptText("Rating you want to give (1-5)");
-        TextField tradeIdInput = new TextField();
-        tradeIdInput.setPromptText("Trade Id");
-
-        Label messageBox = new Label();
-
-        Button addReview = new Button("Add Review");
-
-        HBox backBox = new HBox(10);
-        Button backButton = new Button("Back");
-        backButton.setOnAction(actionEvent -> initialScreen());
-        backBox.getChildren().addAll(backButton);
-
-        HBox hBox = new HBox();
-        hBox.setPadding(new Insets(25, 25, 25, 25));
-        hBox.setSpacing(10);
-        hBox.getChildren().addAll(tradeIdInput, ratingInput, commentInput,addReview, backBox);
-
-        HBox hbox2 = new HBox();
-        hbox2.setPadding(new Insets(25, 25, 25, 25));
-        hbox2.setSpacing(10);
-        hbox2.getChildren().addAll(getTradeListView());
-
-
-        VBox vbox = new VBox();
-        vbox.getChildren().addAll(hBox, messageBox, hbox2);
-
-
-        addReview.setOnAction(e -> {
-            if (!ratingInput.getText().matches("[12345]")) {
-                messageBox.setText("Invalid input. Please review your inputs.");
-            } else if (!canAddReview(tradeIdInput.getText(), username)) {
-                messageBox.setText("You cannot leave a review for this trade");
-            } else {
-                profileController.addReview(tradeIdInput.getText(), Integer.parseInt(ratingInput.getText()), commentInput.getText());
-                messageBox.setText("Review for trade " + tradeIdInput.getText() + " added successfully!");
-            }
-        });
-
-
-        scene = new Scene(vbox);
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    public ListView<String> getTradeListView() throws JSONException {
-
+    private ListView<String> getTradeListView() throws JSONException {
+        // TODO: Make lists update automatically as with other tabs
         // trades
         List<JSONObject> jsonInfo = new ArrayList<>();
         for (String id : tradeModel.getTradeManager().getTradesOfUser(username, "ongoing")) {
@@ -700,7 +630,6 @@ public class TradeGUI implements RunnableGUI {
         list.setPrefHeight(400);
         return list;
     }
-
 
     private boolean canAddReview(String tradeId, String username) {
         List<String> userTrades = tradeModel.getTradeManager().getTradesOfUser(username, "completed");
