@@ -3,7 +3,9 @@ package undocomponent;
 import itemcomponent.ItemManager;
 import tradecomponent.TradeManager;
 
-public class UndoAddInventoryItem implements UndoableOperation {
+import java.io.Serializable;
+
+public class UndoAddInventoryItem implements UndoableOperation, Serializable {
     private final ItemManager itemManager;
     private final TradeManager tradeManager;
     private final String itemId;

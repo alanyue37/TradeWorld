@@ -2,7 +2,9 @@ package undocomponent;
 
 import usercomponent.ReviewManager;
 
-public class UndoAddReview implements UndoableOperation {
+import java.io.Serializable;
+
+public class UndoAddReview implements UndoableOperation, Serializable {
 
     private final ReviewManager reviewManager;
     private final String reviewId;
