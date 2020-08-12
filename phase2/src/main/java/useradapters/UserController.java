@@ -30,7 +30,7 @@ public class UserController implements RunnableController {
         br = new BufferedReader(new InputStreamReader(System.in));
         this.tradeModel = tradeModel;
         this.username = username;
-        presenter = new UserPresenter();
+        presenter = new UserPresenter(tradeModel);
         itemsToShow = new ArrayList<>();
     }
     /**
@@ -110,6 +110,28 @@ public class UserController implements RunnableController {
     protected void createItem(String username, String itemName, String itemDescription){
         tradeModel.getItemManager().addItem(itemName, username, itemDescription);
     }
+
+    /**
+     * Return system inventory of users in same city (except items in current user's inventory).
+     */
+    public List<String[]> viewItems() throws IOException {
+        Set<String> items = tradeModel.getItemManager().getItemsByStage("common");
+        if (tradeModel.getUserManager().getRankByUsername(username).equals("gold")) {
+            items.addAll(tradeModel.getItemManager().getItemsByStage("early"));
+        }
+        Set<String> userInventory =  tradeModel.getItemManager().getInventory(username);
+
+        for (String itemId : items) {
+            String otherUsername = tradeModel.getItemManager().getOwner(itemId);
+            String thisUserCity = tradeModel.getUserManager().getCityByUsername(username);
+            String otherUserCity = tradeModel.getUserManager().getCityByUsername(otherUsername);
+            if (!userInventory.contains(itemId) && thisUserCity.equals(otherUserCity)) {
+                itemsToShow.add(itemId);
+            }
+        }
+        return presenter.returnItemInfo(getItemsInfo(itemsToShow));
+    }
+
 
     /**
      * View system inventory of users in same city (except items in current user's inventory or wishlist).

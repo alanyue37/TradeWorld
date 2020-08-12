@@ -2,34 +2,36 @@ package useradapters;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import tradegateway.TradeModel;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 public class LoggedInProfileGUI extends ProfileGUI {
 
-    private final String currentUser;
+    private ObservableList<String> friendsRequests;
 
     public LoggedInProfileGUI(Stage stage, int width, int height, TradeModel tradeModel, String userProfile) {
         super(stage, width, height, tradeModel, userProfile);
-        currentUser = tradeModel.getCurrentUser();
+        friendsRequests = FXCollections.observableArrayList();
     }
 
     @Override
     public void initialScreen() {
         initializeBasicView();
-
-        // TODO: Override getAccountStandingRow to have unfreeze button if necessary
 
         // Additional rows
         HBox statusesRow;
@@ -53,8 +55,22 @@ public class LoggedInProfileGUI extends ProfileGUI {
         showStage();
     }
 
+    @Override
+    protected HBox getAccountStandingRow() {
+        HBox row =  super.getAccountStandingRow();
+        // If frozen and own profile add Request Unfreeze link
+        if (getController().getFrozenStatus(getUserProfile()) && getController().isOwnProfile(getUserProfile())) {
+            Hyperlink requestUnfreeze = new Hyperlink("Request unfreeze");
+            requestUnfreeze.setBorder(Border.EMPTY);
+            requestUnfreeze.setPadding(new Insets(0, 0, 0, 20));
+            requestUnfreeze.setOnAction(actionEvent -> getController().requestUnfreeze());
+            row.getChildren().add(requestUnfreeze);
+        }
+        return row;
+    }
+
     protected HBox getStatusesRow() {
-        // TODO: add listener to process events for radio buttons
+        // TODO: Refactor into two shorter methods time permitting
         HBox row = new HBox();
         VBox statusesColumn = new VBox();
 
@@ -81,6 +97,10 @@ public class LoggedInProfileGUI extends ProfileGUI {
         ToggleGroup privacyGroup = new ToggleGroup();
         RadioButton onPrivacyButton = new RadioButton("On");
         RadioButton offPrivacyButton = new RadioButton("Off");
+        onPrivacyButton.setUserData(true);
+        offPrivacyButton.setUserData(false);
+        onVacationButton.setUserData(true);
+        offVacationButton.setUserData(false);
         onPrivacyButton.setToggleGroup(privacyGroup);
         offPrivacyButton.setToggleGroup(privacyGroup);
 
@@ -92,6 +112,32 @@ public class LoggedInProfileGUI extends ProfileGUI {
             privacyValueLabel = new Label("Off");
             offPrivacyButton.setSelected(true);
         }
+
+        // Add event handlers for radio buttons
+        // Based on sample code from: https://docs.oracle.com/javafx/2/ui_controls/radio-button.htm
+
+        privacyGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>(){
+            public void changed(ObservableValue<? extends Toggle> ov,
+                                Toggle old_toggle, Toggle new_toggle) {
+                if (privacyGroup.getSelectedToggle() != null) {
+                    boolean privacy = (boolean) privacyGroup.getSelectedToggle().getUserData();
+                    System.out.println(privacy);
+                    getController().setPrivacyMode(privacy);
+                }
+
+            }
+        });
+
+        vacationGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>(){
+            public void changed(ObservableValue<? extends Toggle> ov,
+                                Toggle old_toggle, Toggle new_toggle) {
+                if (vacationGroup.getSelectedToggle() != null) {
+                    boolean vacation = (boolean) vacationGroup.getSelectedToggle().getUserData();
+                    System.out.println(vacation);
+                    getController().setVacationMode(vacation);}
+
+            }
+        });
 
         if (getController().isOwnProfile(getUserProfile())) {
             privacyRow.getChildren().addAll(privacyLabel, offPrivacyButton, onPrivacyButton);
@@ -111,30 +157,85 @@ public class LoggedInProfileGUI extends ProfileGUI {
     }
 
     protected HBox getFriendsRequestsRow() {
-        // TODO: complete
         HBox row = new HBox();
         VBox requestsColumn = new VBox();
         Label requestsLabel = new Label("Friend Requests");
-        String json = getController().getFriendRequests();
-        Gson gson = new Gson();
-        Type type = new TypeToken<List<String>>(){}.getType();
-        List<String> friendsRequests = gson.fromJson(json, type);
         ListView<String> list = new ListView<>();
-        ObservableList<String> items = FXCollections.observableArrayList(friendsRequests);
-        list.setItems(items);
+        list.setPlaceholder(new Label("No requests"));
+
+        updateFriendsRequestsObservableList();
+
+        list.setItems(friendsRequests);
         list.setPrefWidth(300);
         list.setPrefHeight(200);
 
+        list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        ObservableList<Integer> selectedItems =  list.getSelectionModel().getSelectedIndices();
+
         requestsColumn.getChildren().addAll(requestsLabel, list);
-        row.getChildren().add(requestsColumn);
+
+
+        VBox buttonsColumn = new VBox();
+        buttonsColumn.setAlignment(Pos.CENTER);
+        Button acceptButton = new Button("Accept");
+        Button ignoreButton = new Button("Ignore");
+        buttonsColumn.getChildren().add(acceptButton);
+        buttonsColumn.getChildren().add(ignoreButton);
+        acceptButton.setOnAction(actionEvent -> acceptOrIgnoreFriendsRequest(selectedItems, true));
+        ignoreButton.setOnAction(actionEvent -> acceptOrIgnoreFriendsRequest(selectedItems, false));
+
+        row.getChildren().addAll(requestsColumn, buttonsColumn);
+        row.setSpacing(20);
+
         return row;
     }
 
     protected HBox getFriendStatusRow() {
-        //TODO: Complete
-        // Show add friend button if not friends. Otherwise indicate friendship status
         HBox row = new HBox();
+        row.setSpacing(20);
+        Label friendshipLabel = new Label("Friendship:");
+        row.getChildren().add(friendshipLabel);
+        String friendshipStatus = getController().getFriendshipStatus(getUserProfile());
+        Node node;
+        switch (friendshipStatus) {
+            case "friends":
+                node = new Label("Already friends");
+                break;
+            case "sent":
+                node = new Label("Friend request sent");
+                break;
+            case "received":
+                node = new Label("Friend request received");
+                break;
+            default:
+                Hyperlink requestFriendship = new Hyperlink("Send friend request");
+                requestFriendship.setBorder(Border.EMPTY);
+                requestFriendship.setPadding(new Insets(0, 0, 0, 0));
+                requestFriendship.setOnAction(actionEvent -> getController().sendFriendRequest(getUserProfile()));
+                node = requestFriendship;
+                break;
+        }
+        row.getChildren().add(node);
         return row;
+    }
+
+    private void acceptOrIgnoreFriendsRequest(ObservableList<Integer> selectedRequests, boolean accept) {
+        List<String> usernames = new ArrayList<>();
+        for (Integer i: selectedRequests) {
+            usernames.add(friendsRequests.get(i));
+        }
+        getController().acceptOrIgnoreFriendsRequests(usernames, accept);
+        updateFriendsRequestsObservableList();
+        updateFriendsObservableList();
+    }
+
+    protected void updateFriendsRequestsObservableList() {
+        String json = getController().getFriendRequests();
+        Gson gson = new Gson();
+        Type type = new TypeToken<List<String>>(){}.getType();
+        List<String> requests = gson.fromJson(json, type);
+        friendsRequests.clear();
+        friendsRequests.addAll(FXCollections.observableArrayList(requests));
     }
 
 

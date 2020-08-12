@@ -1,5 +1,6 @@
 package useradapters;
 
+import tradegateway.TradeModel;
 import trademisc.TextPresenter;
 
 import java.util.ArrayList;
@@ -7,12 +8,17 @@ import java.util.List;
 
 public class UserPresenter extends TextPresenter {
 
+    protected final TradeModel tradeModel;
+
+    public UserPresenter(TradeModel tm) {
+        tradeModel = tm;
+    }
+
     /**
      * Print main menu to run the UserController
      *
      * // @param username The username of the currently logged in TradingUser
      */
-
     // SHOULD WE DISPLAY THE USERNAME ?
     public List<String> startMenu() {
         // System.out.println("\n*** " + username + " User Menu***");
@@ -64,4 +70,18 @@ public class UserPresenter extends TextPresenter {
         System.out.println("This is just a demo. You cannot actually do this.");
     }
 
+    /**
+     * Return a list of confirmed items and its info that may be added to inventory
+     * @param items The list of item IDs to print
+     */
+    public List<String[]> returnItemInfo(List<String> items){
+        List<String[]> itemInfoList = new ArrayList<>();
+        for (String item : items) {
+            itemInfoList.add(new String[]{item,
+                    tradeModel.getItemManager().getName(item),
+                    tradeModel.getItemManager().getOwner(item),
+                    tradeModel.getItemManager().getItemInfo(item)});
+        }
+        return itemInfoList;
+    }
 }
