@@ -667,8 +667,6 @@ public class TradeGUI implements RunnableGUI {
             allInfo = new StringBuilder(allInfo.toString().replace("}", ""));
             allInfo = new StringBuilder(allInfo.toString().replace("[", ""));
             allInfo = new StringBuilder(allInfo.toString().replace("],\n", ""));
-            System.out.println(allInfo);
-
             tradeInfo.add(allInfo.toString());
         }
 
