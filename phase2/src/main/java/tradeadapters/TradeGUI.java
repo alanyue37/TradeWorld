@@ -1,18 +1,11 @@
 package tradeadapters;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -20,7 +13,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import tradegateway.TradeModel;
@@ -29,14 +21,11 @@ import useradapters.ProfileController;
 import useradapters.UserMenuGUI;
 import viewingadapters.ViewingTradesController;
 
-import javax.swing.*;
-import java.awt.*;
-import java.text.ParseException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class TradeGUI implements RunnableGUI {
@@ -163,6 +152,8 @@ public class TradeGUI implements RunnableGUI {
 
         Scene sceneFinal = new Scene(gridFinal);
 
+        List<String> removeChar = new ArrayList<String>(
+                Arrays.asList("\"", "{", "}", "[", ",", "]\n"));
         int i = trades.size() - 1;
         while (i >= 0) {
             List<JSONObject> allTrade = new ArrayList<>();
@@ -170,7 +161,11 @@ public class TradeGUI implements RunnableGUI {
             allTrade.addAll(tradeModel.getMeetingManager().getMeetingsInfo(trades.get(i)));
             StringBuilder allTradeInfo = new StringBuilder();
             for (JSONObject details : allTrade) {
-                allTradeInfo.append(details.toString(3).replace("\"", ""));
+                String strTradeInfo = details.toString(0);
+                for (String ch : removeChar) {
+                    strTradeInfo = strTradeInfo.replace(ch, "");
+                }
+                allTradeInfo.append(strTradeInfo);
             }
 
             String tradeId = allTrade.get(0).get("Trade ID").toString();
@@ -182,7 +177,7 @@ public class TradeGUI implements RunnableGUI {
             grid.setPadding(new Insets(25, 25, 25, 25));
 
             Text trade = new Text(allTradeInfo.toString());
-            trade.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+            trade.setFont(Font.font("Tahoma", FontWeight.NORMAL, 15));
 
             Button confirmBtn = new Button("Confirm");
             Button editBtn = new Button("Edit");
@@ -292,13 +287,20 @@ public class TradeGUI implements RunnableGUI {
         Scene sceneFinal = new Scene(gridFinal);
 
         int i = trades.size() - 1;
+
+        List<String> removeChar = new ArrayList<String>(
+                Arrays.asList("\"", "{", "}", "[", ",", "]\n"));
         for (String tradeId : trades.keySet()) {
             List<JSONObject> allTrade = new ArrayList<>();
             allTrade.add(tradeModel.getTradeManager().getTradeInfo(tradeId));
             allTrade.addAll(tradeModel.getMeetingManager().getMeetingsInfo(tradeId));
             StringBuilder allTradeInfo = new StringBuilder();
             for (JSONObject details : allTrade) {
-                allTradeInfo.append(details.toString(3).replace("\"", ""));
+                String strTradeInfo = details.toString(0);
+                for (String ch : removeChar) {
+                    strTradeInfo = strTradeInfo.replace(ch, "");
+                }
+                allTradeInfo.append(strTradeInfo);
             }
 
             GridPane grid = new GridPane();
@@ -648,7 +650,7 @@ public class TradeGUI implements RunnableGUI {
 
     public ListView<String> getTradeListView() throws JSONException {
 
-        //trades
+        // trades
         List<JSONObject> jsonInfo = new ArrayList<>();
         for (String id : tradeModel.getTradeManager().getTradesOfUser(username, "ongoing")) {
             jsonInfo.add(tradeModel.getTradeManager().getTradeInfo(id));
@@ -658,16 +660,18 @@ public class TradeGUI implements RunnableGUI {
         }
         List<String> tradeInfo = new ArrayList<>();
 
+        List<String> removeChar = new ArrayList<String>(
+                Arrays.asList("\"", "{", "}", "[", ",", "]\n"));
         for (JSONObject info : jsonInfo){
-            StringBuilder allInfo = new StringBuilder(info.toString(0).replace("\"", ""));
-            for (JSONObject meetingInfo: tradeModel.getMeetingManager().getMeetingsInfo(info.getString("Trade ID"))){
-                allInfo.append(meetingInfo.toString(0).replace("\"", ""));
+            StringBuilder allInfo = new StringBuilder(info.toString(0));
+            for (JSONObject meetingInfo : tradeModel.getMeetingManager().getMeetingsInfo(info.getString("Trade ID"))){
+                allInfo.append(meetingInfo.toString(0));
             }
-            allInfo = new StringBuilder(allInfo.toString().replace("{", ""));
-            allInfo = new StringBuilder(allInfo.toString().replace("}", ""));
-            allInfo = new StringBuilder(allInfo.toString().replace("[", ""));
-            allInfo = new StringBuilder(allInfo.toString().replace("],\n", ""));
-            tradeInfo.add(allInfo.toString());
+            String strInfo = allInfo.toString();
+            for (String ch : removeChar) {
+                strInfo = strInfo.replace(ch, "");
+                }
+            tradeInfo.add(strInfo);
         }
 
         ListView<String> list = new ListView<>();
