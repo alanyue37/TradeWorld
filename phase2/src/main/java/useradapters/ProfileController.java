@@ -1,8 +1,6 @@
 package useradapters;
 
 import com.google.gson.Gson;
-import org.json.JSONException;
-import org.json.JSONObject;
 import tradegateway.TradeModel;
 import trademisc.RunnableController;
 import undocomponent.UndoAddReview;
@@ -17,6 +15,8 @@ import java.util.List;
 import java.util.Set;
 
 public class ProfileController implements RunnableController {
+    // TODO: Clean up unnecessary methods
+    // TODO: Combine some getters for profileGUI into one or more JSON replies time permitting
     private final BufferedReader br;
     private final TradeModel tradeModel;
     private final ProfilePresenter presenter;
@@ -162,7 +162,7 @@ public class ProfileController implements RunnableController {
 //            tradeModel.getUndoManager().add(undoableOperation);
 //        }
 
-    public String addReview(String tradeId, int rating, String comment){
+    public void addReview(String tradeId, int rating, String comment){
         String receiver = "";
         for (List<String> users: tradeModel.getTradeManager().itemToUsers(tradeId).values()){
             users.remove(username);
@@ -171,7 +171,6 @@ public class ProfileController implements RunnableController {
         String reviewId = tradeModel.getReviewManager().addReview(rating, comment, tradeId, username, receiver);
         UndoableOperation undoableOperation = new UndoAddReview(this.tradeModel.getReviewManager(), reviewId);
         tradeModel.getUndoManager().add(undoableOperation);
-        return reviewId;
     }
 
     private List<String> getReviewInfo() throws IOException {
@@ -213,8 +212,7 @@ public class ProfileController implements RunnableController {
     public String getFriends(String username) {
         List<String> friendsList = new ArrayList<>(tradeModel.getUserManager().getFriendList(username));
         Gson gson = new Gson();
-        String json = gson.toJson(friendsList);
-        return json;
+        return gson.toJson(friendsList);
     }
 
     /**
@@ -232,7 +230,7 @@ public class ProfileController implements RunnableController {
         return tradeModel.getUserManager().getCityByUsername(username);
     }
 
-    public boolean getStanding(String username) {
+    public boolean getFrozenStatus(String username) {
         return tradeModel.getUserManager().isFrozen(username);
     }
 
@@ -244,15 +242,52 @@ public class ProfileController implements RunnableController {
         return tradeModel.getUserManager().getPrivateUser().contains(username);
     }
 
+    public void setVacationMode(boolean vacation) {
+        tradeModel.getUserManager().setOnVacation(tradeModel.getCurrentUser(), vacation);
+    }
+
+    public void setPrivacyMode(boolean privacy) {
+        tradeModel.getUserManager().setPrivate(tradeModel.getCurrentUser(), privacy);
+    }
+
+    public void requestUnfreeze() {
+        tradeModel.getUserManager().markUserForUnfreezing(tradeModel.getCurrentUser());
+    }
+
     public boolean isOwnProfile(String username) {
         return tradeModel.getCurrentUser().equals(username);
     }
 
     public String getFriendRequests() {
-        List<String> friendsRequestsList = new ArrayList<>(tradeModel.getUserManager().getFriendRequests(username));
+        List<String> friendsRequestsList = new ArrayList<>(tradeModel.getUserManager().getFriendRequests(tradeModel.getCurrentUser()));
         Gson gson = new Gson();
-        String json = gson.toJson(friendsRequestsList);
-        return json;
+        return gson.toJson(friendsRequestsList);
     }
+
+    public String getFriendshipStatus(String otherUsername) {
+        if (tradeModel.getUserManager().getFriendList(tradeModel.getCurrentUser()).contains(otherUsername)) {
+            return "friends";
+        }
+        else if(tradeModel.getUserManager().getFriendRequests(otherUsername).contains(tradeModel.getCurrentUser())) {
+            return "sent";
+        }
+        else if(tradeModel.getUserManager().getFriendRequests(tradeModel.getCurrentUser()).contains(otherUsername)) {
+            return "received";
+        }
+        else {
+            return "none";
+        }
+    }
+
+    public void sendFriendRequest(String otherUsername) {
+        tradeModel.getUserManager().sendFriendRequest(otherUsername, tradeModel.getCurrentUser());
+    }
+
+    public void acceptOrIgnoreFriendsRequests(List<String> usernames, boolean accept) {
+        for (String u : usernames) {
+            tradeModel.getUserManager().setFriendRequest(tradeModel.getCurrentUser(), u, accept);
+        }
+    }
+
 }
 

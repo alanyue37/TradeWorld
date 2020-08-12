@@ -1,16 +1,17 @@
 package tradegateway;
 
-import adminadapters.AdminGUI;
 import javafx.stage.Stage;
 import loginadapters.LogInController;
 import loginadapters.LoginGUI;
+import sun.java2d.cmm.Profile;
 import trademisc.RunnableController;
 import trademisc.RunnableGUI;
+import useradapters.LoggedInProfileGUI;
+import useradapters.ProfileGUI;
 
 import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Set;
 
 /**
  * DEMO trading system with pre-inserted users, items, etc. solely for internal testing
@@ -29,20 +30,27 @@ public class DemoTradeSystem {
     public void run(Stage stage) {
         try {
             dataManager = new DataManager(tradeModelFile);
-            //tradeModel = dataManager.readFromFile();
-            tradeModel = new TradeModel();
+            tradeModel = dataManager.readFromFile();
 
             // INITIALIZE TRADEMODEL FOR DEMO
             initializeTradeModel(tradeModel);
+            tradeModel.setCurrentUser("u1");
 
-            // controller = new LogInController(tradeModel);
-            //controller.addObserver(this);
-           //LoginGUI gui = new LoginGUI(stage, 500, 500, tradeModel);
-           //gui.initialScreen();
-           AdminGUI adminGUI = new AdminGUI(stage, 500, 500, tradeModel);
-           adminGUI.initialScreen();
-        } catch (IOException ex)  {// | ClassNotFoundException ex) {
+            gui = new LoginGUI(stage, 275, 300, tradeModel);
+            //gui = new ProfileGUI(stage, 720, 600, tradeModel, "u1");
+//            gui = new LoggedInProfileGUI(stage, 720, 600, tradeModel, "u1");
+            gui.initialScreen();
+
+        } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
+        }
+    }
+
+    public void persist() {
+        try {
+            dataManager.saveToFile(tradeModel);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -60,7 +68,6 @@ public class DemoTradeSystem {
         tradeModel.getUserManager().createTradingUser("U_2", "u2", "u2", "Toronto");
         tradeModel.getUserManager().createTradingUser("U_3", "u3", "u3", "Edmonton");
         tradeModel.getUserManager().createTradingUser("U_4", "u4", "u4", "Brampton");
-
 
         String[] users = new String[] {"u1", "u2", "u3", "u4"};
         for (String username: users) {
@@ -97,13 +104,6 @@ public class DemoTradeSystem {
         for (String itemId : items) {
             tradeModel.getItemManager().confirmItem(itemId);
         }
-
-        tradeModel.getUserManager().markUserForUnfreezing("U_1");
-        tradeModel.getUserManager().markUserForUnfreezing("U_2");
-        tradeModel.getUserManager().markUserForUnfreezing("U_3");
-
-
-
         // DEMO  --- END
     }
 }

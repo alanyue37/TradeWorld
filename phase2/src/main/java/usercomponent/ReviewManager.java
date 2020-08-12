@@ -121,6 +121,11 @@ public class ReviewManager implements Serializable {
         Gson gson = new Gson();
         List<Review> reviews = userToReviews.get(receiverUsername);
         List<Map<String, String>> reviewMaps = new ArrayList<>();
+        String json;
+        if (reviews == null) {
+            json = gson.toJson(reviewMaps);
+            return json;
+        }
         for (Review r: reviews) {
             Map<String, String> reviewMap = new HashMap<>();
             reviewMap.put("id", r.getId());
@@ -130,7 +135,7 @@ public class ReviewManager implements Serializable {
             reviewMap.put("tradeId", r.getTradeId());
             reviewMaps.add(reviewMap);
         }
-        String json = gson.toJson(reviewMaps);
+        json = gson.toJson(reviewMaps);
         return json;
     }
 }

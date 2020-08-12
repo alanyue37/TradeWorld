@@ -49,7 +49,7 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Sets the specified threshold value
+     * Sets the specified threshold value.
      * Precondition: The requested threshold must be valid.
      *
      * @param which threshold is being requested
@@ -64,6 +64,21 @@ public class UserManager implements Serializable {
         }
         else {
             tradingThreshold = value;
+        }
+    }
+
+    /**
+     * Gets the name of a user given their username.
+     * Precondition: The username must be valid.
+     *
+     * @param username the username of the user
+     * @return The name of the user
+     */
+    public String getName(String username) {
+        if (tradingUsers.containsKey(username)) {
+            return tradingUsers.get(username).getName();
+        } else {
+            return adminUsers.get(username).getName();
         }
     }
 
@@ -200,14 +215,20 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Adds the id of a particular item to the wishlist of a particular TradingUser
+     * Adds the id of a particular item to the wishlist of a particular TradingUser. Returns false if item was
+     * already in their wishlist.
      *
      * @param username The username of the chosen TradingUser. Must be a valid username for an existing TradingUser.
      * @param id       The id of the given item
+     * @return Whether the item was successfully added
      */
-    public void addToWishlist(String username, String id) {
+    public boolean addToWishlist(String username, String id) {
         TradingUser account = tradingUsers.get(username);
+        if (account.getWishlist().contains(id)) {
+            return false;
+        }
         account.addToWishlist(id);
+        return true;
     }
 
     /**
