@@ -16,7 +16,7 @@ import trademisc.RunnableGUI;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserGUI implements RunnableGUI {
+public class UserMenuGUI implements RunnableGUI {
     private final Stage stage;
     private Scene scene;
     private final UserController2 controller;
@@ -24,10 +24,10 @@ public class UserGUI implements RunnableGUI {
     private final TradeModel tradeModel;
     private final int width;
     private final int height;
-    protected String username;
+    private String username;
     private RunnableGUI nextGUI;
 
-    public UserGUI(Stage stage, int width, int height, TradeModel model, String username) {
+    public UserMenuGUI(Stage stage, int width, int height, TradeModel model, String username) {
         this.stage = stage;
         controller = new UserController2(model, username);
         presenter = new UserPresenter2(model, username);
@@ -39,16 +39,16 @@ public class UserGUI implements RunnableGUI {
 
     @Override
     public void initialScreen(){
-        System.out.println(username);
-        stage.setTitle("Trading User - Options");
+        presenter.menuScreen();
+        stage.setTitle(presenter.next());
 
-        Text title = new Text("Welcome " + presenter.getName());
+        Text title = new Text(presenter.next());
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
-        List<String> options = presenter.startMenu();
-        List<Button> buttons = new ArrayList<Button>();
-        for (String op : options) {
-            buttons.add(new Button(op));
+        presenter.startMenu();
+        List<Button> buttons = new ArrayList<>();
+        while (presenter.hasNext()) {
+            buttons.add(new Button(presenter.next()));
         }
 //        Button addInventory = new Button(options.get(0));
 //        Button addWishlist = new Button(options.get(1));
@@ -92,10 +92,11 @@ public class UserGUI implements RunnableGUI {
 
     private void frozenAlert() {
         if (controller.isFrozen()) {
+            presenter.frozenAlert();
             Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Warning Dialog");
-            alert.setHeaderText("Your account is frozen.");
-            alert.setContentText("You are currently unable to make trades.");
+            alert.setTitle(presenter.next());
+            alert.setHeaderText(presenter.next());
+            alert.setContentText(presenter.next());
 
             alert.showAndWait();
         }

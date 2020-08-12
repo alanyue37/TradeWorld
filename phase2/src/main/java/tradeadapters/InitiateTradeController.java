@@ -329,7 +329,7 @@ public class InitiateTradeController implements RunnableController {
 
     protected void createTrade(Map<String, String> otherInfo) throws ParseException {
         String way = otherInfo.get("way");
-        String type = otherInfo.get("type");
+        String type = otherInfo.get("term");
         List<String> details = new ArrayList<>();
         String itemId = otherInfo.get("chosen");
         if (way.equals("oneWay")){
