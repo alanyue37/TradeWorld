@@ -53,6 +53,7 @@ public class UserMainGUI implements RunnableGUI {
 
     private void initializeScreen() {
         root = new TabPane();
+        root.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
         ProfileGUI profileGUI = new LoggedInProfileGUI(stage, 800, 800, this.tradeModel, username);
         Parent profileParent = profileGUI.getRoot();
@@ -74,8 +75,6 @@ public class UserMainGUI implements RunnableGUI {
         Parent tradeParent = tradeGUI.getRoot();
         Tab tradeTab = new Tab("Trade", tradeParent);
 
-
-        // add tab
         root.getTabs().addAll(profileTab, inventoryTab, wishlistTab, tradeTab, otherProfilesTab);
     }
 }

@@ -172,6 +172,7 @@ public class ProfileGUI implements RunnableGUI {
         return stage;
     }
 
+
     protected int getWidth() {
         return width;
     }
