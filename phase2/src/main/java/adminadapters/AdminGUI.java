@@ -12,6 +12,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
+import tradeadapters.AlertBox;
 import tradegateway.TradeModel;
 import trademisc.RunnableGUI;
 import undocomponent.NoLongerUndoableException;
@@ -118,7 +119,7 @@ public class AdminGUI implements RunnableGUI {
         undoOperations.setOnAction(actionEvent -> undoOperations());
         logOut.setOnAction(actionEvent -> {
             grid.getChildren().clear();
-            exitScreen();
+            logOutScreen();
         }); // should we have an exit or logout or for other screens back to menu?
 
         scene = new Scene(grid, width, height);
@@ -129,7 +130,7 @@ public class AdminGUI implements RunnableGUI {
     /**
      * This method informs the admin that they have logout/ exited successfully.
      */
-    public void exitScreen() {
+    public void logOutScreen() {
         GridPane grid = (GridPane) scene.getRoot();
         Text message = new Text(presenter.loggedOut());
         if (!grid.getChildren().contains(message)){
@@ -267,10 +268,10 @@ public class AdminGUI implements RunnableGUI {
         HBox freezeHBox = new HBox(10);
         freezeHBox.setAlignment(Pos.BOTTOM_RIGHT);
         freezeHBox.getChildren().add(freezeButton);
-        Button backButton = new Button("Back");
+        Button mainMenuButton = new Button("Main Menu");
         HBox hBoxMainMenu = new HBox(10);
         hBoxMainMenu.setAlignment(Pos.BOTTOM_LEFT);
-        hBoxMainMenu.getChildren().add(backButton);
+        hBoxMainMenu.getChildren().add(mainMenuButton);
 
         grid.add(selectMultiple, 0, 1);
         grid.add(list, 0, 2);
@@ -289,7 +290,7 @@ public class AdminGUI implements RunnableGUI {
             }
         });
 
-        backButton.setOnAction(actionEvent -> initialScreen());
+        mainMenuButton.setOnAction(actionEvent -> initialScreen());
 
         scene = new Scene(grid, width, height);
         stage.setScene(scene);
@@ -352,37 +353,38 @@ public class AdminGUI implements RunnableGUI {
         unfreezeButton.setAlignment(Pos.BOTTOM_RIGHT);
         unfreezeHBox.getChildren().add(unfreezeButton);
 
-        Button backButton = new Button("Back");
+        Button mainMenuButton = new Button("Main Menu");
         HBox hBoxMainMenu = new HBox(10);
         hBoxMainMenu.setAlignment(Pos.BOTTOM_LEFT);
-        hBoxMainMenu.getChildren().add(backButton);
+        hBoxMainMenu.getChildren().add(mainMenuButton);
 
         grid.add(selectMultiple, 0, 1);
         grid.add(list, 0, 2);
         grid.add(unfreezeHBox, 0, 3);
         grid.add(hBoxMainMenu, 0, 4);
 
-
         list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         unfreezeButton.setOnAction(EventHandler -> {
             ObservableList<String> selectedItems = list.getSelectionModel().getSelectedItems();
             ArrayList<String> selected = new ArrayList<>(selectedItems);
-            selected.addAll(selectedItems);
             if (selected.isEmpty()) {
                 noAccountsSelectedToUnfreeze();
-            } else {
-                accountsSelectedToUnfreeze();
+            } if (!selected.isEmpty()){
                 controller.askAdminToUnfreezeUsers(selected);
+                accountsSelectedToUnfreeze();
             }
         });
 
-        backButton.setOnAction(actionEvent -> freezeUsers());
+        mainMenuButton.setOnAction(actionEvent -> initialScreen());
         scene = new Scene(grid, width, height);
         stage.setScene(scene);
         stage.show();
     }
 
-                /**
+
+
+
+    /**
      * This method informs the Admin user that they have not selected any accounts to be unfrozen.
      */
     public void noAccountsSelectedToUnfreeze() {
@@ -400,7 +402,7 @@ public class AdminGUI implements RunnableGUI {
         GridPane grid = (GridPane) scene.getRoot();
         Text message = new Text(presenter.unfreezeAccountsHeading(true));
         if (!grid.getChildren().contains(message)) {
-            grid.add(message, 0, 7, 1, 1);
+            grid.add(message, 0, 8, 1, 1);
         }
     }
 
@@ -441,10 +443,10 @@ public class AdminGUI implements RunnableGUI {
 
         hBoxAddItemsButton.setAlignment(Pos.BOTTOM_RIGHT);
         hBoxAddItemsButton.getChildren().add(addItemsButton);
-        Button backButton = new Button("Back");
+        Button mainMenuButton = new Button("Main Menu");
         HBox hBoxMainMenu = new HBox(10);
         hBoxMainMenu.setAlignment(Pos.BOTTOM_LEFT);
-        hBoxMainMenu.getChildren().add(backButton);
+        hBoxMainMenu.getChildren().add(mainMenuButton);
 
         grid.add(selectMultiple, 0, 1);
         grid.add(list, 0, 2);
@@ -458,17 +460,14 @@ public class AdminGUI implements RunnableGUI {
             ArrayList<Integer> conversion = new ArrayList<>(selectedItems);
             ArrayList<String> selected = new ArrayList<>();
             ArrayList<String> notSelected = new ArrayList<>();
-
             for(Integer itemNum : conversion) {
                 selected.add(itemsInList.get(itemNum));
             }
-
             for (String item : itemsInList) {
                 if (!selected.contains(item)) {
                     notSelected.add(item);
                 }
             }
-
             if (!selected.isEmpty() || !notSelected.isEmpty()) {
                 try {
                     controller.askAdminToReviewItems(selected, notSelected);
@@ -481,8 +480,7 @@ public class AdminGUI implements RunnableGUI {
                 reviewItems();
             }
         });
-
-        backButton.setOnAction(actionEvent -> unfreezeUsers());
+        mainMenuButton.setOnAction(actionEvent -> initialScreen());
 
         scene = new Scene(grid, width, height);
         stage.setScene(scene);
@@ -533,15 +531,15 @@ public class AdminGUI implements RunnableGUI {
         HBox hBoxSetThreshold = new HBox(10);
         hBoxSetThreshold.setAlignment(Pos.BOTTOM_RIGHT);
         hBoxSetThreshold.getChildren().add(setThresholdButton);
-        Button back = new Button("Back");
-        HBox hBoxBack = new HBox(10);
-        hBoxBack.setAlignment(Pos.BOTTOM_LEFT);
-        hBoxBack.getChildren().add(back);
+        Button mainMenuButton = new Button("Main Menu");
+        HBox hBoxMainMenu = new HBox(10);
+        hBoxMainMenu.setAlignment(Pos.BOTTOM_LEFT);
+        hBoxMainMenu.getChildren().add(mainMenuButton);
 
         grid.add(lendingThresholdLabel, 0, 1);
         grid.add(lendingThresholdField, 0, 2);
         grid.add(hBoxSetThreshold, 0, 3);
-        grid.add(hBoxBack, 0, 5);
+        grid.add(hBoxMainMenu, 0, 5);
 
         setThresholdButton.setOnAction(actionEvent -> {
             if (controller.IsAnIntegerOrZero(lendingThresholdField.getText())) {
@@ -552,7 +550,7 @@ public class AdminGUI implements RunnableGUI {
                 setLendingThreshold();
             }
         });
-        back.setOnAction(actionEvent -> reviewItems());
+        mainMenuButton.setOnAction(actionEvent -> initialScreen());
         scene = new Scene(grid, width, height);
         stage.setScene(scene);
         stage.show();
@@ -589,15 +587,15 @@ public class AdminGUI implements RunnableGUI {
         HBox hBoxSetThreshold = new HBox(10);
         hBoxSetThreshold.setAlignment(Pos.BOTTOM_RIGHT);
         hBoxSetThreshold.getChildren().add(setThresholdButton);
-        Button back = new Button("Back");
-        HBox hBoxBack = new HBox(10);
-        hBoxBack.setAlignment(Pos.BOTTOM_LEFT);
-        hBoxBack.getChildren().add(back);
+        Button mainMenuButton = new Button("Main Menu");
+        HBox hBoxMainMenu = new HBox(10);
+        hBoxMainMenu.setAlignment(Pos.BOTTOM_LEFT);
+        hBoxMainMenu.getChildren().add(mainMenuButton);
 
         grid.add(limitThresholdLabel, 0, 1);
         grid.add(limitThresholdField, 0, 2);
         grid.add(hBoxSetThreshold, 0, 3);
-        grid.add(hBoxBack, 0 ,5);
+        grid.add(hBoxMainMenu, 0 ,5);
 
 
         setThresholdButton.setOnAction(actionEvent -> {
@@ -609,7 +607,7 @@ public class AdminGUI implements RunnableGUI {
                 setLimitOfTransactionsThreshold();
             }
         });
-        back.setOnAction(actionEvent -> setLendingThreshold());
+        mainMenuButton.setOnAction(actionEvent -> initialScreen());
         scene = new Scene(grid, width, height);
         stage.setScene(scene);
         stage.show();
@@ -645,15 +643,15 @@ public class AdminGUI implements RunnableGUI {
         HBox hBoxSetThreshold = new HBox(10);
         hBoxSetThreshold.setAlignment(Pos.BOTTOM_RIGHT);
         hBoxSetThreshold.getChildren().add(setThresholdButton);
-        Button back = new Button("Back");
-        HBox hBoxBack = new HBox(10);
-        hBoxBack.setAlignment(Pos.BOTTOM_LEFT);
-        hBoxBack.getChildren().add(back);
+        Button mainMenuButton = new Button("Main Menu");
+        HBox hBoxMainMenu = new HBox(10);
+        hBoxMainMenu.setAlignment(Pos.BOTTOM_LEFT);
+        hBoxMainMenu.getChildren().add(mainMenuButton);
 
         grid.add(limitThresholdLabel, 0, 1);
         grid.add(limitThresholdField, 0, 2);
         grid.add(hBoxSetThreshold, 0, 3);
-        grid.add(hBoxBack,0,5);
+        grid.add(hBoxMainMenu,0,5);
 
         setThresholdButton.setOnAction(actionEvent -> {
             if (controller.IsAnIntegerOrOne(limitThresholdField.getText())) {
@@ -665,7 +663,7 @@ public class AdminGUI implements RunnableGUI {
             }
 
         });
-        back.setOnAction(actionEvent -> setLimitOfTransactionsThreshold());
+        mainMenuButton.setOnAction(actionEvent -> initialScreen());
         scene = new Scene(grid, width, height);
         stage.setScene(scene);
         stage.show();
@@ -701,15 +699,15 @@ public class AdminGUI implements RunnableGUI {
         HBox hBoxSetThreshold = new HBox(10);
         hBoxSetThreshold.setAlignment(Pos.BOTTOM_RIGHT);
         hBoxSetThreshold.getChildren().add(setThresholdButton);
-        Button back = new Button("Back");
-        HBox hBoxBack = new HBox(10);
-        hBoxBack.setAlignment(Pos.BOTTOM_LEFT);
-        hBoxBack.getChildren().add(back);
+        Button mainMenuButton = new Button("Main Menu");
+        HBox hBoxMainMenu = new HBox(10);
+        hBoxMainMenu.setAlignment(Pos.BOTTOM_LEFT);
+        hBoxMainMenu.getChildren().add(mainMenuButton);
 
         grid.add(limitThresholdLabel, 0, 1);
         grid.add(limitThresholdField, 0, 2);
         grid.add(hBoxSetThreshold, 0, 3);
-        grid.add(hBoxBack, 0, 5);
+        grid.add(hBoxMainMenu, 0, 5);
 
         setThresholdButton.setOnAction(actionEvent -> {
             if (controller.IsAnIntegerOrZero(limitThresholdField.getText())) {
@@ -720,7 +718,7 @@ public class AdminGUI implements RunnableGUI {
                 setLimitOfEdits();
             }
         });
-        back.setOnAction(actionEvent -> setLimitOfIncompleteTrades());
+        mainMenuButton.setOnAction(actionEvent -> setLimitOfIncompleteTrades());
         scene = new Scene(grid, width, height);
         stage.setScene(scene);
         stage.show();
@@ -752,15 +750,15 @@ public class AdminGUI implements RunnableGUI {
         HBox hBoxSetThreshold = new HBox(10);
         hBoxSetThreshold.setAlignment(Pos.BOTTOM_RIGHT);
         hBoxSetThreshold.getChildren().add(setThresholdButton);
-        Button back = new Button("Back");
-        HBox hBoxBack = new HBox(10);
-        hBoxBack.setAlignment(Pos.BOTTOM_LEFT);
-        hBoxBack.getChildren().add(back);
+        Button mainMenuButton = new Button("Main Menu");
+        HBox hBoxMainMenu = new HBox(10);
+        hBoxMainMenu.setAlignment(Pos.BOTTOM_LEFT);
+        hBoxMainMenu.getChildren().add(mainMenuButton);
 
         grid.add(limitThresholdLabel, 0, 1);
         grid.add(limitThresholdField, 0, 2);
         grid.add(hBoxSetThreshold, 0, 3);
-        grid.add(hBoxBack, 0 ,5);
+        grid.add(hBoxMainMenu, 0 ,5);
 
         setThresholdButton.setOnAction(actionEvent -> {
             if (controller.IsAnIntegerOrZero(limitThresholdField.getText())) {
@@ -771,7 +769,7 @@ public class AdminGUI implements RunnableGUI {
                 setLimitOfEdits();
             }
         });
-        back.setOnAction(actionEvent -> setLimitOfEdits());
+        mainMenuButton.setOnAction(actionEvent -> initialScreen());
         scene = new Scene(grid, width, height);
         stage.setScene(scene);
         stage.show();
@@ -803,15 +801,15 @@ public class AdminGUI implements RunnableGUI {
         HBox hBoxSetThreshold = new HBox(10);
         hBoxSetThreshold.setAlignment(Pos.BOTTOM_RIGHT);
         hBoxSetThreshold.getChildren().add(setThresholdButton);
-        Button back = new Button("Back");
-        HBox hBoxBack = new HBox(10);
-        hBoxBack.setAlignment(Pos.BOTTOM_LEFT);
-        hBoxBack.getChildren().add(back);
+        Button mainMenuButton = new Button("Main Menu");
+        HBox hBoxMainMenu = new HBox(10);
+        hBoxMainMenu.setAlignment(Pos.BOTTOM_LEFT);
+        hBoxMainMenu.getChildren().add(mainMenuButton);
 
         grid.add(limitThresholdLabel, 0, 1);
         grid.add(limitThresholdField, 0, 2);
         grid.add(hBoxSetThreshold, 0, 3);
-        grid.add(hBoxBack, 0 ,5);
+        grid.add(hBoxMainMenu, 0 ,5);
 
         setThresholdButton.setOnAction(actionEvent -> {
             if (controller.IsAnIntegerOrZero(limitThresholdField.getText())) {
@@ -822,7 +820,7 @@ public class AdminGUI implements RunnableGUI {
                 setLimitOfEdits();
             }
         });
-        back.setOnAction(actionEvent -> setGoldThreshold());
+        mainMenuButton.setOnAction(actionEvent -> initialScreen());
         scene = new Scene(grid, width, height);
         stage.setScene(scene);
         stage.show();
@@ -896,14 +894,14 @@ public class AdminGUI implements RunnableGUI {
 
         hBoxConfirmToUndo.setAlignment(Pos.BOTTOM_RIGHT);
         hBoxConfirmToUndo.getChildren().add(confirmToUndo);
-        Button back = new Button("Back");
-        HBox hBoxBack = new HBox(10);
-        hBoxBack.setAlignment(Pos.BOTTOM_LEFT);
-        hBoxBack.getChildren().add(back);
+        Button mainMenuButton = new Button("Main Menu");
+        HBox hBoxMainMenu = new HBox(10);
+        hBoxMainMenu.setAlignment(Pos.BOTTOM_LEFT);
+        hBoxMainMenu.getChildren().add(mainMenuButton);
 
         grid.add(list, 0, 1);
         grid.add(hBoxConfirmToUndo, 0, 4);
-        grid.add(back, 0 ,5);
+        grid.add(hBoxMainMenu, 0 ,5);
 
         confirmToUndo.setOnAction(actionEvent -> {
             try {
@@ -912,7 +910,7 @@ public class AdminGUI implements RunnableGUI {
                 e.printStackTrace();
             }
         });
-        back.setOnAction(actionEvent -> setSilverThreshold());
+        mainMenuButton.setOnAction(actionEvent -> initialScreen());
         scene = new Scene(grid, width, height);
         stage.setScene(scene);
         stage.show();
