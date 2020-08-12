@@ -18,7 +18,7 @@ import org.json.JSONObject;
 import tradegateway.TradeModel;
 import trademisc.RunnableGUI;
 import useradapters.ProfileController;
-import useradapters.UserGUI;
+import useradapters.UserMenuGUI;
 import viewingadapters.ViewingTradesController;
 
 import java.text.DateFormat;
@@ -114,7 +114,7 @@ public class TradeGUI implements RunnableGUI {
             }
         });
 
-        backButtonBtn.setOnAction(actionEvent -> new UserGUI(stage, width, height, tradeModel, username).initialScreen());
+        backButtonBtn.setOnAction(actionEvent -> new UserMenuGUI(stage, width, height, tradeModel, username).initialScreen());
 
 
         scene = new Scene(grid, width, height);
