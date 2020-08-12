@@ -48,7 +48,7 @@ public class AdminPresenter extends TextPresenter {
      * @return Returns a string to inform that the username has been taken.
      */
     public String usernameTaken(String username) {
-        return "Username " + username + " is taken. Please try again.\n";
+        return "Username " + username + " is taken.";
     }
 
     /**
