@@ -22,7 +22,7 @@ public class UserManager implements Serializable {
         tradingUsers = new HashMap<>();
         adminUsers = new HashMap<>();
         unfreezeRequests = new HashSet<>();
-        tradingThreshold = 0;
+        tradingThreshold = 5;
         silverThreshold = 3;
         goldThreshold = 5;
         User initialAdmin = new User("Initial Admin", "ia", "initialize");

@@ -61,6 +61,7 @@ public class DemoTradeSystem {
         tradeModel.getUserManager().createTradingUser("U_3", "u3", "u3", "Edmonton");
         tradeModel.getUserManager().createTradingUser("U_4", "u4", "u4", "Brampton");
 
+
         String[] users = new String[] {"u1", "u2", "u3", "u4"};
         for (String username: users) {
             for (int i = 0; i < 5; ++i) {
@@ -100,7 +101,7 @@ public class DemoTradeSystem {
         tradeModel.getUserManager().markUserForUnfreezing("U_1");
         tradeModel.getUserManager().markUserForUnfreezing("U_2");
         tradeModel.getUserManager().markUserForUnfreezing("U_3");
-        tradeModel.getUserManager().markUserForUnfreezing("U_4");
+
 
 
         // DEMO  --- END

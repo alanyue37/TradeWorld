@@ -1,7 +1,6 @@
 package adminadapters;
 
 import trademisc.TextPresenter;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,62 +10,42 @@ import java.util.List;
 public class AdminPresenter extends TextPresenter {
 
     /**
-     * This method prints the menu options to the screen and asks the admin user to enter a corresponding number to
-     * select a menu option. The number determines which method to call in the admin controller.
-     * @param username The username of the currently logged in admin User
-     */
-    public String startMenu() {
-        return "Add new admins, Freeze user accounts, Unfreeze user accounts, Review newly added items, " +
-                "Set the lending threshold, Set the limit of number of weekly transactions, " +
-                "Set the limit of number of incomplete transactions, Set the limit of number of edits to a meeting";
-
-
-       // System.out.println("\n*** " + username + " Admin Menu***\n");
-        //List<String> options = new ArrayList<>();
-        //options.add("Add new admins");
-        //options.add("Freeze user accounts");
-        //options.add("Unfreeze user accounts");
-        //options.add("Review newly added items");
-        //options.add("Set the lending threshold");
-       // options.add("Set the limit of number of weekly transactions");
-        //options.add("Set the limit of number of incomplete transactions");
-        //options.add("Set the limit of number of edits to a meeting");
-       // printList(options, true, false);
-        //System.out.println("\nPlease enter the # of your choice or \"exit\" to exit: ");
-    }
-
-    /**
-     * This method prompts the admin user to enter the name of another admin user.
+     * This method returns a string asking the admin user to enter the name of another admin user.
+     * @return Returns a string to enter the new admin name.
      */
     public String accountEnterName() {
-        return "Enter name: ";
+        return "Enter Name: ";
     }
 
     /**
-     * This method prompts the admin user to enter the username of another admin user.
+     * This method returns a string asking the admin user to enter the username of another admin user.
+     * @return Returns a string to enter the new admin username.
      */
     public String accountEnterUsername() {
         return "Enter Username: ";
     }
 
     /**
-     * This method prompts the admin user to enter the password of another admin user.
+     * This method returns a string asking the admin user to enter the password of another admin user.
+     * @return Returns a string to enter the new admin password.
      */
     public String accountEnterPassword() {
-        return "Enter password: ";
+        return "Enter Password: ";
     }
 
     /**
-     * Prints message that the admin new account has been successfully created.
-     * @param username  The username of the Admin User inputs.
+     * This method returns a message that the admin new account has been successfully created.
+     * @param username  The username that the Admin user inputs.
+     * @return Returns a string to inform that a new Admin has been created.
      */
     public String newAccountCreated(String username) {
         return "New admin account " + username + " created.\n";
     }
 
     /**
-     * Prints message that the inputted username for new account has been taken.
+     * This method returns a message that the inputted username for the new account has been taken.
      * @param username  The username of the Admin User inputs.
+     * @return Returns a string to inform that the username has been taken.
      */
     public String usernameTaken(String username) {
         return "Username " + username + " is taken. Please try again.\n";
@@ -84,18 +63,13 @@ public class AdminPresenter extends TextPresenter {
         }
         else {
             return "No accounts have been selected to be frozen.";
-
-                    //"The following accounts have exceeded one or more of the system thresholds.\n" +
-                           // "For each account enter 1 to freeze or 0 to skip.\n");
         }
     }
     /**
      * This method prompts the admin user to enter 1 to freeze this particular account or 0 to skip.
-     * @param user  The account that the admin can freeze.
      */
-    public String freezeAccounts(String user) {
-        return "This account has reached the limits. Enter 1 to freeze this account or 0 to skip. " +
-                "\n Freeze Account for:" + user;  // Delete this method?
+    public String freezeAccounts() {
+        return "These accounts have reached the limits.\n";
     }
 
     /**
@@ -154,8 +128,8 @@ public class AdminPresenter extends TextPresenter {
      * a non-lending transaction (i.e., just borrow and not lend).
      */
     public String lendingThreshold() {
-        return "How much does the user have to (at least) lend than they \nborrow in order to make a non-lending transaction? \nEnter a whole " +
-                "number (minimum 0) for the Lending Threshold: ";
+        return "How much does the user have to (at least) lend than \nthey borrow in order to make a non-lending transaction? \nEnter a whole " +
+                "number (minimum 0) for the new limit: ";
     }
 
     /**
@@ -163,7 +137,7 @@ public class AdminPresenter extends TextPresenter {
      * week (i.e., 7 days).
      */
     public String limitOfTransactions() {
-        return "What is the maximum number of transactions a user can conduct in a week? \nEnter a whole number (minimum 1) for the new limit: ";
+        return "What is the maximum number of transactions a user \ncan conduct in a week? \nEnter a whole number (minimum 1) for the new limit: ";
     }
 
     /**
@@ -171,7 +145,7 @@ public class AdminPresenter extends TextPresenter {
      * before the account gets frozen.
      */
     public String limitOfIncompleteTransactions() {
-        return "After how many incomplete transactions should a user be flagged for freezing? \nEnter a whole number (minimum 1) for the new threshold: ";
+        return "After how many incomplete transactions should a \nuser be flagged for freezing? \nEnter a whole number (minimum 1) for the new limit: ";
     }
 
     /**
@@ -206,9 +180,26 @@ public class AdminPresenter extends TextPresenter {
     /**
      * This method prints to the screen and signals to the user that the system has successfully ended.
      */
-    public String exit() {
+    public String loggedOut() {
         return "See you soon!";
     }
-
-
 }
+
+
+ /* *
+    /**
+     * This method prints the menu options to the screen and asks the admin user to enter a corresponding number to
+     * select a menu option. The number determines which method to call in the admin controller.
+     *//*
+    public List<String>  startMenu() {
+        List<String> options = new ArrayList<>();
+        options.add("Add new admins");
+        options.add("Freeze user accounts");
+        options.add("Unfreeze user accounts");
+        options.add("Review newly added items");
+        options.add("Set the lending threshold");
+        options.add("Set the limit of number of weekly transactions");
+        options.add("Set the limit of number of incomplete transactions");
+        options.add("Set the limit of number of edits to a meeting");
+        return options;
+    }*/
