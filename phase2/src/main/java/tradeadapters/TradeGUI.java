@@ -3,9 +3,14 @@ package tradeadapters;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -13,6 +18,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import tradegateway.TradeModel;
@@ -21,11 +27,14 @@ import useradapters.ProfileController;
 import useradapters.UserGUI;
 import viewingadapters.ViewingTradesController;
 
+import javax.swing.*;
+import java.awt.*;
 import java.text.ParseException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class TradeGUI implements RunnableGUI {
@@ -71,6 +80,13 @@ public class TradeGUI implements RunnableGUI {
         Button confirmTradesBtn = new Button("Confirm real life meeting of trades");
         Button viewTradesBtn = new Button("View ongoing and completed trades");
         Button backButtonBtn = new Button("Go back");
+
+        initiateTradeBtn.setMaxWidth(500);
+        proposedTradesBtn.setMaxWidth(500);
+        confirmTradesBtn.setMaxWidth(500);
+        viewTradesBtn.setMaxWidth(500);
+        backButtonBtn.setMaxWidth(500);
+
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -324,15 +340,17 @@ public class TradeGUI implements RunnableGUI {
 
     public void getAvailableItems() {
         Text title = new Text("Available items");
-        title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 15));
 
         Map<String, String> infoToId = initiateTradeController.getAvailableItems();
 
         //Vbox
         VBox mainLayout = new VBox();
         mainLayout.setPrefWidth(300);
-        mainLayout.setSpacing(20);
+        mainLayout.setSpacing(10);
         mainLayout.setPadding(new Insets(25, 25, 25, 25));
+        mainLayout.getChildren().add(title);
+        mainLayout.setAlignment(Pos.CENTER);
 
         ListView<String> list = new ListView<>();
         ObservableList<String> availableItems = FXCollections.observableArrayList();
@@ -340,17 +358,22 @@ public class TradeGUI implements RunnableGUI {
         list.setItems(availableItems);
         list.setPlaceholder(new Label("There are no available items for trading."));
 
+        ScrollPane scrollPane = new ScrollPane();
+
+        VBox itembuttons = new VBox();
+        itembuttons.setSpacing(20);
+        itembuttons.setAlignment(Pos.CENTER);
+
         AtomicReference<String> selected = new AtomicReference<>("");
         ToggleGroup item = new ToggleGroup();
         for (String info : availableItems) {
             RadioButton radioBtn = new RadioButton(info);
             radioBtn.setToggleGroup(item);
-            mainLayout.getChildren().add(radioBtn);
-            radioBtn.setOnAction(actionEvent -> {
-                selected.set(info);
-            });
-
+            itembuttons.getChildren().add(radioBtn);
+            radioBtn.setOnAction(actionEvent -> selected.set(info));
         }
+        scrollPane.setContent(itembuttons);
+
 
         Label selectType = new Label("Select the type of trade you'd like to make.");
         Button oneWayTemporary = new Button("One way temporary");
@@ -359,7 +382,14 @@ public class TradeGUI implements RunnableGUI {
         Button twoWayPermanent = new Button("Two way permanent");
         Button backButton = new Button("Back");
 
+        VBox typeButtons = new VBox();
+        typeButtons.getChildren().addAll(selectType, oneWayPermanent,oneWayTemporary, twoWayPermanent, twoWayTemporary);
+        typeButtons.setAlignment(Pos.CENTER);
+        typeButtons.setSpacing(10);
+
         Label messageBox = new Label();
+        messageBox.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
+        messageBox.setAlignment(Pos.CENTER);
 
         backButton.setOnAction(actionEvent -> initialScreen());
 
@@ -429,7 +459,7 @@ public class TradeGUI implements RunnableGUI {
             }
         });
 
-        mainLayout.getChildren().addAll(messageBox, backButton, selectType, oneWayTemporary, oneWayPermanent,  twoWayTemporary, twoWayPermanent);
+        mainLayout.getChildren().addAll(scrollPane, messageBox, backButton, typeButtons);
         backButton.setOnAction(actionEvent -> initialScreen());
 
 
@@ -448,11 +478,13 @@ public class TradeGUI implements RunnableGUI {
             infoToId.put(tradeModel.getItemManager().getItemInfo(id), id);
         }
 
+
         //Vbox
         VBox mainLayout = new VBox();
         mainLayout.setPrefWidth(300);
         mainLayout.setSpacing(20);
         mainLayout.setPadding(new Insets(25, 25, 25, 25));
+        mainLayout.setAlignment(Pos.CENTER);
 
         ListView<String> list = new ListView<>();
         ObservableList<String> availableItems = FXCollections.observableArrayList();
@@ -462,17 +494,24 @@ public class TradeGUI implements RunnableGUI {
         Button confirmBtn = new Button("Confirm");
 
         Label messageText = new Label();
+        messageText.setFont(Font.font("Tahoma", FontWeight.BOLD, 20));
+
+        ScrollPane scrollPane = new ScrollPane();
+
+        VBox itemBtns = new VBox();
+        itemBtns.setSpacing(20);
+        itemBtns.setAlignment(Pos.CENTER);
+
 
         AtomicReference<String> selected = new AtomicReference<>("");
         ToggleGroup item = new ToggleGroup();
         for (String info : availableItems) {
             RadioButton radioBtn = new RadioButton(info);
             radioBtn.setToggleGroup(item);
-            mainLayout.getChildren().add(radioBtn);
-            radioBtn.setOnAction(actionEvent -> {
-                selected.set(info);
-            });
+            itemBtns.getChildren().add(radioBtn);
+            radioBtn.setOnAction(actionEvent -> selected.set(info));
         }
+        scrollPane.setContent(itemBtns);
 
         confirmBtn.setOnAction(actionEvent -> {
             if (selected.toString().equals("")){
@@ -483,7 +522,7 @@ public class TradeGUI implements RunnableGUI {
             }
         });
 
-        mainLayout.getChildren().addAll(messageText, confirmBtn);
+        mainLayout.getChildren().addAll(scrollPane, messageText, confirmBtn);
 
         scene = new Scene(mainLayout, width, height);
         stage.setScene(scene);
@@ -519,6 +558,7 @@ public class TradeGUI implements RunnableGUI {
         backButton.setOnAction(actionEvent -> initialScreen());
 
         Label messageLabel = new Label();
+        messageLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
 
         grid.add(tradeDate, 0, 6, 2, 1);
         grid.add(timeInput, 4, 6, 2, 1);
@@ -526,7 +566,7 @@ public class TradeGUI implements RunnableGUI {
         grid.add(userInputHour, 4, 7, 2, 1);
         grid.add(tradeLocation, 0, 9, 2, 1);
         grid.add(userInputLocation, 0, 10, 2, 1);
-        grid.add(messageLabel, 0,12,2,1);
+        grid.add(messageLabel, 0,12,4,1);
         grid.add(backButton,0,13,2,1 );
         grid.add(confirmBtn, 4, 13, 2, 1);
 
@@ -537,7 +577,7 @@ public class TradeGUI implements RunnableGUI {
             } else{
                 initiateTradeInfo.put("location", userInputLocation.getText());
                 LocalDate ld = pickDate.getValue();
-                String dateString = String.valueOf(ld.getDayOfMonth()) +"/" +String.valueOf(ld.getMonthValue()) +"/" + String.valueOf(ld.getYear()) + " " + userInputHour.getText();
+                String dateString = (ld.getDayOfMonth()) +"/" +(ld.getMonthValue()) +"/" + (ld.getYear()) + " " + userInputHour.getText();
                 initiateTradeInfo.put("date", dateString);
                 try {
                     initiateTradeController.createTrade(initiateTradeInfo);
@@ -560,7 +600,7 @@ public class TradeGUI implements RunnableGUI {
         TextField commentInput = new TextField();
         commentInput.setPromptText("Leave a comment");
         TextField ratingInput = new TextField();
-        ratingInput.setPromptText("Rating you want to give (1-5)");
+        ratingInput.setPromptText("Rating out of 5 (1-5)");
         TextField tradeIdInput = new TextField();
         tradeIdInput.setPromptText("Trade Id");
 
@@ -582,6 +622,8 @@ public class TradeGUI implements RunnableGUI {
         hbox2.setPadding(new Insets(25, 25, 25, 25));
         hbox2.setSpacing(10);
         hbox2.getChildren().addAll(getTradeListView());
+        hbox2.setAlignment(Pos.CENTER);
+
 
 
         VBox vbox = new VBox();
@@ -617,9 +659,23 @@ public class TradeGUI implements RunnableGUI {
         }
         List<String> tradeInfo = new ArrayList<>();
         for (JSONObject info: jsonInfo){
-            String allInfo = "Trade ID: " + info.getString("Trade ID") + "\nType: " + info.getString("Type") +
-                    "\nStatus: " + info.getString("Status");
-            tradeInfo.add(allInfo);
+            JSONArray users = info.getJSONArray("Users involved");
+            JSONArray items = info.getJSONArray("Items involved");
+
+            String tradeId = info.getString("Trade ID");
+            StringBuilder allInfo = new StringBuilder("Trade ID: " + tradeId + "\nType: " + info.getString("Type") +
+                    "\nStatus: " + info.getString("Status") + "\nUsers involved: " + users.toString() +
+                    "\nItems involved" + items.toString());
+
+            List<JSONObject> meetingJson = tradeModel.getMeetingManager().getMeetingsInfo(tradeId);
+            for (JSONObject meetingInfo: meetingJson){
+                String thisMeeting = "\nMeeting ID: " + meetingInfo.getString("Meeting ID") + "\n\tStatus: " +
+                        meetingInfo.getString("Status") + "\n\tLocation: " + meetingInfo.getString("Location") +
+                        "\n\tTime" + meetingInfo.getString("Time") + "\n\tNumber of Confirmations: " +
+                        meetingInfo.getString("Number of Confirmations");
+                allInfo.append(thisMeeting);
+            }
+            tradeInfo.add(allInfo.toString());
         }
 
         ListView<String> list = new ListView<>();
