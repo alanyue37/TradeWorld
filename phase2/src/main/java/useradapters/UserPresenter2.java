@@ -26,12 +26,12 @@ public class UserPresenter2 {
         List<String> options = new ArrayList<>();
         options.add("Add items to inventory");
         options.add("Add items to wishlist");
-        options.add("View inventory, wishlist or an user's profile");
-        options.add("View trading history");
-        options.add("Initiate trades");
-        options.add("Manage proposed trades");
-        options.add("Confirm trades");
-        options.add("Manage/view your account settings");
+        options.add("Manage trades");
+//        options.add("View trading history");
+//        options.add("Initiate trades");
+//        options.add("Manage proposed trades");
+//        options.add("Confirm trades");
+        options.add("Manage your account settings");
         return options;
     }
 
@@ -42,7 +42,7 @@ public class UserPresenter2 {
     /**
      * Return user's own inventory.
      */
-    public List<String[]> viewInventory() throws IOException {
+    public List<String[]> viewInventory() {
         Set<String> userInventory =  tradeModel.getItemManager().getInventory(username);
         itemsToShow = new ArrayList<>();
         itemsToShow.addAll(userInventory);
@@ -52,7 +52,7 @@ public class UserPresenter2 {
     /**
      * Return system inventory of users in same city (except items in current user's inventory).
      */
-    public List<String[]> viewAllItems() throws IOException {
+    public List<String[]> viewAllItems() {
         itemsToShow = new ArrayList<>();
         Set<String> items = tradeModel.getItemManager().getItemsByStage("common");
         if (tradeModel.getUserManager().getRankByUsername(username).equals("gold")) {
@@ -74,7 +74,7 @@ public class UserPresenter2 {
     /**
      * Return user's wishlist.
      */
-    public List<String[]> viewWishlist() throws IOException {
+    public List<String[]> viewWishlist() {
         Set<String> userWishlist =  tradeModel.getUserManager().getWishlistByUsername(username);
         itemsToShow = new ArrayList<>();
         itemsToShow.addAll(userWishlist);

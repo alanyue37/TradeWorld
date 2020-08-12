@@ -20,7 +20,7 @@ public class TableViewCreator {
         this.presenter = presenter;
     }
 
-    public TableView<ObservableList<String>> create(String type) throws IOException {
+    public TableView<ObservableList<String>> create(String type) {
 
         switch(type) {
             case "own inventory":

@@ -114,7 +114,7 @@ public class TradeGUI implements RunnableGUI {
             }
         });
 
-        backButtonBtn.setOnAction(actionEvent -> new UserGUI(username, stage, width, height, tradeModel).initialScreen());
+        backButtonBtn.setOnAction(actionEvent -> new UserGUI(stage, width, height, tradeModel, username).initialScreen());
 
 
         scene = new Scene(grid, width, height);

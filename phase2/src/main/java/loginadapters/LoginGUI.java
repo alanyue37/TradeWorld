@@ -124,7 +124,7 @@ public class LoginGUI implements RunnableGUI {
                 if (isAdmin){
                     nextGUI = new AdminGUI(stage, width, height, model);
                 } else {
-                    nextGUI = new UserGUI(usernameField.getText(), stage, width, height, model);
+                    nextGUI = new UserGUI(stage, width, height, model, usernameField.getText());
                 }
                 nextGUI.initialScreen();
             } else {
@@ -175,7 +175,7 @@ public class LoginGUI implements RunnableGUI {
 
         registerButton.setOnAction(actionEvent -> {
             if(controller.newTradingUser(nameField.getText(), usernameField.getText(), passwordField.getText(), cityField.getText())){
-                nextGUI = new UserGUI(usernameField.getText(), stage, width, height, model);
+                nextGUI = new UserGUI(stage, width, height, model, usernameField.getText());
                 nextGUI.initialScreen();
             } else {
                 usernameTaken(nameField.getText());
