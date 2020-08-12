@@ -327,7 +327,7 @@ public class InitiateTradeController implements RunnableController {
         return itemsInfo;
     }
 
-    protected void createTrade(Map<String, String> otherInfo, LocalDate date){
+    protected void createTrade(Map<String, String> otherInfo) throws ParseException {
         String way = otherInfo.get("way");
         String type = otherInfo.get("type");
         List<String> details = new ArrayList<>();
@@ -342,9 +342,9 @@ public class InitiateTradeController implements RunnableController {
             details.add(otherInfo.get("giving"));
             details.add(itemId);
         }
+        String dateString = otherInfo.get("date");
+        Date time = parseDateString(dateString);
         String location = otherInfo.get("location");
-        //Time and date?
-        Date time = new Date(); //TODO: come back
         String tradeId = tradeModel.getTradeManager().addTrade(way, type, details);
         String meetingId = tradeModel.getMeetingManager().createMeeting(location, time, username, tradeId);
         tradeModel.getTradeManager().addMeetingToTrade(tradeId, meetingId);
