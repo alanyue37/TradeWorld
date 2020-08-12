@@ -1,7 +1,6 @@
 package adminadapters;
 
 import trademisc.TextPresenter;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,62 +10,42 @@ import java.util.List;
 public class AdminPresenter extends TextPresenter {
 
     /**
-     * This method prints the menu options to the screen and asks the admin user to enter a corresponding number to
-     * select a menu option. The number determines which method to call in the admin controller.
-     * @param username The username of the currently logged in admin User
-     */
-    public String startMenu() {
-        return "Add new admins, Freeze user accounts, Unfreeze user accounts, Review newly added items, " +
-                "Set the lending threshold, Set the limit of number of weekly transactions, " +
-                "Set the limit of number of incomplete transactions, Set the limit of number of edits to a meeting";
-
-
-       // System.out.println("\n*** " + username + " Admin Menu***\n");
-        //List<String> options = new ArrayList<>();
-        //options.add("Add new admins");
-        //options.add("Freeze user accounts");
-        //options.add("Unfreeze user accounts");
-        //options.add("Review newly added items");
-        //options.add("Set the lending threshold");
-       // options.add("Set the limit of number of weekly transactions");
-        //options.add("Set the limit of number of incomplete transactions");
-        //options.add("Set the limit of number of edits to a meeting");
-       // printList(options, true, false);
-        //System.out.println("\nPlease enter the # of your choice or \"exit\" to exit: ");
-    }
-
-    /**
-     * This method prompts the admin user to enter the name of another admin user.
+     * This method returns a string asking the admin user to enter the name of another admin user.
+     * @return Returns a string to enter the new admin name.
      */
     public String accountEnterName() {
-        return "Enter name: ";
+        return "Enter Name: ";
     }
 
     /**
-     * This method prompts the admin user to enter the username of another admin user.
+     * This method returns a string asking the admin user to enter the username of another admin user.
+     * @return Returns a string to enter the new admin username.
      */
     public String accountEnterUsername() {
         return "Enter Username: ";
     }
 
     /**
-     * This method prompts the admin user to enter the password of another admin user.
+     * This method returns a string asking the admin user to enter the password of another admin user.
+     * @return Returns a string to enter the new admin password.
      */
     public String accountEnterPassword() {
-        return "Enter password: ";
+        return "Enter Password: ";
     }
 
     /**
-     * Prints message that the admin new account has been successfully created.
-     * @param username  The username of the Admin User inputs.
+     * This method returns a message that the admin new account has been successfully created.
+     * @param username  The username that the Admin user inputs.
+     * @return Returns a string to inform that a new Admin has been created.
      */
     public String newAccountCreated(String username) {
-        return "New admin account " + username + " created.\n";
+        return "New admin account created: " + username;
     }
 
     /**
-     * Prints message that the inputted username for new account has been taken.
+     * This method returns a message that the inputted username for the new account has been taken.
      * @param username  The username of the Admin User inputs.
+     * @return Returns a string to inform that the username has been taken.
      */
     public String usernameTaken(String username) {
         return "Username " + username + " is taken. Please try again.\n";
@@ -84,24 +63,18 @@ public class AdminPresenter extends TextPresenter {
         }
         else {
             return "No accounts have been selected to be frozen.";
-
-                    //"The following accounts have exceeded one or more of the system thresholds.\n" +
-                           // "For each account enter 1 to freeze or 0 to skip.\n");
         }
     }
     /**
      * This method prompts the admin user to enter 1 to freeze this particular account or 0 to skip.
-     * @param user  The account that the admin can freeze.
      */
-    public String freezeAccounts(String user) {
-        return "This account has reached the limits. Enter 1 to freeze this account or 0 to skip. " +
-                "\n Freeze Account for:" + user;  // Delete this method?
+    public String freezeAccounts() {
+        return "These accounts have reached the limits.\n";
     }
 
     /**
      * Prints relevant heading for unfreeze account view.
      * Prints no accounts to be unfrozen if empty is true. Otherwise prints instructions.
-     * @param empty True iff no accounts have requested to be unfrozen.
      */
     public String unfreezeAccountsHeading(boolean selected) {
         if (selected) {
@@ -152,54 +125,43 @@ public class AdminPresenter extends TextPresenter {
     /**
      * This method prompts the admin user to set a threshold for how much a user has to lend than borrow to make
      * a non-lending transaction (i.e., just borrow and not lend).
-     * @param current   The current threshold set for how much the user has to lend than borrow to make a non-lending
-     *                  transaction.
      */
     public String lendingThreshold() {
-        return "How many more times (at least) does the user have to lend than they borrow in order to make " +
-                "a non-lending transaction? " + "Enter a whole number (minimum 0) for the Lending Threshold: ";
+        return "How much does the user have to (at least) lend than \nthey borrow in order to make a non-lending transaction? \nEnter a whole " +
+                "number (minimum 0) for the new limit: ";
     }
 
     /**
      * This method prompts the admin user to set a threshold for the number of transaction that a use can make in one
      * week (i.e., 7 days).
-     * @param current   The current threshold set for the number of transactions a user can conduct in a week.
      */
-    public void limitOfTransactions(int current) {
-        System.out.println("What is the maximum number of transactions a user can conduct in a week?");
-        System.out.println("The current limit is: " + current);
-        System.out.println("Enter a whole number (minimum 1) for the new limit: ");
+    public String limitOfTransactions() {
+        return "What is the maximum number of transactions a user \ncan conduct in a week? \nEnter a whole number (minimum 1) for the new limit: ";
     }
 
     /**
      * This method prompts the admin user to set a threshold for the number of incomplete transactions a user can have
      * before the account gets frozen.
-     * @param current   The current threshold set for incomplete transactions.
      */
-    public void limitOfIncompleteTransactions(int current) {
-        System.out.println("After how many incomplete transactions should a user be flagged for freezing?");
-        System.out.println("The current threshold is: " + current);
-        System.out.println("Enter a whole number (minimum 1) for the new threshold: ");
+    public String limitOfIncompleteTransactions() {
+        return "After how many incomplete transactions should a \nuser be flagged for freezing? \nEnter a whole number (minimum 1) for the new limit: ";
     }
 
     /**
      * This method prompts the admin user to set a threshold for the number of edits allowed by the user to change the
      * meeting place and time. The limit of edits should remain 3.
-     * @param current   The current threshold set for the number of edits allowed by the user
      */
-    public void limitOfEdits(int current) {
-        System.out.println("What is the maximum number of times the proposed meeting time for a trade can be edited?");
-        System.out.println("The current limit is: " + current);
-        System.out.println("Enter a whole number (minimum 0) for the new limit: ");
+    public String limitOfEdits() {
+        return "What is the maximum number of times the proposed \nmeeting time for a trade can be edited? \nEnter a whole number (minimum 0) for the new limit: ";
     }
 
-    /**
-     * This method informs the admin user that the input is not accepted by the program.
-     */
-    public void invalidInput() {
-        System.out.println("This is an invalid input.\n Please try again!");
+    public String goldThreshold() {
+        return "What is the credit limit that ranks users gold? \nEnter a whole number (minimum 0) for the new limit: ";
     }
 
+    public String silverThreshold() {
+        return "What is the credit limit that ranks users silver? \nEnter a whole number (minimum 0) for the new limit: ";
+    }
 
     public String enterAtLeastZero() {
         return "Not an integer or is a number less than zero. \n Please try again";
@@ -216,9 +178,26 @@ public class AdminPresenter extends TextPresenter {
     /**
      * This method prints to the screen and signals to the user that the system has successfully ended.
      */
-    public void end() {
-        System.out.println("See you soon!");
+    public String loggedOut() {
+        return "See you soon!";
     }
-
-
 }
+
+
+ /* *
+    /**
+     * This method prints the menu options to the screen and asks the admin user to enter a corresponding number to
+     * select a menu option. The number determines which method to call in the admin controller.
+     *//*
+    public List<String>  startMenu() {
+        List<String> options = new ArrayList<>();
+        options.add("Add new admins");
+        options.add("Freeze user accounts");
+        options.add("Unfreeze user accounts");
+        options.add("Review newly added items");
+        options.add("Set the lending threshold");
+        options.add("Set the limit of number of weekly transactions");
+        options.add("Set the limit of number of incomplete transactions");
+        options.add("Set the limit of number of edits to a meeting");
+        return options;
+    }*/

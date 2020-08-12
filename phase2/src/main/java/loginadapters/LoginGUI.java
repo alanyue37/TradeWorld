@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
@@ -117,7 +118,9 @@ public class LoginGUI implements RunnableGUI {
         }
 
         scene = new Scene(grid, width, height);
+
         stage.setScene(scene);
+
         stage.show();
     }
 
@@ -153,16 +156,28 @@ public class LoginGUI implements RunnableGUI {
         grid.add(hBoxLoginButton, 1, 4);
 
         loginButton.setOnAction(actionEvent -> {
-            if(controller.logIn(isAdmin, usernameField.getText(), passwordField.getText())){
-                model.setCurrentUser(usernameField.getText());
-                if (isAdmin){
-                    nextGUI = new AdminGUI(stage, width, height, model);
-                } else {
-                    nextGUI = new UserMenuGUI(stage, width, height, model, usernameField.getText());
-                }
-                nextGUI.initialScreen();
-            } else {
-                invalidAccount();
+//            if(controller.logIn(isAdmin, usernameField.getText(), passwordField.getText())){
+//                model.setCurrentUser(usernameField.getText());
+//                if (isAdmin){
+//                    nextGUI = new AdminGUI(stage, width, height, model);
+//                } else {
+//                    nextGUI = new UserMenuGUI(stage, width, height, model, usernameField.getText());
+//                }
+//                nextGUI.initialScreen();
+//            } else {
+//                invalidAccount();
+            logInHandler(usernameField.getText(), passwordField.getText(), isAdmin);
+        });
+
+        usernameField.setOnKeyPressed(event -> {
+            if(event.getCode() == KeyCode.ENTER){
+                logInHandler(usernameField.getText(), passwordField.getText(), isAdmin);
+            }
+        });
+
+        passwordField.setOnKeyPressed(event -> {
+            if(event.getCode() == KeyCode.ENTER){
+                logInHandler(usernameField.getText(), passwordField.getText(), isAdmin);
             }
         });
 
@@ -232,5 +247,19 @@ public class LoginGUI implements RunnableGUI {
         backButton.setOnAction(actionEvent -> {
             initialScreen();
         });
+    }
+
+    private void logInHandler(String username, String password, boolean isAdmin) {
+        if(controller.logIn(isAdmin, username, password)){
+            model.setCurrentUser(username);
+            if (isAdmin){
+                nextGUI = new AdminGUI(stage, width, height, model);
+            } else {
+                nextGUI = new UserGUI(stage, width, height, model, username);
+            }
+            nextGUI.initialScreen();
+        } else {
+            invalidAccount();
+        }
     }
 }
