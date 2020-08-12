@@ -56,6 +56,10 @@ public class LogInPresenter implements Iterator<String> {
         prompts.add("Welcome");
     }
 
+    public void tryAgain() {
+        prompts.add("Please try again");
+    }
+
     /**
      * Return a list with the menu options
      */

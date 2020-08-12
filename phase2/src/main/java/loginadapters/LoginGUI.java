@@ -207,7 +207,9 @@ public class LoginGUI implements RunnableGUI {
         grid.add(hBoxRegisterButton, 1, 5);
 
         registerButton.setOnAction(actionEvent -> {
-            if(controller.newTradingUser(nameField.getText(), usernameField.getText(), passwordField.getText(), cityField.getText())){
+            if (nameField.getText().isEmpty() || usernameField.getText().isEmpty() || passwordField.getText().isEmpty() || cityField.getText().isEmpty()) {
+                tryAgain();
+            } else if(controller.newTradingUser(nameField.getText(), usernameField.getText(), passwordField.getText(), cityField.getText())){
                 nextGUI = new UserMenuGUI(stage, width, height, model, usernameField.getText());
                 nextGUI.initialScreen();
             } else {
@@ -219,6 +221,14 @@ public class LoginGUI implements RunnableGUI {
 
         scene = new Scene(grid, width, height);
         stage.setScene(scene);
+    }
+
+    public void tryAgain() {
+        presenter.tryAgain();
+        Text message = new Text(presenter.next());
+        if (!grid.getChildren().contains(message)) {
+            grid.add(message, 0, 10, 1, 1);
+        }
     }
 
     private void backButton() {
