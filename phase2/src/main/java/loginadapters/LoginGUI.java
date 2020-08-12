@@ -15,12 +15,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import tradeadapters.TradeGUI;
 import tradegateway.TradeModel;
 import trademisc.RunnableGUI;
-import useradapters.AddItemGUI;
-import useradapters.AddWishlistGUI;
-import useradapters.ProfileGUI;
 import useradapters.UserMenuGUI;
 
 import java.util.ArrayList;
@@ -85,7 +81,6 @@ public class LoginGUI implements RunnableGUI {
 //        registerBtn.setOnAction(actionEvent -> newAccount());
 //        demoBtn.setOnAction(actionEvent -> {
 //            controller.demo();
-//            // TODO DemoGUI
 //        });
         buttons.get(0).setOnAction(actionEvent -> {
             logIn(false);
@@ -100,7 +95,6 @@ public class LoginGUI implements RunnableGUI {
             controller.demo();
         });
 
-//        GridPane grid = new GridPane();
         grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
@@ -118,9 +112,7 @@ public class LoginGUI implements RunnableGUI {
         }
 
         scene = new Scene(grid, width, height);
-
         stage.setScene(scene);
-
         stage.show();
     }
 
@@ -130,7 +122,6 @@ public class LoginGUI implements RunnableGUI {
 
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
-//        GridPane grid = new GridPane();
         grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
@@ -156,16 +147,6 @@ public class LoginGUI implements RunnableGUI {
         grid.add(hBoxLoginButton, 1, 4);
 
         loginButton.setOnAction(actionEvent -> {
-//            if(controller.logIn(isAdmin, usernameField.getText(), passwordField.getText())){
-//                model.setCurrentUser(usernameField.getText());
-//                if (isAdmin){
-//                    nextGUI = new AdminGUI(stage, width, height, model);
-//                } else {
-//                    nextGUI = new UserMenuGUI(stage, width, height, model, usernameField.getText());
-//                }
-//                nextGUI.initialScreen();
-//            } else {
-//                invalidAccount();
             logInHandler(usernameField.getText(), passwordField.getText(), isAdmin);
         });
 
@@ -255,7 +236,7 @@ public class LoginGUI implements RunnableGUI {
             if (isAdmin){
                 nextGUI = new AdminGUI(stage, width, height, model);
             } else {
-                nextGUI = new UserGUI(stage, width, height, model, username);
+                nextGUI = new UserMenuGUI(stage, width, height, model, username);
             }
             nextGUI.initialScreen();
         } else {
