@@ -1,5 +1,7 @@
 package tradeadapters;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -24,7 +26,7 @@ import org.json.JSONObject;
 import tradegateway.TradeModel;
 import trademisc.RunnableGUI;
 import useradapters.ProfileController;
-import useradapters.UserGUI;
+import useradapters.UserMenuGUI;
 import viewingadapters.ViewingTradesController;
 
 import javax.swing.*;
@@ -131,7 +133,7 @@ public class TradeGUI implements RunnableGUI {
             }
         });
 
-        backButtonBtn.setOnAction(actionEvent -> new UserGUI(stage, width, height, tradeModel, username).initialScreen());
+        backButtonBtn.setOnAction(actionEvent -> new UserMenuGUI(stage, width, height, tradeModel, username).initialScreen());
 
 
         scene = new Scene(grid, width, height);
@@ -168,7 +170,7 @@ public class TradeGUI implements RunnableGUI {
             allTrade.addAll(tradeModel.getMeetingManager().getMeetingsInfo(trades.get(i)));
             StringBuilder allTradeInfo = new StringBuilder();
             for (JSONObject details : allTrade) {
-                allTradeInfo.append(details.toString(4));
+                allTradeInfo.append(details.toString(3).replace("\"", ""));
             }
 
             String tradeId = allTrade.get(0).get("Trade ID").toString();
@@ -258,7 +260,7 @@ public class TradeGUI implements RunnableGUI {
                 details.add(location);
                 DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                 String strDate = dateFormat.format(date);
-                details.add(strDate + time);
+                details.add(strDate + " " + time);
                 proposedTradesController.editMeetingTime(tradeId, details);
             }});
 
@@ -296,7 +298,7 @@ public class TradeGUI implements RunnableGUI {
             allTrade.addAll(tradeModel.getMeetingManager().getMeetingsInfo(tradeId));
             StringBuilder allTradeInfo = new StringBuilder();
             for (JSONObject details : allTrade) {
-                allTradeInfo.append(details.toString(4));
+                allTradeInfo.append(details.toString(3).replace("\"", ""));
             }
 
             GridPane grid = new GridPane();
@@ -558,7 +560,6 @@ public class TradeGUI implements RunnableGUI {
         backButton.setOnAction(actionEvent -> initialScreen());
 
         Label messageLabel = new Label();
-        messageLabel.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
 
         grid.add(tradeDate, 0, 6, 2, 1);
         grid.add(timeInput, 4, 6, 2, 1);
@@ -600,7 +601,7 @@ public class TradeGUI implements RunnableGUI {
         TextField commentInput = new TextField();
         commentInput.setPromptText("Leave a comment");
         TextField ratingInput = new TextField();
-        ratingInput.setPromptText("Rating out of 5 (1-5)");
+        ratingInput.setPromptText("Rating you want to give (1-5)");
         TextField tradeIdInput = new TextField();
         tradeIdInput.setPromptText("Trade Id");
 
@@ -622,8 +623,6 @@ public class TradeGUI implements RunnableGUI {
         hbox2.setPadding(new Insets(25, 25, 25, 25));
         hbox2.setSpacing(10);
         hbox2.getChildren().addAll(getTradeListView());
-        hbox2.setAlignment(Pos.CENTER);
-
 
 
         VBox vbox = new VBox();
@@ -651,37 +650,22 @@ public class TradeGUI implements RunnableGUI {
 
         //trades
         List<JSONObject> jsonInfo = new ArrayList<>();
-        for (String id :tradeModel.getTradeManager().getTradesOfUser(username, "ongoing")) {
+        for (String id : tradeModel.getTradeManager().getTradesOfUser(username, "ongoing")) {
             jsonInfo.add(tradeModel.getTradeManager().getTradeInfo(id));
         }
-        for (String id: tradeModel.getTradeManager().getTradesOfUser(username, "completed")){
+        for (String id : tradeModel.getTradeManager().getTradesOfUser(username, "completed")){
             jsonInfo.add(tradeModel.getTradeManager().getTradeInfo(id));
         }
         List<String> tradeInfo = new ArrayList<>();
-        for (JSONObject info: jsonInfo){
-            JSONArray users = info.getJSONArray("Users involved");
-            JSONArray items = info.getJSONArray("Items involved");
-
-            String tradeId = info.getString("Trade ID");
-            StringBuilder allInfo = new StringBuilder("Trade ID: " + tradeId + "\nType: " + info.getString("Type") +
-                    "\nStatus: " + info.getString("Status") + "\nUsers involved: " + users.toString() +
-                    "\nItems involved" + items.toString());
-
-            List<JSONObject> meetingJson = tradeModel.getMeetingManager().getMeetingsInfo(tradeId);
-            for (JSONObject meetingInfo: meetingJson){
-                String thisMeeting = "\nMeeting ID: " + meetingInfo.getString("Meeting ID") + "\n\tStatus: " +
-                        meetingInfo.getString("Status") + "\n\tLocation: " + meetingInfo.getString("Location") +
-                        "\n\tTime" + meetingInfo.getString("Time") + "\n\tNumber of Confirmations: " +
-                        meetingInfo.getString("Number of Confirmations");
-                allInfo.append(thisMeeting);
-            }
-            tradeInfo.add(allInfo.toString());
+        for (JSONObject info : jsonInfo){
+            String allInfo = info.toString(3).replace("\"", "");
+            tradeInfo.add(allInfo);
         }
 
         ListView<String> list = new ListView<>();
         ObservableList<String> trades = FXCollections.observableArrayList(tradeInfo);
         list.setItems(trades);
-        list.setPlaceholder(new Label("There are no trades to be viewed"));
+        list.setPlaceholder(new Label("There are no trades to be viewed."));
         list.setPrefHeight(height - 50); // we could change this
         list.setPrefWidth(width - 50);   // we could change this
 

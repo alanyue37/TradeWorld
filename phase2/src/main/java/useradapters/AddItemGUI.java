@@ -1,27 +1,17 @@
 package useradapters;
 
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import sun.java2d.cmm.Profile;
-import tradeadapters.TradeGUI;
 import tradegateway.TradeModel;
 import trademisc.RunnableGUI;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class AddItemGUI implements RunnableGUI {
     private final Stage stage;
@@ -31,10 +21,9 @@ public class AddItemGUI implements RunnableGUI {
     private final TradeModel tradeModel;
     private final int width;
     private final int height;
-    protected String username;
+    private String username;
     private final TableViewCreator creator;
-    private RunnableGUI nextGUI;
-    private final GridPane grid;
+    private GridPane grid;
 
     public AddItemGUI(Stage stage, int width, int height, TradeModel model, String username) {
         this.stage = stage;
@@ -45,35 +34,34 @@ public class AddItemGUI implements RunnableGUI {
         this.height = height;
         this.username = username;
         creator = new TableViewCreator(presenter);
-        grid = new GridPane();
     }
 
     @Override
     public void initialScreen(){
-
+        grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
 
+        TableView<ObservableList<String>> table = creator.create("own inventory");
 
-        Text title = new Text("Current Inventory");
+        presenter.addItemScreen();
+        Text title = new Text(presenter.next());
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         grid.add(title, 0, 0, 2, 1);
 
-        TableView<ObservableList<String>> table = creator.create("own inventory");
-
         grid.add(table, 0, 1, 5, 5);
 
-        Text prompt = new Text("Add item to inventory");
+        Text prompt = new Text(presenter.next());
         prompt.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
-        Label itemNameLabel = new Label("Item name");
+        Label itemNameLabel = new Label(presenter.next());
         TextField itemNameField = new TextField();
-        Label itemDescriptionLabel = new Label("Item description");
+        Label itemDescriptionLabel = new Label(presenter.next());
         TextArea itemDescriptionField = new TextArea();
 
-        Button createItemButton = new Button("Create Item");
+        Button createItemButton = new Button(presenter.next());
 
         grid.add(itemNameLabel, 0, 7);
         grid.add(itemNameField, 1, 7);
@@ -81,11 +69,15 @@ public class AddItemGUI implements RunnableGUI {
         grid.add(itemDescriptionField, 1, 8);
         grid.add(createItemButton, 1, 9);
 
+        presenter.placeholderText("inventory");
+        table.setPlaceholder(new Label(presenter.next()));
+
         createItemButton.setOnAction(actionEvent -> {
             controller.createItem(username, itemNameField.getText(), itemDescriptionField.getText());
             itemNameField.clear();
             itemDescriptionField.clear();
-            Text message = new Text("Item added!");
+            presenter.itemAdded();
+            Text message = new Text(presenter.next());
             grid.add(message, 0, 10, 2, 1);
         });
 
@@ -96,10 +88,11 @@ public class AddItemGUI implements RunnableGUI {
     }
 
     private void backButton() {
-        Button backButton = new Button("Back");
+        presenter.backButton();
+        Button backButton = new Button(presenter.next());
         grid.add(backButton, 0, 11);
         backButton.setOnAction(actionEvent -> {
-            new UserGUI(stage, width, height, tradeModel, username).initialScreen();
+            new UserMenuGUI(stage, width, height, tradeModel, username).initialScreen();
         });
     }
 }

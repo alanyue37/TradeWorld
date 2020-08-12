@@ -6,13 +6,9 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
-import java.io.IOException;
-import java.util.List;
-
 public class TableViewCreator {
 
     private final UserPresenter2 presenter;
-    private List<String[]> data;
     private String[] colTitles;
     private double[] widths;
 
@@ -24,26 +20,26 @@ public class TableViewCreator {
 
         switch(type) {
             case "own inventory":
-                data = presenter.viewInventory();
+                presenter.viewInventory();
                 colTitles = new String[]{"ID", "Name", "Description"};
                 widths = new double[]{0.1, 0.3, 0.6};
                 break;
             case "all items":
-                data = presenter.viewAllItems();
+                presenter.viewAllItems();
                 colTitles = new String[]{"ID", "Name", "Owner", "Description"};
                 widths = new double[]{0.1, 0.2, 0.2, 0.5};
                 break;
             case "wishlist":
-                data = presenter.viewWishlist();
-                colTitles = new String[]{"ID", "Name", "Owner", "Descrpition"};
+                presenter.viewWishlist();
+                colTitles = new String[]{"ID", "Name", "Owner", "Description"};
                 widths = new double[]{0.1, 0.2, 0.2, 0.5};
                 break;
         }
 
         TableView<ObservableList<String>> table = new TableView<>();
         ObservableList<ObservableList<String>> observableItemList = FXCollections.observableArrayList();
-        for (String[] row : data) {
-            observableItemList.add(FXCollections.observableArrayList(row));
+        while (presenter.hasNext()) {
+            observableItemList.add(FXCollections.observableArrayList(presenter.next().split(" ")));
         }
         table.setItems(observableItemList);
 
