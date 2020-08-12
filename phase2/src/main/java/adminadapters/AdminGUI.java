@@ -177,7 +177,7 @@ public class AdminGUI implements RunnableGUI {
         grid.add(hBoxMainMenu, 0 , 9);
         
         createButton.setOnAction(actionEvent -> {
-            if (nameField.getText().isBlank() || usernameField.getText().isBlank() || passwordField.getText().isBlank()) {
+            if (nameField.getText().isEmpty() || usernameField.getText().isEmpty() || passwordField.getText().isEmpty()) {
                 tryAgain();
 
             } else if (controller.askAdminToAddNewAdmin(nameField.getText(), usernameField.getText(), passwordField.getText())) {
@@ -370,7 +370,7 @@ public class AdminGUI implements RunnableGUI {
                 noAccountsSelectedToUnfreeze();
             } if (!selected.isEmpty()){
                 controller.askAdminToUnfreezeUsers(selectedItems);
-               // accountsSelectedToUnfreeze();
+               accountsSelectedToUnfreeze();
             }
         });
 
