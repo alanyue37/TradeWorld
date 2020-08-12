@@ -68,6 +68,7 @@ public class DemoTradeSystem {
         tradeModel.getUserManager().createTradingUser("U_2", "u2", "u2", "Toronto");
         tradeModel.getUserManager().createTradingUser("U_3", "u3", "u3", "Edmonton");
         tradeModel.getUserManager().createTradingUser("U_4", "u4", "u4", "Brampton");
+        tradeModel.getUserManager().createTradingUser("U_5", "u5", "u5", "Mississauga");
 
         String[] users = new String[] {"u1", "u2", "u3", "u4"};
         for (String username: users) {
