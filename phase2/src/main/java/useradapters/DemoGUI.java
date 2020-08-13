@@ -15,7 +15,6 @@ public class DemoGUI implements RunnableGUI {
     private final Stage stage;
     private Scene scene;
     private final DemoController controller;
-    private final UserPresenter presenter;
     private final int width;
     private final int height;
     protected String username;
@@ -32,7 +31,6 @@ public class DemoGUI implements RunnableGUI {
         this.stage = stage;
         controller = new DemoController(model, username);
         this.initiateTradeController = new InitiateTradeController(model, username);
-        presenter = new UserPresenter(model, username);
         this.width = width;
         this.height = height;
         this.username = username;

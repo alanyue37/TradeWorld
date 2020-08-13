@@ -18,7 +18,6 @@ public class DemoAddItemGUI implements RunnableGUI {
     private final Stage stage;
     private Scene scene;
     private final UserController controller;
-    private final UserPresenter presenter;
     private final TradeModel tradeModel;
     private final int width;
     private final int height;
@@ -28,13 +27,12 @@ public class DemoAddItemGUI implements RunnableGUI {
 
     public DemoAddItemGUI(Stage stage, int width, int height, TradeModel model, String username) {
         this.stage = stage;
-        controller = new UserController(model, username);
-        presenter = new UserPresenter(model, username);
+        controller = new UserController(model);
         tradeModel = model;
         this.width = width;
         this.height = height;
         this.username = username;
-        creator = new TableViewCreator(presenter);
+        creator = new TableViewCreator(tradeModel);
     }
 
     @Override
@@ -64,22 +62,21 @@ public class DemoAddItemGUI implements RunnableGUI {
 
         TableView<ObservableList<String>> table = creator.create("own inventory");
 
-        presenter.addItemScreen();
-        Text title = new Text(presenter.next());
+        Text title = new Text("Current Inventory");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         grid.add(title, 0, 0, 2, 1);
 
         grid.add(table, 0, 1, 5, 5);
 
-        Text prompt = new Text(presenter.next());
+        Text prompt = new Text("Add item to inventory");
         prompt.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
-        Label itemNameLabel = new Label(presenter.next());
+        Label itemNameLabel = new Label("Item name");
         TextField itemNameField = new TextField();
-        Label itemDescriptionLabel = new Label(presenter.next());
+        Label itemDescriptionLabel = new Label("Item description");
         TextArea itemDescriptionField = new TextArea();
 
-        Button createItemButton = new Button(presenter.next());
+        Button createItemButton = new Button("Create Item");
 
         grid.add(itemNameLabel, 0, 7);
         grid.add(itemNameField, 1, 7);
@@ -87,29 +84,14 @@ public class DemoAddItemGUI implements RunnableGUI {
         grid.add(itemDescriptionField, 1, 8);
         grid.add(createItemButton, 1, 9);
 
-        presenter.placeholderText("inventory");
-        table.setPlaceholder(new Label(presenter.next()));
+        table.setPlaceholder(new Label("No items in inventory"));
 
         createItemButton.setOnAction(actionEvent -> {
+            controller.createItem(username, itemNameField.getText(), itemDescriptionField.getText());
             itemNameField.clear();
             itemDescriptionField.clear();
-            // presenter.itemAdded();
-            Text message = new Text("demo item was added");
+            Text message = new Text("Item added");
             grid.add(message, 0, 10, 2, 1);
-        });
-
-        backButton();
-    }
-
-    private void backButton() {
-        presenter.backButton();
-        Button backButton = new Button(presenter.next());
-        grid.add(backButton, 0, 11);
-        backButton.setOnAction(actionEvent -> {
-            new UserMenuGUI(stage, width, height, tradeModel, username).initialScreen();
         });
     }
 }
-
-
-

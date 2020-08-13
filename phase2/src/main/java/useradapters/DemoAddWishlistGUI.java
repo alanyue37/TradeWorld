@@ -18,7 +18,6 @@ public class DemoAddWishlistGUI implements RunnableGUI {
     private final Stage stage;
     private Scene scene;
     private final UserController controller;
-    private final UserPresenter presenter;
     private final TradeModel tradeModel;
     private final int width;
     private final int height;
@@ -28,18 +27,18 @@ public class DemoAddWishlistGUI implements RunnableGUI {
 
     public DemoAddWishlistGUI(Stage stage, int width, int height, TradeModel model, String username) {
         this.stage = stage;
-        controller = new UserController(model, username);
-        presenter = new UserPresenter(model, username);
+        controller = new UserController(model);
         tradeModel = model;
         this.width = width;
         this.height = height;
         this.username = username;
-        creator = new TableViewCreator(presenter);
+        creator = new TableViewCreator(tradeModel);
     }
 
     @Override
     public void initialScreen(){
-
+        initializeScreen();
+        showScreen();
     }
 
     @Override
@@ -50,7 +49,6 @@ public class DemoAddWishlistGUI implements RunnableGUI {
 
     @Override
     public void showScreen() {
-        initializeScreen();
         scene = new Scene(grid, width, height);
         stage.setScene(scene);
     }
@@ -65,52 +63,41 @@ public class DemoAddWishlistGUI implements RunnableGUI {
         TableView<ObservableList<String>> itemTable = creator.create("all items");
         TableView<ObservableList<String>> wishlistTable = creator.create("wishlist");
 
-        presenter.addWishlistScreen();
-        Text title1 = new Text(presenter.next());
+        Text title1 = new Text("All available items");
         title1.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         grid.add(title1, 0, 0, 2, 1);
 
-        Text title2 = new Text(presenter.next());
+        Text title2 = new Text("Your wishlist");
         title2.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         grid.add(title2, 6, 0, 2, 1);
 
         grid.add(itemTable, 0, 1, 5, 5);
         grid.add(wishlistTable, 6, 1, 5, 5);
 
-        Button addButton = new Button(presenter.next());
+        Button addButton = new Button("Add item");
         grid.add(addButton, 0, 6, 2, 1);
-        Button removeButton = new Button(presenter.next());
+        Button removeButton = new Button("Remove item");
         grid.add(removeButton, 6, 6, 2, 1);
 
-        presenter.placeholderText("all items");
-        itemTable.setPlaceholder(new Label(presenter.next()));
-        presenter.placeholderText("wishlist");
-        wishlistTable.setPlaceholder(new Label(presenter.next()));
+        itemTable.setPlaceholder(new Label("No items to display"));
+        wishlistTable.setPlaceholder(new Label("No items in wishlist"));
 
         TableView.TableViewSelectionModel<ObservableList<String>> itemSelection = itemTable.getSelectionModel();
         TableView.TableViewSelectionModel<ObservableList<String>> wishlistSelection = wishlistTable.getSelectionModel();
 
         addButton.setOnAction(actionEvent -> {
             ObservableList<ObservableList<String>> selectedItems = itemSelection.getSelectedItems();
-            wishlistTable.getItems().add(selectedItems.get(0));
-//            itemTable.getItems().remove(selectedItems.get(0));
+            System.out.println(selectedItems.get(0).get(1));
+            if (controller.addItemToWishlist(selectedItems.get(0).get(0))) { // new item added to wishlist
+                wishlistTable.getItems().add(selectedItems.get(0));
+            }
         });
 
         removeButton.setOnAction(actionEvent -> {
             ObservableList<ObservableList<String>> selectedItems = wishlistSelection.getSelectedItems();
-//            itemTable.getItems().add(selectedItems.get(0));
+            System.out.println(selectedItems.get(0).get(1));
+            controller.removeItemFromWishlist(selectedItems.get(0).get(0));
             wishlistTable.getItems().remove(selectedItems.get(0));
-        });
-
-        backButton();
-    }
-
-    private void backButton() {
-        presenter.backButton();
-        Button backButton = new Button(presenter.next());
-        grid.add(backButton, 0, 11);
-        backButton.setOnAction(actionEvent -> {
-            new UserMenuGUI(stage, width, height, tradeModel, username).initialScreen();
         });
     }
 }

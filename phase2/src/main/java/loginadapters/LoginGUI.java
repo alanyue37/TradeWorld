@@ -20,10 +20,6 @@ import tradegateway.TradeModel;
 import trademisc.RunnableGUI;
 import trademisc.UserMainGUI;
 import useradapters.DemoGUI;
-import useradapters.UserMenuGUI;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class LoginGUI implements RunnableGUI {
     private final Stage stage;
@@ -201,7 +197,7 @@ public class LoginGUI implements RunnableGUI {
             if (nameField.getText().isEmpty() || usernameField.getText().isEmpty() || passwordField.getText().isEmpty() || cityField.getText().isEmpty()) {
                 tryAgain();
             } else if(controller.newTradingUser(nameField.getText(), usernameField.getText(), passwordField.getText(), cityField.getText())){
-                nextGUI = new UserMenuGUI(stage, width, height, model, usernameField.getText());
+                nextGUI = new UserMainGUI(800, 800, model, usernameField.getText());
                 nextGUI.initialScreen();
             } else {
                 usernameTaken(nameField.getText());
