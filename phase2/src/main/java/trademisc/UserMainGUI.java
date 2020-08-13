@@ -1,5 +1,7 @@
 package trademisc;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -10,21 +12,15 @@ import tradeadapters.TradeGUI;
 import tradegateway.TradeModel;
 import useradapters.*;
 
-public class UserMainGUI implements RunnableGUI {
+public class UserMainGUI extends MainGUI implements RunnableGUI {
 
-    private final Stage stage;
-    private final TradeModel tradeModel;
-    private final int width;
-    private final int height;
     private final String username;
     private TabPane root;
 
-    public UserMainGUI(Stage stage, int width, int height, TradeModel tradeModel, String username) {
-        this.stage = stage;
-        this.tradeModel = tradeModel;
-        this.width = width;
-        this.height = height;
+    public UserMainGUI(int width, int height, TradeModel tradeModel, String username) {
+        super(width, height, tradeModel);
         this.username = username;
+        this.root = new TabPane();
     }
 
 
@@ -42,35 +38,35 @@ public class UserMainGUI implements RunnableGUI {
     @Override
     public void showScreen() {
         initializeScreen();
-        Scene scene = new Scene(root, width, height);
-        stage.setScene(scene);
-        stage.setTitle("TradeWorld");
-        stage.show();
+        Scene scene = new Scene(root, getWidth(), getHeight());
+        getStage().setScene(scene);
+        getStage().setTitle("TradeWorld");
+        getStage().show();
     }
 
     private void initializeScreen() {
-        root = new TabPane();
+        //root = new TabPane();
         root.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
-        ProfileGUI profileGUI = new LoggedInProfileGUI(stage, 800, 800, this.tradeModel, username);
+        ProfileGUI profileGUI = new LoggedInProfileGUI(getStage(), 800, 800, getTradeModel(), true);
         Parent profileParent = profileGUI.getRoot();
         Tab profileTab = new Tab("My Profile", profileParent);
 
-        ProfileGUI otherProfilesGUI = new LoggedInProfileGUI(stage, 800, 800, this.tradeModel, "u2");
-        Parent otherProfilesParent = otherProfilesGUI.getRoot();
-        Tab otherProfilesTab = new Tab("View Profiles", otherProfilesParent);
-
-        AddItemGUI inventoryGUI = new AddItemGUI(stage, 800, 800, this.tradeModel, username);
+        AddItemGUI inventoryGUI = new AddItemGUI(getStage(), 800, 800, getTradeModel(), username);
         Parent inventoryParent = inventoryGUI.getRoot();
         Tab inventoryTab = new Tab("Inventory", inventoryParent);
 
-        AddWishlistGUI wishlistGUI = new AddWishlistGUI(stage, 800, 800, this.tradeModel, username);
+        AddWishlistGUI wishlistGUI = new AddWishlistGUI(getStage(), 800, 800, getTradeModel(), username);
         Parent wishlistParent = wishlistGUI.getRoot();
         Tab wishlistTab = new Tab("Wishlist", wishlistParent);
 
-        TradeGUI tradeGUI = new TradeGUI(stage, 800, 800, this.tradeModel, username);
+        TradeGUI tradeGUI = new TradeGUI(getStage(), 800, 800, getTradeModel(), username);
         Parent tradeParent = tradeGUI.getRoot();
         Tab tradeTab = new Tab("Trade", tradeParent);
+
+        ProfileGUI otherProfilesGUI = new LoggedInProfileGUI(getStage(), 800, 800, getTradeModel(), false);
+        Parent otherProfilesParent = otherProfilesGUI.getRoot();
+        Tab otherProfilesTab = new Tab("View Profiles", otherProfilesParent);
 
         TradeHistoryGUI tradeHistoryGUI = new TradeHistoryGUI(stage, 800, 800, this.tradeModel, username);
         Parent tradeHistoryParent = tradeHistoryGUI.getRoot();

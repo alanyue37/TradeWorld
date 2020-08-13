@@ -14,10 +14,10 @@ import javafx.stage.Stage;
 import tradegateway.TradeModel;
 import trademisc.RunnableGUI;
 
-public class AddItemGUI implements RunnableGUI {
+public class DemoAddItemGUI implements RunnableGUI {
     private final Stage stage;
     private Scene scene;
-    private final UserController controller;
+    // private final UserController controller;
     private final TradeModel tradeModel;
     private final int width;
     private final int height;
@@ -25,9 +25,9 @@ public class AddItemGUI implements RunnableGUI {
     private final TableViewCreator creator;
     private GridPane grid;
 
-    public AddItemGUI(Stage stage, int width, int height, TradeModel model, String username) {
+    public DemoAddItemGUI(Stage stage, int width, int height, TradeModel model, String username) {
         this.stage = stage;
-        controller = new UserController(model);
+        // controller = new UserController(model);
         tradeModel = model;
         this.width = width;
         this.height = height;
@@ -87,12 +87,10 @@ public class AddItemGUI implements RunnableGUI {
         table.setPlaceholder(new Label("No items in inventory"));
 
         createItemButton.setOnAction(actionEvent -> {
-            controller.createItem(username, itemNameField.getText(), itemDescriptionField.getText());
             itemNameField.clear();
             itemDescriptionField.clear();
             Text message = new Text("Item added");
             grid.add(message, 0, 10, 2, 1);
-            table.setItems(creator.create("own inventory").getItems());
         });
     }
 }

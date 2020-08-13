@@ -1,13 +1,18 @@
 package useradapters;
 
 import com.google.gson.reflect.TypeToken;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableStringValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -15,18 +20,21 @@ import javafx.stage.Stage;
 import tradegateway.TradeModel;
 import com.google.gson.Gson;
 import trademisc.RunnableGUI;
+import usercomponent.ReviewManager;
 import usercomponent.UserManager;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
 
 public class ProfileGUI implements RunnableGUI {
     private final Stage stage;
     private final TradeModel tradeModel;
+    private final boolean ownProfile;
     private Scene scene;
-    private final ProfileController controller;
+    private final ProfileController profileController;
     private final int width;
     private final int height;
     private String userProfile;
@@ -34,17 +42,21 @@ public class ProfileGUI implements RunnableGUI {
     private VBox root;
     private ObservableList<String> friends;
     private ObservableList<String> reviews;
+    private ObservableList<String> usernames;
+    private HBox accountProfileContainer;
+    private ComboBox<String> usernameSelector;
 
-    public ProfileGUI(Stage stage, int width, int height, TradeModel tradeModel, String userProfile) {
+    public ProfileGUI(Stage stage, int width, int height, TradeModel tradeModel, boolean ownProfile) {
         this.stage = stage;
         this.tradeModel = tradeModel;
-        this.controller = new ProfileController(tradeModel, "u1"); // TODO: delete username once controller constructor is changed
+        this.profileController = new ProfileController(tradeModel, "u1"); // TODO: delete username once controller constructor is changed
         this.width = width;
         this.height = height;
-        this.userProfile = userProfile;
-        this.root = new VBox();
+        this.ownProfile = ownProfile;
+        this.userProfile = null;
         friends = FXCollections.observableArrayList();
         reviews = FXCollections.observableArrayList();
+        usernames = FXCollections.observableArrayList();
     }
 
     @Override
@@ -66,17 +78,60 @@ public class ProfileGUI implements RunnableGUI {
         stage.show();
     }
 
-    protected void initializeScreen() {
+    public void initializeScreen() {
+        setUserProfile();
+        root = new VBox();
         root.setSpacing(20);
         root.setPadding(new Insets(25, 25, 25, 25));
 
         stage.setTitle("Profile");
 
         // Rows
+        HBox usernamesRow;
+        //HBox accountProfileContainer;
+
+        // Set username selector if not own profile
+        usernamesRow = getUsernamesRow();
+
+        accountProfileContainer = getContainerForAccountProfile();
+
+
+        //HBox rankHBox = getUserRankBox();
+
+        root.getChildren().addAll(usernamesRow, accountProfileContainer);
+    }
+
+    private void setUserProfile() {
+        if (ownProfile) {
+            userProfile = tradeModel.getCurrentUser();
+        }
+        else if (!profileController.getOtherUsersWithProfiles().isEmpty()) {
+            // Remains at null if no other userProfiles
+            userProfile = profileController.getOtherUsersWithProfiles().get(0);
+        }
+    }
+
+    protected boolean noUsers() {
+        return userProfile == null;
+    }
+
+    protected HBox getContainerForAccountProfile() {
+        HBox row = new HBox();
+
+        if (noUsers()) {
+            Label noUsersLabel = new Label("No user profiles to show");
+            row.getChildren().add(noUsersLabel);
+            return row;
+        }
+
+        VBox container = new VBox();
+        row.setSpacing(20);
+        container.setSpacing(20);
         HBox titleRow;
         HBox profileInfoRow;
         HBox accountStandingRow;
         HBox friendsAndReviewsRow;
+
 
         // Set title
         titleRow = new HBox();
@@ -99,24 +154,61 @@ public class ProfileGUI implements RunnableGUI {
 
         VBox reviewsColumn = new VBox();
         Label reviewsLabel = new Label("Reviews");
-        reviewsColumn.getChildren().addAll(reviewsLabel, getReviewsListView());
+        Label averageRatingLabel = new Label("(Average Rating: " + profileController.getAverageRating(userProfile) + ")");
+        averageRatingLabel.setAlignment(Pos.BOTTOM_RIGHT);
+        HBox reviewsLabelsRow = new HBox(reviewsLabel, averageRatingLabel);
+
+        reviewsLabelsRow.setSpacing(20);
+        reviewsColumn.getChildren().addAll(reviewsLabelsRow, getReviewsListView());
 
         friendsAndReviewsRow = new HBox();
         friendsAndReviewsRow.getChildren().addAll(friendsColumn, reviewsColumn);
         friendsAndReviewsRow.setSpacing(20);
 
-        //HBox rankHBox = getUserRankBox();
+        container.getChildren().addAll(titleRow, profileInfoRow, accountStandingRow, friendsAndReviewsRow);
+        row.getChildren().add(container);
+        return row;
 
-        root.getChildren().addAll(titleRow, profileInfoRow, accountStandingRow, friendsAndReviewsRow);
     }
 
+    protected void updateScreen() {
+        userProfile = usernameSelector.getSelectionModel().getSelectedItem();
+        //initializeScreen();
+        HBox oldAccountProfileContainer = accountProfileContainer;
+        HBox newAccountProfileContainer = getContainerForAccountProfile();
+        oldAccountProfileContainer.getChildren().setAll(newAccountProfileContainer.getChildren());
+    }
 
+    protected HBox getUsernamesRow() {
+        HBox row = new HBox();
+        usernames = FXCollections.observableArrayList(profileController.getOtherUsersWithProfiles());
+        usernameSelector = new ComboBox(usernames);
+        if (!noUsers()) {
+            usernameSelector.getSelectionModel().select(userProfile);
+        }
+        usernameSelector.setPlaceholder(new Label("No other profiles to view"));
+        Button viewButton = new Button("View Profile");
+        viewButton.setOnAction(actionEvent -> {
+            if (!usernames.isEmpty()) {
+                userProfile = usernameSelector.getSelectionModel().getSelectedItem();
+                //initializeScreen();
+                HBox oldAccountProfileContainer = accountProfileContainer;
+                HBox newAccountProfileContainer = getContainerForAccountProfile();
+                oldAccountProfileContainer.getChildren().setAll(newAccountProfileContainer.getChildren());
+                }
+            else {
+                System.out.println("empty");
+            }
+        });
+        row.getChildren().addAll(usernameSelector, viewButton);
+        return row;
+    }
 
     protected ListView<String> getFriendsListView() {
         // TODO: TESTING CODE - UNCOMMENT IF NECESSARY - DELETE LATER
         UserManager userManager = tradeModel.getUserManager();
         userManager.sendFriendRequest("u1", "u2");
-        userManager.sendFriendRequest("u1", "u3");
+        //userManager.sendFriendRequest("u1", "u3");
         //userManager.sendFriendRequest("u3", "u1");
         //userManager.setFriendRequest("u1", "u2", true);
         //userManager.setFriendRequest("u3", "u1", true);
@@ -132,8 +224,8 @@ public class ProfileGUI implements RunnableGUI {
 
     protected ListView<String> getReviewsListView() {
         // TODO: TESTING CODE - UNCOMMENT IF NECESSARY - DELETE LATER
-        // ReviewManager reviewManager = tradeModel.getReviewManager();
-        // reviewManager.addReview(3, "Amazing guy", "3", "u1", "u2");
+        ReviewManager reviewManager = tradeModel.getReviewManager();
+        reviewManager.addReview(3, "Amazing guy", "3", "u1", "u2");
 
         updateReviewsObservableList();
         ListView<String> list = new ListView<>();
@@ -148,7 +240,7 @@ public class ProfileGUI implements RunnableGUI {
     protected HBox getAccountStandingRow() {
         HBox row = new HBox();
         Label standingLabel;
-        if (controller.getFrozenStatus(userProfile)) {
+        if (profileController.getFrozenStatus(userProfile)) {
             standingLabel = new Label("Account Standing: Frozen");
         }
         else {
@@ -161,8 +253,8 @@ public class ProfileGUI implements RunnableGUI {
     protected HBox getProfileInfoRow() {
         HBox row = new HBox();
         VBox profileInfoColumn = new VBox();
-        Label cityLabel = new Label("City: " + controller.getCity(userProfile));
-        Label rankLabel = new Label("User Rank: " + controller.getRank(userProfile));
+        Label cityLabel = new Label("City: " + profileController.getCity(userProfile));
+        Label rankLabel = new Label("User Rank: " + profileController.getRank(userProfile));
         profileInfoColumn.getChildren().addAll(cityLabel, rankLabel);
         row.getChildren().add(profileInfoColumn);
         return row;
@@ -189,32 +281,18 @@ public class ProfileGUI implements RunnableGUI {
         root.getChildren().add(row);
     }
 
-    protected ProfileController getController() {
-        return controller;
+    protected ProfileController getProfileController() {
+        return profileController;
     }
 
     protected void updateFriendsObservableList() {
-        String json = controller.getFriends(userProfile);
-        Gson gson = new Gson();
-        Type type = new TypeToken<List<String>>(){}.getType();
-        List<String> friendsList = gson.fromJson(json, type);
         friends.clear();
-        friends.addAll(friendsList);
+        friends.addAll(profileController.getFriends(userProfile));
     }
 
     protected void updateReviewsObservableList() {
-        String json = controller.getReviews(userProfile);
-        Gson gson = new Gson();
-        Type type = new TypeToken<List<Map<String, String>>>(){}.getType();
-        List<Map<String, String>> reviewMaps = gson.fromJson(json, type);
-        List<String> reviewStrings = new ArrayList<>();
-
-        for (Map<String, String> reviewMap : reviewMaps) {
-            String r = "Author: " + reviewMap.get("author") + "\nRating: " + reviewMap.get("rating") + "\n" + reviewMap.get("comment");
-            reviewStrings.add(r);
-        }
         reviews.clear();
-        reviews.addAll(reviewStrings);
+        reviews.addAll(profileController.getReviews(userProfile));
     }
 
 }

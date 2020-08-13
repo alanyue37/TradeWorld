@@ -1,10 +1,10 @@
 package loginadapters;
 
-import adminadapters.AdminController;
+import com.google.gson.Gson;
 import tradegateway.TradeModel;
-import trademisc.RunnableController;
-import useradapters.DemoController;
-import useradapters.UserController;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The controller class that allows users to log in to the system.
@@ -12,9 +12,6 @@ import useradapters.UserController;
 public class LogInController {
 
     private final TradeModel tradeModel;
-    private String username;
-    private String password;
-    private RunnableController nextController = null;
 
     /**
      * Creates a LogInController.
@@ -24,36 +21,29 @@ public class LogInController {
         this.tradeModel = tradeModel;
     }
 
-    /**
-     * Method to get the next controller to run.
-     * @return the next controller that will be run
-     */
-    public RunnableController getNextController() {
-        return nextController;
-    }
-
-    // Logging in
-    boolean logIn(boolean isAdmin, String user, String pass) {
-        username = user;
-        password = pass;
-        return tradeModel.getUserManager().login(username, password);
+    // Logging in - returns JSON
+    public String logIn(String user, String pass) {
+        Gson gson = new Gson();
+        Map<String, String> userInfo = new HashMap<>();
+        if (tradeModel.getUserManager().login(user, pass)) {
+            tradeModel.setCurrentUser(user);
+            userInfo.put("authenticated", "true");
+            if (tradeModel.getUserManager().isAdmin(user)) {
+                userInfo.put("userType", "admin");
+            }
+            else {
+                userInfo.put("userType", "trading");
+            }
+        }
+        else {
+            userInfo.put("authenticated", "false");
+        }
+        return gson.toJson(userInfo);
     }
 
     // Create new account
     boolean newTradingUser(String name, String user, String pass, String city) {
-        username = user;
-        password = pass;
-
-        if (!tradeModel.getUserManager().createTradingUser(name, username, password, city)) {
-            return false;
-        }
-
-        nextController = new UserController(tradeModel, username);
-        return true;
+        return tradeModel.getUserManager().createTradingUser(name, user, pass, city);
     }
 
-    void demo(){
-        username = "DemoUser"; //TODO demo without username?
-        nextController = new DemoController(tradeModel, username);
-    }
 }

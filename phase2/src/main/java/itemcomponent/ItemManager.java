@@ -123,6 +123,18 @@ public class ItemManager implements Serializable {
     }
 
     /**
+     * Returns if an item is available
+     * Precondition: An item with the given ID must exist.
+     *
+     * @param itemId    The id of the item
+     * @return  The availability of the item
+     */
+    public boolean getAvailable(String itemId) {
+        Item item = items.get(itemId);
+        return item.isAvailable();
+    }
+
+    /**
      * Creates a new item and adds it to the current set of items
      * @param name  The name of the item
      * @param owner The owner of the item

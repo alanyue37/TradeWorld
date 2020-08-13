@@ -11,14 +11,13 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import tradegateway.DemoTradeSystem;
 import tradegateway.TradeModel;
 import trademisc.RunnableGUI;
 
-public class AddWishlistGUI implements RunnableGUI {
+public class DemoAddWishlistGUI implements RunnableGUI {
     private final Stage stage;
     private Scene scene;
-    private final UserController controller;
+    // private final UserController controller;
     private final TradeModel tradeModel;
     private final int width;
     private final int height;
@@ -26,9 +25,9 @@ public class AddWishlistGUI implements RunnableGUI {
     private final TableViewCreator creator;
     private GridPane grid;
 
-    public AddWishlistGUI(Stage stage, int width, int height, TradeModel model, String username) {
+    public DemoAddWishlistGUI(Stage stage, int width, int height, TradeModel model, String username) {
         this.stage = stage;
-        controller = new UserController(model);
+        // controller = new UserController(model);
         tradeModel = model;
         this.width = width;
         this.height = height;
@@ -88,16 +87,12 @@ public class AddWishlistGUI implements RunnableGUI {
 
         addButton.setOnAction(actionEvent -> {
             ObservableList<ObservableList<String>> selectedItems = itemSelection.getSelectedItems();
-            System.out.println(selectedItems.get(0).get(1));
-            if (controller.addItemToWishlist(selectedItems.get(0).get(0))) { // new item added to wishlist
-                wishlistTable.getItems().add(selectedItems.get(0));
-            }
+            wishlistTable.getItems().add(selectedItems.get(0));
+
         });
 
         removeButton.setOnAction(actionEvent -> {
             ObservableList<ObservableList<String>> selectedItems = wishlistSelection.getSelectedItems();
-            System.out.println(selectedItems.get(0).get(1));
-            controller.removeItemFromWishlist(selectedItems.get(0).get(0));
             wishlistTable.getItems().remove(selectedItems.get(0));
         });
     }

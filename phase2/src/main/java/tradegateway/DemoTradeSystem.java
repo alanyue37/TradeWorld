@@ -1,11 +1,14 @@
 package tradegateway;
 
+import adminadapters.AdminGUI;
 import javafx.stage.Stage;
 import loginadapters.LogInController;
 import loginadapters.LoginGUI;
 import sun.java2d.cmm.Profile;
+import trademisc.MainGUI;
 import trademisc.RunnableController;
 import trademisc.RunnableGUI;
+import trademisc.UserMainGUI;
 import useradapters.LoggedInProfileGUI;
 import useradapters.ProfileGUI;
 
@@ -36,10 +39,11 @@ public class DemoTradeSystem {
             initializeTradeModel(tradeModel);
             tradeModel.setCurrentUser("u1");
 
-            gui = new LoginGUI(stage, 275, 300, tradeModel);
-            //gui = new ProfileGUI(stage, 720, 600, tradeModel, "u1");
-//            gui = new LoggedInProfileGUI(stage, 720, 600, tradeModel, "u1");
-            gui.initialScreen();
+            gui = new LoginGUI(stage, 400, 275, tradeModel);
+            //gui = new ProfileGUI(stage, 720, 600, tradeModel, false);
+            //gui = new LoggedInProfileGUI(stage, 720, 600, tradeModel, false);
+            //gui = new UserMainGUI(800, 800, tradeModel, "u1");
+            gui.showScreen();
 
         } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
