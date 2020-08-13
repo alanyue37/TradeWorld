@@ -1,7 +1,5 @@
 package tradeadapters;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -24,10 +22,7 @@ import trademisc.RunnableGUI;
 import useradapters.ProfileController;
 import viewingadapters.ViewingTradesController;
 
-import java.lang.reflect.Type;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
