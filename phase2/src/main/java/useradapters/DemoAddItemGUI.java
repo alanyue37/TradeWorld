@@ -17,7 +17,7 @@ import trademisc.RunnableGUI;
 public class DemoAddItemGUI implements RunnableGUI {
     private final Stage stage;
     private Scene scene;
-    private final UserController controller;
+    // private final UserController controller;
     private final TradeModel tradeModel;
     private final int width;
     private final int height;
@@ -27,7 +27,7 @@ public class DemoAddItemGUI implements RunnableGUI {
 
     public DemoAddItemGUI(Stage stage, int width, int height, TradeModel model, String username) {
         this.stage = stage;
-        controller = new UserController(model);
+        // controller = new UserController(model);
         tradeModel = model;
         this.width = width;
         this.height = height;
@@ -87,7 +87,6 @@ public class DemoAddItemGUI implements RunnableGUI {
         table.setPlaceholder(new Label("No items in inventory"));
 
         createItemButton.setOnAction(actionEvent -> {
-            controller.createItem(username, itemNameField.getText(), itemDescriptionField.getText());
             itemNameField.clear();
             itemDescriptionField.clear();
             Text message = new Text("Item added");
