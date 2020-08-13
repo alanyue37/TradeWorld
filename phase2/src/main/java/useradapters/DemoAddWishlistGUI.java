@@ -17,8 +17,8 @@ import trademisc.RunnableGUI;
 public class DemoAddWishlistGUI implements RunnableGUI {
     private final Stage stage;
     private Scene scene;
-    private final UserController2 controller;
-    private final UserPresenter2 presenter;
+    private final UserController controller;
+    private final UserPresenter presenter;
     private final TradeModel tradeModel;
     private final int width;
     private final int height;
@@ -28,8 +28,8 @@ public class DemoAddWishlistGUI implements RunnableGUI {
 
     public DemoAddWishlistGUI(Stage stage, int width, int height, TradeModel model, String username) {
         this.stage = stage;
-        controller = new UserController2(model, username);
-        presenter = new UserPresenter2(model, username);
+        controller = new UserController(model, username);
+        presenter = new UserPresenter(model, username);
         tradeModel = model;
         this.width = width;
         this.height = height;

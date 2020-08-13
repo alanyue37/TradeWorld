@@ -8,11 +8,11 @@ import javafx.scene.control.TableView;
 
 public class TableViewCreator {
 
-    private final UserPresenter2 presenter;
+    private final UserPresenter presenter;
     private String[] colTitles;
     private double[] widths;
 
-    public TableViewCreator(UserPresenter2 presenter) {
+    public TableViewCreator(UserPresenter presenter) {
         this.presenter = presenter;
     }
 

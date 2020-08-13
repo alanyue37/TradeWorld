@@ -1,30 +1,13 @@
 package useradapters;
 
-import adminadapters.AdminGUI;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import sun.java2d.cmm.Profile;
 import tradeadapters.InitiateTradeController;
-import tradeadapters.TradeGUI;
 import tradegateway.TradeModel;
 import trademisc.RunnableGUI;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static javafx.collections.FXCollections.observableArrayList;
 
@@ -32,7 +15,7 @@ public class DemoGUI implements RunnableGUI {
     private final Stage stage;
     private Scene scene;
     private final DemoController controller;
-    private final UserPresenter2 presenter;
+    private final UserPresenter presenter;
     private final int width;
     private final int height;
     protected String username;
@@ -49,7 +32,7 @@ public class DemoGUI implements RunnableGUI {
         this.stage = stage;
         controller = new DemoController(model, username);
         this.initiateTradeController = new InitiateTradeController(model, username);
-        presenter = new UserPresenter2(model, username);
+        presenter = new UserPresenter(model, username);
         this.width = width;
         this.height = height;
         this.username = username;
