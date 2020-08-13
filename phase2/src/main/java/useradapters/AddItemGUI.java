@@ -92,6 +92,7 @@ public class AddItemGUI implements RunnableGUI {
             itemDescriptionField.clear();
             Text message = new Text("Item added");
             grid.add(message, 0, 10, 2, 1);
+            //TODO: implement update screen
         });
     }
 }

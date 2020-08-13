@@ -62,11 +62,11 @@ public class DemoGUI implements RunnableGUI {
         root = new TabPane();
         root.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
-        ProfileGUI profileGUI = new ProfileGUI(stage, 800, 800, this.model, username);
+        ProfileGUI profileGUI = new ProfileGUI(stage, 800, 800, this.model, true);
         Parent profileParent = profileGUI.getRoot();
         Tab profileTab = new Tab("My Profile", profileParent);
 
-        ProfileGUI otherProfilesGUI = new ProfileGUI(stage, 800, 800, this.model, "u2");
+        ProfileGUI otherProfilesGUI = new ProfileGUI(stage, 800, 800, this.model, false);
         Parent otherProfilesParent = otherProfilesGUI.getRoot();
         Tab otherProfilesTab = new Tab("View Profiles", otherProfilesParent);
 

@@ -132,6 +132,10 @@ public class UserManager implements Serializable {
         return allUsers;
     }
 
+    public Set<String> getAllTradingUsers() {
+        return tradingUsers.keySet();
+    }
+
     /**
      * Checks a User's username and password on login.
      *

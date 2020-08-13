@@ -9,10 +9,7 @@ import undocomponent.UndoableOperation;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ProfileController implements RunnableController {
     // TODO: Clean up unnecessary methods
@@ -287,6 +284,18 @@ public class ProfileController implements RunnableController {
         for (String u : usernames) {
             tradeModel.getUserManager().setFriendRequest(tradeModel.getCurrentUser(), u, accept);
         }
+    }
+
+    public List<String> getOtherUsersWithProfiles() {
+        Set<String> userIds = tradeModel.getUserManager().getAllTradingUsers();
+        List<String> otherUserIds = new ArrayList<>();
+        for (String id: userIds) {
+            if (tradeModel.getCurrentUser() == null || !id.equals(tradeModel.getCurrentUser())) {
+                otherUserIds.add(id);
+            }
+        }
+        Collections.sort(otherUserIds, String.CASE_INSENSITIVE_ORDER);
+        return otherUserIds;
     }
 
 }

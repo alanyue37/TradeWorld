@@ -55,7 +55,7 @@ public class LoginGUI implements RunnableGUI {
 
     @Override
     public void initialScreen() {
-        showScreen();
+
     }
 
     @Override
@@ -198,9 +198,9 @@ public class LoginGUI implements RunnableGUI {
                 tryAgain();
             } else if(controller.newTradingUser(nameField.getText(), usernameField.getText(), passwordField.getText(), cityField.getText())){
                 nextGUI = new UserMainGUI(800, 800, model, usernameField.getText());
-                nextGUI.initialScreen();
+                nextGUI.showScreen();
             } else {
-                usernameTaken(nameField.getText());
+                usernameTaken(usernameField.getText());
             }
         });
 
