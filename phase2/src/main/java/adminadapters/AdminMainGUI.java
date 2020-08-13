@@ -299,7 +299,6 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI{
 
         ListView<String> list = new ListView<>();
         ObservableList<String> freezeAccounts = FXCollections.observableArrayList();
-        getTradeModel().getUserManager().setFrozen("u1", true);
         Set<String> flaggedAccounts = new HashSet<>();
         List<String> incompleteUsers = model.getMeetingManager().getTradesIncompleteMeetings(model.getTradeManager().getAllTypeTrades("ongoing"));
         flaggedAccounts.addAll(model.getTradeManager().getExceedIncompleteLimitUser(incompleteUsers));
@@ -344,6 +343,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI{
                 message.setText("No accounts have been selected to be frozen.");
             } else {
                 controller.askAdminToFreezeUsers(selected);
+                freezeAccounts.removeAll(selected);
                 message.setText("Selected accounts have been frozen");
                 list.refresh();
             }
@@ -422,6 +422,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI{
                 message.setText("No accounts are selected to be unfrozen");
             } else {
                 controller.askAdminToUnfreezeUsers(selectedItems);
+                unfreezeAccounts.removeAll(selectedItems);
                 message.setText("Selected accounts are now unfrozen.");
             }
         });
@@ -495,7 +496,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI{
                     e.printStackTrace();
                 }
                 message.setText("Selected items have been added to the system.");
-                list.refresh();
+                reviewItems.clear();
             } else {
                 message.setText("No items are added to the system.");
             }

@@ -222,7 +222,7 @@ public class LoginGUI implements RunnableGUI {
 
         if (userInfo.get("authenticated").equals("true")) {
             if (userInfo.get("userType").equals("admin")) {
-                nextGUI = new AdminMainGUI(800, 800, tradeModel);
+                nextGUI = new AdminMainGUI( 800, 800, tradeModel);
             }
             else {
                 nextGUI = new UserMainGUI(800, 800, tradeModel, username);
