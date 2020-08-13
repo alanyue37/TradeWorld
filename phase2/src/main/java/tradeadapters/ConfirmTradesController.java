@@ -17,7 +17,6 @@ import java.util.*;
 public class ConfirmTradesController implements RunnableController {
     private final BufferedReader br;
     private final TradeModel tradeModel;
-    private final ConfirmTradesPresenter presenter;
     private final String username;
 
     /**
@@ -29,7 +28,6 @@ public class ConfirmTradesController implements RunnableController {
         br = new BufferedReader(new InputStreamReader(System.in));
         this.tradeModel = tradeModel;
         this.username = username;
-        presenter = new ConfirmTradesPresenter();
     }
 
     /**
@@ -54,7 +52,6 @@ public class ConfirmTradesController implements RunnableController {
             for (JSONObject details : allTrade) {
                 allTradeInfo.append(details.toString(4));
             }
-            presenter.showTrade(allTradeInfo.toString());
             String input = br.readLine();
             switch(input) {
                 case "1":
@@ -63,12 +60,10 @@ public class ConfirmTradesController implements RunnableController {
                 case "2":
                     break;
                 case "exit":
-                    presenter.end();
                     return false;
                 default:
-                    presenter.tryAgain();
             }
-        } presenter.endTrades();
+        }
         return true;
     }
 
@@ -85,7 +80,6 @@ public class ConfirmTradesController implements RunnableController {
     protected void confirmTradeHappened(String tradeId, String type) {
         if (tradeModel.getMeetingManager().canChangeMeeting(tradeId, username)) {
             changeToConfirmed(tradeId, username);
-            presenter.confirmedTrade();
 
             if (tradeModel.getTradeManager().getTradesOfUser(username, "completed").contains(tradeId)) {
                 completedTradeChanges(tradeId, type);
@@ -96,7 +90,7 @@ public class ConfirmTradesController implements RunnableController {
                     }
                 }
             }
-        } else { presenter.declineConfirm(); }
+        }
     }
 
     private void changeToConfirmed(String tradeId, String username){
@@ -119,7 +113,6 @@ public class ConfirmTradesController implements RunnableController {
         String newMeetingId = tradeModel.getMeetingManager().createMeeting(tradeModel.getMeetingManager().getLastMeetingLocation(tradeId), newDate, username, tradeId);
         tradeModel.getTradeManager().addMeetingToTrade(tradeId, newMeetingId);
         tradeModel.getMeetingManager().confirmAgreement(newMeetingId);
-        presenter.displayNewDate(newDate.toString());
     }
 
     /**

@@ -17,7 +17,6 @@ import java.util.*;
 
 public class InitiateTradeController implements RunnableController {
     private final TradeModel tradeModel;
-    private final InitiateTradePresenter presenter;
     private final BufferedReader br;
     private final String username;
 
@@ -29,7 +28,6 @@ public class InitiateTradeController implements RunnableController {
      */
     public InitiateTradeController(TradeModel tradeModel, String username) {
         this.tradeModel = tradeModel;
-        this.presenter = new InitiateTradePresenter();
         this.br = new BufferedReader(new InputStreamReader(System.in));
         this.username = username;
     }
@@ -206,7 +204,7 @@ public class InitiateTradeController implements RunnableController {
         List<String> meetingDetails = new ArrayList<>();
 
         // Get location
-        presenter.askMeetingLocation();
+//        presenter.askMeetingLocation();
         String location = br.readLine();
         meetingDetails.add(location);
 
@@ -215,12 +213,12 @@ public class InitiateTradeController implements RunnableController {
         Date date = null;
         do {
             try {
-                presenter.askMeetingDate();
+//                presenter.askMeetingDate();
                 dateString = br.readLine();
                 date = parseDateString(dateString); // check formatting is valid
             }
             catch (ParseException e) {
-                presenter.tryAgain();
+//                presenter.tryAgain();
             }
         } while (date == null);
         meetingDetails.add(dateString);
@@ -308,10 +306,10 @@ public class InitiateTradeController implements RunnableController {
     }
 
     private void unfreezeRequest() throws IOException { //TODO: move to another gui
-        presenter.frozenAccount();
+//        presenter.frozenAccount();
         String input = br.readLine();
         while (!input.equals("0") && !input.equals("1")){
-            presenter.tryAgain();
+//            presenter.tryAgain();
             input = br.readLine();
         }
         if (input.equals("1")) {
