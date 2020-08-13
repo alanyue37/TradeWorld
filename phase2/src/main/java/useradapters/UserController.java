@@ -34,10 +34,6 @@ public class UserController {
         tradeModel.getItemManager().addItem(itemName, username, itemDescription);
     }
 
-    public boolean isFrozen() {
-        return tradeModel.getUserManager().isFrozen(tradeModel.getCurrentUser());
-    }
-
     public boolean addItemToWishlist(String itemID){
         return tradeModel.getUserManager().addToWishlist(tradeModel.getCurrentUser(), itemID);
     }
