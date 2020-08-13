@@ -262,7 +262,7 @@ public class LoginGUI implements RunnableGUI {
             if (isAdmin){
                 nextGUI = new AdminGUI(stage, 800, 800, model);
             } else {
-                nextGUI = new UserMainGUI(stage, 800, 800, model, username);
+                nextGUI = new UserMainGUI(800, 800, model, username);
             }
             nextGUI.showScreen();
         } else {
