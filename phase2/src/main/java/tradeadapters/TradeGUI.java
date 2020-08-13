@@ -259,13 +259,20 @@ public class TradeGUI implements RunnableGUI {
 
         confirmBtn.setOnAction(actionEvent -> {
             String tradeId = proposedTradesIDObservableList.get(proposedTradesListView.getSelectionModel().getSelectedIndex());
+            if (!tradeModel.getMeetingManager().canChangeMeeting(tradeId, username)) {
+                AlertBox.display("Please wait for the other user to confirm the meeting.");
+            } else {
             proposedTradesController.confirmMeetingTime(tradeId);
             updateProposedObservableLists();
+            updateToBeConfirmedObservableLists();}
         });
         editBtn.setOnAction(actionEvent -> {
             String tradeId = proposedTradesIDObservableList.get(proposedTradesListView.getSelectionModel().getSelectedIndex());
+            if (!tradeModel.getMeetingManager().canChangeMeeting(tradeId, username)) {
+                AlertBox.display("Please wait for the other user to edit the meeting.");
+            } else {
             editProposedTrade(tradeId);
-            updateProposedObservableLists();
+            updateProposedObservableLists(); }
         });
         declineBtn.setOnAction(actionEvent -> {
             String tradeId = proposedTradesIDObservableList.get(proposedTradesListView.getSelectionModel().getSelectedIndex());
@@ -294,7 +301,11 @@ public class TradeGUI implements RunnableGUI {
 
         confirmBtn.setOnAction(actionEvent -> {
             String tradeId = confirmTradesIDObservableList.get(confirmTradesListView.getSelectionModel().getSelectedIndex());
-            confirmTradesController.confirmTradeHappened(tradeId, trades.get(tradeId));
+            if (!tradeModel.getMeetingManager().canChangeMeeting(tradeId, username)) {
+                AlertBox.display("Already confirmed. Please wait for the other user.");
+            } else {
+                confirmTradesController.confirmTradeHappened(tradeId, trades.get(tradeId));
+            }
             updateToBeConfirmedObservableLists();
         });
 
@@ -308,7 +319,7 @@ public class TradeGUI implements RunnableGUI {
         TextField ratingInput = new TextField();
         ratingInput.setPromptText("Rating you want to give (1-5)");
         TextField tradeIdInput = new TextField();
-        tradeIdInput.setPromptText("Trade Id");
+        tradeIdInput.setPromptText("Trade ID");
 
         Label messageBox = new Label();
 
@@ -396,9 +407,9 @@ public class TradeGUI implements RunnableGUI {
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
 
-        Label locationLabel = new Label("Location: ");
+        Label locationLabel = new Label("Location:");
         TextField locationField = new TextField();
-        Label timeLabel = new Label("Time (hh:mm): ");
+        Label timeLabel = new Label("Time (hh:mm):");
         TextField timeField = new TextField();
 
         Button editBtn = new Button("Edit Meeting");
@@ -414,6 +425,7 @@ public class TradeGUI implements RunnableGUI {
 
         editBtn.setOnAction(actionEvent -> {
             LocalDate date = datePicker.getValue();
+            System.out.println(date);
             String location = locationField.getText();
             String time = timeField.getText();
             if (date == null || location == null || time == null) {
@@ -422,9 +434,8 @@ public class TradeGUI implements RunnableGUI {
                 AlertBox.display("You have an incorrect field. Please review your inputs.");
             } else {
                 details.add(location);
-                DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-                String strDate = dateFormat.format(date);
-                details.add(strDate + " " + time);
+                String dateString = (date.getDayOfMonth()) +"/" +(date.getMonthValue()) +"/" + (date.getYear()) + " " + time;
+                details.add(dateString);
                 proposedTradesController.editMeetingTime(tradeId, details);
                 updateProposedObservableLists();
                 stage2.close();
