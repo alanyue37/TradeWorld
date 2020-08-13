@@ -2,6 +2,7 @@ package adminadapters;
 
 import tradegateway.TradeModel;
 import undocomponent.NoLongerUndoableException;
+import undocomponent.UndoAddInventoryItem;
 import undocomponent.UndoableOperation;
 
 import java.io.IOException;
@@ -185,6 +186,8 @@ public class AdminController {
                 // presenter.invalidInput();
                 // input = br.readLine();
                 tradeModel.getItemManager().confirmItem(itemId);
+                UndoableOperation undoableOperation = new UndoAddInventoryItem(tradeModel.getItemManager(), tradeModel.getTradeManager(), itemId);
+                tradeModel.getUndoManager().add(undoableOperation);
             }
         }
         if (!notItemsSelected.isEmpty()) {
