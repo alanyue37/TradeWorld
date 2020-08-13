@@ -8,10 +8,7 @@ import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
 import tradeadapters.TradeGUI;
 import tradegateway.TradeModel;
-import useradapters.AddItemGUI;
-import useradapters.AddWishlistGUI;
-import useradapters.LoggedInProfileGUI;
-import useradapters.ProfileGUI;
+import useradapters.*;
 
 public class UserMainGUI implements RunnableGUI {
 
@@ -75,6 +72,10 @@ public class UserMainGUI implements RunnableGUI {
         Parent tradeParent = tradeGUI.getRoot();
         Tab tradeTab = new Tab("Trade", tradeParent);
 
-        root.getTabs().addAll(profileTab, inventoryTab, wishlistTab, tradeTab, otherProfilesTab);
+        TradeHistoryGUI tradeHistoryGUI = new TradeHistoryGUI(stage, 800, 800, this.tradeModel, username);
+        Parent tradeHistoryParent = tradeHistoryGUI.getRoot();
+        Tab tradeHistoryTab = new Tab("Trading History", tradeHistoryParent);
+
+        root.getTabs().addAll(profileTab, inventoryTab, wishlistTab, tradeTab, otherProfilesTab, tradeHistoryTab);
     }
 }
