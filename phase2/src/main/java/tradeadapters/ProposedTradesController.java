@@ -22,7 +22,6 @@ import java.util.Map;
 public class ProposedTradesController implements RunnableController {
     private final BufferedReader br;
     private final TradeModel tradeModel;
-    private final ProposedTradesPresenter presenter;
     private final String username;
 
     /**
@@ -35,7 +34,6 @@ public class ProposedTradesController implements RunnableController {
         br = new BufferedReader(new InputStreamReader(System.in));
         this.tradeModel = tradeModel;
         this.username = username;
-        presenter = new ProposedTradesPresenter();
     }
 
     /**
@@ -60,7 +58,6 @@ public class ProposedTradesController implements RunnableController {
             for (JSONObject details : allTrade) {
                 allTradeInfo.append(details.toString(4));
             }
-            presenter.showMeeting(allTradeInfo.toString());
             String input = br.readLine();
             switch (input) {
                 case "1": // confirm meeting times
@@ -72,20 +69,16 @@ public class ProposedTradesController implements RunnableController {
                         if (details.size() > 0) {
                             editMeetingTime(tradeId, details); }
                     } else {
-                        presenter.declineEditMeeting();
                     }
                     break;
                 case "3": // decline/cancel trade
                     declineTrade(tradeId);
                     break;
                 case "exit":
-                    presenter.end();
                     return false;
                 default:
-                    presenter.tryAgain();
             }
         }
-        presenter.endMeetings();
         return true;
     }
 
@@ -99,9 +92,7 @@ public class ProposedTradesController implements RunnableController {
             String meetingId = tradeModel.getTradeManager().getMeetingOfTrade(tradeId).get(tradeModel.getTradeManager().getMeetingOfTrade(tradeId).size() - 1);
             tradeModel.getMeetingManager().confirmAgreement(meetingId);
             changeItemUnavailable(tradeId);
-            presenter.confirmedMeeting();
         } else {
-            presenter.declineConfirmMeeting();
         }
     }
 
@@ -123,11 +114,9 @@ public class ProposedTradesController implements RunnableController {
         if (tradeModel.getMeetingManager().attainedThresholdEdits(tradeModel.getTradeManager().getMeetingOfTrade(tradeId).get(0))) {
             tradeModel.getTradeManager().cancelTrade(tradeId);
             tradeModel.getMeetingManager().cancelMeetingsOfTrade(tradeId);
-            presenter.canceledTrade();
             return new ArrayList<>();
         } else {
             List<String> details = new ArrayList<>();
-            presenter.enterLocation();
             String location = br.readLine();
             details.add(location);
 
@@ -135,12 +124,10 @@ public class ProposedTradesController implements RunnableController {
             Date date = null;
             do {
                 try {
-                    presenter.enterDateTime();
                     dateString = br.readLine();
                     DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                     date = format.parse(dateString); // check formatting is valid
                 } catch (ParseException e) {
-                    presenter.tryAgain();
                 }
             } while (date == null);
             details.add(dateString);
