@@ -349,6 +349,7 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
             } else {
                 controller.askAdminToFreezeUsers(selected);
                 message.setText("Selected accounts have been frozen");
+                list.refresh();
             }
         });
 
@@ -536,6 +537,7 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
                     e.printStackTrace();
                 }
                 message.setText("Selected items have been added to the system.");
+                list.refresh();
             } else {
                 message.setText("No items are added to the system.");
             }
