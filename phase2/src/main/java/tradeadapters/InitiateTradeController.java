@@ -49,7 +49,7 @@ public class InitiateTradeController implements RunnableController {
 //    private boolean initiateTrade() throws IOException {
 //        boolean success = false;
 //        if (tradeModel.getUserManager().isFrozen(username)) {
-//            unfreezeRequest(); //TODO: move to somewhere else
+//            unfreezeRequest();
 //            return success;
 //        }
 //        if (tradeModel.getUserManager().getOnVacation().contains(username)){
@@ -65,7 +65,7 @@ public class InitiateTradeController implements RunnableController {
 //        return success;
 //    }
 
-    protected boolean initiateTrade() {
+    protected boolean canTrade() {
         boolean success = true;
         if (tradeModel.getUserManager().isFrozen(username)) {
             success = false;
@@ -76,7 +76,7 @@ public class InitiateTradeController implements RunnableController {
         return success;
     }
 
-//    private boolean createTrade(String itemId) throws IOException {  //TODO
+//    private boolean createTrade(String itemId) throws IOException {
 //        String otherUsername = tradeModel.getItemManager().getOwner(itemId);
 //        String tradeId;
 //        String thisUserItemId;

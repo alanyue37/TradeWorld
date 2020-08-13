@@ -97,17 +97,14 @@ public class AdminPresenter extends TextPresenter {
     /**
      * Prints relevant heading for reviewing added items view.
      * Prints no items to be reviewed if empty is true. Otherwise prints instructions.
-     * @param empty True iff no items to be reviewed.
+     * @param selected True iff no items to be reviewed.
      */
-    public String reviewItemsHeading(boolean empty) {
-        if (empty) {
-            return "No items to be reviewed.\n";
+    public String reviewItemsHeading(boolean selected) {
+        if (selected) {
+            return "Selected items have been added to the system.";
         }
         else {
-            return "Selected items have been added to the system.";
-
-            // System.out.println("The following items have been recently added and need to be reviewed.\n" +
-              //      "For each item enter 1 to add the item or 0 to not add the item.\n");
+            return "No items are added to the system.";
         }
     }
 
@@ -117,9 +114,7 @@ public class AdminPresenter extends TextPresenter {
      * @param item  The item could be added to the system.
      */
     public String reviewItem(String item) {
-        return "Selected items have been added to the system and the items not selected are deleted.";
-
-               // "Enter 1 to add the following item or 0 to not add the following item: \n" + item);
+        return "These items are pending to be added. Unselected items will be deleted.\n Hold down shift to add multiple items to the system.";
     }
 
     /**

@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 import tradegateway.TradeModel;
 import trademisc.RunnableGUI;
 
-public class AddItemGUI implements RunnableGUI {
+public class DemoAddItemGUI implements RunnableGUI {
     private final Stage stage;
     private Scene scene;
     private final UserController controller;
@@ -25,7 +25,7 @@ public class AddItemGUI implements RunnableGUI {
     private final TableViewCreator creator;
     private GridPane grid;
 
-    public AddItemGUI(Stage stage, int width, int height, TradeModel model, String username) {
+    public DemoAddItemGUI(Stage stage, int width, int height, TradeModel model, String username) {
         this.stage = stage;
         controller = new UserController(model);
         tradeModel = model;
@@ -92,7 +92,6 @@ public class AddItemGUI implements RunnableGUI {
             itemDescriptionField.clear();
             Text message = new Text("Item added");
             grid.add(message, 0, 10, 2, 1);
-            //TODO: implement update screen
         });
     }
 }

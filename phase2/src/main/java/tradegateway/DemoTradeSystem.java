@@ -11,7 +11,6 @@ import trademisc.RunnableGUI;
 import trademisc.UserMainGUI;
 import useradapters.LoggedInProfileGUI;
 import useradapters.ProfileGUI;
-import useradapters.UserMenuGUI;
 
 import java.io.IOException;
 import java.util.Observable;

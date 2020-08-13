@@ -36,10 +36,10 @@ public class TradeSystem implements Observer {
     @Override
     public void update(Observable observable, Object o) {
         try {
-            RunnableController mainController = controller.getNextController();
-            if (mainController != null) {
-                mainController.run(); // This could be either UserController or AdminController
-            }
+//            RunnableController mainController = controller.getNextController();
+//            if (mainController != null) {
+//                mainController.run(); // This could be either UserController or AdminController
+//            }
             dataManager.saveToFile(tradeModel);
         } catch (IOException e) {
             e.printStackTrace();

@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 import tradegateway.TradeModel;
 import trademisc.RunnableGUI;
 
-public class AddWishlistGUI implements RunnableGUI {
+public class DemoAddWishlistGUI implements RunnableGUI {
     private final Stage stage;
     private Scene scene;
     private final UserController controller;
@@ -25,7 +25,7 @@ public class AddWishlistGUI implements RunnableGUI {
     private final TableViewCreator creator;
     private GridPane grid;
 
-    public AddWishlistGUI(Stage stage, int width, int height, TradeModel model, String username) {
+    public DemoAddWishlistGUI(Stage stage, int width, int height, TradeModel model, String username) {
         this.stage = stage;
         controller = new UserController(model);
         tradeModel = model;
