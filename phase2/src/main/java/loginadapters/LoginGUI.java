@@ -226,8 +226,8 @@ public class LoginGUI implements RunnableGUI {
             if (nameField.getText().isEmpty() || usernameField.getText().isEmpty() || passwordField.getText().isEmpty() || cityField.getText().isEmpty()) {
                 tryAgain();
             } else if(controller.newTradingUser(nameField.getText(), usernameField.getText(), passwordField.getText(), cityField.getText())){
-                nextGUI = new UserMenuGUI(stage, width, height, model, usernameField.getText());
-                nextGUI.initialScreen();
+                nextGUI = new UserMainGUI(800, 800, model, usernameField.getText());
+                nextGUI.showScreen();
             } else {
                 usernameTaken(nameField.getText());
             }

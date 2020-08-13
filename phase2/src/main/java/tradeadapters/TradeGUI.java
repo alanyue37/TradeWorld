@@ -1,5 +1,7 @@
 package tradeadapters;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -105,6 +107,20 @@ public class TradeGUI implements RunnableGUI {
         Tab viewTab = new Tab("View Trades", viewParent);
 
         root.getTabs().addAll(initiateTab, proposedTab, confirmTab, viewTab);
+
+        // Listener code below based on https://stackoverflow.com/questions/17522686/javafx-tabpane-how-to-listen-to-selection-changes
+        root.getSelectionModel().selectedItemProperty().addListener(
+                new ChangeListener<Tab>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Tab> observableValue, Tab oldTab, Tab newTab) {
+                        updateScreen();
+                    }
+                }
+        );
+    }
+
+    public void updateScreen() {
+        initializeScreen();
     }
 
     // Main tab methods

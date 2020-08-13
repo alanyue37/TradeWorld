@@ -97,6 +97,7 @@ public class AddItemGUI implements RunnableGUI {
             presenter.itemAdded();
             Text message = new Text(presenter.next());
             grid.add(message, 0, 10, 2, 1);
+            //TODO: implement update screen
         });
 
         backButton();

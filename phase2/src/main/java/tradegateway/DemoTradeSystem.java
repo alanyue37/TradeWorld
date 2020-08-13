@@ -43,6 +43,7 @@ public class DemoTradeSystem {
             gui = new LoginGUI(stage, 275, 300, tradeModel);
             //gui = new ProfileGUI(stage, 720, 600, tradeModel, "u1");
 //            gui = new LoggedInProfileGUI(stage, 720, 600, tradeModel, "u1");
+            //gui = new UserMainGUI(800, 800, tradeModel, "u1");
             gui.showScreen();
 
         } catch (IOException | ClassNotFoundException ex) {

@@ -25,8 +25,8 @@ public class LoggedInProfileGUI extends ProfileGUI {
 
     private ObservableList<String> friendsRequests;
 
-    public LoggedInProfileGUI(Stage stage, int width, int height, TradeModel tradeModel, String userProfile) {
-        super(stage, width, height, tradeModel, userProfile);
+    public LoggedInProfileGUI(Stage stage, int width, int height, TradeModel tradeModel, boolean ownProfile) {
+        super(stage, width, height, tradeModel, ownProfile);
         friendsRequests = FXCollections.observableArrayList();
     }
 
@@ -39,9 +39,14 @@ public class LoggedInProfileGUI extends ProfileGUI {
     }
 
     @Override
-    protected void initializeScreen() {
-        super.initializeScreen();
+    protected HBox getContainerForAccountProfile() {
+        HBox row;
+        row = super.getContainerForAccountProfile();
+        if (noUsers()) {
+            return row;
+        }
 
+        VBox container = new VBox();
         // Additional rows
         HBox statusesRow;
         HBox friendsRow;
@@ -49,9 +54,8 @@ public class LoggedInProfileGUI extends ProfileGUI {
         // Set statusesRow
         // vacation + public/private
         statusesRow = getStatusesRow();
-        addRow(statusesRow);
 
-        if (getController().isOwnProfile(getUserProfile())) {
+        if (getProfileController().isOwnProfile(getUserProfile())) {
             // Add friends requests list row if own profile
             friendsRow = getFriendsRequestsRow();
         }
@@ -59,18 +63,29 @@ public class LoggedInProfileGUI extends ProfileGUI {
             // Add friend status / send friend request button if not own profile
             friendsRow = getFriendStatusRow();
         }
-        addRow(friendsRow);
+
+        container.getChildren().addAll(row, statusesRow, friendsRow);
+        return new HBox(container);
+    }
+
+    @Override
+    protected HBox getUsernamesRow() {
+        // Only return if not own profile
+        if (!getProfileController().isOwnProfile(getUserProfile())) {
+            return super.getUsernamesRow();
+        }
+        return new HBox();
     }
 
     @Override
     protected HBox getAccountStandingRow() {
         HBox row =  super.getAccountStandingRow();
         // If frozen and own profile add Request Unfreeze link
-        if (getController().getFrozenStatus(getUserProfile()) && getController().isOwnProfile(getUserProfile())) {
+        if (getProfileController().getFrozenStatus(getUserProfile()) && getProfileController().isOwnProfile(getUserProfile())) {
             Hyperlink requestUnfreeze = new Hyperlink("Request unfreeze");
             requestUnfreeze.setBorder(Border.EMPTY);
             requestUnfreeze.setPadding(new Insets(0, 0, 0, 20));
-            requestUnfreeze.setOnAction(actionEvent -> getController().requestUnfreeze());
+            requestUnfreeze.setOnAction(actionEvent -> getProfileController().requestUnfreeze());
             row.getChildren().add(requestUnfreeze);
         }
         return row;
@@ -89,7 +104,7 @@ public class LoggedInProfileGUI extends ProfileGUI {
         RadioButton offVacationButton = new RadioButton("Off");
         onVacationButton.setToggleGroup(vacationGroup);
         offVacationButton.setToggleGroup(vacationGroup);
-        if (getController().getVacationMode(getUserProfile())) {
+        if (getProfileController().getVacationMode(getUserProfile())) {
             vacationValueLabel = new Label("On");
             onVacationButton.setSelected(true);
         }
@@ -111,7 +126,7 @@ public class LoggedInProfileGUI extends ProfileGUI {
         onPrivacyButton.setToggleGroup(privacyGroup);
         offPrivacyButton.setToggleGroup(privacyGroup);
 
-        if (getController().getPrivacyMode(getUserProfile())) {
+        if (getProfileController().getPrivacyMode(getUserProfile())) {
             privacyValueLabel = new Label("On");
             onPrivacyButton.setSelected(true);
         }
@@ -129,7 +144,7 @@ public class LoggedInProfileGUI extends ProfileGUI {
                 if (privacyGroup.getSelectedToggle() != null) {
                     boolean privacy = (boolean) privacyGroup.getSelectedToggle().getUserData();
                     System.out.println(privacy);
-                    getController().setPrivacyMode(privacy);
+                    getProfileController().setPrivacyMode(privacy);
                 }
 
             }
@@ -141,12 +156,12 @@ public class LoggedInProfileGUI extends ProfileGUI {
                 if (vacationGroup.getSelectedToggle() != null) {
                     boolean vacation = (boolean) vacationGroup.getSelectedToggle().getUserData();
                     System.out.println(vacation);
-                    getController().setVacationMode(vacation);}
+                    getProfileController().setVacationMode(vacation);}
 
             }
         });
 
-        if (getController().isOwnProfile(getUserProfile())) {
+        if (getProfileController().isOwnProfile(getUserProfile())) {
             privacyRow.getChildren().addAll(privacyLabel, offPrivacyButton, onPrivacyButton);
             vacationRow.getChildren().addAll(vacationLabel, offVacationButton, onVacationButton);
 
@@ -202,7 +217,7 @@ public class LoggedInProfileGUI extends ProfileGUI {
         row.setSpacing(20);
         Label friendshipLabel = new Label("Friendship:");
         row.getChildren().add(friendshipLabel);
-        String friendshipStatus = getController().getFriendshipStatus(getUserProfile());
+        String friendshipStatus = getProfileController().getFriendshipStatus(getUserProfile());
         Node node;
         switch (friendshipStatus) {
             case "friends":
@@ -218,7 +233,7 @@ public class LoggedInProfileGUI extends ProfileGUI {
                 Hyperlink requestFriendship = new Hyperlink("Send friend request");
                 requestFriendship.setBorder(Border.EMPTY);
                 requestFriendship.setPadding(new Insets(0, 0, 0, 0));
-                requestFriendship.setOnAction(actionEvent -> getController().sendFriendRequest(getUserProfile()));
+                requestFriendship.setOnAction(actionEvent -> getProfileController().sendFriendRequest(getUserProfile()));
                 node = requestFriendship;
                 break;
         }
@@ -231,13 +246,13 @@ public class LoggedInProfileGUI extends ProfileGUI {
         for (Integer i: selectedRequests) {
             usernames.add(friendsRequests.get(i));
         }
-        getController().acceptOrIgnoreFriendsRequests(usernames, accept);
+        getProfileController().acceptOrIgnoreFriendsRequests(usernames, accept);
         updateFriendsRequestsObservableList();
         updateFriendsObservableList();
     }
 
     protected void updateFriendsRequestsObservableList() {
-        String json = getController().getFriendRequests();
+        String json = getProfileController().getFriendRequests();
         Gson gson = new Gson();
         Type type = new TypeToken<List<String>>(){}.getType();
         List<String> requests = gson.fromJson(json, type);

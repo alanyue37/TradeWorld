@@ -88,7 +88,7 @@ public class UserMenuGUI implements RunnableGUI {
             nextGUI.initialScreen();
         });
         buttons.get(3).setOnAction(actionEvent -> {
-            nextGUI = new ProfileGUI(stage, 800, 800, tradeModel, username);
+            nextGUI = new ProfileGUI(stage, 800, 800, tradeModel, true);
             nextGUI.initialScreen();
         });
 

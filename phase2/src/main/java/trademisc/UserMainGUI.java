@@ -1,5 +1,7 @@
 package trademisc;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -21,6 +23,7 @@ public class UserMainGUI extends MainGUI implements RunnableGUI {
     public UserMainGUI(int width, int height, TradeModel tradeModel, String username) {
         super(width, height, tradeModel);
         this.username = username;
+        this.root = new TabPane();
     }
 
 
@@ -45,16 +48,12 @@ public class UserMainGUI extends MainGUI implements RunnableGUI {
     }
 
     private void initializeScreen() {
-        root = new TabPane();
+        //root = new TabPane();
         root.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
-        ProfileGUI profileGUI = new LoggedInProfileGUI(getStage(), 800, 800, getTradeModel(), username);
+        ProfileGUI profileGUI = new LoggedInProfileGUI(getStage(), 800, 800, getTradeModel(), true);
         Parent profileParent = profileGUI.getRoot();
         Tab profileTab = new Tab("My Profile", profileParent);
-
-        ProfileGUI otherProfilesGUI = new LoggedInProfileGUI(getStage(), 800, 800, getTradeModel(), "u2");
-        Parent otherProfilesParent = otherProfilesGUI.getRoot();
-        Tab otherProfilesTab = new Tab("View Profiles", otherProfilesParent);
 
         AddItemGUI inventoryGUI = new AddItemGUI(getStage(), 800, 800, getTradeModel(), username);
         Parent inventoryParent = inventoryGUI.getRoot();
@@ -68,6 +67,27 @@ public class UserMainGUI extends MainGUI implements RunnableGUI {
         Parent tradeParent = tradeGUI.getRoot();
         Tab tradeTab = new Tab("Trade", tradeParent);
 
+        ProfileGUI otherProfilesGUI = new LoggedInProfileGUI(getStage(), 800, 800, getTradeModel(), false);
+        Parent otherProfilesParent = otherProfilesGUI.getRoot();
+        Tab otherProfilesTab = new Tab("View Profiles", otherProfilesParent);
+
+        //root.getTabs().setAll(profileTab, inventoryTab, wishlistTab, tradeTab, otherProfilesTab);
         root.getTabs().addAll(profileTab, inventoryTab, wishlistTab, tradeTab, otherProfilesTab);
+
+        // Listener code below based on https://stackoverflow.com/questions/17522686/javafx-tabpane-how-to-listen-to-selection-changes
+        root.getSelectionModel().selectedItemProperty().addListener(
+                new ChangeListener<Tab>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Tab> observableValue, Tab oldTab, Tab newTab) {
+                        profileTab.setContent(profileGUI.getRoot());
+                        inventoryTab.setContent(inventoryGUI.getRoot());
+                        wishlistTab.setContent(wishlistGUI.getRoot());
+                        tradeTab.setContent(tradeGUI.getRoot());
+                        otherProfilesTab.setContent(otherProfilesGUI.getRoot());
+
+
+                    }
+                }
+        );
     }
 }
