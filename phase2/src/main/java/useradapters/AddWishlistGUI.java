@@ -105,15 +105,15 @@ public class AddWishlistGUI implements RunnableGUI {
             wishlistTable.getItems().remove(selectedItems.get(0));
         });
 
-        backButton();
+//        backButton();
     }
-
-    private void backButton() {
-        presenter.backButton();
-        Button backButton = new Button(presenter.next());
-        grid.add(backButton, 0, 11);
-        backButton.setOnAction(actionEvent -> {
-            new UserMenuGUI(stage, width, height, tradeModel, username).initialScreen();
-        });
-    }
+//
+//    private void backButton() {
+//        presenter.backButton();
+//        Button backButton = new Button(presenter.next());
+//        grid.add(backButton, 0, 11);
+//        backButton.setOnAction(actionEvent -> {
+//            new UserMenuGUI(stage, width, height, tradeModel, username).initialScreen();
+//        });
+//    }
 }
