@@ -255,43 +255,6 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
        return grid;
     }
 
-   /* ***
-     * This method informs that Admin user that a new Admin user is created.
-     *
-     * @param username The username of the new admin created.
-     *//*
-    public void newAdminCreated(String username) {
-        GridPane grid = (GridPane) scene.getRoot();
-        Text message = new Text("New admin account created: " + username);
-        if (!grid.getChildren().contains(message)) {
-            grid.add(message, 0, 11, 1, 1);
-        }
-    }
-
-    *
-     * This method informs that Admin user that the username entered is already exists.
-     *
-     * @param username The username of the new admin created.
-     *//*
-    public void usernameTaken(String username) {
-        GridPane grid = (GridPane) scene.getRoot();
-        Text message = new Text(username + "username is already taken.");
-        if (!grid.getChildren().contains(message)) {
-            grid.add(message, 0, 12, 1, 1);
-        }
-    }
-
-    *
-     * This method tells the Admin User to try again for various reasons, such as the input was an empty string.
-     *//*
-    public void tryAgain() {
-        GridPane grid = (GridPane) scene.getRoot();
-        Text message = new Text("Please try again!");
-        if (!grid.getChildren().contains(message)) {
-            grid.add(message, 0, 10, 1, 1);
-        }
-    }*/
-
     /**
      * This method allows the Admin user to freeze a given list of users. The selected users will have their status
      * changed to frozen.
@@ -352,7 +315,6 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
                 list.refresh();
             }
         });
-
         return grid;
     }
 
@@ -401,7 +363,7 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
-        grid.setPadding(new Insets(35, 35, 35, 35));
+        grid.setPadding(new Insets(25, 25, 25, 25));
         grid.add(title, 0, 0, 1, 1);
         list.setPrefHeight(height - 50);
         list.setPrefWidth(width - 50);
@@ -411,15 +373,9 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
         unfreezeButton.setAlignment(Pos.BOTTOM_RIGHT);
         unfreezeHBox.getChildren().add(unfreezeButton);
 
-        Button mainMenuButton = new Button("Main Menu");
-        HBox hBoxMainMenu = new HBox(10);
-        hBoxMainMenu.setAlignment(Pos.BOTTOM_LEFT);
-        hBoxMainMenu.getChildren().add(mainMenuButton);
-
         grid.add(heading, 0, 1);
         grid.add(list, 0, 2);
         grid.add(unfreezeHBox, 0, 3);
-        grid.add(hBoxMainMenu, 0, 4);
 
         Label message = new Label();
         message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
@@ -437,32 +393,8 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
                 message.setText("Selected accounts are now unfrozen.");
             }
         });
-        mainMenuButton.setOnAction(actionEvent -> initializeScreen());
 
         return grid;
-    }
-
-
-    /**
-     * This method informs the Admin user that they have not selected any accounts to be unfrozen.
-     */
-    public void noAccountsSelectedToUnfreeze() {
-        GridPane grid = (GridPane) scene.getRoot();
-        Text message = new Text("No accounts are selected to be unfrozen");
-        if (!grid.getChildren().contains(message)) {
-            grid.add(message, 0, 6, 1, 1);
-        }
-    }
-
-    /**
-     * This method informs the Admin user that the selected accounts have been unfrozen.
-     */
-    public void accountsSelectedToUnfreeze() {
-        GridPane grid = (GridPane) scene.getRoot();
-        Text message = new Text("Selected accounts are now unfrozen.");
-        if (!grid.getChildren().contains(message)) {
-            grid.add(message, 0, 8, 1, 1);
-        }
     }
 
     /**
@@ -501,15 +433,10 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
 
         hBoxAddItemsButton.setAlignment(Pos.BOTTOM_RIGHT);
         hBoxAddItemsButton.getChildren().add(addItemsButton);
-        Button mainMenuButton = new Button("Main Menu");
-        HBox hBoxMainMenu = new HBox(10);
-        hBoxMainMenu.setAlignment(Pos.BOTTOM_LEFT);
-        hBoxMainMenu.getChildren().add(mainMenuButton);
 
         grid.add(heading, 0, 1);
         grid.add(list, 0, 2);
         grid.add(hBoxAddItemsButton, 0, 3);
-        grid.add(hBoxMainMenu, 0, 4);
 
         Label message = new Label();
         message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
@@ -542,29 +469,8 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
                 message.setText("No items are added to the system.");
             }
         });
-        mainMenuButton.setOnAction(actionEvent -> initializeScreen());
 
         return grid;
-    }
-
-    /**
-     * This method informs the Admin that the selected items have been added to the system and the items not selected
-     * are deleted.
-     */
-    public void itemReviewed() {
-        GridPane grid = (GridPane) scene.getRoot();
-        Text message = new Text("Selected items have been added to the system.");
-        if (!grid.getChildren().contains(message)) {
-            grid.add(message, 0, 6, 2, 1);
-        }
-    }
-
-    public void noItemsSelected() {
-        GridPane grid = (GridPane) scene.getRoot();
-        Text message = new Text("No items are added to the system.");
-        if (!grid.getChildren().contains(message)) {
-            grid.add(message, 0, 6, 2, 1);
-        }
     }
 
     /**
@@ -600,15 +506,10 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
         HBox hBoxSetThreshold = new HBox(10);
         hBoxSetThreshold.setAlignment(Pos.BOTTOM_RIGHT);
         hBoxSetThreshold.getChildren().add(setThresholdButton);
-        Button mainMenuButton = new Button("Main Menu");
-        HBox hBoxMainMenu = new HBox(10);
-        hBoxMainMenu.setAlignment(Pos.BOTTOM_LEFT);
-        hBoxMainMenu.getChildren().add(mainMenuButton);
 
         grid.add(heading, 0, 1);
         grid.add(lendingThresholdField, 0, 2);
         grid.add(hBoxSetThreshold, 0, 3);
-        grid.add(hBoxMainMenu, 0, 5);
 
         Label message = new Label();
         message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
@@ -626,11 +527,7 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
                 message.setText("Not an integer or is a number less than zero. \nPlease try again");
             }
         });
-        mainMenuButton.setOnAction(actionEvent -> setThresholdMenu());
         return grid;
-        /*scene = new Scene(grid, width, height);
-        stage.setScene(scene);
-        stage.show();*/
     }
 
     /**
@@ -664,15 +561,11 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
         HBox hBoxSetThreshold = new HBox(10);
         hBoxSetThreshold.setAlignment(Pos.BOTTOM_RIGHT);
         hBoxSetThreshold.getChildren().add(setThresholdButton);
-        Button mainMenuButton = new Button("Main Menu");
-        HBox hBoxMainMenu = new HBox(10);
-        hBoxMainMenu.setAlignment(Pos.BOTTOM_LEFT);
-        hBoxMainMenu.getChildren().add(mainMenuButton);
+
 
         grid.add(heading, 0, 1);
         grid.add(limitThresholdField, 0, 2);
         grid.add(hBoxSetThreshold, 0, 3);
-        grid.add(hBoxMainMenu, 0, 5);
 
         Label message = new Label();
         message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
@@ -690,7 +583,6 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
                 message.setText("Not an integer or is a number less than one. \nPlease try again");
             }
         });
-        mainMenuButton.setOnAction(actionEvent -> setThresholdMenu());
         return grid;
     }
 
@@ -724,15 +616,10 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
         HBox hBoxSetThreshold = new HBox(10);
         hBoxSetThreshold.setAlignment(Pos.BOTTOM_RIGHT);
         hBoxSetThreshold.getChildren().add(setThresholdButton);
-        Button mainMenuButton = new Button("Main Menu");
-        HBox hBoxMainMenu = new HBox(10);
-        hBoxMainMenu.setAlignment(Pos.BOTTOM_LEFT);
-        hBoxMainMenu.getChildren().add(mainMenuButton);
 
         grid.add(heading, 0, 1);
         grid.add(limitThresholdField, 0, 2);
         grid.add(hBoxSetThreshold, 0, 3);
-        grid.add(hBoxMainMenu, 0, 5);
 
         Label message = new Label();
         message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
@@ -751,11 +638,7 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
             }
 
         });
-        mainMenuButton.setOnAction(actionEvent -> setThresholdMenu());
         return grid;
-        /*scene = new Scene(grid, width, height);
-        stage.setScene(scene);
-        stage.show();*/
     }
 
     /**
@@ -788,15 +671,10 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
         HBox hBoxSetThreshold = new HBox(10);
         hBoxSetThreshold.setAlignment(Pos.BOTTOM_RIGHT);
         hBoxSetThreshold.getChildren().add(setThresholdButton);
-        Button mainMenuButton = new Button("Main Menu");
-        HBox hBoxMainMenu = new HBox(10);
-        hBoxMainMenu.setAlignment(Pos.BOTTOM_LEFT);
-        hBoxMainMenu.getChildren().add(mainMenuButton);
 
         grid.add(heading, 0, 1);
         grid.add(limitThresholdField, 0, 2);
         grid.add(hBoxSetThreshold, 0, 3);
-        grid.add(hBoxMainMenu, 0, 5);
 
         Label message = new Label();
         message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
@@ -814,11 +692,7 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
                 message.setText("Not an integer or is a number less than zero. \nPlease try again");
             }
         });
-
         return grid;
-        /*scene = new Scene(grid, width, height);
-        stage.setScene(scene);
-        stage.show();*/
     }
 
     public Parent setGoldThreshold() {
@@ -847,15 +721,10 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
         HBox hBoxSetThreshold = new HBox(10);
         hBoxSetThreshold.setAlignment(Pos.BOTTOM_RIGHT);
         hBoxSetThreshold.getChildren().add(setThresholdButton);
-        Button mainMenuButton = new Button("Main Menu");
-        HBox hBoxMainMenu = new HBox(10);
-        hBoxMainMenu.setAlignment(Pos.BOTTOM_LEFT);
-        hBoxMainMenu.getChildren().add(mainMenuButton);
 
         grid.add(heading, 0, 1);
         grid.add(limitThresholdField, 0, 2);
         grid.add(hBoxSetThreshold, 0, 3);
-        grid.add(hBoxMainMenu, 0, 5);
 
         Label message = new Label();
         message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
@@ -873,11 +742,7 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
                 message.setText("Not an integer or is a number less than zero. \nPlease try again");
             }
         });
-        mainMenuButton.setOnAction(actionEvent -> setThresholdMenu());
         return grid;
-        /*scene = new Scene(grid, width, height);
-        stage.setScene(scene);
-        stage.show();*/
     }
 
     public Parent setSilverThreshold() {
@@ -906,16 +771,17 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
         HBox hBoxSetThreshold = new HBox(10);
         hBoxSetThreshold.setAlignment(Pos.BOTTOM_RIGHT);
         hBoxSetThreshold.getChildren().add(setThresholdButton);
-        Button mainMenuButton = new Button("Main Menu");
+     /*   Button mainMenuButton = new Button("Main Menu");
         HBox hBoxMainMenu = new HBox(10);
         hBoxMainMenu.setAlignment(Pos.BOTTOM_LEFT);
-        hBoxMainMenu.getChildren().add(mainMenuButton);
+        hBoxMainMenu.getChildren().add(mainMenuButton);*/
 
         grid.add(heading, 0, 1);
         grid.add(limitThresholdField, 0, 2);
         grid.add(hBoxSetThreshold, 0, 3);
+/*
         grid.add(hBoxMainMenu, 0, 5);
-
+*/
         Label message = new Label();
         message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
         message.setAlignment(Pos.CENTER);
@@ -932,11 +798,7 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
                 message.setText("Not an integer or is a number less than zero. \nPlease try again");
             }
         });
-        mainMenuButton.setOnAction(actionEvent -> setThresholdMenu());
         return grid;
-       /* scene = new Scene(grid, width, height);
-        stage.setScene(scene);
-        stage.show();*/
     }
 
     /**
@@ -959,23 +821,6 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
         if (!grid.getChildren().contains(message)) {
             grid.add(message, 0, 8, 2, 1);
         }
-    }
-
-    /**
-     * This method informs that Admin user that the threshold has been set.
-     */
-    public Label thresholdSet() {
-        Label message = new Label();
-        message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
-        message.setAlignment(Pos.CENTER);
-        message.setText("Threshold is set.");
-        return message;
-
-       /* GridPane grid = (GridPane) scene.getRoot();
-        Text message = new Text("Threshold is set.");
-        if (!grid.getChildren().contains(message)) {
-            grid.add(message, 0, 6, 2, 1);
-        }*/
     }
 
     /**
@@ -1014,15 +859,15 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
 
         hBoxConfirmToUndo.setAlignment(Pos.BOTTOM_RIGHT);
         hBoxConfirmToUndo.getChildren().add(confirmToUndo);
-        Button mainMenuButton = new Button("Main Menu");
-        HBox hBoxMainMenu = new HBox(10);
-        hBoxMainMenu.setAlignment(Pos.BOTTOM_LEFT);
-        hBoxMainMenu.getChildren().add(mainMenuButton);
 
         grid.add(heading, 0, 1);
         grid.add(list, 0, 2);
         grid.add(hBoxConfirmToUndo, 0, 4);
-        grid.add(hBoxMainMenu, 0, 5);
+
+        Label message = new Label();
+        message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
+        message.setAlignment(Pos.CENTER);
+        grid.add(message, 0, 11, 1, 1);
 
         confirmToUndo.setOnAction(actionEvent -> {
             ObservableList<String> selectedActions = list.getSelectionModel().getSelectedItems();
@@ -1032,21 +877,11 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
                     controller.undoOperations();
                 } catch (NoLongerUndoableException e) {
                     e.printStackTrace();
-                }
+                } message.setText("Reversed the selected actions.");
             } else {
-                noActionsSelected();
+                message.setText("No undo actions selected.");
             }
         });
-        mainMenuButton.setOnAction(actionEvent -> initializeScreen());
-
        return grid;
-    }
-
-    public void noActionsSelected() {
-        GridPane grid = (GridPane) scene.getRoot();
-        Text message = new Text("No undo actions selected.");
-        if (!grid.getChildren().contains(message)) {
-            grid.add(message, 0, 6, 2, 1);
-        }
     }
 }
