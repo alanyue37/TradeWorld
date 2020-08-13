@@ -101,7 +101,7 @@ public class TradeGUI implements RunnableGUI {
         Parent proposedParent = viewProposedTrades();
         Tab proposedTab = new Tab("Proposed Trades", proposedParent);
 
-        Parent confirmParent = viewConfirmTrades(username);
+        Parent confirmParent = viewConfirmTrades();
         Tab confirmTab = new Tab("Confirm Trades", confirmParent);
 
         Parent viewParent = viewAllTrades();
@@ -310,7 +310,7 @@ public class TradeGUI implements RunnableGUI {
         return grid;
     }
 
-    private Parent viewConfirmTrades(String username) {
+    private Parent viewConfirmTrades() {
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
