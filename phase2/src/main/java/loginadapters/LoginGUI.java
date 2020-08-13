@@ -21,7 +21,7 @@ import javafx.stage.Stage;
 import tradegateway.TradeModel;
 import trademisc.RunnableGUI;
 import trademisc.UserMainGUI;
-import useradapters.DemoGUI;
+import useradapters.DemoMainGUI;
 
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -211,7 +211,7 @@ public class LoginGUI implements RunnableGUI {
     }
 
     private void demoUserLogIn() {
-        nextGUI = new DemoGUI(800, 800, tradeModel);
+        nextGUI = new DemoMainGUI(800, 800, tradeModel);
         nextGUI.showScreen();
     }
 

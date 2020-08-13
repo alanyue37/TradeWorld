@@ -11,7 +11,7 @@ import trademisc.RunnableGUI;
 
 import static javafx.collections.FXCollections.observableArrayList;
 
-public class DemoGUI extends MainGUI implements RunnableGUI {
+public class DemoMainGUI extends MainGUI implements RunnableGUI {
     private final Stage stage;
     private Scene scene;
     // private final DemoController controller;
@@ -25,7 +25,7 @@ public class DemoGUI extends MainGUI implements RunnableGUI {
 
     private RunnableGUI nextGUI;
 
-    public DemoGUI (int width, int height, TradeModel model) {
+    public DemoMainGUI(int width, int height, TradeModel model) {
         super(width, height, model);
         // do we really need the username for a demo user
         // we need it to access controller and presenter
