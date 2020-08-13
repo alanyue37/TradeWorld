@@ -31,8 +31,8 @@ import java.util.Set;
  * Also, used https://docs.oracle.com/javafx/2/ui_controls/list-view.htm.
  */
 public class AdminGUI extends MainGUI implements RunnableGUI{
-    private Scene scene;
     private Stage stage;
+    private Scene scene;
     private final int width;
     private final int height;
     private final AdminController controller;
