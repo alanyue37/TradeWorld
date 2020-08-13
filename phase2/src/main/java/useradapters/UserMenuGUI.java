@@ -27,6 +27,7 @@ public class UserMenuGUI implements RunnableGUI {
     private final int height;
     private String username;
     private RunnableGUI nextGUI;
+    private GridPane grid;
 
     public UserMenuGUI(Stage stage, int width, int height, TradeModel model, String username) {
         this.stage = stage;
@@ -39,17 +40,25 @@ public class UserMenuGUI implements RunnableGUI {
     }
 
     @Override
-    public void showScreen() {
+    public void initialScreen(){
 
+    }
+
+    @Override
+    public void showScreen() {
+        initializeScreen();
+        scene = new Scene(grid, width, height);
+        stage.setScene(scene);
+        stage.show();
     }
 
     @Override
     public Parent getRoot() {
-        return null;
+        initializeScreen();
+        return grid;
     }
 
-    @Override
-    public void initialScreen(){
+    private void initializeScreen() {
         presenter.menuScreen();
         stage.setTitle(presenter.next());
 
@@ -83,7 +92,7 @@ public class UserMenuGUI implements RunnableGUI {
             nextGUI.initialScreen();
         });
 
-        GridPane grid = new GridPane();
+        grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
@@ -93,10 +102,6 @@ public class UserMenuGUI implements RunnableGUI {
         for (int i = 0; i < buttons.size(); i++) {
             grid.add(buttons.get(i), 0, i+1, 2, 1);
         }
-
-        scene = new Scene(grid, width, height);
-        stage.setScene(scene);
-        stage.show();
 
         frozenAlert();
     }

@@ -49,8 +49,7 @@ public class ProfileGUI implements RunnableGUI {
 
     @Override
     public void initialScreen() {
-        initializeScreen();
-        showScreen();
+
     }
 
     @Override
@@ -61,6 +60,7 @@ public class ProfileGUI implements RunnableGUI {
 
     @Override
     public void showScreen() {
+        initializeScreen();
         scene = new Scene(root, width, height);
         stage.setScene(scene);
         stage.show();
@@ -171,6 +171,7 @@ public class ProfileGUI implements RunnableGUI {
     protected Stage getStage() {
         return stage;
     }
+
 
     protected int getWidth() {
         return width;

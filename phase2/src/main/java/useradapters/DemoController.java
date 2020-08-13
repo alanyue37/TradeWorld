@@ -65,21 +65,14 @@ public class DemoController extends UserController implements RunnableController
     /**
      * View system inventory. Gives the user the option of simulating adding items to their wishlist.
      *
-     * @throws IOException if a problem occurs with reading in input
-     * @return
+//     * @throws IOException if a problem occurs with reading in input
+//     * @return
      */
-    /*@Override
-    public void viewItemsToAddToWishlist() throws IOException {
-        Set<String> items = tradeModel.getItemManager().getItemsByStage("common");
-        presenter.printItemsToAddToWishlist(getItemsInfo(items));
-        //String choice = br.readLine();
-        while (!items.contains(choice) && !choice.equals("back")) {
-            presenter.tryAgain();
-           // choice = br.readLine();
-        }
-        if (items.contains(choice)) {
-            presenter.printDemoMessage();
-        }
-        */
+    @Override
+    public List<String> viewItemsToAddToWishlist(){
+        List<String> items = (List<String>) tradeModel.getItemManager().getItemsByStage("common");
+        return items;
+    }
+
 }
 

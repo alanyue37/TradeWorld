@@ -12,9 +12,6 @@ import useradapters.UserController;
 public class LogInController {
 
     private final TradeModel tradeModel;
-    private String username;
-    private String password;
-    private RunnableController nextController = null;
 
     /**
      * Creates a LogInController.
@@ -24,36 +21,18 @@ public class LogInController {
         this.tradeModel = tradeModel;
     }
 
-    /**
-     * Method to get the next controller to run.
-     * @return the next controller that will be run
-     */
-    public RunnableController getNextController() {
-        return nextController;
-    }
-
     // Logging in
     boolean logIn(boolean isAdmin, String user, String pass) {
-        username = user;
-        password = pass;
-        return tradeModel.getUserManager().login(username, password);
+        return tradeModel.getUserManager().login(user, pass);
     }
 
     // Create new account
     boolean newTradingUser(String name, String user, String pass, String city) {
-        username = user;
-        password = pass;
-
-        if (!tradeModel.getUserManager().createTradingUser(name, username, password, city)) {
-            return false;
-        }
-
-        nextController = new UserController(tradeModel, username);
-        return true;
+        return tradeModel.getUserManager().createTradingUser(name, user, pass, city);
     }
 
-    void demo(){
-        username = "DemoUser"; //TODO demo without username?
-        nextController = new DemoController(tradeModel, username);
-    }
+//    void demo(){
+//        String username = "DemoUser";
+//        nextController = new DemoController(tradeModel, username);
+//    }
 }

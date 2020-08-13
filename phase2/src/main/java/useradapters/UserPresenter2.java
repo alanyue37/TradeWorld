@@ -112,9 +112,14 @@ public class UserPresenter2 implements Iterator<String> {
     public void viewInventory() {
         Set<String> userInventory = tradeModel.getItemManager().getInventory(username);
         for (String itemID : userInventory) {
-            prompts.add(itemID + " " +
-                    tradeModel.getItemManager().getName(itemID) + " " +
-                    tradeModel.getItemManager().getDescription(itemID));
+            prompts.add(itemID);
+            prompts.add(tradeModel.getItemManager().getName(itemID));
+            prompts.add(tradeModel.getItemManager().getDescription(itemID));
+            if (tradeModel.getItemManager().getAvailable(itemID)) {
+                prompts.add("Yes");
+            } else {
+                prompts.add("No");
+            }
         }
     }
 
@@ -133,10 +138,10 @@ public class UserPresenter2 implements Iterator<String> {
             String thisUserCity = tradeModel.getUserManager().getCityByUsername(username);
             String otherUserCity = tradeModel.getUserManager().getCityByUsername(otherUsername);
             if (!userInventory.contains(itemID) && thisUserCity.equals(otherUserCity)) {
-                prompts.add(itemID + " " +
-                        tradeModel.getItemManager().getName(itemID) + " " +
-                        tradeModel.getItemManager().getOwner(itemID) + " " +
-                        tradeModel.getItemManager().getDescription(itemID));
+                prompts.add(itemID);
+                prompts.add(tradeModel.getItemManager().getName(itemID));
+                prompts.add(tradeModel.getItemManager().getOwner(itemID));
+                prompts.add(tradeModel.getItemManager().getDescription(itemID));
             }
         }
     }
@@ -147,10 +152,10 @@ public class UserPresenter2 implements Iterator<String> {
     public void viewWishlist() {
         Set<String> userWishlist =  tradeModel.getUserManager().getWishlistByUsername(username);
         for (String itemID : userWishlist) {
-            prompts.add(itemID + " " +
-                    tradeModel.getItemManager().getName(itemID) + " " +
-                    tradeModel.getItemManager().getOwner(itemID) + " " +
-                    tradeModel.getItemManager().getDescription(itemID));
+            prompts.add(itemID);
+            prompts.add(tradeModel.getItemManager().getName(itemID));
+            prompts.add(tradeModel.getItemManager().getOwner(itemID));
+            prompts.add(tradeModel.getItemManager().getDescription(itemID));
         }
     }
 

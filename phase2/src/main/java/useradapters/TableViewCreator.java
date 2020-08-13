@@ -21,8 +21,8 @@ public class TableViewCreator {
         switch(type) {
             case "own inventory":
                 presenter.viewInventory();
-                colTitles = new String[]{"ID", "Name", "Description"};
-                widths = new double[]{0.1, 0.3, 0.6};
+                colTitles = new String[]{"ID", "Name", "Description", "Approved"};
+                widths = new double[]{0.1, 0.3, 0.5, 0.1};
                 break;
             case "all items":
                 presenter.viewAllItems();
@@ -39,7 +39,11 @@ public class TableViewCreator {
         TableView<ObservableList<String>> table = new TableView<>();
         ObservableList<ObservableList<String>> observableItemList = FXCollections.observableArrayList();
         while (presenter.hasNext()) {
-            observableItemList.add(FXCollections.observableArrayList(presenter.next().split(" ")));
+            String[] tokens = new String[colTitles.length];
+            for (int i = 0; i < colTitles.length; i++) {
+                tokens[i] = presenter.next();
+            }
+            observableItemList.add(FXCollections.observableArrayList(tokens));
         }
         table.setItems(observableItemList);
 

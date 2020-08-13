@@ -2,7 +2,9 @@ package undocomponent;
 
 import usercomponent.UserManager;
 
-public class UndoAddWishlistItem implements UndoableOperation {
+import java.io.Serializable;
+
+public class UndoAddWishlistItem implements UndoableOperation, Serializable {
     private final UserManager userManager;
     private final String username;
     private final String itemId;

@@ -3,10 +3,11 @@ package undocomponent;
 import tradecomponent.MeetingManager;
 import tradecomponent.TradeManager;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UndoAddProposedTrade implements UndoableOperation {
+public class UndoAddProposedTrade implements UndoableOperation, Serializable {
     private final TradeManager tradeManager;
     private final MeetingManager meetingManager;
     private final String tradeId;

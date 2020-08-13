@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 import tradegateway.TradeModel;
 import trademisc.RunnableGUI;
 
-public class AddItemGUI implements RunnableGUI {
+public class DemoAddItemGUI implements RunnableGUI {
     private final Stage stage;
     private Scene scene;
     private final UserController2 controller;
@@ -26,7 +26,7 @@ public class AddItemGUI implements RunnableGUI {
     private final TableViewCreator creator;
     private GridPane grid;
 
-    public AddItemGUI(Stage stage, int width, int height, TradeModel model, String username) {
+    public DemoAddItemGUI(Stage stage, int width, int height, TradeModel model, String username) {
         this.stage = stage;
         controller = new UserController2(model, username);
         presenter = new UserPresenter2(model, username);
@@ -91,25 +91,24 @@ public class AddItemGUI implements RunnableGUI {
         table.setPlaceholder(new Label(presenter.next()));
 
         createItemButton.setOnAction(actionEvent -> {
-            controller.createItem(username, itemNameField.getText(), itemDescriptionField.getText());
             itemNameField.clear();
             itemDescriptionField.clear();
-            presenter.itemAdded();
-            Text message = new Text(presenter.next());
+            // presenter.itemAdded();
+            Text message = new Text("demo item was added");
             grid.add(message, 0, 10, 2, 1);
         });
 
-//        backButton();
+        backButton();
     }
 
-//    private void backButton() {
-//        presenter.backButton();
-//        Button backButton = new Button(presenter.next());
-//        grid.add(backButton, 0, 11);
-//        backButton.setOnAction(actionEvent -> {
-//            new UserMenuGUI(stage, width, height, tradeModel, username).initialScreen();
-//        });
-//    }
+    private void backButton() {
+        presenter.backButton();
+        Button backButton = new Button(presenter.next());
+        grid.add(backButton, 0, 11);
+        backButton.setOnAction(actionEvent -> {
+            new UserMenuGUI(stage, width, height, tradeModel, username).initialScreen();
+        });
+    }
 }
 
 

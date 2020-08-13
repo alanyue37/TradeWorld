@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 import tradegateway.TradeModel;
 import trademisc.RunnableGUI;
 
-public class AddWishlistGUI implements RunnableGUI {
+public class DemoAddWishlistGUI implements RunnableGUI {
     private final Stage stage;
     private Scene scene;
     private final UserController2 controller;
@@ -26,7 +26,7 @@ public class AddWishlistGUI implements RunnableGUI {
     private final TableViewCreator creator;
     private GridPane grid;
 
-    public AddWishlistGUI(Stage stage, int width, int height, TradeModel model, String username) {
+    public DemoAddWishlistGUI(Stage stage, int width, int height, TradeModel model, String username) {
         this.stage = stage;
         controller = new UserController2(model, username);
         presenter = new UserPresenter2(model, username);
@@ -39,8 +39,7 @@ public class AddWishlistGUI implements RunnableGUI {
 
     @Override
     public void initialScreen(){
-        initializeScreen();
-        showScreen();
+
     }
 
     @Override
@@ -51,6 +50,7 @@ public class AddWishlistGUI implements RunnableGUI {
 
     @Override
     public void showScreen() {
+        initializeScreen();
         scene = new Scene(grid, width, height);
         stage.setScene(scene);
     }
@@ -92,16 +92,13 @@ public class AddWishlistGUI implements RunnableGUI {
 
         addButton.setOnAction(actionEvent -> {
             ObservableList<ObservableList<String>> selectedItems = itemSelection.getSelectedItems();
-            System.out.println(selectedItems.get(0).get(1));
-            if (controller.addItemToWishlist(selectedItems.get(0).get(0))) { // new item added to wishlist
-                wishlistTable.getItems().add(selectedItems.get(0));
-            }
+            wishlistTable.getItems().add(selectedItems.get(0));
+//            itemTable.getItems().remove(selectedItems.get(0));
         });
 
         removeButton.setOnAction(actionEvent -> {
             ObservableList<ObservableList<String>> selectedItems = wishlistSelection.getSelectedItems();
-            System.out.println(selectedItems.get(0).get(1));
-            controller.removeItemFromWishlist(selectedItems.get(0).get(0));
+//            itemTable.getItems().add(selectedItems.get(0));
             wishlistTable.getItems().remove(selectedItems.get(0));
         });
 
