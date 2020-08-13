@@ -112,11 +112,9 @@ public class TradeGUI implements RunnableGUI {
 
         root.getTabs().addAll(initiateTab, proposedTab, confirmTab, viewTab);
 
-        for (Tab tabs: root.getTabs()){
-            if (tabs.isSelected()){
-                tabs.setOnSelectionChanged(actionEvent -> initializeScreen());
-            }
-        }
+        //TODO: does this work?
+        root.getSelectionModel().getSelectedItem().setOnSelectionChanged(actionEvent -> getRoot());
+
     }
 
     // Main tab methods
@@ -550,7 +548,9 @@ public class TradeGUI implements RunnableGUI {
         //confirm button
         Button confirmBtnReturnItem = new Button("Confirm");
         Button exitBtn = new Button("Exit");
-        exitBtn.setOnAction(actionEvent -> stage2.close());
+        exitBtn.setOnAction(actionEvent -> {
+//            getRoot();
+            stage2.close();});
 
         Label messageLabel = new Label();
 
@@ -631,7 +631,7 @@ public class TradeGUI implements RunnableGUI {
         Button exitBtn = new Button("Exit");
         exitBtn.setOnAction(actionEvent -> {
             stage2.close();
-            getRoot(); //TODO: not too sure
+//            getRoot(); //TODO: not too sure
         });
 
         Label messageLabel = new Label();
