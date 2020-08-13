@@ -120,8 +120,6 @@ public class ProfileGUI implements RunnableGUI {
         VBox container = new VBox();
         row.setSpacing(20);
         container.setSpacing(20);
-        //row.setPadding(new Insets(25, 25, 25, 25));
-        // TODO: complete implementation
         HBox titleRow;
         HBox profileInfoRow;
         HBox accountStandingRow;
