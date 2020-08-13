@@ -1,5 +1,7 @@
 package tradeadapters;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -22,6 +24,7 @@ import trademisc.RunnableGUI;
 import useradapters.ProfileController;
 import viewingadapters.ViewingTradesController;
 
+import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -47,6 +50,8 @@ public class TradeGUI implements RunnableGUI {
     private ObservableList<String> proposedTradesInfoObservableList;
     private ObservableList<String> confirmTradesIDObservableList;
     private ObservableList<String> confirmTradesInfoObservableList;
+    private ObservableList<String> userOngoingTradeList;
+    private ObservableList<String> userCompletedTradeList;
 
     public TradeGUI(Stage stage, int width, int height, TradeModel tradeModel, String username) {
         this.stage = stage;
@@ -65,6 +70,8 @@ public class TradeGUI implements RunnableGUI {
         this.proposedTradesInfoObservableList = FXCollections.observableArrayList();
         this.confirmTradesIDObservableList = FXCollections.observableArrayList();
         this.confirmTradesInfoObservableList = FXCollections.observableArrayList();
+        this.userOngoingTradeList = FXCollections.observableArrayList();
+        this.userCompletedTradeList = FXCollections.observableArrayList();
     }
 
     @Override
@@ -94,7 +101,6 @@ public class TradeGUI implements RunnableGUI {
         Parent initiateParent = viewInitiateTrades();
         Tab initiateTab = new Tab("Initiate", initiateParent);
 
-
         Parent proposedParent = viewProposedTrades();
         Tab proposedTab = new Tab("Proposed Trades", proposedParent);
 
@@ -105,6 +111,10 @@ public class TradeGUI implements RunnableGUI {
         Tab viewTab = new Tab("View Trades", viewParent);
 
         root.getTabs().addAll(initiateTab, proposedTab, confirmTab, viewTab);
+
+        //TODO: does this work?
+        root.getSelectionModel().getSelectedItem().setOnSelectionChanged(actionEvent -> getRoot());
+
     }
 
     // Main tab methods
@@ -144,6 +154,7 @@ public class TradeGUI implements RunnableGUI {
             radioBtn.setOnAction(actionEvent -> selected.set(info));
         }
         scrollPane.setContent(itembuttons);
+        mainLayout.getChildren().add(scrollPane);
 
 
         Label selectType = new Label("Select the type of trade you'd like to make.");
@@ -151,7 +162,15 @@ public class TradeGUI implements RunnableGUI {
         Button oneWayPermanent = new Button("One way permanent");
         Button twoWayTemporary = new Button("Two way temporary");
         Button twoWayPermanent = new Button("Two way permanent");
-        Button backButton = new Button("Back");
+
+        if (!initiateTradeController.canTrade()){
+            oneWayPermanent.setDisable(true);
+            oneWayTemporary.setDisable(true);
+            twoWayPermanent.setDisable(true);
+            twoWayTemporary.setDisable(true);
+            Label cannotTrade = new Label("You cannot initiate a trade. Check your account status");
+            mainLayout.getChildren().add(cannotTrade);
+        }
 
         VBox typeButtons = new VBox();
         typeButtons.getChildren().addAll(selectType, oneWayPermanent,oneWayTemporary, twoWayPermanent, twoWayTemporary);
@@ -161,8 +180,6 @@ public class TradeGUI implements RunnableGUI {
         Label messageBox = new Label();
         messageBox.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
         messageBox.setAlignment(Pos.CENTER);
-
-        backButton.setOnAction(actionEvent -> initialScreen());
 
         oneWayTemporary.setOnAction(actionEvent ->{
                     if (selected.toString().equals("")){
@@ -231,9 +248,7 @@ public class TradeGUI implements RunnableGUI {
             }
         });
 
-        mainLayout.getChildren().addAll(scrollPane, messageBox, backButton, typeButtons);
-        backButton.setOnAction(actionEvent -> initialScreen());
-
+        mainLayout.getChildren().addAll(messageBox, typeButtons);
 
         return mainLayout;
     }
@@ -290,6 +305,8 @@ public class TradeGUI implements RunnableGUI {
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
 
+        updateToBeConfirmedObservableLists();
+
         ListView<String> confirmTradesListView = new ListView<>();
         Map<String, String> trades = confirmTradesController.getToBeConfirmedTrades(username);
         confirmTradesListView.setPlaceholder(new Label("No trades to confirm"));
@@ -313,42 +330,43 @@ public class TradeGUI implements RunnableGUI {
     }
 
     public Parent viewAllTrades() {
+        Label addReviewLabel = new Label("Enter your review.");
 
         TextField commentInput = new TextField();
         commentInput.setPromptText("Leave a comment");
         TextField ratingInput = new TextField();
-        ratingInput.setPromptText("Rating you want to give (1-5)");
+        ratingInput.setPromptText("Rating out of 5 (1-5)");
         TextField tradeIdInput = new TextField();
         tradeIdInput.setPromptText("Trade ID");
 
         Label messageBox = new Label();
+        messageBox.setFont(Font.font("Tahoma", FontWeight.BOLD, 15));
+        Label ongoingTrades = new Label("Your ongoing trades");
+        Label completedTrades = new Label("Your completed trades");
 
         Button addReview = new Button("Add Review");
 
-        HBox backBox = new HBox(10);
-        Button backButton = new Button("Back");
-        backButton.setOnAction(actionEvent -> initialScreen());
-        backBox.getChildren().addAll(backButton);
 
         HBox hBox = new HBox();
         hBox.setPadding(new Insets(25, 25, 25, 25));
         hBox.setSpacing(10);
-        hBox.getChildren().addAll(tradeIdInput, ratingInput, commentInput,addReview, backBox);
+        hBox.getChildren().addAll(addReviewLabel, tradeIdInput, ratingInput, commentInput, addReview);
 
-        HBox hbox2 = new HBox();
-        hbox2.setPadding(new Insets(25, 25, 25, 25));
-        hbox2.setSpacing(10);
+        HBox hboxOngoing = new HBox();
+        HBox hboxCompleted = new HBox();
+        hboxOngoing.setPadding(new Insets(25, 25, 25, 25));
+        hboxOngoing.setSpacing(10);
+        hboxCompleted.setPadding(new Insets(25, 25, 25, 25));
+        hboxCompleted.setSpacing(10);
 
-        try {
-            hbox2.getChildren().addAll(getTradeListView());
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-        }
+        updateCompletedTradesObservableList();
+        updateOngoingTradesObservableList();
+        hboxOngoing.getChildren().addAll(getOngoingTradesListView());
+        hboxCompleted.getChildren().addAll(getCompletedTradesListView());
 
 
         VBox vbox = new VBox();
-        vbox.getChildren().addAll(hBox, messageBox, hbox2);
+        vbox.getChildren().addAll(hBox, messageBox, ongoingTrades, hboxOngoing, completedTrades, hboxCompleted);
 
 
         addReview.setOnAction(e -> {
@@ -362,7 +380,6 @@ public class TradeGUI implements RunnableGUI {
             }
         });
 
-
         return vbox;
     }
 
@@ -373,7 +390,7 @@ public class TradeGUI implements RunnableGUI {
         proposedTradesInfoObservableList.clear();
         List<String> trades = tradeModel.getMeetingManager().getToCheckTrades(tradeModel.getTradeManager().getTradesOfUser(tradeModel.getCurrentUser(), "ongoing"), "proposed");
         proposedTradesIDObservableList.addAll(trades);
-        List<String> removeChar = new ArrayList<String>(
+        List<String> removeChar = new ArrayList<>(
                 Arrays.asList("\"", "{", "}", "[", ",", "]\n"));
         try {
             for (String tradeId : trades) {
@@ -450,7 +467,7 @@ public class TradeGUI implements RunnableGUI {
         confirmTradesInfoObservableList.clear();
         Map<String, String> trades = confirmTradesController.getToBeConfirmedTrades(username);
         confirmTradesIDObservableList.addAll(trades.keySet());
-        List<String> removeChar = new ArrayList<String>(Arrays.asList("\"", "{", "}", "[", ",", "]\n"));
+        List<String> removeChar = new ArrayList<>(Arrays.asList("\"", "{", "}", "[", ",", "]\n"));
         try {
             for (String tradeId : trades.keySet()) {
                 List<JSONObject> allTrade = new ArrayList<>();
@@ -472,6 +489,7 @@ public class TradeGUI implements RunnableGUI {
         }
     }
 
+
     public void selectItemTwoWayPage(List<String> itemsToOffer, Map<String, String> initiateTradeInfo){
         Stage stage2 = new Stage();
         Text title = new Text("Select an item to exchange.");
@@ -481,7 +499,6 @@ public class TradeGUI implements RunnableGUI {
         for (String id: itemsToOffer){
             infoToId.put(tradeModel.getItemManager().getItemInfo(id), id);
         }
-
 
         //Vbox
         VBox mainLayout = new VBox();
@@ -517,18 +534,78 @@ public class TradeGUI implements RunnableGUI {
         }
         scrollPane.setContent(itemBtns);
 
+        Text meetingTitle = new Text("Meeting details");
+        meetingTitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(25, 25, 25, 25));
+        grid.add(meetingTitle, 0, 0, 2, 1);
+
+        //location
+        Label tradeLocation = new Label("Suggest a location of real life meeting.");
+        TextField userInputLocation = new TextField();
+
+        //date and time
+        Label tradeDate = new Label("Pick a date for the real life meeting.");
+        DatePicker pickDate = new DatePicker();
+        pickDate.setMaxWidth(150);
+        Label timeInput = new Label("Input time as hh:mm");
+        TextField userInputHour = new TextField();
+        userInputHour.setMaxWidth(150);
+
+        //confirm button
+        Button confirmBtnReturnItem = new Button("Confirm");
+        Button exitBtn = new Button("Exit");
+        exitBtn.setOnAction(actionEvent -> {
+//            getRoot();
+            stage2.close();});
+
+        Label messageLabel = new Label();
+
+        grid.add(tradeDate, 0, 6, 2, 1);
+        grid.add(timeInput, 4, 6, 2, 1);
+        grid.add(pickDate, 0, 7, 2, 1);
+        grid.add(userInputHour, 4, 7, 2, 1);
+        grid.add(tradeLocation, 0, 9, 2, 1);
+        grid.add(userInputLocation, 0, 10, 2, 1);
+        grid.add(messageLabel, 0,12,4,1);
+        grid.add(confirmBtnReturnItem, 4, 13, 2, 1);
+
+        confirmBtnReturnItem.setOnAction(actionEvent -> {
+            if (userInputLocation.getText().isEmpty()| userInputHour.getText().isEmpty()|
+                    !userInputHour.getText().matches("^([0-1][0-9]|[2][0-3]):([0-5][0-9])$") | pickDate.getValue() == null){
+                messageLabel.setText("You have an invalid input. Please check your input again.");
+            } else{
+                initiateTradeInfo.put("location", userInputLocation.getText());
+                LocalDate ld = pickDate.getValue();
+                String dateString = (ld.getDayOfMonth()) +"/" +(ld.getMonthValue()) +"/" + (ld.getYear()) + " " + userInputHour.getText();
+                initiateTradeInfo.put("date", dateString);
+                try {
+                    initiateTradeController.createTrade(initiateTradeInfo);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                Label createdTrade = new Label("Trade initiated successfully! ");
+                grid.getChildren().removeAll(tradeDate, timeInput, pickDate, userInputHour, tradeLocation, userInputLocation, messageLabel, confirmBtnReturnItem, meetingTitle);
+                grid.add(createdTrade, 0, 1, 2, 1);
+                grid.add(exitBtn, 0, 2, 2, 1);
+            }
+        });
+
         confirmBtn.setOnAction(actionEvent -> {
             if (selected.toString().equals("")){
                 messageText.setText("Choose an item to trade.");
             } else {
                 initiateTradeInfo.put("giving", infoToId.get(selected.toString()));
-                initiateTradeMeetingInfo(initiateTradeInfo);
-                stage2.hide();
+                mainLayout.getChildren().removeAll(title, scrollPane, messageText, confirmBtn);
+                mainLayout.getChildren().add(grid);
             }
         });
 
-        mainLayout.getChildren().addAll(scrollPane, messageText, confirmBtn);
-
+        mainLayout.getChildren().addAll(title, scrollPane, messageText, confirmBtn);
 
         Scene scene2 = new Scene(mainLayout, width, height);
         stage2.setScene(scene2);
@@ -538,15 +615,15 @@ public class TradeGUI implements RunnableGUI {
 
     private void initiateTradeMeetingInfo(Map<String, String> initiateTradeInfo) {
         Stage stage2 = new Stage();
-        Text title = new Text("Meeting details");
-        title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        Text meetingTitle = new Text("Meeting details");
+        meetingTitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
-        grid.add(title, 0, 0, 2, 1);
+        grid.add(meetingTitle, 0, 0, 2, 1);
 
         //location
         Label tradeLocation = new Label("Suggest a location of real life meeting.");
@@ -562,8 +639,11 @@ public class TradeGUI implements RunnableGUI {
 
         //confirm button
         Button confirmBtn = new Button("Confirm");
-        Button backButton = new Button("Back");
-        backButton.setOnAction(actionEvent -> initialScreen());
+        Button exitBtn = new Button("Exit");
+        exitBtn.setOnAction(actionEvent -> {
+            stage2.close();
+//            getRoot(); //TODO: not too sure
+        });
 
         Label messageLabel = new Label();
 
@@ -574,7 +654,6 @@ public class TradeGUI implements RunnableGUI {
         grid.add(tradeLocation, 0, 9, 2, 1);
         grid.add(userInputLocation, 0, 10, 2, 1);
         grid.add(messageLabel, 0,12,4,1);
-        grid.add(backButton,0,13,2,1 );
         grid.add(confirmBtn, 4, 13, 2, 1);
 
         confirmBtn.setOnAction(actionEvent -> {
@@ -591,8 +670,10 @@ public class TradeGUI implements RunnableGUI {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                AlertBox.display("Trade initiated successfully! ");
-                initialScreen();
+                Label createdTrade = new Label("Trade initiated successfully! ");
+                grid.getChildren().removeAll(meetingTitle, tradeDate, timeInput, pickDate, userInputHour, tradeLocation, userInputLocation, messageLabel, confirmBtn);
+                grid.add(createdTrade,0 , 1, 2, 1);
+                grid.add(exitBtn, 1, 3, 2, 1);
             }
         });
 
@@ -603,42 +684,73 @@ public class TradeGUI implements RunnableGUI {
         stage2.showAndWait();
     }
 
-    private ListView<String> getTradeListView() throws JSONException {
-        // TODO: Make lists update automatically as with other tabs
-        // trades
-        List<JSONObject> jsonInfo = new ArrayList<>();
-        for (String id : tradeModel.getTradeManager().getTradesOfUser(username, "ongoing")) {
-            jsonInfo.add(tradeModel.getTradeManager().getTradeInfo(id));
-        }
-        for (String id : tradeModel.getTradeManager().getTradesOfUser(username, "completed")){
-            jsonInfo.add(tradeModel.getTradeManager().getTradeInfo(id));
-        }
-        List<String> tradeInfo = new ArrayList<>();
-
-        List<String> removeChar = new ArrayList<String>(
-                Arrays.asList("\"", "{", "}", "[", ",", "]\n"));
-        for (JSONObject info : jsonInfo){
-            StringBuilder allInfo = new StringBuilder(info.toString(0));
-            for (JSONObject meetingInfo : tradeModel.getMeetingManager().getMeetingsInfo(info.getString("Trade ID"))){
-                allInfo.append(meetingInfo.toString(0));
-            }
-            String strInfo = allInfo.toString();
-            for (String ch : removeChar) {
-                strInfo = strInfo.replace(ch, "");
+    private void updateOngoingTradesObservableList() {
+        userOngoingTradeList.clear();
+        List<String> trades = tradeModel.getTradeManager().getTradesOfUser(username, "ongoing");
+        List<String> removeChar = new ArrayList<>(Arrays.asList("\"", "{", "}", "[", ",", "]\n"));
+        try {
+            for (String tradeId : trades) {
+                List<JSONObject> allTrade = new ArrayList<>();
+                allTrade.add(tradeModel.getTradeManager().getTradeInfo(tradeId));
+                allTrade.addAll(tradeModel.getMeetingManager().getMeetingsInfo(tradeId));
+                StringBuilder allTradeInfo = new StringBuilder();
+                for (JSONObject details : allTrade) {
+                    String strTradeInfo = details.toString(0);
+                    for (String ch : removeChar) {
+                        strTradeInfo = strTradeInfo.replace(ch, "");
+                    }
+                    allTradeInfo.append(strTradeInfo);
                 }
-            tradeInfo.add(strInfo);
+                userOngoingTradeList.addAll(allTradeInfo.toString());
+            }
         }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
+    private ListView<String> getOngoingTradesListView() {
+        updateOngoingTradesObservableList();
         ListView<String> list = new ListView<>();
-        ObservableList<String> trades = FXCollections.observableArrayList(tradeInfo);
-        list.setItems(trades);
-        list.setPlaceholder(new Label("There are no trades to be viewed."));
-        list.setPrefHeight(height - 50); // we could change this
-        list.setPrefWidth(width - 50);   // we could change this
+        list.setPlaceholder(new Label("You have no ongoing trades"));
+        list.setItems(userOngoingTradeList);
+        list.setPrefWidth(300);
+        list.setPrefHeight(200);
+        return list;
+    }
 
+    private void updateCompletedTradesObservableList() {
+        userCompletedTradeList.clear();
+        List<String> trades = tradeModel.getTradeManager().getTradesOfUser(username, "completed");
+        List<String> removeChar = new ArrayList<>(Arrays.asList("\"", "{", "}", "[", ",", "]\n"));
+        try {
+            for (String tradeId : trades) {
+                List<JSONObject> allTrade = new ArrayList<>();
+                allTrade.add(tradeModel.getTradeManager().getTradeInfo(tradeId));
+                allTrade.addAll(tradeModel.getMeetingManager().getMeetingsInfo(tradeId));
+                StringBuilder allTradeInfo = new StringBuilder();
+                for (JSONObject details : allTrade) {
+                    String strTradeInfo = details.toString(0);
+                    for (String ch : removeChar) {
+                        strTradeInfo = strTradeInfo.replace(ch, "");
+                    }
+                    allTradeInfo.append(strTradeInfo);
+                }
+                userCompletedTradeList.addAll(allTradeInfo.toString());
+            }
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
-        list.setPrefWidth(600);
-        list.setPrefHeight(400);
+    private ListView<String> getCompletedTradesListView() {
+        updateCompletedTradesObservableList();
+        ListView<String> list = new ListView<>();
+        list.setPlaceholder(new Label("You have no completed trades"));
+        list.setItems(userCompletedTradeList);
+        list.setPrefWidth(300);
+        list.setPrefHeight(200);
         return list;
     }
 
