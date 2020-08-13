@@ -411,15 +411,9 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
         unfreezeButton.setAlignment(Pos.BOTTOM_RIGHT);
         unfreezeHBox.getChildren().add(unfreezeButton);
 
-        Button mainMenuButton = new Button("Main Menu");
-        HBox hBoxMainMenu = new HBox(10);
-        hBoxMainMenu.setAlignment(Pos.BOTTOM_LEFT);
-        hBoxMainMenu.getChildren().add(mainMenuButton);
-
         grid.add(heading, 0, 1);
         grid.add(list, 0, 2);
         grid.add(unfreezeHBox, 0, 3);
-        grid.add(hBoxMainMenu, 0, 4);
 
         Label message = new Label();
         message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
@@ -437,7 +431,6 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
                 message.setText("Selected accounts are now unfrozen.");
             }
         });
-        mainMenuButton.setOnAction(actionEvent -> initializeScreen());
 
         return grid;
     }
@@ -501,15 +494,10 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
 
         hBoxAddItemsButton.setAlignment(Pos.BOTTOM_RIGHT);
         hBoxAddItemsButton.getChildren().add(addItemsButton);
-        Button mainMenuButton = new Button("Main Menu");
-        HBox hBoxMainMenu = new HBox(10);
-        hBoxMainMenu.setAlignment(Pos.BOTTOM_LEFT);
-        hBoxMainMenu.getChildren().add(mainMenuButton);
 
         grid.add(heading, 0, 1);
         grid.add(list, 0, 2);
         grid.add(hBoxAddItemsButton, 0, 3);
-        grid.add(hBoxMainMenu, 0, 4);
 
         Label message = new Label();
         message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
@@ -542,7 +530,6 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
                 message.setText("No items are added to the system.");
             }
         });
-        mainMenuButton.setOnAction(actionEvent -> initializeScreen());
 
         return grid;
     }
@@ -600,15 +587,10 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
         HBox hBoxSetThreshold = new HBox(10);
         hBoxSetThreshold.setAlignment(Pos.BOTTOM_RIGHT);
         hBoxSetThreshold.getChildren().add(setThresholdButton);
-        Button mainMenuButton = new Button("Main Menu");
-        HBox hBoxMainMenu = new HBox(10);
-        hBoxMainMenu.setAlignment(Pos.BOTTOM_LEFT);
-        hBoxMainMenu.getChildren().add(mainMenuButton);
 
         grid.add(heading, 0, 1);
         grid.add(lendingThresholdField, 0, 2);
         grid.add(hBoxSetThreshold, 0, 3);
-        grid.add(hBoxMainMenu, 0, 5);
 
         Label message = new Label();
         message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
@@ -626,11 +608,7 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
                 message.setText("Not an integer or is a number less than zero. \nPlease try again");
             }
         });
-        mainMenuButton.setOnAction(actionEvent -> setThresholdMenu());
         return grid;
-        /*scene = new Scene(grid, width, height);
-        stage.setScene(scene);
-        stage.show();*/
     }
 
     /**
@@ -664,15 +642,11 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
         HBox hBoxSetThreshold = new HBox(10);
         hBoxSetThreshold.setAlignment(Pos.BOTTOM_RIGHT);
         hBoxSetThreshold.getChildren().add(setThresholdButton);
-        Button mainMenuButton = new Button("Main Menu");
-        HBox hBoxMainMenu = new HBox(10);
-        hBoxMainMenu.setAlignment(Pos.BOTTOM_LEFT);
-        hBoxMainMenu.getChildren().add(mainMenuButton);
+
 
         grid.add(heading, 0, 1);
         grid.add(limitThresholdField, 0, 2);
         grid.add(hBoxSetThreshold, 0, 3);
-        grid.add(hBoxMainMenu, 0, 5);
 
         Label message = new Label();
         message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
@@ -690,7 +664,6 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
                 message.setText("Not an integer or is a number less than one. \nPlease try again");
             }
         });
-        mainMenuButton.setOnAction(actionEvent -> setThresholdMenu());
         return grid;
     }
 
@@ -724,15 +697,10 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
         HBox hBoxSetThreshold = new HBox(10);
         hBoxSetThreshold.setAlignment(Pos.BOTTOM_RIGHT);
         hBoxSetThreshold.getChildren().add(setThresholdButton);
-        Button mainMenuButton = new Button("Main Menu");
-        HBox hBoxMainMenu = new HBox(10);
-        hBoxMainMenu.setAlignment(Pos.BOTTOM_LEFT);
-        hBoxMainMenu.getChildren().add(mainMenuButton);
 
         grid.add(heading, 0, 1);
         grid.add(limitThresholdField, 0, 2);
         grid.add(hBoxSetThreshold, 0, 3);
-        grid.add(hBoxMainMenu, 0, 5);
 
         Label message = new Label();
         message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
@@ -751,11 +719,7 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
             }
 
         });
-        mainMenuButton.setOnAction(actionEvent -> setThresholdMenu());
         return grid;
-        /*scene = new Scene(grid, width, height);
-        stage.setScene(scene);
-        stage.show();*/
     }
 
     /**
@@ -788,15 +752,10 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
         HBox hBoxSetThreshold = new HBox(10);
         hBoxSetThreshold.setAlignment(Pos.BOTTOM_RIGHT);
         hBoxSetThreshold.getChildren().add(setThresholdButton);
-        Button mainMenuButton = new Button("Main Menu");
-        HBox hBoxMainMenu = new HBox(10);
-        hBoxMainMenu.setAlignment(Pos.BOTTOM_LEFT);
-        hBoxMainMenu.getChildren().add(mainMenuButton);
 
         grid.add(heading, 0, 1);
         grid.add(limitThresholdField, 0, 2);
         grid.add(hBoxSetThreshold, 0, 3);
-        grid.add(hBoxMainMenu, 0, 5);
 
         Label message = new Label();
         message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
@@ -816,9 +775,6 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
         });
 
         return grid;
-        /*scene = new Scene(grid, width, height);
-        stage.setScene(scene);
-        stage.show();*/
     }
 
     public Parent setGoldThreshold() {
@@ -847,15 +803,10 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
         HBox hBoxSetThreshold = new HBox(10);
         hBoxSetThreshold.setAlignment(Pos.BOTTOM_RIGHT);
         hBoxSetThreshold.getChildren().add(setThresholdButton);
-        Button mainMenuButton = new Button("Main Menu");
-        HBox hBoxMainMenu = new HBox(10);
-        hBoxMainMenu.setAlignment(Pos.BOTTOM_LEFT);
-        hBoxMainMenu.getChildren().add(mainMenuButton);
 
         grid.add(heading, 0, 1);
         grid.add(limitThresholdField, 0, 2);
         grid.add(hBoxSetThreshold, 0, 3);
-        grid.add(hBoxMainMenu, 0, 5);
 
         Label message = new Label();
         message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
@@ -873,11 +824,7 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
                 message.setText("Not an integer or is a number less than zero. \nPlease try again");
             }
         });
-        mainMenuButton.setOnAction(actionEvent -> setThresholdMenu());
         return grid;
-        /*scene = new Scene(grid, width, height);
-        stage.setScene(scene);
-        stage.show();*/
     }
 
     public Parent setSilverThreshold() {
@@ -906,16 +853,17 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
         HBox hBoxSetThreshold = new HBox(10);
         hBoxSetThreshold.setAlignment(Pos.BOTTOM_RIGHT);
         hBoxSetThreshold.getChildren().add(setThresholdButton);
-        Button mainMenuButton = new Button("Main Menu");
+     /*   Button mainMenuButton = new Button("Main Menu");
         HBox hBoxMainMenu = new HBox(10);
         hBoxMainMenu.setAlignment(Pos.BOTTOM_LEFT);
-        hBoxMainMenu.getChildren().add(mainMenuButton);
+        hBoxMainMenu.getChildren().add(mainMenuButton);*/
 
         grid.add(heading, 0, 1);
         grid.add(limitThresholdField, 0, 2);
         grid.add(hBoxSetThreshold, 0, 3);
+/*
         grid.add(hBoxMainMenu, 0, 5);
-
+*/
         Label message = new Label();
         message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
         message.setAlignment(Pos.CENTER);
@@ -932,11 +880,7 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
                 message.setText("Not an integer or is a number less than zero. \nPlease try again");
             }
         });
-        mainMenuButton.setOnAction(actionEvent -> setThresholdMenu());
         return grid;
-       /* scene = new Scene(grid, width, height);
-        stage.setScene(scene);
-        stage.show();*/
     }
 
     /**
@@ -1014,15 +958,15 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
 
         hBoxConfirmToUndo.setAlignment(Pos.BOTTOM_RIGHT);
         hBoxConfirmToUndo.getChildren().add(confirmToUndo);
-        Button mainMenuButton = new Button("Main Menu");
-        HBox hBoxMainMenu = new HBox(10);
-        hBoxMainMenu.setAlignment(Pos.BOTTOM_LEFT);
-        hBoxMainMenu.getChildren().add(mainMenuButton);
 
         grid.add(heading, 0, 1);
         grid.add(list, 0, 2);
         grid.add(hBoxConfirmToUndo, 0, 4);
-        grid.add(hBoxMainMenu, 0, 5);
+
+        Label message = new Label();
+        message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
+        message.setAlignment(Pos.CENTER);
+        grid.add(message, 0, 11, 1, 1);
 
         confirmToUndo.setOnAction(actionEvent -> {
             ObservableList<String> selectedActions = list.getSelectionModel().getSelectedItems();
@@ -1032,13 +976,11 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
                     controller.undoOperations();
                 } catch (NoLongerUndoableException e) {
                     e.printStackTrace();
-                }
+                } message.setText("Reversed the selected actions.");
             } else {
-                noActionsSelected();
+                message.setText("No undo actions selected.");
             }
         });
-        mainMenuButton.setOnAction(actionEvent -> initializeScreen());
-
        return grid;
     }
 
