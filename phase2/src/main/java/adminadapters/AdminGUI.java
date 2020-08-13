@@ -255,43 +255,6 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
        return grid;
     }
 
-   /* ***
-     * This method informs that Admin user that a new Admin user is created.
-     *
-     * @param username The username of the new admin created.
-     *//*
-    public void newAdminCreated(String username) {
-        GridPane grid = (GridPane) scene.getRoot();
-        Text message = new Text("New admin account created: " + username);
-        if (!grid.getChildren().contains(message)) {
-            grid.add(message, 0, 11, 1, 1);
-        }
-    }
-
-    *
-     * This method informs that Admin user that the username entered is already exists.
-     *
-     * @param username The username of the new admin created.
-     *//*
-    public void usernameTaken(String username) {
-        GridPane grid = (GridPane) scene.getRoot();
-        Text message = new Text(username + "username is already taken.");
-        if (!grid.getChildren().contains(message)) {
-            grid.add(message, 0, 12, 1, 1);
-        }
-    }
-
-    *
-     * This method tells the Admin User to try again for various reasons, such as the input was an empty string.
-     *//*
-    public void tryAgain() {
-        GridPane grid = (GridPane) scene.getRoot();
-        Text message = new Text("Please try again!");
-        if (!grid.getChildren().contains(message)) {
-            grid.add(message, 0, 10, 1, 1);
-        }
-    }*/
-
     /**
      * This method allows the Admin user to freeze a given list of users. The selected users will have their status
      * changed to frozen.
@@ -352,7 +315,6 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
                 list.refresh();
             }
         });
-
         return grid;
     }
 
@@ -401,7 +363,7 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
-        grid.setPadding(new Insets(35, 35, 35, 35));
+        grid.setPadding(new Insets(25, 25, 25, 25));
         grid.add(title, 0, 0, 1, 1);
         list.setPrefHeight(height - 50);
         list.setPrefWidth(width - 50);
@@ -433,29 +395,6 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
         });
 
         return grid;
-    }
-
-
-    /**
-     * This method informs the Admin user that they have not selected any accounts to be unfrozen.
-     */
-    public void noAccountsSelectedToUnfreeze() {
-        GridPane grid = (GridPane) scene.getRoot();
-        Text message = new Text("No accounts are selected to be unfrozen");
-        if (!grid.getChildren().contains(message)) {
-            grid.add(message, 0, 6, 1, 1);
-        }
-    }
-
-    /**
-     * This method informs the Admin user that the selected accounts have been unfrozen.
-     */
-    public void accountsSelectedToUnfreeze() {
-        GridPane grid = (GridPane) scene.getRoot();
-        Text message = new Text("Selected accounts are now unfrozen.");
-        if (!grid.getChildren().contains(message)) {
-            grid.add(message, 0, 8, 1, 1);
-        }
     }
 
     /**
@@ -532,26 +471,6 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
         });
 
         return grid;
-    }
-
-    /**
-     * This method informs the Admin that the selected items have been added to the system and the items not selected
-     * are deleted.
-     */
-    public void itemReviewed() {
-        GridPane grid = (GridPane) scene.getRoot();
-        Text message = new Text("Selected items have been added to the system.");
-        if (!grid.getChildren().contains(message)) {
-            grid.add(message, 0, 6, 2, 1);
-        }
-    }
-
-    public void noItemsSelected() {
-        GridPane grid = (GridPane) scene.getRoot();
-        Text message = new Text("No items are added to the system.");
-        if (!grid.getChildren().contains(message)) {
-            grid.add(message, 0, 6, 2, 1);
-        }
     }
 
     /**
@@ -773,7 +692,6 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
                 message.setText("Not an integer or is a number less than zero. \nPlease try again");
             }
         });
-
         return grid;
     }
 
@@ -906,23 +824,6 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
     }
 
     /**
-     * This method informs that Admin user that the threshold has been set.
-     */
-    public Label thresholdSet() {
-        Label message = new Label();
-        message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
-        message.setAlignment(Pos.CENTER);
-        message.setText("Threshold is set.");
-        return message;
-
-       /* GridPane grid = (GridPane) scene.getRoot();
-        Text message = new Text("Threshold is set.");
-        if (!grid.getChildren().contains(message)) {
-            grid.add(message, 0, 6, 2, 1);
-        }*/
-    }
-
-    /**
      *
      */
     public Parent undoActions() {
@@ -982,13 +883,5 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
             }
         });
        return grid;
-    }
-
-    public void noActionsSelected() {
-        GridPane grid = (GridPane) scene.getRoot();
-        Text message = new Text("No undo actions selected.");
-        if (!grid.getChildren().contains(message)) {
-            grid.add(message, 0, 6, 2, 1);
-        }
     }
 }
