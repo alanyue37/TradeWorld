@@ -22,6 +22,7 @@ import tradeadapters.InitiateTradeController;
 import tradeadapters.ProposedTradesController;
 import tradegateway.TradeModel;
 import trademisc.RunnableGUI;
+import trademisc.UserMainGUI;
 import viewingadapters.ViewingTradesController;
 
 import java.text.DateFormat;
@@ -109,7 +110,7 @@ public class DemoTradeGUI implements RunnableGUI {
         grid.add(viewTradesBtn, 0, 4, 2, 1);
         grid.add(backButtonBtn, 0, 5, 2, 1);
 
-        backButtonBtn.setOnAction(actionEvent -> new UserMenuGUI(stage, width, height, tradeModel, username).initialScreen());
+        backButtonBtn.setOnAction(actionEvent -> new UserMainGUI(800, 800, tradeModel, tradeModel.getCurrentUser()));
     }
 
 }
