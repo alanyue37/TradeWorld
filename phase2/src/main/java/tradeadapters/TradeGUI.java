@@ -279,10 +279,13 @@ public class TradeGUI implements RunnableGUI {
         grid.add(editBtn, 0, 2, 2, 1);
         grid.add(declineBtn, 0, 3, 2, 1);
 
+        Label messageBox = new Label();
+        messageBox.setFont(Font.font("Tahoma", FontWeight.NORMAL, 13));
+
         confirmBtn.setOnAction(actionEvent -> {
             String tradeId = proposedTradesIDObservableList.get(proposedTradesListView.getSelectionModel().getSelectedIndex());
             if (!tradeModel.getMeetingManager().canChangeMeeting(tradeId, username)) {
-                AlertBox.display("Please wait for the other user to confirm the meeting.");
+                messageBox.setText("Please wait for the other user to confirm the meeting.");
             } else {
             proposedTradesController.confirmMeetingTime(tradeId);
             updateProposedObservableLists();
@@ -291,7 +294,7 @@ public class TradeGUI implements RunnableGUI {
         editBtn.setOnAction(actionEvent -> {
             String tradeId = proposedTradesIDObservableList.get(proposedTradesListView.getSelectionModel().getSelectedIndex());
             if (!tradeModel.getMeetingManager().canChangeMeeting(tradeId, username)) {
-                AlertBox.display("Please wait for the other user to edit the meeting.");
+                messageBox.setText("Please wait for the other user to edit the meeting.");
             } else {
             editProposedTrade(tradeId);
             updateProposedObservableLists(); }
@@ -301,6 +304,8 @@ public class TradeGUI implements RunnableGUI {
             proposedTradesController.declineTrade(tradeId);
             updateProposedObservableLists();
         });
+
+        grid.add(messageBox, 0, 4, 2, 1);
 
         return grid;
     }
@@ -323,16 +328,20 @@ public class TradeGUI implements RunnableGUI {
         grid.add(confirmTradesListView, 0, 0, 2, 1);
         grid.add(confirmBtn, 0, 1, 2, 1);
 
+        Label messageBox = new Label();
+        messageBox.setFont(Font.font("Tahoma", FontWeight.NORMAL, 13));
+
         confirmBtn.setOnAction(actionEvent -> {
             String tradeId = confirmTradesIDObservableList.get(confirmTradesListView.getSelectionModel().getSelectedIndex());
             if (!tradeModel.getMeetingManager().canChangeMeeting(tradeId, username)) {
-                AlertBox.display("Already confirmed. Please wait for the other user.");
+                messageBox.setText("Already confirmed. Please wait for the other user.");
             } else {
                 confirmTradesController.confirmTradeHappened(tradeId, trades.get(tradeId));
             }
             updateToBeConfirmedObservableLists();
         });
 
+        grid.add(messageBox, 0, 2, 2, 1);
         return grid;
     }
 
@@ -398,7 +407,7 @@ public class TradeGUI implements RunnableGUI {
         List<String> trades = tradeModel.getMeetingManager().getToCheckTrades(tradeModel.getTradeManager().getTradesOfUser(tradeModel.getCurrentUser(), "ongoing"), "proposed");
         proposedTradesIDObservableList.addAll(trades);
         List<String> removeChar = new ArrayList<>(
-                Arrays.asList("\"", "{", "}", "[", ",", "]\n"));
+                Arrays.asList("\"", "{", "}", "[", ",", "]"));
         try {
             for (String tradeId : trades) {
                 List<JSONObject> allTrade = new ArrayList<>();
@@ -410,9 +419,9 @@ public class TradeGUI implements RunnableGUI {
                     for (String ch : removeChar) {
                         strTradeInfo = strTradeInfo.replace(ch, "");
                     }
+                    strTradeInfo = strTradeInfo.replace("\n\n", "\n");
                     allTradeInfo.append(strTradeInfo);
                 }
-
                 proposedTradesInfoObservableList.add(allTradeInfo.toString());
             }
         }
@@ -445,6 +454,9 @@ public class TradeGUI implements RunnableGUI {
         grid.add(timeField, 1, 2);
         grid.add(editBtn, 1, 5);
 
+        Label messageBox = new Label();
+        messageBox.setFont(Font.font("Tahoma", FontWeight.NORMAL, 13));
+
         List<String> details = new ArrayList<>();
 
         editBtn.setOnAction(actionEvent -> {
@@ -453,9 +465,9 @@ public class TradeGUI implements RunnableGUI {
             String location = locationField.getText();
             String time = timeField.getText();
             if (date == null || location == null || time == null) {
-                AlertBox.display("You have an incorrect field. Please review your inputs.");
+                messageBox.setText("You have an incorrect field. Please review your inputs.");
             } else if (!time.matches("^([0-1][0-9]|[2][0-3]):([0-5][0-9])$")) {
-                AlertBox.display("You have an incorrect field. Please review your inputs.");
+                messageBox.setText("You have an incorrect field. Please review your inputs.");
             } else {
                 details.add(location);
                 String dateString = (date.getDayOfMonth()) +"/" +(date.getMonthValue()) +"/" + (date.getYear()) + " " + time;
@@ -464,6 +476,8 @@ public class TradeGUI implements RunnableGUI {
                 updateProposedObservableLists();
                 stage2.close();
             }});
+
+        grid.add(messageBox, 0, 6, 2, 1);
 
         stage2.initModality(Modality.APPLICATION_MODAL);
         stage2.showAndWait();
@@ -486,6 +500,7 @@ public class TradeGUI implements RunnableGUI {
                     for (String ch : removeChar) {
                         strTradeInfo = strTradeInfo.replace(ch, "");
                     }
+                    strTradeInfo = strTradeInfo.replace("\n\n", "\n");
                     allTradeInfo.append(strTradeInfo);
                 }
                 confirmTradesInfoObservableList.add(allTradeInfo.toString());
@@ -706,6 +721,7 @@ public class TradeGUI implements RunnableGUI {
                     for (String ch : removeChar) {
                         strTradeInfo = strTradeInfo.replace(ch, "");
                     }
+                    strTradeInfo = strTradeInfo.replace("\n\n", "\n");
                     allTradeInfo.append(strTradeInfo);
                 }
                 userOngoingTradeList.addAll(allTradeInfo.toString());
@@ -741,6 +757,7 @@ public class TradeGUI implements RunnableGUI {
                     for (String ch : removeChar) {
                         strTradeInfo = strTradeInfo.replace(ch, "");
                     }
+                    strTradeInfo = strTradeInfo.replace("\n\n", "\n");
                     allTradeInfo.append(strTradeInfo);
                 }
                 userCompletedTradeList.addAll(allTradeInfo.toString());
