@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 import tradegateway.TradeModel;
 import trademisc.RunnableGUI;
 import trademisc.UserMainGUI;
+import useradapters.DemoGUI;
 import useradapters.UserMenuGUI;
 
 import java.util.ArrayList;
@@ -62,7 +63,7 @@ public class LoginGUI implements RunnableGUI {
 
     @Override
     public void initialScreen() {
-
+        showScreen();
     }
 
     @Override
@@ -112,7 +113,7 @@ public class LoginGUI implements RunnableGUI {
             newAccount();
         });
         buttons.get(3).setOnAction(actionEvent -> {
-            controller.demo();
+            demoUserLogIn();
         });
 
         grid = new GridPane();
@@ -230,6 +231,49 @@ public class LoginGUI implements RunnableGUI {
                 nextGUI.initialScreen();
             } else {
                 usernameTaken(nameField.getText());
+            }
+        });
+
+        backButton();
+
+        scene = new Scene(grid, width, height);
+        stage.setScene(scene);
+    }
+
+    private void demoUserLogIn() {
+        Text title = new Text("Demo Welcome");
+        title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(25, 25, 25, 25));
+
+        grid.add(title, 0, 0, 2, 1);
+
+        Label usernameLabel = new Label("Username: ");
+        TextField usernameField = new TextField();
+        Label passwordLabel = new Label("Password: ");
+        PasswordField passwordField = new PasswordField();
+
+        Button loginButton = new Button("Log In");
+        HBox hBoxLoginButton = new HBox(10);
+        hBoxLoginButton.setAlignment(Pos.BOTTOM_RIGHT);
+        hBoxLoginButton.getChildren().add(loginButton);
+
+        grid.add(usernameLabel, 0, 1);
+        grid.add(usernameField, 1, 1);
+        grid.add(passwordLabel, 0, 2);
+        grid.add(passwordField, 1, 2);
+        grid.add(hBoxLoginButton, 1, 4);
+
+        loginButton.setOnAction(actionEvent -> {
+            if (usernameField.getText().equals("u1") && passwordField.getText().equals("Password123")) {
+                nextGUI = new DemoGUI(usernameField.getText(), stage, width, height, model);
+                nextGUI.initialScreen();
+            } else {
+                invalidAccount();
             }
         });
 
