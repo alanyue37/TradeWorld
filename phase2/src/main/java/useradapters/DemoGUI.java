@@ -7,11 +7,12 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import tradeadapters.InitiateTradeController;
 import tradegateway.TradeModel;
+import trademisc.MainGUI;
 import trademisc.RunnableGUI;
 
 import static javafx.collections.FXCollections.observableArrayList;
 
-public class DemoGUI implements RunnableGUI {
+public class DemoGUI extends MainGUI implements RunnableGUI {
     private final Stage stage;
     private Scene scene;
     private final DemoController controller;
@@ -25,16 +26,17 @@ public class DemoGUI implements RunnableGUI {
 
     private RunnableGUI nextGUI;
 
-    public DemoGUI(String username, Stage stage, int width, int height, TradeModel model) {
+    public DemoGUI (int width, int height, TradeModel model) {
+        super(width, height, model);
         // do we really need the username for a demo user
         // we need it to access controller and presenter
-        this.stage = stage;
-        controller = new DemoController(model, username);
-        this.initiateTradeController = new InitiateTradeController(model, username);
+        this.username = "username"; // TODO: get rid of username
+        controller = new DemoController(model, username); // TODO: get rid of username
+        this.initiateTradeController = new InitiateTradeController(model, username); // TODO: get rid of username
         this.width = width;
         this.height = height;
-        this.username = username;
         this.model = model;
+        this.stage = new Stage();
     }
 
     @Override
