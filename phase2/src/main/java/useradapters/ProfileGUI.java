@@ -1,13 +1,18 @@
 package useradapters;
 
 import com.google.gson.reflect.TypeToken;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableStringValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -15,12 +20,14 @@ import javafx.stage.Stage;
 import tradegateway.TradeModel;
 import com.google.gson.Gson;
 import trademisc.RunnableGUI;
+import usercomponent.ReviewManager;
 import usercomponent.UserManager;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
 
 public class ProfileGUI implements RunnableGUI {
     private final Stage stage;
@@ -145,10 +152,14 @@ public class ProfileGUI implements RunnableGUI {
         Label friendsLabel = new Label("Friends");
         friendsColumn.getChildren().addAll(friendsLabel, getFriendsListView());
 
-        // TODO: add average rating
         VBox reviewsColumn = new VBox();
         Label reviewsLabel = new Label("Reviews");
-        reviewsColumn.getChildren().addAll(reviewsLabel, getReviewsListView());
+        Label averageRatingLabel = new Label("(Average Rating: " + profileController.getAverageRating(userProfile) + ")");
+        averageRatingLabel.setAlignment(Pos.BOTTOM_RIGHT);
+        HBox reviewsLabelsRow = new HBox(reviewsLabel, averageRatingLabel);
+
+        reviewsLabelsRow.setSpacing(20);
+        reviewsColumn.getChildren().addAll(reviewsLabelsRow, getReviewsListView());
 
         friendsAndReviewsRow = new HBox();
         friendsAndReviewsRow.getChildren().addAll(friendsColumn, reviewsColumn);
@@ -195,8 +206,8 @@ public class ProfileGUI implements RunnableGUI {
 
     protected ListView<String> getFriendsListView() {
         // TODO: TESTING CODE - UNCOMMENT IF NECESSARY - DELETE LATER
-        //UserManager userManager = tradeModel.getUserManager();
-        //userManager.sendFriendRequest("u1", "u2");
+        UserManager userManager = tradeModel.getUserManager();
+        userManager.sendFriendRequest("u1", "u2");
         //userManager.sendFriendRequest("u1", "u3");
         //userManager.sendFriendRequest("u3", "u1");
         //userManager.setFriendRequest("u1", "u2", true);
@@ -213,8 +224,8 @@ public class ProfileGUI implements RunnableGUI {
 
     protected ListView<String> getReviewsListView() {
         // TODO: TESTING CODE - UNCOMMENT IF NECESSARY - DELETE LATER
-        // ReviewManager reviewManager = tradeModel.getReviewManager();
-        // reviewManager.addReview(3, "Amazing guy", "3", "u1", "u2");
+        ReviewManager reviewManager = tradeModel.getReviewManager();
+        reviewManager.addReview(3, "Amazing guy", "3", "u1", "u2");
 
         updateReviewsObservableList();
         ListView<String> list = new ListView<>();
@@ -275,27 +286,13 @@ public class ProfileGUI implements RunnableGUI {
     }
 
     protected void updateFriendsObservableList() {
-        String json = profileController.getFriends(userProfile);
-        Gson gson = new Gson();
-        Type type = new TypeToken<List<String>>(){}.getType();
-        List<String> friendsList = gson.fromJson(json, type);
         friends.clear();
-        friends.addAll(friendsList);
+        friends.addAll(profileController.getFriends(userProfile));
     }
 
     protected void updateReviewsObservableList() {
-        String json = profileController.getReviews(userProfile);
-        Gson gson = new Gson();
-        Type type = new TypeToken<List<Map<String, String>>>(){}.getType();
-        List<Map<String, String>> reviewMaps = gson.fromJson(json, type);
-        List<String> reviewStrings = new ArrayList<>();
-
-        for (Map<String, String> reviewMap : reviewMaps) {
-            String r = "Author: " + reviewMap.get("author") + "\nRating: " + reviewMap.get("rating") + "\n" + reviewMap.get("comment");
-            reviewStrings.add(r);
-        }
         reviews.clear();
-        reviews.addAll(reviewStrings);
+        reviews.addAll(profileController.getReviews(userProfile));
     }
 
 }
