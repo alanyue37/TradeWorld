@@ -117,25 +117,39 @@ public class ReviewManager implements Serializable {
         userToReviews.get(username).remove(reviewToBeDeleted);
     }
 
-    public String getReviews(String receiverUsername) {
+    public String getReviewsByUser(String receiverUsername) {
         Gson gson = new Gson();
         List<Review> reviews = userToReviews.get(receiverUsername);
         List<Map<String, String>> reviewMaps = new ArrayList<>();
-        String json;
+        Map<String, String> averageRatingMap = new HashMap<>();
+        reviewMaps.add(0, averageRatingMap);
+
         if (reviews == null) {
-            json = gson.toJson(reviewMaps);
-            return json;
+            averageRatingMap.put("average", "N/A");
+            return gson.toJson(reviewMaps);
         }
+
+        float totalRating = 0;
         for (Review r: reviews) {
             Map<String, String> reviewMap = new HashMap<>();
             reviewMap.put("id", r.getId());
             reviewMap.put("comment", r.getComment());
             reviewMap.put("rating", String.valueOf(r.getRating()));
+            totalRating += r.getRating();
             reviewMap.put("author", r.getAuthor());
             reviewMap.put("tradeId", r.getTradeId());
             reviewMaps.add(reviewMap);
         }
-        json = gson.toJson(reviewMaps);
-        return json;
+
+        float averageRating = totalRating / reviews.size();
+        averageRatingMap.put("average", String.format("%.2f", averageRating));
+
+        return gson.toJson(reviewMaps);
+    }
+
+    public String getAverageRatingByUser(String receiverUsername) {
+        List<Review> reviews = userToReviews.get(receiverUsername);
+        float averageRating = (float)1/3;
+        return String.format("%.2f", averageRating);
     }
 }

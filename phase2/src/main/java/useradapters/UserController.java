@@ -5,6 +5,7 @@ import tradeadapters.InitiateTradeController;
 import tradeadapters.ProposedTradesController;
 import tradegateway.TradeModel;
 import trademisc.RunnableController;
+import undocomponent.UndoAddInventoryItem;
 import undocomponent.UndoAddWishlistItem;
 import undocomponent.UndoableOperation;
 import viewingadapters.ViewingMenuController;
@@ -34,12 +35,13 @@ public class UserController {
         tradeModel.getItemManager().addItem(itemName, username, itemDescription);
     }
 
-    public boolean isFrozen() {
-        return tradeModel.getUserManager().isFrozen(tradeModel.getCurrentUser());
-    }
-
     public boolean addItemToWishlist(String itemID){
-        return tradeModel.getUserManager().addToWishlist(tradeModel.getCurrentUser(), itemID);
+        boolean added = tradeModel.getUserManager().addToWishlist(tradeModel.getCurrentUser(), itemID);
+        if (added) {
+            UndoableOperation undoableOperation = new UndoAddWishlistItem(tradeModel.getUserManager(), tradeModel.getCurrentUser(), itemID);
+            tradeModel.getUndoManager().add(undoableOperation);
+        }
+        return added;
     }
 
     public void removeItemFromWishlist(String itemID) {
