@@ -200,7 +200,7 @@ public class LoginGUI implements RunnableGUI {
                 nextGUI = new UserMainGUI(800, 800, model, usernameField.getText());
                 nextGUI.initialScreen();
             } else {
-                usernameTaken(nameField.getText());
+                usernameTaken(usernameField.getText());
             }
         });
 
