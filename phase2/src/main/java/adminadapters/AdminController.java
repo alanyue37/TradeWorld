@@ -317,9 +317,8 @@ public class AdminController {
      * trade, undo add review, and undo add wishlist item).
      * @throws NoLongerUndoableException If the undo no longer exists.
      */
-    protected void undoOperations() throws NoLongerUndoableException {
-        Set<String> undoIDs = tradeModel.getUndoManager().getUndoableOperations().keySet();
-        for (String undoID : undoIDs) {
+    protected void undoOperations(List<String> undoActions) throws NoLongerUndoableException {
+        for (String undoID : undoActions) {
             tradeModel.getUndoManager().execute(undoID);
         }
     }
