@@ -1,5 +1,7 @@
 package adminadapters;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -30,7 +32,7 @@ import java.util.Set;
  * Used code from LifeOnTheFarm.zip in week 10 for reference.
  * Also, used https://docs.oracle.com/javafx/2/ui_controls/list-view.htm.
  */
-public class AdminGUI extends MainGUI implements RunnableGUI{
+public class AdminMainGUI extends MainGUI implements RunnableGUI{
     private Stage stage;
     private Scene scene;
     private final int width;
@@ -46,9 +48,8 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
      * @param height    The height of the screen.
      * @param model The TradeModel.
      */
-    public AdminGUI(Stage stage, int width, int height, TradeModel model) {
+    public AdminMainGUI(int width, int height, TradeModel model) {
         super(width, height, model);
-        this.stage = stage;
         this.width = width;
         this.height = height;
         this.controller = new AdminController(model);
@@ -58,7 +59,6 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
     }
 
     public void initializeScreen() {
-        root = new TabPane();
         root.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
         Parent newAdminParent = addNewAdmin();
@@ -80,6 +80,24 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
         Tab undoActionsTab = new Tab("Undo Actions", undoActionsParent);
 
         root.getTabs().addAll(addAdminTab, freezeUsersTab, unfreezeUsersTab, reviewItemsTab, thresholdsTab, undoActionsTab);
+
+        // Listener code below based on https://stackoverflow.com/questions/17522686/javafx-tabpane-how-to-listen-to-selection-changes
+        root.getSelectionModel().selectedItemProperty().addListener(
+                new ChangeListener<Tab>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Tab> observableValue, Tab oldTab, Tab newTab) {
+                        addAdminTab.setContent(addNewAdmin());
+                        freezeUsersTab.setContent(freezeUsers());
+                        unfreezeUsersTab.setContent(unfreezeUsers());
+                        reviewItemsTab.setContent(reviewItems());
+                        thresholdsTab.setContent(setThresholdMenu());
+                        undoActionsTab.setContent(undoActions());
+                        System.out.println(oldTab.getText() + "->" + newTab.getText() );
+
+
+                    }
+                }
+        );
     }
 
     @Override
@@ -95,10 +113,9 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
     @Override
     public void showScreen() {
         initializeScreen();
-        Scene scene = new Scene(root, width, height);
-        stage.setScene(scene);
-        stage.setTitle("Administration");
-        stage.show();
+        scene = new Scene(root, width, height);
+        getStage().setScene(scene);
+        getStage().show();
     }
 
     /**
@@ -129,6 +146,24 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
         Tab silverLimitTab = new Tab("Silver Threshold", silverLimitParent);
 
         subroot.getTabs().addAll(lendingLimitTab, weeklyLimitTab, incompleteTradeLimitTab, editLimitTab, goldLimitTab, silverLimitTab);
+
+        // Listener code below based on https://stackoverflow.com/questions/17522686/javafx-tabpane-how-to-listen-to-selection-changes
+        subroot.getSelectionModel().selectedItemProperty().addListener(
+                new ChangeListener<Tab>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Tab> observableValue, Tab oldTab, Tab newTab) {
+                        lendingLimitTab.setContent(setLendingThreshold());
+                        weeklyLimitTab.setContent(setLimitOfTransactionsThreshold());
+                        incompleteTradeLimitTab.setContent(setLimitOfIncompleteTrades());
+                        editLimitTab.setContent(setLimitOfEdits());
+                        goldLimitTab.setContent(setGoldThreshold());
+                        silverLimitTab.setContent(setSilverThreshold());
+                        System.out.println(oldTab.getText() + "->" + newTab.getText() );
+
+                    }
+                }
+        );
+
         return subroot;
     }
 
@@ -207,7 +242,6 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
      * This method allows the Admin User to create a new Admin.
      */
     public Parent addNewAdmin() {
-        stage.setTitle("Admin User");
         Text title = new Text("Create a New Admin");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -260,13 +294,12 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
      * changed to frozen.
      */
     public Parent freezeUsers() {
-        stage.setTitle("Admin User");
         Text title = new Text("Freeze Users");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
         ListView<String> list = new ListView<>();
         ObservableList<String> freezeAccounts = FXCollections.observableArrayList();
-
+        getTradeModel().getUserManager().setFrozen("u1", true);
         Set<String> flaggedAccounts = new HashSet<>();
         List<String> incompleteUsers = model.getMeetingManager().getTradesIncompleteMeetings(model.getTradeManager().getAllTypeTrades("ongoing"));
         flaggedAccounts.addAll(model.getTradeManager().getExceedIncompleteLimitUser(incompleteUsers));
@@ -345,7 +378,6 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
      * changed to unfrozen.
      */
     public Parent unfreezeUsers() {
-        stage.setTitle("Admin User");
         Text title = new Text("Unfreeze Users");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -401,7 +433,6 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
      * This method allows the Admin user to select items that should be added to the system.
      */
     public Parent reviewItems() {
-        stage.setTitle("Admin User");
         Text title = new Text("Review Items");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -478,7 +509,6 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
      * invalid.
      */
     public Parent setLendingThreshold() {
-        stage.setTitle("Admin User");
         Text title = new Text("Set Lending Threshold");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -535,7 +565,6 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
      * invalid.
      */
     public Parent setLimitOfTransactionsThreshold() {
-        stage.setTitle("Admin User");
         Text title = new Text("Set Transactions Threshold");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -591,7 +620,6 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
      * invalid.
      */
     public Parent setLimitOfIncompleteTrades() {
-        stage.setTitle("Admin User");
         Text title = new Text("Set Incomplete Trade Threshold");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -646,7 +674,6 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
      * invalid.
      */
     public Parent setLimitOfEdits() {
-        stage.setTitle("Admin User");
         Text title = new Text("Set Edit Threshold");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -696,7 +723,6 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
     }
 
     public Parent setGoldThreshold() {
-        stage.setTitle("Admin User");
         Text title = new Text("Set Gold Threshold");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -746,7 +772,6 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
     }
 
     public Parent setSilverThreshold() {
-        stage.setTitle("Admin User");
         Text title = new Text("Set Silver Threshold");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -827,7 +852,6 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
      *
      */
     public Parent undoActions() {
-        stage.setTitle("Admin User");
         Text title = new Text("Undo Operations");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
