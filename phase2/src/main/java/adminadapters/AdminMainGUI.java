@@ -861,12 +861,11 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI{
         ObservableList<String> reviewItems = FXCollections.observableArrayList();
         Text heading = new Text("The following are outstanding undo actions. \nHold down shift to undo multiple actions.");
 
-        // Set<String> items = model.getItemManager().getItemsByStage("pending");
         List<String> undoOperations = new ArrayList<>(controller.undoOperationsString());
 
         reviewItems.addAll(undoOperations);
         list.setItems(reviewItems);
-        list.setPlaceholder(new Label("There are no undo operations."));
+        list.setPlaceholder(new Label("There are no undo actions."));
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -874,9 +873,8 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI{
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
         grid.add(title, 0, 0, 2, 1);
-        // grid.getChildren().add(list);
-        list.setPrefHeight(height - 50); // we could change this
-        list.setPrefWidth(width - 50);   // we could change this
+        list.setPrefHeight(height - 50);
+        list.setPrefWidth(width - 50);
 
         Button confirmToUndo = new Button("Confirm to Undo");
         HBox hBoxConfirmToUndo = new HBox(10);
