@@ -26,7 +26,7 @@ public class TableViewCreator {
         switch(type) {
             case "own inventory":
                 viewInventory();
-                colTitles = new String[]{"ID", "Name", "Description", "Approved"};
+                colTitles = new String[]{"ID", "Name", "Description", "Available"};
                 widths = new double[]{0.1, 0.3, 0.5, 0.1};
                 break;
             case "all items":
