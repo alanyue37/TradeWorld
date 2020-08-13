@@ -39,9 +39,9 @@ public class DemoTradeSystem {
             initializeTradeModel(tradeModel);
             tradeModel.setCurrentUser("u1");
 
-            gui = new LoginGUI(stage, 275, 300, tradeModel);
-            //gui = new ProfileGUI(stage, 720, 600, tradeModel, "u1");
-//            gui = new LoggedInProfileGUI(stage, 720, 600, tradeModel, "u1");
+            gui = new LoginGUI(stage, 400, 275, tradeModel);
+            //gui = new ProfileGUI(stage, 720, 600, tradeModel, false);
+            //gui = new LoggedInProfileGUI(stage, 720, 600, tradeModel, false);
             //gui = new UserMainGUI(800, 800, tradeModel, "u1");
             gui.showScreen();
 

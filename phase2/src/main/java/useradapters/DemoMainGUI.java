@@ -5,47 +5,48 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import tradeadapters.InitiateTradeController;
 import tradegateway.TradeModel;
+import trademisc.MainGUI;
 import trademisc.RunnableGUI;
 
 import static javafx.collections.FXCollections.observableArrayList;
 
-public class DemoGUI implements RunnableGUI {
+public class DemoMainGUI extends MainGUI implements RunnableGUI {
     private final Stage stage;
     private Scene scene;
-    private final DemoController controller;
+    // private final DemoController controller;
     private final int width;
     private final int height;
     protected String username;
     private TradeModel model;
-    private InitiateTradeController initiateTradeController;
+    // private InitiateTradeController initiateTradeController;
     private GridPane grid;
     private TabPane root;
 
     private RunnableGUI nextGUI;
 
-    public DemoGUI(String username, Stage stage, int width, int height, TradeModel model) {
+    public DemoMainGUI(int width, int height, TradeModel model) {
+        super(width, height, model);
         // do we really need the username for a demo user
         // we need it to access controller and presenter
-        this.stage = stage;
-        controller = new DemoController(model, username);
-        this.initiateTradeController = new InitiateTradeController(model, username);
+        // controller = new DemoController(model, username);
+        // this.initiateTradeController = new InitiateTradeController(model, username);
         this.width = width;
         this.height = height;
-        this.username = username;
+        this.username = "username"; // TODO: get rid of username
         this.model = model;
+        this.stage = new Stage();
     }
 
     @Override
     public void initialScreen() {
-        showScreen();
+
     }
 
     @Override
     public Parent getRoot() {
         initializeScreen();
-        return grid;
+        return root;
     }
 
     @Override
