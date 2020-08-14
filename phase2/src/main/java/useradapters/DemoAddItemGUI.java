@@ -16,21 +16,16 @@ import trademisc.RunnableGUI;
 
 public class DemoAddItemGUI implements RunnableGUI {
     private final Stage stage;
-    private Scene scene;
-    private final TradeModel tradeModel;
     private final int width;
     private final int height;
-    private String username;
     private final TableViewCreator creator;
     private GridPane grid;
 
-    public DemoAddItemGUI(Stage stage, int width, int height, TradeModel model, String username) {
+    public DemoAddItemGUI(Stage stage, int width, int height, TradeModel model) {
         this.stage = stage;
-        tradeModel = model;
         this.width = width;
         this.height = height;
-        this.username = username;
-        creator = new TableViewCreator(tradeModel);
+        creator = new TableViewCreator(model);
     }
 
     @Override
@@ -47,7 +42,7 @@ public class DemoAddItemGUI implements RunnableGUI {
     @Override
     public void showScreen() {
         initializeScreen();
-        scene = new Scene(grid, width, height);
+        Scene scene = new Scene(grid, width, height);
         stage.setScene(scene);
     }
 

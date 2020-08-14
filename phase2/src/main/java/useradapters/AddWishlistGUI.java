@@ -11,15 +11,12 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import tradegateway.DemoTradeSystem;
 import tradegateway.TradeModel;
 import trademisc.RunnableGUI;
 
 public class AddWishlistGUI implements RunnableGUI {
     private final Stage stage;
-    private Scene scene;
     private final UserController controller;
-    private final TradeModel tradeModel;
     private final int width;
     private final int height;
     private final TableViewCreator creator;
@@ -28,10 +25,9 @@ public class AddWishlistGUI implements RunnableGUI {
     public AddWishlistGUI(Stage stage, int width, int height, TradeModel model) {
         this.stage = stage;
         controller = new UserController(model);
-        tradeModel = model;
         this.width = width;
         this.height = height;
-        creator = new TableViewCreator(tradeModel);
+        creator = new TableViewCreator(model);
     }
 
     @Override
@@ -48,7 +44,7 @@ public class AddWishlistGUI implements RunnableGUI {
 
     @Override
     public void showScreen() {
-        scene = new Scene(grid, width, height);
+        Scene scene = new Scene(grid, width, height);
         stage.setScene(scene);
     }
 

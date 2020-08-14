@@ -71,11 +71,11 @@ public class DemoMainGUI extends MainGUI implements RunnableGUI {
         Parent otherProfilesParent = otherProfilesGUI.getRoot();
         Tab otherProfilesTab = new Tab("View Profiles", otherProfilesParent);
 
-        DemoAddItemGUI inventoryGUI = new DemoAddItemGUI(stage, 800, 800, this.model, username);
+        DemoAddItemGUI inventoryGUI = new DemoAddItemGUI(stage, 800, 800, this.model);
         Parent inventoryParent = inventoryGUI.getRoot();
         Tab inventoryTab = new Tab("Inventory", inventoryParent);
 
-        DemoAddWishlistGUI wishlistGUI = new DemoAddWishlistGUI(stage, 800, 800, this.model, username);
+        DemoAddWishlistGUI wishlistGUI = new DemoAddWishlistGUI(stage, 800, 800, this.model);
         Parent wishlistParent = wishlistGUI.getRoot();
         Tab wishlistTab = new Tab("Wishlist", wishlistParent);
 
