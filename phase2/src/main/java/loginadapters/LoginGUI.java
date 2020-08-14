@@ -35,6 +35,7 @@ public class LoginGUI implements RunnableGUI {
     private RunnableGUI nextGUI;
     private GridPane grid;
     private final VBox root;
+    private Text errorMessage;
 
     public LoginGUI(Stage stage, int width, int height, TradeModel tradeModel, Image logo) {
         this.stage = stage;
@@ -44,6 +45,8 @@ public class LoginGUI implements RunnableGUI {
         this.tradeModel = tradeModel;
         this.root = new VBox();
         this.logo = logo;
+        errorMessage = new Text(""); // default blank
+        errorMessage.setFill(Color.RED);
     }
 
     @Override
@@ -118,8 +121,9 @@ public class LoginGUI implements RunnableGUI {
         grid.add(usernameField, 1, 2);
         grid.add(passwordLabel, 0, 3);
         grid.add(passwordField, 1, 3);
+        grid.add(errorMessage, 0, 4, 2, 1);
         grid.add(hBoxLoginButton, 1, 5);
-        grid.add(hBoxNewAccount, 0, 5);
+        grid.add(hBoxNewAccount, 0, 5, 1, 1);
         grid.add(hBoxDemo, 0, 8, 2, 1);
 
         loginButton.setOnAction(actionEvent -> {
@@ -199,18 +203,22 @@ public class LoginGUI implements RunnableGUI {
         grid.add(passwordField, 1, 4);
         grid.add(cityLabel, 0, 5);
         grid.add(cityField, 1, 5);
-        grid.add(hBoxRegisterButton, 1, 6);
-        grid.add(hBoxLogIn, 0, 6);
+        grid.add(errorMessage, 0, 6, 2, 1);
+        grid.add(hBoxRegisterButton, 1, 7);
+        grid.add(hBoxLogIn, 0, 7);
 
         registerButton.setOnAction(actionEvent -> {
             if (nameField.getText().isEmpty() || usernameField.getText().isEmpty() || passwordField.getText().isEmpty() || cityField.getText().isEmpty()) {
-                tryAgain();
+//                tryAgain();
+                errorMessage.setText("Please try again");
             } else if(controller.newTradingUser(nameField.getText(), usernameField.getText(), passwordField.getText(), cityField.getText())){
                 tradeModel.setCurrentUser(usernameField.getText());
                 nextGUI = new UserMainGUI(800, 800, tradeModel);
+                errorMessage.setText(""); // clear the error message
                 nextGUI.showScreen();
             } else {
-                usernameTaken(usernameField.getText());
+//                usernameTaken(usernameField.getText());
+                errorMessage.setText("Username " + usernameField.getText() + " is already taken");
             }
         });
 
@@ -236,43 +244,47 @@ public class LoginGUI implements RunnableGUI {
             else {
                 nextGUI = new UserMainGUI(800, 800, tradeModel);
             }
+            errorMessage.setText(""); // clear the error message
             nextGUI.showScreen();
             //stage.hide();
         }
         else {
-            invalidAccount();
+//            invalidAccount();
+            errorMessage.setText("Incorrect username or password");
         }
     }
 
-    public void invalidAccount(){
-        Text message = new Text("Incorrect username or password");
-        message.setFill(Color.RED);
-        HBox messageBox = new HBox(message);
-        messageBox.setAlignment(Pos.CENTER);
-        if(!grid.getChildren().contains(message)){
-            grid.add(messageBox, 0, 5, 2, 1);
-        }
-    }
+//    public void invalidAccount(){
+//        Text message = new Text("Incorrect username or password");
+//        message.setFill(Color.RED);
+//        HBox messageBox = new HBox(message);
+////        messageBox.setAlignment(Pos.CENTER);
+//        System.out.println("invalid account");
+//        if(!grid.getChildren().contains(message)){
+//            System.out.println("add messagebox");
+//            grid.add(messageBox, 0, 4, 2, 1);
+//        }
+//    }
 
-    public void usernameTaken(String username) {
-        Text message = new Text("Username " + username + " is already taken");
-        message.setFill(Color.RED);
-        HBox messageBox = new HBox(message);
-        messageBox.setAlignment(Pos.CENTER);
-        if(!grid.getChildren().contains(message)){
-            grid.add(message, 0, 6, 2, 1);
-        }
-    }
+//    public void usernameTaken(String username) {
+//        Text message = new Text("Username " + username + " is already taken");
+//        message.setFill(Color.RED);
+//        HBox messageBox = new HBox(message);
+//        messageBox.setAlignment(Pos.CENTER);
+//        if(!grid.getChildren().contains(message)){
+//            grid.add(message, 0, 6, 2, 1);
+//        }
+//    }
 
-    public void tryAgain() {
-        Text message = new Text("Please try again");
-        message.setFill(Color.RED);
-        HBox messageBox = new HBox(message);
-        messageBox.setAlignment(Pos.CENTER);
-        if (!grid.getChildren().contains(message)) {
-            grid.add(messageBox, 0, 6, 2, 1);
-        }
-    }
+//    public void tryAgain() {
+//        Text message = new Text("Please try again");
+//        message.setFill(Color.RED);
+//        HBox messageBox = new HBox(message);
+//        messageBox.setAlignment(Pos.CENTER);
+//        if (!grid.getChildren().contains(message)) {
+//            grid.add(messageBox, 0, 6, 2, 1);
+//        }
+//    }
 
     private HBox getLogoRow() {
         if (logo == null) {
