@@ -50,13 +50,12 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
     private ObservableList<String> userOngoingTradeList;
     private ObservableList<String> userCompletedTradeList;
 
-    public TradeGUI(Stage stage, int width, int height, TradeModel tradeModel, String username) {
+    public TradeGUI(Stage stage, int width, int height, TradeModel tradeModel) {
         this.stage = stage;
         this.width = width;
         this.height = height;
         this.tradeModel = tradeModel;
-//        this.username = tradeModel.getCurrentUser();
-        this.username = username;
+        this.username = tradeModel.getCurrentUser();
         this.initiateTradeController = new InitiateTradeController(tradeModel);
         this.confirmTradesController = new ConfirmTradesController(tradeModel);
         this.proposedTradesController = new ProposedTradesController(tradeModel);
@@ -726,7 +725,7 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
     private void updateOngoingTradesObservableList() {
         userOngoingTradeList.clear();
         List<String> trades = tradeModel.getTradeManager().getTradesOfUser(username, "ongoing");
-        List<String> removeChar = new ArrayList<>(Arrays.asList("\"", "{", "}", "[", ",", "]\n"));
+        List<String> removeChar = new ArrayList<>(Arrays.asList("\"", "{", "}", "[", ",", "]"));
         try {
             for (String tradeId : trades) {
                 List<JSONObject> allTrade = new ArrayList<>();
@@ -762,7 +761,7 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
     private void updateCompletedTradesObservableList() {
         userCompletedTradeList.clear();
         List<String> trades = tradeModel.getTradeManager().getTradesOfUser(username, "completed");
-        List<String> removeChar = new ArrayList<>(Arrays.asList("\"", "{", "}", "[", ",", "]\n"));
+        List<String> removeChar = new ArrayList<>(Arrays.asList("\"", "{", "}", "[", ",", "]"));
         try {
             for (String tradeId : trades) {
                 List<JSONObject> allTrade = new ArrayList<>();

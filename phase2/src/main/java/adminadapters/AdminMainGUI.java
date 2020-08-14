@@ -123,10 +123,9 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         root.getTabs().get(0).setContent(addNewAdmin());
         root.getTabs().get(1).setContent(freezeUsers());
         root.getTabs().get(2).setContent(unfreezeUsers());
-        root.getTabs().get(3).setContent(unfreezeUsers());
+        root.getTabs().get(3).setContent(reviewItems());
         root.getTabs().get(4).setContent(setThresholdMenu());
         root.getTabs().get(5).setContent(undoActions());
-
     }
 
     /**
@@ -561,13 +560,14 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
 
         addItemsButton.setOnAction(actionEvent -> {
             ObservableList<ObservableList<String>> selectedItems = itemSelection.getSelectedItems();
+            int size = selectedItems.size();
 //            System.out.println(selectedItems.size());
             for (ObservableList<String> item : new ArrayList<>(selectedItems)) {
                 controller.askAdminToAcceptItem(item.get(0));
                 table.getItems().remove(item);
 //                System.out.println(item.get(0));
             }
-            if (selectedItems.size() > 0) {
+            if (size > 0) {
                 message.setText("Selected items have been added to the system.");
             } else {
                 message.setText("No items are added to the system.");
@@ -576,6 +576,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
 
         removeItemsButton.setOnAction(actionEvent -> {
             ObservableList<ObservableList<String>> selectedItems = itemSelection.getSelectedItems();
+            int size = selectedItems.size();
 //            System.out.println(selectedItems.size());
             for (ObservableList<String> item : new ArrayList<>(selectedItems)) {
                 try {
@@ -586,7 +587,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
                 table.getItems().remove(item);
 //                System.out.println(item.get(0));
             }
-            if (selectedItems.size() > 0) {
+            if (size > 0) {
                 message.setText("Selected items have been removed from the system.");
             } else {
                 message.setText("No items are removed to the system.");
