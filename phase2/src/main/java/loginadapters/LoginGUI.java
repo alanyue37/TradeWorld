@@ -246,7 +246,7 @@ public class LoginGUI implements RunnableGUI {
             }
             errorMessage.setText(""); // clear the error message
             nextGUI.showScreen();
-            //stage.hide();
+            stage.hide();
         }
         else {
 //            invalidAccount();
