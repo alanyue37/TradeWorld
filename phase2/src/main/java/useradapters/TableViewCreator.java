@@ -19,6 +19,7 @@ public class TableViewCreator {
 
     public TableViewCreator (TradeModel tm) {
         tradeModel = tm;
+        itemsToShow = new ArrayList<>();
     }
 
     public TableView<ObservableList<String>> create(String type) {
@@ -119,4 +120,13 @@ public class TableViewCreator {
                     tradeModel.getItemManager().getDescription(itemID)});
         }
     }
+
+    protected ArrayList<String[]> getItemsToShow() {
+        return itemsToShow;
+    }
+
+    protected void newItemsToShow() {
+        itemsToShow = new ArrayList<>();
+    }
+
 }

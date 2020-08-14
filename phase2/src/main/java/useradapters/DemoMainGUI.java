@@ -48,8 +48,8 @@ public class DemoMainGUI extends MainGUI implements RunnableGUI {
         root = new TabPane();
         root.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         // Should we create a demo user account?
-        //getTradeModel().getUserManager().createTradingUser("Demo User", "DemoUser", "demo", "Montreal");
-        //getTradeModel().setCurrentUser(username);
+        getTradeModel().getUserManager().createTradingUser("Demo User", "DemoUser", "demo", "Montreal");
+        getTradeModel().setCurrentUser("DemoUser");
 
         ProfileGUI profileGUI = new ProfileGUI(getStage(), 800, 800, getTradeModel(), true);
         Parent profileParent = profileGUI.getRoot();
