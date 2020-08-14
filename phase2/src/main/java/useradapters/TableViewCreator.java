@@ -39,6 +39,11 @@ public class TableViewCreator {
                 colTitles = new String[]{"ID", "Name", "Owner", "Description"};
                 widths = new double[]{0.1, 0.2, 0.2, 0.5};
                 break;
+            case "pending":
+                viewPending();
+                colTitles = new String[]{"ID", "Name", "Owner", "Description"};
+                widths = new double[]{0.1, 0.2, 0.2, 0.5};
+                break;
         }
 
         TableView<ObservableList<String>> table = new TableView<>();
@@ -111,7 +116,21 @@ public class TableViewCreator {
      */
     public void viewWishlist() {
         itemsToShow = new ArrayList<>();
-        Set<String> userWishlist =  tradeModel.getUserManager().getWishlistByUsername(tradeModel.getCurrentUser());
+        Set<String> userWishlist = tradeModel.getUserManager().getWishlistByUsername(tradeModel.getCurrentUser());
+        for (String itemID : userWishlist) {
+            itemsToShow.add(new String[]{itemID,
+                    tradeModel.getItemManager().getName(itemID),
+                    tradeModel.getItemManager().getOwner(itemID),
+                    tradeModel.getItemManager().getDescription(itemID)});
+        }
+    }
+
+    /**
+     * Sets itemsToShow to the pending items.
+     */
+    public void viewPending() {
+        itemsToShow = new ArrayList<>();
+        Set<String> userWishlist = tradeModel.getItemManager().getItemsByStage("pending");
         for (String itemID : userWishlist) {
             itemsToShow.add(new String[]{itemID,
                     tradeModel.getItemManager().getName(itemID),
