@@ -72,5 +72,21 @@ public class UserMainGUI extends MainGUI implements RunnableGUI {
         Tab tradeHistoryTab = new Tab("Trading History", tradeHistoryParent);
 
         root.getTabs().addAll(profileTab, inventoryTab, wishlistTab, tradeTab, otherProfilesTab, tradeHistoryTab);
+
+        // Listener code below based on https://stackoverflow.com/questions/17522686/javafx-tabpane-how-to-listen-to-selection-changes
+        root.getSelectionModel().selectedItemProperty().addListener(
+                new ChangeListener<Tab>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Tab> observableValue, Tab oldTab, Tab newTab) {
+                        profileTab.setContent(profileGUI.getRoot());
+                        inventoryTab.setContent(inventoryGUI.getRoot());
+                        wishlistTab.setContent(wishlistGUI.getRoot());
+                        tradeTab.setContent(tradeGUI.getRoot());
+                        otherProfilesTab.setContent(otherProfilesGUI.getRoot());
+                        tradeHistoryTab.setContent(tradeGUI.getRoot());
+                    }
+                }
+        );
+
     }
 }
