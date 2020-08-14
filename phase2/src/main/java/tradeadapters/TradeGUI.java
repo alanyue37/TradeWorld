@@ -296,6 +296,9 @@ public class TradeGUI implements RunnableGUI {
                 messageBox.setText("Please wait for the other user to edit the meeting.");
             } else {
                 String tradeId = proposedTradesIDObservableList.get(proposedTradesListView.getSelectionModel().getSelectedIndex());
+                if (tradeModel.getMeetingManager().attainedThresholdEdits(tradeModel.getTradeManager().getMeetingOfTrade(tradeId).get(0))) {
+                    messageBox.setText("Exceeded the limit of edits to a meeting. Trade was canceled.");
+                }
                 editProposedTrade(tradeId);
                 updateProposedObservableLists(); }
         });
@@ -341,7 +344,20 @@ public class TradeGUI implements RunnableGUI {
                 messageBox.setText("Already confirmed. Please wait for the other user.");
             } else {
                 String tradeId = confirmTradesIDObservableList.get(confirmTradesListView.getSelectionModel().getSelectedIndex());
-                confirmTradesController.confirmTradeHappened(tradeId, trades.get(tradeId));
+                try {
+                    JSONObject json = tradeModel.getTradeManager().getTradeInfo(tradeId);
+                    if (json.get("Type").toString().equalsIgnoreCase("temporary") &&
+                            (json.get("Number of meetings").equals("1"))) {
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(tradeModel.getMeetingManager().getLastMeetingTime(tradeId));
+                        cal.add(Calendar.DATE, 30);
+                        Date newDate = cal.getTime();
+                        messageBox.setText("The next meeting is on " + newDate + ", 30 days after the first meeting time.");
+                    }
+                    confirmTradesController.confirmTradeHappened(tradeId, trades.get(tradeId));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
             updateToBeConfirmedObservableLists();
         });
@@ -463,7 +479,6 @@ public class TradeGUI implements RunnableGUI {
 
         editBtn.setOnAction(actionEvent -> {
             LocalDate date = datePicker.getValue();
-            System.out.println(date);
             String location = locationField.getText();
             String time = timeField.getText();
             if (date == null || location == null || time == null) {
