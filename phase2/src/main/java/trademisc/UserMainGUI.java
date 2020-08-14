@@ -68,7 +68,7 @@ public class UserMainGUI extends MainGUI implements RunnableGUI {
         Parent otherProfilesParent = otherProfilesGUI.getRoot();
         Tab otherProfilesTab = new Tab("View Profiles", otherProfilesParent);
 
-        TradeHistoryGUI tradeHistoryGUI = new TradeHistoryGUI(stage, 800, 800, this.tradeModel, username);
+        TradeHistoryGUI tradeHistoryGUI = new TradeHistoryGUI(getStage(), 800, 800, getTradeModel(), username);
         Parent tradeHistoryParent = tradeHistoryGUI.getRoot();
         Tab tradeHistoryTab = new Tab("Trading History", tradeHistoryParent);
 
