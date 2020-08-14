@@ -123,10 +123,9 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         root.getTabs().get(0).setContent(addNewAdmin());
         root.getTabs().get(1).setContent(freezeUsers());
         root.getTabs().get(2).setContent(unfreezeUsers());
-        root.getTabs().get(3).setContent(unfreezeUsers());
+        root.getTabs().get(3).setContent(reviewItems());
         root.getTabs().get(4).setContent(setThresholdMenu());
         root.getTabs().get(5).setContent(undoActions());
-
     }
 
     /**
