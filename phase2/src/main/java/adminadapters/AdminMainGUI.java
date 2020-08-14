@@ -550,9 +550,11 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI{
 
         addItemsButton.setOnAction(actionEvent -> {
             ObservableList<ObservableList<String>> selectedItems = itemSelection.getSelectedItems();
-            for (ObservableList<String> item : selectedItems) {
+            System.out.println(selectedItems.size());
+            for (ObservableList<String> item : new ArrayList<>(selectedItems)) {
                 controller.askAdminToAcceptItem(item.get(0));
                 table.getItems().remove(item);
+                System.out.println(item.get(0));
             }
             if (selectedItems.size() > 0) {
                 message.setText("Selected items have been added to the system.");
@@ -563,13 +565,15 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI{
 
         removeItemsButton.setOnAction(actionEvent -> {
             ObservableList<ObservableList<String>> selectedItems = itemSelection.getSelectedItems();
-            for (ObservableList<String> item : selectedItems) {
+            System.out.println(selectedItems.size());
+            for (ObservableList<String> item : new ArrayList<>(selectedItems)) {
                 try {
                     controller.askAdminToDeleteItem(item.get(0));
                 } catch (NoLongerUndoableException e) {
                     e.printStackTrace();
                 }
                 table.getItems().remove(item);
+                System.out.println(item.get(0));
             }
             if (selectedItems.size() > 0) {
                 message.setText("Selected items have been removed from the system.");

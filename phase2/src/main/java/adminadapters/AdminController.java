@@ -198,7 +198,7 @@ public class AdminController {
 //    }
 
     /**
-     * This method allows an admin user to look at the item and check whether this item should be added to the system.
+     * This method asks an admin user whether an item should be accepted into the system.
      * This is a way to prevent the user from selling items that are possible to sell such as intangible items.
      */
     protected void askAdminToAcceptItem(String itemId) {
@@ -208,7 +208,7 @@ public class AdminController {
     }
 
     /**
-     * This method allows an admin user to look at the item and check whether this item should not be added to the system
+     * This method asks an admin user whether an item should be rejected from the system.
      * This is a way to prevent the user from selling items that are possible to sell such as intangible items.
      */
     protected void askAdminToDeleteItem(String itemId) throws NoLongerUndoableException {
