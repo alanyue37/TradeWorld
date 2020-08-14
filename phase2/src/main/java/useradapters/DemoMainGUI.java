@@ -12,9 +12,6 @@ import trademisc.RunnableGUI;
 import static javafx.collections.FXCollections.observableArrayList;
 
 public class DemoMainGUI extends MainGUI implements RunnableGUI {
-    private Scene scene;
-    private TradeModel model;
-    private GridPane grid;
     private TabPane root;
 
     private RunnableGUI nextGUI;
@@ -37,7 +34,7 @@ public class DemoMainGUI extends MainGUI implements RunnableGUI {
     @Override
     public void showScreen() {
         initializeScreen();
-        scene = new Scene(root, getWidth(), getHeight());
+        Scene scene = new Scene(root, getWidth(), getHeight());
         getStage().setScene(scene);
         getStage().show();
     }
@@ -47,14 +44,6 @@ public class DemoMainGUI extends MainGUI implements RunnableGUI {
     public void initializeScreen(){
         root = new TabPane();
         root.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
-        // Should we create a demo user account?
-        //TODO: TESTING CODE - DELETE IF REQUIRED
-        getTradeModel().getUserManager().createTradingUser("Demo User", "DemoUser", "demo", "Montreal");
-        getTradeModel().setCurrentUser("DemoUser");
-
-        ProfileGUI profileGUI = new ProfileGUI(getStage(), 800, 800, getTradeModel(), true);
-        Parent profileParent = profileGUI.getRoot();
-        Tab profileTab = new Tab("My Profile", profileParent);
 
         ProfileGUI otherProfilesGUI = new ProfileGUI(getStage(), 800, 800, getTradeModel(), false);
         Parent otherProfilesParent = otherProfilesGUI.getRoot();
@@ -68,11 +57,12 @@ public class DemoMainGUI extends MainGUI implements RunnableGUI {
         Parent wishlistParent = wishlistGUI.getRoot();
         Tab wishlistTab = new Tab("Wishlist", wishlistParent);
 
-        DemoTradeGUI tradeGUI = new DemoTradeGUI(getStage(), 800, 800, getTradeModel());
-        Parent tradeParent = tradeGUI.getRoot();
-        Tab tradeTab = new Tab("Trade", tradeParent);
+        //DemoTradeGUI tradeGUI = new DemoTradeGUI(getStage(), 800, 800, getTradeModel());
+        //Parent tradeParent = tradeGUI.getRoot();
+        //Tab tradeTab = new Tab("Trade", tradeParent);
 
-        root.getTabs().addAll(profileTab, inventoryTab, wishlistTab, tradeTab, otherProfilesTab);
+        //root.getTabs().addAll(otherProfilesTab, inventoryTab, wishlistTab, tradeTab);
+        root.getTabs().addAll(otherProfilesTab, inventoryTab, wishlistTab);
     }
 
 
