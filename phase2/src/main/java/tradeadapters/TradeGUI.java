@@ -571,7 +571,7 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
     private void updateOngoingTradesObservableList() {
         userOngoingTradeList.clear();
         List<String> trades = tradeModel.getTradeManager().getTradesOfUser(username, "ongoing");
-        List<String> removeChar = new ArrayList<>(Arrays.asList("\"", "{", "}", "[", ",", "]\n"));
+        List<String> removeChar = new ArrayList<>(Arrays.asList("\"", "{", "}", "[", ",", "]"));
         try {
             for (String tradeId : trades) {
                 List<JSONObject> allTrade = new ArrayList<>();
@@ -607,7 +607,7 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
     private void updateCompletedTradesObservableList() {
         userCompletedTradeList.clear();
         List<String> trades = tradeModel.getTradeManager().getTradesOfUser(username, "completed");
-        List<String> removeChar = new ArrayList<>(Arrays.asList("\"", "{", "}", "[", ",", "]\n"));
+        List<String> removeChar = new ArrayList<>(Arrays.asList("\"", "{", "}", "[", ",", "]"));
         try {
             for (String tradeId : trades) {
                 List<JSONObject> allTrade = new ArrayList<>();

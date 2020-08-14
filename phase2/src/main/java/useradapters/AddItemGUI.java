@@ -14,14 +14,21 @@ import javafx.stage.Stage;
 import tradegateway.TradeModel;
 import trademisc.RunnableGUI;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AddItemGUI implements RunnableGUI {
     private final Stage stage;
     private final UserController controller;
     private final TradeModel tradeModel;
     private final int width;
     private final int height;
-    private final TableViewCreator creator;
+    private TableViewCreator creator;
     private GridPane grid;
+    private TextField itemNameField;
+    private TextArea itemDescriptionField;
+    private Text message;
+    TableView<ObservableList<String>> inventoryTable;
 
     public AddItemGUI(Stage stage, int width, int height, TradeModel model) {
         this.stage = stage;
@@ -57,21 +64,21 @@ public class AddItemGUI implements RunnableGUI {
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
 
-        TableView<ObservableList<String>> table = creator.create("own inventory");
+        inventoryTable = creator.create("own inventory");
 
         Text title = new Text("Current Inventory");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         grid.add(title, 0, 0, 2, 1);
 
-        grid.add(table, 0, 1, 5, 5);
+        grid.add(inventoryTable, 0, 1, 5, 5);
 
         Text prompt = new Text("Add item to inventory");
         prompt.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
         Label itemNameLabel = new Label("Item name");
-        TextField itemNameField = new TextField();
+        itemNameField = new TextField();
         Label itemDescriptionLabel = new Label("Item description");
-        TextArea itemDescriptionField = new TextArea();
+        itemDescriptionField = new TextArea();
 
         Button createItemButton = new Button("Create Item");
 
@@ -81,20 +88,53 @@ public class AddItemGUI implements RunnableGUI {
         grid.add(itemDescriptionField, 1, 8);
         grid.add(createItemButton, 1, 9);
 
-        table.setPlaceholder(new Label("No items in inventory"));
+        inventoryTable.setPlaceholder(new Label("No items in inventory"));
 
-        Text message = new Text("");
+        message = new Text("");
         grid.add(message, 0, 10, 2, 1);
+
+        configureButtons(createItemButton);
+
+    }
+
+    protected  void configureButtons(Button createItemButton) {
         createItemButton.setOnAction(actionEvent -> {
-            if (itemNameField.getText().isEmpty() || itemDescriptionField.getText().isEmpty()) {
-                message.setText("Fields cannot be empty. Please try again.");
+            if (invalidInput()) {
+                setMessage("Fields cannot be empty. Please try again.");
             } else {
                 controller.createItem(tradeModel.getCurrentUser(), itemNameField.getText(), itemDescriptionField.getText());
-                itemNameField.clear();
-                itemDescriptionField.clear();
-                message.setText("Item added");
+                clearInputFields();
+                setMessage("Item added");
                 //table.setItems(creator.create("own inventory").getItems());
             }
         });
+    }
+
+    protected boolean invalidInput() {
+        return itemNameField.getText().isEmpty() || itemDescriptionField.getText().isEmpty();
+    }
+
+    protected void setMessage(String text) {
+        message.setText(text);
+    }
+
+    protected void clearInputFields() {
+        itemNameField.clear();
+        itemDescriptionField.clear();
+    }
+
+    protected void setTableViewCreator (TableViewCreator creator) {
+        this.creator = creator;
+    }
+
+    protected TableView<ObservableList<String>> getInventoryTable() {
+        return inventoryTable;
+    }
+
+    protected List<String> getInputStrings() {
+        List<String> inputStrings = new ArrayList<>();
+        inputStrings.add(itemNameField.getText());
+        inputStrings.add(itemDescriptionField.getText());
+        return inputStrings;
     }
 }
