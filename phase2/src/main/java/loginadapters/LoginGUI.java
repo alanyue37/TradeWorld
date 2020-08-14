@@ -206,7 +206,8 @@ public class LoginGUI implements RunnableGUI {
             if (nameField.getText().isEmpty() || usernameField.getText().isEmpty() || passwordField.getText().isEmpty() || cityField.getText().isEmpty()) {
                 tryAgain();
             } else if(controller.newTradingUser(nameField.getText(), usernameField.getText(), passwordField.getText(), cityField.getText())){
-                nextGUI = new UserMainGUI(800, 800, tradeModel, usernameField.getText());
+                tradeModel.setCurrentUser(usernameField.getText());
+                nextGUI = new UserMainGUI(800, 800, tradeModel);
                 nextGUI.showScreen();
             } else {
                 usernameTaken(usernameField.getText());
@@ -222,16 +223,18 @@ public class LoginGUI implements RunnableGUI {
     }
 
     private void logInHandler(String username, String password) {
+        // TODO: move to controller
         Gson gson = new Gson();
         Type type = new TypeToken<Map<String, String>>(){}.getType();
         Map<String, String> userInfo = gson.fromJson(controller.logIn(username, password), type);
 
         if (userInfo.get("authenticated").equals("true")) {
+            tradeModel.setCurrentUser(username);
             if (userInfo.get("userType").equals("admin")) {
                 nextGUI = new AdminMainGUI( 800, 800, tradeModel);
             }
             else {
-                nextGUI = new UserMainGUI(800, 800, tradeModel, username);
+                nextGUI = new UserMainGUI(800, 800, tradeModel);
             }
             nextGUI.showScreen();
             //stage.hide();
