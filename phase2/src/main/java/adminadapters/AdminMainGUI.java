@@ -93,7 +93,6 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI{
                         reviewItemsTab.setContent(reviewItems());
                         thresholdsTab.setContent(setThresholdMenu());
                         undoActionsTab.setContent(undoActions());
-                        System.out.println(oldTab.getText() + "->" + newTab.getText() );
 
 
                     }
@@ -935,9 +934,9 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI{
 
         ListView<String> list = new ListView<>();
 
-        list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        //list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         ObservableList<String> reviewItems = FXCollections.observableArrayList();
-        Text heading = new Text("The following are outstanding undo actions. \nHold down shift to undo multiple actions.");
+        Text heading = new Text("The following are outstanding undo actions.");
 
         List<String> undoOperations = new ArrayList<>(controller.undoOperationsString());
 
@@ -970,13 +969,14 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI{
         grid.add(message, 0, 11, 1, 1);
 
         confirmToUndo.setOnAction(actionEvent -> {
-            ObservableList<String> selectedActions = list.getSelectionModel().getSelectedItems();
-            ArrayList<String> selected = new ArrayList<>(selectedActions);
-            if (!selected.isEmpty()) {
+            String selected = list.getSelectionModel().getSelectedItem();
+            if (selected != null) { // Is this the right check? Should we check for null instead?
                 try {
-                    controller.undoOperations(selected);
+                    controller.undoOperation(selected);
+                    reviewItems.remove(selected);
                 } catch (NoLongerUndoableException e) {
                     e.printStackTrace();
+                    message.setText("The selected operation can no longer be reversed");
                 } message.setText("Reversed the selected actions.");
             } else {
                 message.setText("No undo actions selected.");

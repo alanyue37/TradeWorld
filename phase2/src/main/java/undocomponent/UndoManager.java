@@ -46,4 +46,14 @@ public class UndoManager implements Serializable {
     public Map<String, UndoableOperation> getUndoableOperations() {
         return undoableOperations;
     }
+
+    /**
+     * Returns the UndoableOperation with given undoId
+     *
+     * @param undoId id of request UndoableOperation
+     * @return UndoableOperation instance with the given id
+     */
+    public UndoableOperation getUndoableOperation(String undoId) {
+        return undoableOperations.get(undoId);
+    }
 }
