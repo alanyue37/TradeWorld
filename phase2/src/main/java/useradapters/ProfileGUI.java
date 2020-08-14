@@ -105,7 +105,7 @@ public class ProfileGUI implements RunnableGUI {
         if (ownProfile) {
             userProfile = tradeModel.getCurrentUser();
         }
-        else if (profileController.getOtherUsersWithProfiles().isEmpty()) {
+        else if (!profileController.getOtherUsersWithProfiles().isEmpty()) {
             // Remains at null if no other userProfiles
             userProfile = profileController.getOtherUsersWithProfiles().get(0);
         }
@@ -181,6 +181,7 @@ public class ProfileGUI implements RunnableGUI {
 
     protected HBox getUsernamesRow() {
         HBox row = new HBox();
+        row.setSpacing(20);
         usernames = FXCollections.observableArrayList(profileController.getOtherUsersWithProfiles());
         usernameSelector = new ComboBox(usernames);
         if (!noUsers()) {

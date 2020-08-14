@@ -47,24 +47,27 @@ public class DemoMainGUI extends MainGUI implements RunnableGUI {
     public void initializeScreen(){
         root = new TabPane();
         root.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+        // Should we create a demo user account?
+        //getTradeModel().getUserManager().createTradingUser("Demo User", "DemoUser", "demo", "Montreal");
+        //getTradeModel().setCurrentUser(username);
 
-        ProfileGUI profileGUI = new ProfileGUI(getStage(), 800, 800, this.model, true);
+        ProfileGUI profileGUI = new ProfileGUI(getStage(), 800, 800, getTradeModel(), true);
         Parent profileParent = profileGUI.getRoot();
         Tab profileTab = new Tab("My Profile", profileParent);
 
-        ProfileGUI otherProfilesGUI = new ProfileGUI(getStage(), 800, 800, this.model, false);
+        ProfileGUI otherProfilesGUI = new ProfileGUI(getStage(), 800, 800, getTradeModel(), false);
         Parent otherProfilesParent = otherProfilesGUI.getRoot();
         Tab otherProfilesTab = new Tab("View Profiles", otherProfilesParent);
 
-        DemoAddItemGUI inventoryGUI = new DemoAddItemGUI(getStage(), 800, 800, this.model);
+        DemoAddItemGUI inventoryGUI = new DemoAddItemGUI(getStage(), 800, 800, getTradeModel());
         Parent inventoryParent = inventoryGUI.getRoot();
         Tab inventoryTab = new Tab("Inventory", inventoryParent);
 
-        DemoAddWishlistGUI wishlistGUI = new DemoAddWishlistGUI(getStage(), 800, 800, this.model);
+        DemoAddWishlistGUI wishlistGUI = new DemoAddWishlistGUI(getStage(), 800, 800, getTradeModel());
         Parent wishlistParent = wishlistGUI.getRoot();
         Tab wishlistTab = new Tab("Wishlist", wishlistParent);
 
-        DemoTradeGUI tradeGUI = new DemoTradeGUI(getStage(), 800, 800, this.model);
+        DemoTradeGUI tradeGUI = new DemoTradeGUI(getStage(), 800, 800, getTradeModel());
         Parent tradeParent = tradeGUI.getRoot();
         Tab tradeTab = new Tab("Trade", tradeParent);
 

@@ -30,7 +30,6 @@ public class DemoTradeSystem {
 
             // INITIALIZE TRADEMODEL FOR DEMO
             initializeTradeModel(tradeModel);
-            tradeModel.setCurrentUser("u1");
             Image logo = dataManager.readImage(logoFile);
 
             gui = new LoginGUI(stage, 500, 650, tradeModel, logo);
