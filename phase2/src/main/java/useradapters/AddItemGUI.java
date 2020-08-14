@@ -84,13 +84,20 @@ public class AddItemGUI implements RunnableGUI {
 
         table.setPlaceholder(new Label("No items in inventory"));
 
+        Text message = new Text("");
+        grid.add(message, 0, 10, 2, 1);
         createItemButton.setOnAction(actionEvent -> {
-            controller.createItem(tradeModel.getCurrentUser(), itemNameField.getText(), itemDescriptionField.getText());
-            itemNameField.clear();
-            itemDescriptionField.clear();
-            Text message = new Text("Item added");
-            grid.add(message, 0, 10, 2, 1);
-            table.setItems(creator.create("own inventory").getItems());
+            if (itemNameField.getText().isEmpty() || itemDescriptionField.getText().isEmpty()) {
+                message.setText("Fields cannot be blank. Please try again.");
+//                grid.add(message, 0, 10, 2, 1);
+            } else {
+                controller.createItem(tradeModel.getCurrentUser(), itemNameField.getText(), itemDescriptionField.getText());
+                itemNameField.clear();
+                itemDescriptionField.clear();
+                message.setText("Item added");
+//                grid.add(message, 0, 10, 2, 1);
+                table.setItems(creator.create("own inventory").getItems());
+            }
         });
     }
 }
