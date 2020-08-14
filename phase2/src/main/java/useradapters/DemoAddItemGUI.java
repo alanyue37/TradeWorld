@@ -32,7 +32,7 @@ public class DemoAddItemGUI extends AddItemGUI implements RunnableGUI {
             if (invalidInput()) {
                 setMessage("Fields cannot be empty. Please try again.");
             } else {
-                ObservableList<String> item = FXCollections.observableArrayList(String.valueOf(newItemId), getInputStrings().get(0), getInputStrings().get(0), "Yes");
+                ObservableList<String> item = FXCollections.observableArrayList(String.valueOf(newItemId), getInputStrings().get(0), getInputStrings().get(0), "No");
                 newItemId++;
                 getInventoryTable().getItems().add(item);
                 clearInputFields();
