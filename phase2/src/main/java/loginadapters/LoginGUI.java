@@ -35,7 +35,7 @@ public class LoginGUI implements RunnableGUI {
     private RunnableGUI nextGUI;
     private GridPane grid;
     private final VBox root;
-    private Text errorMessage;
+    private final Text errorMessage;
 
     public LoginGUI(Stage stage, int width, int height, TradeModel tradeModel, Image logo) {
         this.stage = stage;

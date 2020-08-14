@@ -16,7 +16,6 @@ import trademisc.RunnableGUI;
 
 public class AddItemGUI implements RunnableGUI {
     private final Stage stage;
-    private Scene scene;
     private final UserController controller;
     private final TradeModel tradeModel;
     private final int width;
@@ -47,7 +46,7 @@ public class AddItemGUI implements RunnableGUI {
     @Override
     public void showScreen() {
         initializeScreen();
-        scene = new Scene(grid, width, height);
+        Scene scene = new Scene(grid, width, height);
         stage.setScene(scene);
     }
 
@@ -89,13 +88,11 @@ public class AddItemGUI implements RunnableGUI {
         createItemButton.setOnAction(actionEvent -> {
             if (itemNameField.getText().isEmpty() || itemDescriptionField.getText().isEmpty()) {
                 message.setText("Fields cannot be empty. Please try again.");
-//                grid.add(message, 0, 10, 2, 1);
             } else {
                 controller.createItem(tradeModel.getCurrentUser(), itemNameField.getText(), itemDescriptionField.getText());
                 itemNameField.clear();
                 itemDescriptionField.clear();
                 message.setText("Item added");
-//                grid.add(message, 0, 10, 2, 1);
                 table.setItems(creator.create("own inventory").getItems());
             }
         });
