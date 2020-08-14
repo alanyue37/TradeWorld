@@ -39,7 +39,6 @@ public class DemoTradeSystem {
             //gui = new AdminMainGUI(800, 800, tradeModel);
             //gui = new UserMainGUI(800, 800, tradeModel, "u1");
             gui.showScreen();
-
         } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }

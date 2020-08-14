@@ -72,9 +72,8 @@ class DataManager {
      * @throws IOException if IOException occurs
      * @throws ClassNotFoundException if ClassNotFoundException occurs
      */
-    public Image readImage(String imageFile) throws IOException, ClassNotFoundException {
+    public Image readImage(String imageFile) throws IOException {
         File file = new File(getFilePath(imageFile));
-        TradeModel tradeModel;
         if (file.exists()) {
             InputStream fileStream = new FileInputStream(file);
             Image image = new Image(fileStream);
