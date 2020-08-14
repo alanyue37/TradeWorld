@@ -318,8 +318,12 @@ public class AdminController {
      * @throws NoLongerUndoableException If the undo no longer exists.
      */
     protected void undoOperations(List<String> undoActions) throws NoLongerUndoableException {
+        Set<String> undo = tradeModel.getUndoManager().getUndoableOperations().keySet();
+        ArrayList<String> undoActionsCopy = new ArrayList<>(undo);
         for (String undoID : undoActions) {
-            tradeModel.getUndoManager().execute(undoID);
+            if (undoActionsCopy.contains(undoID)) {
+                tradeModel.getUndoManager().execute(undoID);
+            }
         }
     }
 
