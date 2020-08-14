@@ -10,20 +10,15 @@ import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
 import tradeadapters.TradeGUI;
 import tradegateway.TradeModel;
-import useradapters.AddItemGUI;
-import useradapters.AddWishlistGUI;
-import useradapters.LoggedInProfileGUI;
-import useradapters.ProfileGUI;
+import useradapters.*;
 
 public class UserMainGUI extends MainGUI implements RunnableGUI {
 
-    private final String username;
     private TabPane root;
 
 //    TODO: remove username from constructor call?
-    public UserMainGUI(int width, int height, TradeModel tradeModel, String username) {
+    public UserMainGUI(int width, int height, TradeModel tradeModel) {
         super(width, height, tradeModel);
-        this.username = username;
         this.root = new TabPane();
     }
 
@@ -64,7 +59,7 @@ public class UserMainGUI extends MainGUI implements RunnableGUI {
         Parent wishlistParent = wishlistGUI.getRoot();
         Tab wishlistTab = new Tab("Wishlist", wishlistParent);
 
-        TradeGUI tradeGUI = new TradeGUI(getStage(), 800, 800, getTradeModel(), username);
+        TradeGUI tradeGUI = new TradeGUI(getStage(), 800, 800, getTradeModel(), getTradeModel().getCurrentUser());
         Parent tradeParent = tradeGUI.getRoot();
         Tab tradeTab = new Tab("Trade", tradeParent);
 
@@ -72,23 +67,10 @@ public class UserMainGUI extends MainGUI implements RunnableGUI {
         Parent otherProfilesParent = otherProfilesGUI.getRoot();
         Tab otherProfilesTab = new Tab("View Profiles", otherProfilesParent);
 
-        //root.getTabs().setAll(profileTab, inventoryTab, wishlistTab, tradeTab, otherProfilesTab);
-        root.getTabs().addAll(profileTab, inventoryTab, wishlistTab, tradeTab, otherProfilesTab);
+        TradeHistoryGUI tradeHistoryGUI = new TradeHistoryGUI(getStage(), 800, 800, getTradeModel(), getTradeModel().getCurrentUser());
+        Parent tradeHistoryParent = tradeHistoryGUI.getRoot();
+        Tab tradeHistoryTab = new Tab("Trading History", tradeHistoryParent);
 
-        // Listener code below based on https://stackoverflow.com/questions/17522686/javafx-tabpane-how-to-listen-to-selection-changes
-        root.getSelectionModel().selectedItemProperty().addListener(
-                new ChangeListener<Tab>() {
-                    @Override
-                    public void changed(ObservableValue<? extends Tab> observableValue, Tab oldTab, Tab newTab) {
-                        profileTab.setContent(profileGUI.getRoot());
-                        inventoryTab.setContent(inventoryGUI.getRoot());
-                        wishlistTab.setContent(wishlistGUI.getRoot());
-                        tradeTab.setContent(tradeGUI.getRoot());
-                        otherProfilesTab.setContent(otherProfilesGUI.getRoot());
-
-
-                    }
-                }
-        );
+        root.getTabs().addAll(profileTab, inventoryTab, wishlistTab, tradeTab, otherProfilesTab, tradeHistoryTab);
     }
 }

@@ -1,5 +1,7 @@
 package tradegateway;
 
+import javafx.scene.image.Image;
+
 import java.io.*;
 import java.net.URLDecoder;
 
@@ -61,6 +63,24 @@ class DataManager {
             input.close();
         }
         return tradeModel;
+    }
+
+    /**
+     * Reads a image file at filePath.
+     *
+     * @return the Image read in.
+     * @throws IOException if IOException occurs
+     * @throws ClassNotFoundException if ClassNotFoundException occurs
+     */
+    public Image readImage(String imageFile) throws IOException, ClassNotFoundException {
+        File file = new File(getFilePath(imageFile));
+        TradeModel tradeModel;
+        if (file.exists()) {
+            InputStream fileStream = new FileInputStream(file);
+            Image image = new Image(fileStream);
+            return image;
+        }
+        return null;
     }
 
     /**
