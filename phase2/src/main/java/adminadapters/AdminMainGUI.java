@@ -39,8 +39,8 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI{
     private final int height;
     private final AdminController controller;
     private final TradeModel model;
-    private TabPane root;
-    private TabPane subroot;
+    private final TabPane root;
+    private TabPane subRoot;
 
     /**
      * A constructor for AdminGUI class.
@@ -55,7 +55,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI{
         this.controller = new AdminController(model);
         this.model = model;
         this.root = new TabPane();
-        this.subroot = new TabPane();
+        this.subRoot = new TabPane();
     }
 
     public void initializeScreen() {
@@ -124,8 +124,8 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI{
      * or logs out.
      */
     public Parent setThresholdMenu() {
-        subroot = new TabPane();
-        subroot.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+        subRoot = new TabPane();
+        subRoot.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
         Parent lendingLimitParent = setLendingThreshold();
         Tab lendingLimitTab = new Tab("Lending Threshold", lendingLimitParent);
@@ -145,10 +145,10 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI{
         Parent silverLimitParent = setSilverThreshold();
         Tab silverLimitTab = new Tab("Silver Threshold", silverLimitParent);
 
-        subroot.getTabs().addAll(lendingLimitTab, weeklyLimitTab, incompleteTradeLimitTab, editLimitTab, goldLimitTab, silverLimitTab);
+        subRoot.getTabs().addAll(lendingLimitTab, weeklyLimitTab, incompleteTradeLimitTab, editLimitTab, goldLimitTab, silverLimitTab);
 
         // Listener code below based on https://stackoverflow.com/questions/17522686/javafx-tabpane-how-to-listen-to-selection-changes
-        subroot.getSelectionModel().selectedItemProperty().addListener(
+        subRoot.getSelectionModel().selectedItemProperty().addListener(
                 new ChangeListener<Tab>() {
                     @Override
                     public void changed(ObservableValue<? extends Tab> observableValue, Tab oldTab, Tab newTab) {
@@ -163,8 +163,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI{
                     }
                 }
         );
-
-        return subroot;
+        return subRoot;
     }
 
 
@@ -897,7 +896,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI{
             ArrayList<String> selected = new ArrayList<>(selectedActions);
             if (!selected.isEmpty()) {
                 try {
-                    controller.undoOperations();
+                    controller.undoOperations(selected);
                 } catch (NoLongerUndoableException e) {
                     e.printStackTrace();
                 } message.setText("Reversed the selected actions.");
