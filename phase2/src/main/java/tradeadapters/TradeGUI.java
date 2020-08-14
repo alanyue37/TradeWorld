@@ -292,15 +292,18 @@ public class TradeGUI implements RunnableGUI {
         editBtn.setOnAction(actionEvent -> {
             if (proposedTradesListView.getSelectionModel().isEmpty()){
                 messageBox.setText("Please select a trade.");
-            } else if (!tradeModel.getMeetingManager().canChangeMeeting(proposedTradesIDObservableList.get(proposedTradesListView.getSelectionModel().getSelectedIndex()), username)){
-                messageBox.setText("Please wait for the other user to edit the meeting.");
-            } else {
+            } else{
                 String tradeId = proposedTradesIDObservableList.get(proposedTradesListView.getSelectionModel().getSelectedIndex());
-                if (tradeModel.getMeetingManager().attainedThresholdEdits(tradeModel.getTradeManager().getMeetingOfTrade(tradeId).get(0))) {
+                if (!tradeModel.getMeetingManager().canChangeMeeting(tradeId, username)){
+                    messageBox.setText("Please wait for the other user to edit the meeting.");
+                } else if(tradeModel.getMeetingManager().attainedThresholdEdits(tradeModel.getTradeManager().getMeetingOfTrade(tradeId).get(0))){
                     messageBox.setText("Exceeded the limit of edits to a meeting. Trade was canceled.");
-                }
-                editProposedTrade(tradeId);
-                updateProposedObservableLists(); }
+                    proposedTradesController.declineTrade(tradeId);
+                    updateProposedObservableLists();
+                } else{
+                    editProposedTrade(tradeId);
+                    updateProposedObservableLists();}
+            }
         });
         declineBtn.setOnAction(actionEvent -> {
             if (proposedTradesListView.getSelectionModel().isEmpty()) {
