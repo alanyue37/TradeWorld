@@ -168,33 +168,51 @@ public class AdminController {
         }
     }
 
-    /**
-     * This method allows an admin user to look at the item and check whether this item should be added to the system
-     * or not. This is a way to prevent the user from selling items that are possible to sell such as intangible items.
-     */
-    protected void askAdminToReviewItems(List<String> itemsSelected, List<String> notItemsSelected) throws NoLongerUndoableException {
-        // Set<String> items = tradeModel.getItemManager().getItemsByStage("pending");
-        // boolean empty = items.isEmpty();
-        // presenter.reviewItemsHeading(empty);
+//    /**
+//     * This method allows an admin user to look at the item and check whether this item should be added to the system
+//     * or not. This is a way to prevent the user from selling items that are possible to sell such as intangible items.
+//     */
+//    protected void askAdminToReviewItems(List<String> itemsSelected, List<String> notItemsSelected) throws NoLongerUndoableException {
+//        // Set<String> items = tradeModel.getItemManager().getItemsByStage("pending");
+//        // boolean empty = items.isEmpty();
+//        // presenter.reviewItemsHeading(empty);
+//
+//        if (!itemsSelected.isEmpty()) {
+//            for (String itemId : itemsSelected) {
+//                //String itemInfo = tradeModel.getItemManager().getItemInfo(itemId);
+//                //presenter.reviewItem(itemInfo);
+//                // String input = br.readLine();
+//                // while (!input.equals("0") && !input.equals("1")) {
+//                // presenter.invalidInput();
+//                // input = br.readLine();
+//                tradeModel.getItemManager().confirmItem(itemId);
+//                UndoableOperation undoableOperation = new UndoAddInventoryItem(tradeModel.getItemManager(), tradeModel.getTradeManager(), itemId);
+//                tradeModel.getUndoManager().add(undoableOperation);
+//            }
+//        }
+//        if (!notItemsSelected.isEmpty()) {
+//            for (String itemId : notItemsSelected) {
+//                tradeModel.getItemManager().deleteItem(itemId);
+//            }
+//        }
+//    }
 
-        if (!itemsSelected.isEmpty()) {
-            for (String itemId : itemsSelected) {
-                //String itemInfo = tradeModel.getItemManager().getItemInfo(itemId);
-                //presenter.reviewItem(itemInfo);
-                // String input = br.readLine();
-                // while (!input.equals("0") && !input.equals("1")) {
-                // presenter.invalidInput();
-                // input = br.readLine();
-                tradeModel.getItemManager().confirmItem(itemId);
-                UndoableOperation undoableOperation = new UndoAddInventoryItem(tradeModel.getItemManager(), tradeModel.getTradeManager(), itemId);
-                tradeModel.getUndoManager().add(undoableOperation);
-            }
-        }
-        if (!notItemsSelected.isEmpty()) {
-            for (String itemId : notItemsSelected) {
-                tradeModel.getItemManager().deleteItem(itemId);
-            }
-        }
+    /**
+     * This method allows an admin user to look at the item and check whether this item should be added to the system.
+     * This is a way to prevent the user from selling items that are possible to sell such as intangible items.
+     */
+    protected void askAdminToAcceptItem(String itemId) {
+        tradeModel.getItemManager().confirmItem(itemId);
+        UndoableOperation undoableOperation = new UndoAddInventoryItem(tradeModel.getItemManager(), tradeModel.getTradeManager(), itemId);
+        tradeModel.getUndoManager().add(undoableOperation);
+    }
+
+    /**
+     * This method allows an admin user to look at the item and check whether this item should not be added to the system
+     * This is a way to prevent the user from selling items that are possible to sell such as intangible items.
+     */
+    protected void askAdminToDeleteItem(String itemId) throws NoLongerUndoableException {
+        tradeModel.getItemManager().deleteItem(itemId);
     }
 
     /**

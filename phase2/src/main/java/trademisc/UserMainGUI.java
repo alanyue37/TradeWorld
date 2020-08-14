@@ -39,7 +39,7 @@ public class UserMainGUI extends MainGUI implements RunnableGUI {
         initializeScreen();
         Scene scene = new Scene(root, getWidth(), getHeight());
         getStage().setScene(scene);
-        getStage().setTitle("TradeWorld");
+        getStage().setTitle("TradeWorld - Trader");
         getStage().show();
     }
 
