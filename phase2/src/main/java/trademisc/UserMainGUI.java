@@ -17,6 +17,7 @@ public class UserMainGUI extends MainGUI implements RunnableGUI {
     private final String username;
     private TabPane root;
 
+//    TODO: remove username from constructor call?
     public UserMainGUI(int width, int height, TradeModel tradeModel, String username) {
         super(width, height, tradeModel);
         this.username = username;
@@ -52,11 +53,11 @@ public class UserMainGUI extends MainGUI implements RunnableGUI {
         Parent profileParent = profileGUI.getRoot();
         Tab profileTab = new Tab("My Profile", profileParent);
 
-        AddItemGUI inventoryGUI = new AddItemGUI(getStage(), 800, 800, getTradeModel(), username);
+        AddItemGUI inventoryGUI = new AddItemGUI(getStage(), 800, 800, getTradeModel());
         Parent inventoryParent = inventoryGUI.getRoot();
         Tab inventoryTab = new Tab("Inventory", inventoryParent);
 
-        AddWishlistGUI wishlistGUI = new AddWishlistGUI(getStage(), 800, 800, getTradeModel(), username);
+        AddWishlistGUI wishlistGUI = new AddWishlistGUI(getStage(), 800, 800, getTradeModel());
         Parent wishlistParent = wishlistGUI.getRoot();
         Tab wishlistTab = new Tab("Wishlist", wishlistParent);
 

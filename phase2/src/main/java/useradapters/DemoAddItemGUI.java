@@ -17,7 +17,6 @@ import trademisc.RunnableGUI;
 public class DemoAddItemGUI implements RunnableGUI {
     private final Stage stage;
     private Scene scene;
-    // private final UserController controller;
     private final TradeModel tradeModel;
     private final int width;
     private final int height;
@@ -27,7 +26,6 @@ public class DemoAddItemGUI implements RunnableGUI {
 
     public DemoAddItemGUI(Stage stage, int width, int height, TradeModel model, String username) {
         this.stage = stage;
-        // controller = new UserController(model);
         tradeModel = model;
         this.width = width;
         this.height = height;
@@ -76,7 +74,7 @@ public class DemoAddItemGUI implements RunnableGUI {
         Label itemDescriptionLabel = new Label("Item description");
         TextArea itemDescriptionField = new TextArea();
 
-        Button createItemButton = new Button("Create Item");
+        Button createItemButton = new Button("Create Demo Item");
 
         grid.add(itemNameLabel, 0, 7);
         grid.add(itemNameField, 1, 7);
@@ -89,7 +87,7 @@ public class DemoAddItemGUI implements RunnableGUI {
         createItemButton.setOnAction(actionEvent -> {
             itemNameField.clear();
             itemDescriptionField.clear();
-            Text message = new Text("Item added");
+            Text message = new Text("demo item would've been added");
             grid.add(message, 0, 10, 2, 1);
         });
     }
