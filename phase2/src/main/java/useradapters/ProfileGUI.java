@@ -49,7 +49,7 @@ public class ProfileGUI implements RunnableGUI {
     public ProfileGUI(Stage stage, int width, int height, TradeModel tradeModel, boolean ownProfile) {
         this.stage = stage;
         this.tradeModel = tradeModel;
-        this.profileController = new ProfileController(tradeModel, "u1"); // TODO: delete username once controller constructor is changed
+        this.profileController = new ProfileController(tradeModel);
         this.width = width;
         this.height = height;
         this.ownProfile = ownProfile;
@@ -105,7 +105,7 @@ public class ProfileGUI implements RunnableGUI {
         if (ownProfile) {
             userProfile = tradeModel.getCurrentUser();
         }
-        else if (!profileController.getOtherUsersWithProfiles().isEmpty()) {
+        else if (profileController.getOtherUsersWithProfiles().isEmpty()) {
             // Remains at null if no other userProfiles
             userProfile = profileController.getOtherUsersWithProfiles().get(0);
         }
@@ -205,14 +205,6 @@ public class ProfileGUI implements RunnableGUI {
     }
 
     protected ListView<String> getFriendsListView() {
-        // TODO: TESTING CODE - UNCOMMENT IF NECESSARY - DELETE LATER
-        UserManager userManager = tradeModel.getUserManager();
-        //userManager.sendFriendRequest("u1", "u2");
-        //userManager.sendFriendRequest("u1", "u3");
-        //userManager.sendFriendRequest("u3", "u1");
-        //userManager.setFriendRequest("u1", "u2", true);
-        //userManager.setFriendRequest("u3", "u1", true);
-
         ListView<String> list = new ListView<>();
         list.setPlaceholder(new Label("No friends"));
         updateFriendsObservableList();
@@ -223,10 +215,6 @@ public class ProfileGUI implements RunnableGUI {
     }
 
     protected ListView<String> getReviewsListView() {
-        // TODO: TESTING CODE - UNCOMMENT IF NECESSARY - DELETE LATER
-        //ReviewManager reviewManager = tradeModel.getReviewManager();
-        //reviewManager.addReview(3, "Amazing guy", "3", "u1", "u2");
-
         updateReviewsObservableList();
         ListView<String> list = new ListView<>();
         list.setPlaceholder(new Label("No reviews"));

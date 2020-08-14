@@ -24,12 +24,11 @@ public class InitiateTradeController implements RunnableController {
      * Initiates the InitiateTradeController
      *
      * @param tradeModel The tradeModel
-     * @param username   The name of the User
      */
-    public InitiateTradeController(TradeModel tradeModel, String username) {
+    public InitiateTradeController(TradeModel tradeModel) {
         this.tradeModel = tradeModel;
         this.br = new BufferedReader(new InputStreamReader(System.in));
-        this.username = username;
+        this.username = tradeModel.getCurrentUser();
     }
 
     /**

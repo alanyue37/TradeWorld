@@ -22,12 +22,11 @@ public class ConfirmTradesController implements RunnableController {
     /**
      * Initiates ConfirmTradesController
      * @param tradeModel tradeModel
-     * @param username *username* of the user
      */
-    public ConfirmTradesController(TradeModel tradeModel, String username) {
+    public ConfirmTradesController(TradeModel tradeModel) {
         br = new BufferedReader(new InputStreamReader(System.in));
         this.tradeModel = tradeModel;
-        this.username = username;
+        this.username = tradeModel.getCurrentUser();
     }
 
     /**

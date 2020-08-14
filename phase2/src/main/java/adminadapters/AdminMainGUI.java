@@ -169,7 +169,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
                         editLimitTab.setContent(setLimitOfEdits());
                         goldLimitTab.setContent(setGoldThreshold());
                         silverLimitTab.setContent(setSilverThreshold());
-                        System.out.println(oldTab.getText() + "->" + newTab.getText() );
+
 
                     }
                 }

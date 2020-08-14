@@ -57,10 +57,10 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         this.tradeModel = tradeModel;
 //        this.username = tradeModel.getCurrentUser();
         this.username = username;
-        this.initiateTradeController = new InitiateTradeController(tradeModel, username);
-        this.confirmTradesController = new ConfirmTradesController(tradeModel, username);
-        this.proposedTradesController = new ProposedTradesController(tradeModel, username);
-        this.profileController = new ProfileController(tradeModel, username);
+        this.initiateTradeController = new InitiateTradeController(tradeModel);
+        this.confirmTradesController = new ConfirmTradesController(tradeModel);
+        this.proposedTradesController = new ProposedTradesController(tradeModel);
+        this.profileController = new ProfileController(tradeModel);
         this.datePicker = new DatePicker();
         this.proposedTradesIDObservableList = FXCollections.observableArrayList();
         this.proposedTradesInfoObservableList = FXCollections.observableArrayList();

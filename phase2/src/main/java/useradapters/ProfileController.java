@@ -19,12 +19,10 @@ public class ProfileController implements RunnableController {
     private final BufferedReader br;
     private final TradeModel tradeModel;
     private final ProfilePresenter presenter;
-    private final String username;
 
-    public ProfileController(TradeModel tradeModel, String username) {
+    public ProfileController(TradeModel tradeModel) {
         br = new BufferedReader(new InputStreamReader(System.in));
         this.tradeModel = tradeModel;
-        this.username = username;
         presenter = new ProfilePresenter();
     }
 
@@ -78,7 +76,7 @@ public class ProfileController implements RunnableController {
             presenter.invalidInput();
             confirmationInput = br.readLine();
         }
-        tradeModel.getUserManager().setOnVacation(username, confirmationInput.equals("1"));
+        tradeModel.getUserManager().setOnVacation(tradeModel.getCurrentUser(), confirmationInput.equals("1"));
     }
 
     private void accountPrivacy() throws IOException {
@@ -88,11 +86,11 @@ public class ProfileController implements RunnableController {
             presenter.invalidInput();
             confirmationInput = br.readLine();
         }
-        tradeModel.getUserManager().setPrivate(username, confirmationInput.equals("1"));
+        tradeModel.getUserManager().setPrivate(tradeModel.getCurrentUser(), confirmationInput.equals("1"));
     }
 
     private void reviewFriendRequests() throws IOException {
-        Set<String> requests = tradeModel.getUserManager().getFriendRequests(username);
+        Set<String> requests = tradeModel.getUserManager().getFriendRequests(tradeModel.getCurrentUser());
         for (String user : requests) {
             presenter.manageRequest(user);
             String confirmationInput = br.readLine();
@@ -101,7 +99,7 @@ public class ProfileController implements RunnableController {
                 confirmationInput = br.readLine();
             }
             if (!confirmationInput.equals("0")){
-                tradeModel.getUserManager().setFriendRequest(username, user, confirmationInput.equals("1"));
+                tradeModel.getUserManager().setFriendRequest(tradeModel.getCurrentUser(), user, confirmationInput.equals("1"));
             }
         }
     }
@@ -111,13 +109,13 @@ public class ProfileController implements RunnableController {
         String friend = br.readLine();
         if (!tradeModel.getUserManager().containsTradingUser(friend)){
             presenter.printSearchingInvalid();
-        } else if((tradeModel.getUserManager().getFriendList(username).contains(friend))| (friend.equals(username))){
+        } else if((tradeModel.getUserManager().getFriendList(tradeModel.getCurrentUser()).contains(friend))| (friend.equals(tradeModel.getCurrentUser()))){
             presenter.alreadyFriend();
-        } else if(tradeModel.getUserManager().getFriendRequests(friend).contains(username)){
+        } else if(tradeModel.getUserManager().getFriendRequests(friend).contains(tradeModel.getCurrentUser())){
             presenter.alreadySentRequest();
         }
         else {
-            tradeModel.getUserManager().sendFriendRequest(friend, username);
+            tradeModel.getUserManager().sendFriendRequest(friend, tradeModel.getCurrentUser());
             presenter.addedFriend();
         }
     }
@@ -125,28 +123,28 @@ public class ProfileController implements RunnableController {
     private void viewAccountSetting(){
         String privacy;
         String vacation;
-        if (tradeModel.getUserManager().getPrivateUser().contains(username)){
+        if (tradeModel.getUserManager().getPrivateUser().contains(tradeModel.getCurrentUser())){
             privacy = "private";
         } else{ privacy = "public";}
-        if (tradeModel.getUserManager().getOnVacation().contains(username)){
+        if (tradeModel.getUserManager().getOnVacation().contains(tradeModel.getCurrentUser())){
             vacation = "on";
         } else{ vacation = "off";}
-        String city = tradeModel.getUserManager().getCityByUsername(username);
+        String city = tradeModel.getUserManager().getCityByUsername(tradeModel.getCurrentUser());
         presenter.printViewAccountSettings(privacy, vacation, city);
     }
 
     private void viewFriends(){
-        List<String> friends = new ArrayList<>(tradeModel.getUserManager().getFriendList(username));
+        List<String> friends = new ArrayList<>(tradeModel.getUserManager().getFriendList(tradeModel.getCurrentUser()));
         presenter.printViewFriends(friends);
     }
 
     public void addReview(String tradeId, int rating, String comment){
         String receiver = "";
         for (List<String> users: tradeModel.getTradeManager().itemToUsers(tradeId).values()){
-            users.remove(username);
+            users.remove(tradeModel.getCurrentUser());
             receiver = users.get(0);
         }
-        String reviewId = tradeModel.getReviewManager().addReview(rating, comment, tradeId, username, receiver);
+        String reviewId = tradeModel.getReviewManager().addReview(rating, comment, tradeId, tradeModel.getCurrentUser(), receiver);
         UndoableOperation undoableOperation = new UndoAddReview(this.tradeModel.getReviewManager(), reviewId);
         tradeModel.getUndoManager().add(undoableOperation);
     }
