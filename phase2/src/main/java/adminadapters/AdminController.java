@@ -198,6 +198,24 @@ public class AdminController {
     }
 
     /**
+     * This method asks an admin user whether an item should be accepted into the system.
+     * This is a way to prevent the user from selling items that are possible to sell such as intangible items.
+     */
+     protected void askAdminToAcceptItem(String itemId) {
+        tradeModel.getItemManager().confirmItem(itemId);
+        UndoableOperation undoableOperation = new UndoAddInventoryItem(tradeModel.getItemManager(), tradeModel.getTradeManager(), itemId);
+        tradeModel.getUndoManager().add(undoableOperation);
+    }
+
+    /**
+     * This method asks an admin user whether an item should be rejected from the system.
+     * This is a way to prevent the user from selling items that are possible to sell such as intangible items.
+     */
+    protected void askAdminToDeleteItem(String itemId) throws NoLongerUndoableException {
+        tradeModel.getItemManager().deleteItem(itemId);
+    }
+
+    /**
      * This method allows an admin user to change the lending threshold, that is, how much the user lends than borrow
      * in order to make a non-lending transaction. It prompts the Admin user to enter a number that is an integer
      * greater than or equal to zero.

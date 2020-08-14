@@ -26,7 +26,7 @@ public class UserManager implements Serializable {
         tradingUsers = new HashMap<>();
         adminUsers = new HashMap<>();
         unfreezeRequests = new HashSet<>();
-        tradingThreshold = 5;
+        tradingThreshold = 0;
         silverThreshold = 3;
         goldThreshold = 5;
         User initialAdmin = new User("Initial Admin", "ia", "initialize");

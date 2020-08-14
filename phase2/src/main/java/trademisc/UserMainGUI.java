@@ -54,6 +54,9 @@ public class UserMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         getTradeModel().addObserver(this);
         root.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
+        // Update all the items that are no longer early access
+        getTradeModel().getItemManager().updateEarlyItems();
+
         ProfileGUI profileGUI = new LoggedInProfileGUI(getStage(), 800, 800, getTradeModel(), true);
         Parent profileParent = profileGUI.getRoot();
         Tab profileTab = new Tab("My Profile", profileParent);

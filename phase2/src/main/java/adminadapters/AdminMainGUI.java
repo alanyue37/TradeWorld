@@ -20,6 +20,7 @@ import tradegateway.TradeModel;
 import trademisc.MainGUI;
 import trademisc.RunnableGUI;
 import undocomponent.NoLongerUndoableException;
+import useradapters.TableViewCreator;
 
 import java.util.*;
 
@@ -115,6 +116,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         initializeScreen();
         scene = new Scene(root, width, height);
         getStage().setScene(scene);
+        getStage().setTitle("TradeWorld - Admin");
         getStage().show();
     }
 
@@ -440,6 +442,82 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         return grid;
     }
 
+//    OLD REVIEW ITEMS
+//    /**
+//     * This method allows the Admin user to select items that should be added to the system.
+//     */
+//    public Parent reviewItems() {
+//        Text title = new Text("Review Items");
+//        title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+//
+//        ListView<String> list = new ListView<>();
+//        ObservableList<String> reviewItems = FXCollections.observableArrayList();
+//
+//        Set<String> items = model.getItemManager().getItemsByStage("pending");
+//        List<String> itemsInList = new ArrayList<>(items);
+//
+//        for (String itemID : items) {
+//            String itemInfo = model.getItemManager().getItemInfo(itemID);
+//            reviewItems.addAll(itemInfo);
+//        }
+//        list.setItems(reviewItems);
+//        list.setPlaceholder(new Label("There are no items to be reviewed."));
+//        Text heading = new Text("These items are pending to be added. Unselected items will be deleted.\n Hold down shift to add multiple items to the system.");
+//
+//        GridPane grid = new GridPane();
+//        grid.setAlignment(Pos.CENTER);
+//        grid.setHgap(10);
+//        grid.setVgap(10);
+//        grid.setPadding(new Insets(25, 25, 25, 25));
+//        grid.add(title, 0, 0, 2, 1);
+//        list.setPrefHeight(height - 50); // we could change this
+//        list.setPrefWidth(width - 50);   // we could change this
+//
+//        Button addItemsButton = new Button("Add these Items");
+//        HBox hBoxAddItemsButton = new HBox(10);
+//
+//        hBoxAddItemsButton.setAlignment(Pos.BOTTOM_RIGHT);
+//        hBoxAddItemsButton.getChildren().add(addItemsButton);
+//
+//        grid.add(heading, 0, 1);
+//        grid.add(list, 0, 2);
+//        grid.add(hBoxAddItemsButton, 0, 3);
+//
+//        Label message = new Label();
+//        message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
+//        message.setAlignment(Pos.CENTER);
+//        grid.add(message, 0, 11, 1, 1);
+//
+//        list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+//        addItemsButton.setOnAction(actionEvent -> {
+//            ObservableList<Integer> selectedItems = list.getSelectionModel().getSelectedIndices();
+//            ArrayList<Integer> conversion = new ArrayList<>(selectedItems);
+//            ArrayList<String> selected = new ArrayList<>();
+//            ArrayList<String> notSelected = new ArrayList<>();
+//            for (Integer itemID : conversion) {
+//                selected.add(itemsInList.get(itemID));
+//            }
+//            for (String itemID : itemsInList) {
+//                if (!selected.contains(itemID)) {
+//                    notSelected.add(itemID);
+//                }
+//            }
+//            if (!selected.isEmpty() || !notSelected.isEmpty()) {
+//                try {
+//                    controller.askAdminToReviewItems(selected, notSelected);
+//                } catch (NoLongerUndoableException e) {
+//                    e.printStackTrace();
+//                }
+//                message.setText("Selected items have been added to the system.");
+//                reviewItems.clear();
+//            } else {
+//                message.setText("No items are added to the system.");
+//            }
+//        });
+//
+//        return grid;
+//    }
+
     /**
      * This method allows the Admin user to select items that should be added to the system.
      */
@@ -447,18 +525,10 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         Text title = new Text("Review Items");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
-        ListView<String> list = new ListView<>();
-        ObservableList<String> reviewItems = FXCollections.observableArrayList();
+        TableViewCreator creator = new TableViewCreator(model);
+        TableView<ObservableList<String>> table = creator.create("pending");
+        table.setPlaceholder(new Label("There are no items to be reviewed."));
 
-        Set<String> items = model.getItemManager().getItemsByStage("pending");
-        List<String> itemsInList = new ArrayList<>(items);
-
-        for (String itemID : items) {
-            String itemInfo = model.getItemManager().getItemInfo(itemID);
-            reviewItems.addAll(itemInfo);
-        }
-        list.setItems(reviewItems);
-        list.setPlaceholder(new Label("There are no items to be reviewed."));
         Text heading = new Text("These items are pending to be added. Unselected items will be deleted.\n Hold down shift to add multiple items to the system.");
 
         GridPane grid = new GridPane();
@@ -467,48 +537,61 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
         grid.add(title, 0, 0, 2, 1);
-        list.setPrefHeight(height - 50); // we could change this
-        list.setPrefWidth(width - 50);   // we could change this
+        table.setPrefHeight(height - 50); // we could change this
+        table.setPrefWidth(width - 50);   // we could change this
 
-        Button addItemsButton = new Button("Add these Items");
-        HBox hBoxAddItemsButton = new HBox(10);
+        Button addItemsButton = new Button("Accept these items");
+//        HBox hBoxAddItemsButton = new HBox(10);
+        Button removeItemsButton = new Button("Reject these items");
 
-        hBoxAddItemsButton.setAlignment(Pos.BOTTOM_RIGHT);
-        hBoxAddItemsButton.getChildren().add(addItemsButton);
+//        hBoxAddItemsButton.setAlignment(Pos.BOTTOM_RIGHT);
+//        hBoxAddItemsButton.getChildren().add(addItemsButton);
 
         grid.add(heading, 0, 1);
-        grid.add(list, 0, 2);
-        grid.add(hBoxAddItemsButton, 0, 3);
+        grid.add(table, 0, 2, 2, 1);
+//        grid.add(hBoxAddItemsButton, 0, 3);
+        grid.add(addItemsButton, 0, 3);
+        grid.add(removeItemsButton, 1, 3);
 
         Label message = new Label();
         message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
         message.setAlignment(Pos.CENTER);
         grid.add(message, 0, 11, 1, 1);
 
-        list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        TableView.TableViewSelectionModel<ObservableList<String>> itemSelection = table.getSelectionModel();
+        table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
         addItemsButton.setOnAction(actionEvent -> {
-            ObservableList<Integer> selectedItems = list.getSelectionModel().getSelectedIndices();
-            ArrayList<Integer> conversion = new ArrayList<>(selectedItems);
-            ArrayList<String> selected = new ArrayList<>();
-            ArrayList<String> notSelected = new ArrayList<>();
-            for (Integer itemID : conversion) {
-                selected.add(itemsInList.get(itemID));
+            ObservableList<ObservableList<String>> selectedItems = itemSelection.getSelectedItems();
+//            System.out.println(selectedItems.size());
+            for (ObservableList<String> item : new ArrayList<>(selectedItems)) {
+                controller.askAdminToAcceptItem(item.get(0));
+                table.getItems().remove(item);
+//                System.out.println(item.get(0));
             }
-            for (String itemID : itemsInList) {
-                if (!selected.contains(itemID)) {
-                    notSelected.add(itemID);
-                }
+            if (selectedItems.size() > 0) {
+                message.setText("Selected items have been added to the system.");
+            } else {
+                message.setText("No items are added to the system.");
             }
-            if (!selected.isEmpty() || !notSelected.isEmpty()) {
+        });
+
+        removeItemsButton.setOnAction(actionEvent -> {
+            ObservableList<ObservableList<String>> selectedItems = itemSelection.getSelectedItems();
+//            System.out.println(selectedItems.size());
+            for (ObservableList<String> item : new ArrayList<>(selectedItems)) {
                 try {
-                    controller.askAdminToReviewItems(selected, notSelected);
+                    controller.askAdminToDeleteItem(item.get(0));
                 } catch (NoLongerUndoableException e) {
                     e.printStackTrace();
                 }
-                message.setText("Selected items have been added to the system.");
-                reviewItems.clear();
+                table.getItems().remove(item);
+//                System.out.println(item.get(0));
+            }
+            if (selectedItems.size() > 0) {
+                message.setText("Selected items have been removed from the system.");
             } else {
-                message.setText("No items are added to the system.");
+                message.setText("No items are removed to the system.");
             }
         });
 
