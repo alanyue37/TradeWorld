@@ -40,7 +40,6 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
     private final TradeModel model;
     private final TabPane root;
     private TabPane subRoot;
-    private List<Tab> tabs;
 
     /**
      * A constructor for AdminGUI class.
@@ -56,7 +55,6 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         this.model = model;
         this.root = new TabPane();
         this.subRoot = new TabPane();
-        tabs = new ArrayList<>();
     }
 
     public void initializeScreen() {
