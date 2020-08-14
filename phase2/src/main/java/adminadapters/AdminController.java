@@ -323,6 +323,7 @@ public class AdminController {
         for (String undoID : undoActions) {
             if (undoActionsCopy.contains(undoID)) {
                 tradeModel.getUndoManager().execute(undoID);
+                undoActionsCopy.remove(undoID);
             }
         }
     }
