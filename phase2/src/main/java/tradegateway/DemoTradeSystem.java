@@ -1,20 +1,10 @@
 package tradegateway;
 
-import adminadapters.AdminGUI;
 import javafx.stage.Stage;
-import loginadapters.LogInController;
 import loginadapters.LoginGUI;
-import sun.java2d.cmm.Profile;
-import trademisc.MainGUI;
-import trademisc.RunnableController;
 import trademisc.RunnableGUI;
-import trademisc.UserMainGUI;
-import useradapters.LoggedInProfileGUI;
-import useradapters.ProfileGUI;
 
 import java.io.IOException;
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  * DEMO trading system with pre-inserted users, items, etc. solely for internal testing

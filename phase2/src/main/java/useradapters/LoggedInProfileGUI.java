@@ -91,17 +91,15 @@ public class LoggedInProfileGUI extends ProfileGUI {
         return row;
     }
 
-    protected HBox getStatusesRow() {
-        // TODO: Refactor into two shorter methods time permitting
-        HBox row = new HBox();
-        VBox statusesColumn = new VBox();
-
+    protected HBox getVacationStatusRow() {
         HBox vacationRow = new HBox();
         Label vacationLabel = new Label("Vacation Mode:\t");
         Label vacationValueLabel;
         ToggleGroup vacationGroup = new ToggleGroup();
         RadioButton onVacationButton = new RadioButton("On");
         RadioButton offVacationButton = new RadioButton("Off");
+        onVacationButton.setUserData(true);
+        offVacationButton.setUserData(false);
         onVacationButton.setToggleGroup(vacationGroup);
         offVacationButton.setToggleGroup(vacationGroup);
         if (getProfileController().getVacationMode(getUserProfile())) {
@@ -113,6 +111,32 @@ public class LoggedInProfileGUI extends ProfileGUI {
             offVacationButton.setSelected(true);
         }
 
+        // Add event handlers for radio buttons
+        // Based on sample code from: https://docs.oracle.com/javafx/2/ui_controls/radio-button.htm
+
+        vacationGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>(){
+            public void changed(ObservableValue<? extends Toggle> ov,
+                                Toggle old_toggle, Toggle new_toggle) {
+                if (vacationGroup.getSelectedToggle() != null) {
+                    boolean vacation = (boolean) vacationGroup.getSelectedToggle().getUserData();
+                    getProfileController().setVacationMode(vacation);}
+
+            }
+        });
+
+        if (getProfileController().isOwnProfile(getUserProfile())) {
+            vacationRow.getChildren().addAll(vacationLabel, offVacationButton, onVacationButton);
+
+        }
+        else {
+            vacationRow.getChildren().addAll(vacationLabel, vacationValueLabel);
+        }
+
+        vacationRow.setSpacing(20);
+        return vacationRow;
+    }
+
+    private HBox getPrivacyRow() {
         HBox privacyRow = new HBox();
         Label privacyLabel = new Label("Private Mode:\t\t");
         Label privacyValueLabel;
@@ -121,8 +145,7 @@ public class LoggedInProfileGUI extends ProfileGUI {
         RadioButton offPrivacyButton = new RadioButton("Off");
         onPrivacyButton.setUserData(true);
         offPrivacyButton.setUserData(false);
-        onVacationButton.setUserData(true);
-        offVacationButton.setUserData(false);
+
         onPrivacyButton.setToggleGroup(privacyGroup);
         offPrivacyButton.setToggleGroup(privacyGroup);
 
@@ -143,37 +166,32 @@ public class LoggedInProfileGUI extends ProfileGUI {
                                 Toggle old_toggle, Toggle new_toggle) {
                 if (privacyGroup.getSelectedToggle() != null) {
                     boolean privacy = (boolean) privacyGroup.getSelectedToggle().getUserData();
-                    System.out.println(privacy);
                     getProfileController().setPrivacyMode(privacy);
                 }
 
             }
         });
 
-        vacationGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>(){
-            public void changed(ObservableValue<? extends Toggle> ov,
-                                Toggle old_toggle, Toggle new_toggle) {
-                if (vacationGroup.getSelectedToggle() != null) {
-                    boolean vacation = (boolean) vacationGroup.getSelectedToggle().getUserData();
-                    System.out.println(vacation);
-                    getProfileController().setVacationMode(vacation);}
-
-            }
-        });
-
         if (getProfileController().isOwnProfile(getUserProfile())) {
             privacyRow.getChildren().addAll(privacyLabel, offPrivacyButton, onPrivacyButton);
-            vacationRow.getChildren().addAll(vacationLabel, offVacationButton, onVacationButton);
 
         }
         else {
             privacyRow.getChildren().addAll(privacyLabel, privacyValueLabel);
-            vacationRow.getChildren().addAll(vacationLabel, vacationValueLabel);
         }
 
-        statusesColumn.getChildren().addAll(vacationRow, privacyRow);
-        vacationRow.setSpacing(20);
         privacyRow.setSpacing(20);
+        return privacyRow;
+    }
+    private HBox getStatusesRow() {
+        HBox row = new HBox();
+        VBox statusesColumn = new VBox();
+
+        HBox vacationRow = getVacationStatusRow();
+        HBox privacyRow = getPrivacyRow();
+
+        statusesColumn.getChildren().addAll(vacationRow, privacyRow);
+
         row.getChildren().add(statusesColumn);
         return row;
     }

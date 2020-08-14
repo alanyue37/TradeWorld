@@ -3,7 +3,6 @@ package tradegateway;
 import javafx.stage.Stage;
 import loginadapters.LogInController;
 import loginadapters.LoginGUI;
-import trademisc.RunnableController;
 
 import java.io.IOException;
 import java.util.Observable;

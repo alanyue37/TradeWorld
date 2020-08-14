@@ -21,17 +21,15 @@ public class AddItemGUI implements RunnableGUI {
     private final TradeModel tradeModel;
     private final int width;
     private final int height;
-    private String username;
     private final TableViewCreator creator;
     private GridPane grid;
 
-    public AddItemGUI(Stage stage, int width, int height, TradeModel model, String username) {
+    public AddItemGUI(Stage stage, int width, int height, TradeModel model) {
         this.stage = stage;
         controller = new UserController(model);
         tradeModel = model;
         this.width = width;
         this.height = height;
-        this.username = username;
         creator = new TableViewCreator(tradeModel);
     }
 
@@ -87,7 +85,7 @@ public class AddItemGUI implements RunnableGUI {
         table.setPlaceholder(new Label("No items in inventory"));
 
         createItemButton.setOnAction(actionEvent -> {
-            controller.createItem(username, itemNameField.getText(), itemDescriptionField.getText());
+            controller.createItem(tradeModel.getCurrentUser(), itemNameField.getText(), itemDescriptionField.getText());
             itemNameField.clear();
             itemDescriptionField.clear();
             Text message = new Text("Item added");

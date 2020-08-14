@@ -1,6 +1,7 @@
 package useradapters;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import tradegateway.TradeModel;
 import trademisc.RunnableController;
 import undocomponent.UndoAddReview;
@@ -9,6 +10,7 @@ import undocomponent.UndoableOperation;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.util.*;
 
 public class ProfileController implements RunnableController {
@@ -188,9 +190,31 @@ public class ProfileController implements RunnableController {
      * @param username user's reviews to get
      * @return JSON representation of reviews
      */
-    public String getReviews(String username) {
-            return tradeModel.getReviewManager().getReviews(username);
+    public List<String> getReviews(String username) {
+        String json = tradeModel.getReviewManager().getReviewsByUser(username);
+        Gson gson = new Gson();
+        Type type = new TypeToken<List<Map<String, String>>>(){}.getType();
+        List<Map<String, String>> reviewMaps = gson.fromJson(json, type);
+        List<String> reviewStrings = new ArrayList<>();
+
+        for (int i=1; i < reviewMaps.size(); i++) {
+            // Skip first map because that's average rating
+            Map<String, String> reviewMap = reviewMaps.get(i);
+            String r = "Author: " + reviewMap.get("author") + "\nRating: " + reviewMap.get("rating") + "\n" + reviewMap.get("comment");
+            reviewStrings.add(r);
         }
+        return reviewStrings;
+    }
+
+    public String getAverageRating(String username) {
+        String json = tradeModel.getReviewManager().getReviewsByUser(username);
+        Gson gson = new Gson();
+        Type type = new TypeToken<List<Map<String, String>>>(){}.getType();
+        List<Map<String, String>> reviewMaps = gson.fromJson(json, type);
+        List<String> reviewStrings = new ArrayList<>();
+        String averageRating = reviewMaps.get(0).get("average");
+        return averageRating;
+    }
 
     /**
      * Get friends of user with username
@@ -199,10 +223,10 @@ public class ProfileController implements RunnableController {
      * @param username user's friends to get
      * @return JSON representation of friends list
      */
-    public String getFriends(String username) {
+    public List<String> getFriends(String username) {
         List<String> friendsList = new ArrayList<>(tradeModel.getUserManager().getFriendList(username));
-        Gson gson = new Gson();
-        return gson.toJson(friendsList);
+        Collections.sort(friendsList, String.CASE_INSENSITIVE_ORDER);
+        return friendsList;
     }
 
     /**

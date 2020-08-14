@@ -1,5 +1,7 @@
 package adminadapters;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -30,7 +32,7 @@ import java.util.Set;
  * Used code from LifeOnTheFarm.zip in week 10 for reference.
  * Also, used https://docs.oracle.com/javafx/2/ui_controls/list-view.htm.
  */
-public class AdminGUI extends MainGUI implements RunnableGUI{
+public class AdminMainGUI extends MainGUI implements RunnableGUI{
     private Stage stage;
     private Scene scene;
     private final int width;
@@ -46,9 +48,8 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
      * @param height    The height of the screen.
      * @param model The TradeModel.
      */
-    public AdminGUI(Stage stage, int width, int height, TradeModel model) {
+    public AdminMainGUI(int width, int height, TradeModel model) {
         super(width, height, model);
-        this.stage = stage;
         this.width = width;
         this.height = height;
         this.controller = new AdminController(model);
@@ -58,7 +59,6 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
     }
 
     public void initializeScreen() {
-        root = new TabPane();
         root.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
         Parent newAdminParent = addNewAdmin();
@@ -80,6 +80,24 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
         Tab undoActionsTab = new Tab("Undo Actions", undoActionsParent);
 
         root.getTabs().addAll(addAdminTab, freezeUsersTab, unfreezeUsersTab, reviewItemsTab, thresholdsTab, undoActionsTab);
+
+        // Listener code below based on https://stackoverflow.com/questions/17522686/javafx-tabpane-how-to-listen-to-selection-changes
+        root.getSelectionModel().selectedItemProperty().addListener(
+                new ChangeListener<Tab>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Tab> observableValue, Tab oldTab, Tab newTab) {
+                        addAdminTab.setContent(addNewAdmin());
+                        freezeUsersTab.setContent(freezeUsers());
+                        unfreezeUsersTab.setContent(unfreezeUsers());
+                        reviewItemsTab.setContent(reviewItems());
+                        thresholdsTab.setContent(setThresholdMenu());
+                        undoActionsTab.setContent(undoActions());
+                        System.out.println(oldTab.getText() + "->" + newTab.getText() );
+
+
+                    }
+                }
+        );
     }
 
     @Override
@@ -95,10 +113,9 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
     @Override
     public void showScreen() {
         initializeScreen();
-        Scene scene = new Scene(root, width, height);
-        stage.setScene(scene);
-        stage.setTitle("Administration");
-        stage.show();
+        scene = new Scene(root, width, height);
+        getStage().setScene(scene);
+        getStage().show();
     }
 
     /**
@@ -129,6 +146,24 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
         Tab silverLimitTab = new Tab("Silver Threshold", silverLimitParent);
 
         subroot.getTabs().addAll(lendingLimitTab, weeklyLimitTab, incompleteTradeLimitTab, editLimitTab, goldLimitTab, silverLimitTab);
+
+        // Listener code below based on https://stackoverflow.com/questions/17522686/javafx-tabpane-how-to-listen-to-selection-changes
+        subroot.getSelectionModel().selectedItemProperty().addListener(
+                new ChangeListener<Tab>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Tab> observableValue, Tab oldTab, Tab newTab) {
+                        lendingLimitTab.setContent(setLendingThreshold());
+                        weeklyLimitTab.setContent(setLimitOfTransactionsThreshold());
+                        incompleteTradeLimitTab.setContent(setLimitOfIncompleteTrades());
+                        editLimitTab.setContent(setLimitOfEdits());
+                        goldLimitTab.setContent(setGoldThreshold());
+                        silverLimitTab.setContent(setSilverThreshold());
+                        System.out.println(oldTab.getText() + "->" + newTab.getText() );
+
+                    }
+                }
+        );
+
         return subroot;
     }
 
@@ -207,7 +242,6 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
      * This method allows the Admin User to create a new Admin.
      */
     public Parent addNewAdmin() {
-        stage.setTitle("Admin User");
         Text title = new Text("Create a New Admin");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -255,55 +289,16 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
        return grid;
     }
 
-   /* ***
-     * This method informs that Admin user that a new Admin user is created.
-     *
-     * @param username The username of the new admin created.
-     *//*
-    public void newAdminCreated(String username) {
-        GridPane grid = (GridPane) scene.getRoot();
-        Text message = new Text("New admin account created: " + username);
-        if (!grid.getChildren().contains(message)) {
-            grid.add(message, 0, 11, 1, 1);
-        }
-    }
-
-    *
-     * This method informs that Admin user that the username entered is already exists.
-     *
-     * @param username The username of the new admin created.
-     *//*
-    public void usernameTaken(String username) {
-        GridPane grid = (GridPane) scene.getRoot();
-        Text message = new Text(username + "username is already taken.");
-        if (!grid.getChildren().contains(message)) {
-            grid.add(message, 0, 12, 1, 1);
-        }
-    }
-
-    *
-     * This method tells the Admin User to try again for various reasons, such as the input was an empty string.
-     *//*
-    public void tryAgain() {
-        GridPane grid = (GridPane) scene.getRoot();
-        Text message = new Text("Please try again!");
-        if (!grid.getChildren().contains(message)) {
-            grid.add(message, 0, 10, 1, 1);
-        }
-    }*/
-
     /**
      * This method allows the Admin user to freeze a given list of users. The selected users will have their status
      * changed to frozen.
      */
     public Parent freezeUsers() {
-        stage.setTitle("Admin User");
         Text title = new Text("Freeze Users");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
         ListView<String> list = new ListView<>();
         ObservableList<String> freezeAccounts = FXCollections.observableArrayList();
-
         Set<String> flaggedAccounts = new HashSet<>();
         List<String> incompleteUsers = model.getMeetingManager().getTradesIncompleteMeetings(model.getTradeManager().getAllTypeTrades("ongoing"));
         flaggedAccounts.addAll(model.getTradeManager().getExceedIncompleteLimitUser(incompleteUsers));
@@ -348,11 +343,11 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
                 message.setText("No accounts have been selected to be frozen.");
             } else {
                 controller.askAdminToFreezeUsers(selected);
+                freezeAccounts.removeAll(selected);
                 message.setText("Selected accounts have been frozen");
                 list.refresh();
             }
         });
-
         return grid;
     }
 
@@ -383,7 +378,6 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
      * changed to unfrozen.
      */
     public Parent unfreezeUsers() {
-        stage.setTitle("Admin User");
         Text title = new Text("Unfreeze Users");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -401,7 +395,7 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
         grid.setVgap(10);
-        grid.setPadding(new Insets(35, 35, 35, 35));
+        grid.setPadding(new Insets(25, 25, 25, 25));
         grid.add(title, 0, 0, 1, 1);
         list.setPrefHeight(height - 50);
         list.setPrefWidth(width - 50);
@@ -428,6 +422,7 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
                 message.setText("No accounts are selected to be unfrozen");
             } else {
                 controller.askAdminToUnfreezeUsers(selectedItems);
+                unfreezeAccounts.removeAll(selectedItems);
                 message.setText("Selected accounts are now unfrozen.");
             }
         });
@@ -435,34 +430,10 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
         return grid;
     }
 
-
-    /**
-     * This method informs the Admin user that they have not selected any accounts to be unfrozen.
-     */
-    public void noAccountsSelectedToUnfreeze() {
-        GridPane grid = (GridPane) scene.getRoot();
-        Text message = new Text("No accounts are selected to be unfrozen");
-        if (!grid.getChildren().contains(message)) {
-            grid.add(message, 0, 6, 1, 1);
-        }
-    }
-
-    /**
-     * This method informs the Admin user that the selected accounts have been unfrozen.
-     */
-    public void accountsSelectedToUnfreeze() {
-        GridPane grid = (GridPane) scene.getRoot();
-        Text message = new Text("Selected accounts are now unfrozen.");
-        if (!grid.getChildren().contains(message)) {
-            grid.add(message, 0, 8, 1, 1);
-        }
-    }
-
     /**
      * This method allows the Admin user to select items that should be added to the system.
      */
     public Parent reviewItems() {
-        stage.setTitle("Admin User");
         Text title = new Text("Review Items");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -525,7 +496,7 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
                     e.printStackTrace();
                 }
                 message.setText("Selected items have been added to the system.");
-                list.refresh();
+                reviewItems.clear();
             } else {
                 message.setText("No items are added to the system.");
             }
@@ -535,31 +506,10 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
     }
 
     /**
-     * This method informs the Admin that the selected items have been added to the system and the items not selected
-     * are deleted.
-     */
-    public void itemReviewed() {
-        GridPane grid = (GridPane) scene.getRoot();
-        Text message = new Text("Selected items have been added to the system.");
-        if (!grid.getChildren().contains(message)) {
-            grid.add(message, 0, 6, 2, 1);
-        }
-    }
-
-    public void noItemsSelected() {
-        GridPane grid = (GridPane) scene.getRoot();
-        Text message = new Text("No items are added to the system.");
-        if (!grid.getChildren().contains(message)) {
-            grid.add(message, 0, 6, 2, 1);
-        }
-    }
-
-    /**
      * This method allows the Admin user to set a lending threshold and prompts the Admin user again if the input is
      * invalid.
      */
     public Parent setLendingThreshold() {
-        stage.setTitle("Admin User");
         Text title = new Text("Set Lending Threshold");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -616,7 +566,6 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
      * invalid.
      */
     public Parent setLimitOfTransactionsThreshold() {
-        stage.setTitle("Admin User");
         Text title = new Text("Set Transactions Threshold");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -672,7 +621,6 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
      * invalid.
      */
     public Parent setLimitOfIncompleteTrades() {
-        stage.setTitle("Admin User");
         Text title = new Text("Set Incomplete Trade Threshold");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -727,7 +675,6 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
      * invalid.
      */
     public Parent setLimitOfEdits() {
-        stage.setTitle("Admin User");
         Text title = new Text("Set Edit Threshold");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -773,12 +720,10 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
                 message.setText("Not an integer or is a number less than zero. \nPlease try again");
             }
         });
-
         return grid;
     }
 
     public Parent setGoldThreshold() {
-        stage.setTitle("Admin User");
         Text title = new Text("Set Gold Threshold");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -828,7 +773,6 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
     }
 
     public Parent setSilverThreshold() {
-        stage.setTitle("Admin User");
         Text title = new Text("Set Silver Threshold");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -906,27 +850,9 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
     }
 
     /**
-     * This method informs that Admin user that the threshold has been set.
-     */
-    public Label thresholdSet() {
-        Label message = new Label();
-        message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
-        message.setAlignment(Pos.CENTER);
-        message.setText("Threshold is set.");
-        return message;
-
-       /* GridPane grid = (GridPane) scene.getRoot();
-        Text message = new Text("Threshold is set.");
-        if (!grid.getChildren().contains(message)) {
-            grid.add(message, 0, 6, 2, 1);
-        }*/
-    }
-
-    /**
      *
      */
     public Parent undoActions() {
-        stage.setTitle("Admin User");
         Text title = new Text("Undo Operations");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -936,12 +862,11 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
         ObservableList<String> reviewItems = FXCollections.observableArrayList();
         Text heading = new Text("The following are outstanding undo actions. \nHold down shift to undo multiple actions.");
 
-        // Set<String> items = model.getItemManager().getItemsByStage("pending");
         List<String> undoOperations = new ArrayList<>(controller.undoOperationsString());
 
         reviewItems.addAll(undoOperations);
         list.setItems(reviewItems);
-        list.setPlaceholder(new Label("There are no undo operations."));
+        list.setPlaceholder(new Label("There are no undo actions."));
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -949,9 +874,8 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
         grid.add(title, 0, 0, 2, 1);
-        // grid.getChildren().add(list);
-        list.setPrefHeight(height - 50); // we could change this
-        list.setPrefWidth(width - 50);   // we could change this
+        list.setPrefHeight(height - 50);
+        list.setPrefWidth(width - 50);
 
         Button confirmToUndo = new Button("Confirm to Undo");
         HBox hBoxConfirmToUndo = new HBox(10);
@@ -982,13 +906,5 @@ public class AdminGUI extends MainGUI implements RunnableGUI{
             }
         });
        return grid;
-    }
-
-    public void noActionsSelected() {
-        GridPane grid = (GridPane) scene.getRoot();
-        Text message = new Text("No undo actions selected.");
-        if (!grid.getChildren().contains(message)) {
-            grid.add(message, 0, 6, 2, 1);
-        }
     }
 }
