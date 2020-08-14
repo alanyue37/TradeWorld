@@ -430,6 +430,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI{
         return grid;
     }
 
+//    OLD REVIEW ITEMS
 //    /**
 //     * This method allows the Admin user to select items that should be added to the system.
 //     */
@@ -550,11 +551,11 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI{
 
         addItemsButton.setOnAction(actionEvent -> {
             ObservableList<ObservableList<String>> selectedItems = itemSelection.getSelectedItems();
-            System.out.println(selectedItems.size());
+//            System.out.println(selectedItems.size());
             for (ObservableList<String> item : new ArrayList<>(selectedItems)) {
                 controller.askAdminToAcceptItem(item.get(0));
                 table.getItems().remove(item);
-                System.out.println(item.get(0));
+//                System.out.println(item.get(0));
             }
             if (selectedItems.size() > 0) {
                 message.setText("Selected items have been added to the system.");
@@ -565,7 +566,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI{
 
         removeItemsButton.setOnAction(actionEvent -> {
             ObservableList<ObservableList<String>> selectedItems = itemSelection.getSelectedItems();
-            System.out.println(selectedItems.size());
+//            System.out.println(selectedItems.size());
             for (ObservableList<String> item : new ArrayList<>(selectedItems)) {
                 try {
                     controller.askAdminToDeleteItem(item.get(0));
@@ -573,7 +574,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI{
                     e.printStackTrace();
                 }
                 table.getItems().remove(item);
-                System.out.println(item.get(0));
+//                System.out.println(item.get(0));
             }
             if (selectedItems.size() > 0) {
                 message.setText("Selected items have been removed from the system.");
