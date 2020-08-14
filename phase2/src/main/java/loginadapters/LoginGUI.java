@@ -216,6 +216,7 @@ public class LoginGUI implements RunnableGUI {
                 nextGUI = new UserMainGUI(800, 800, tradeModel);
                 errorMessage.setText(""); // clear the error message
                 nextGUI.showScreen();
+                stage.hide();
             } else {
 //                usernameTaken(usernameField.getText());
                 errorMessage.setText("Username " + usernameField.getText() + " is already taken");
