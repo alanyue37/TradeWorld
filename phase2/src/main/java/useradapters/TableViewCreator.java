@@ -8,6 +8,7 @@ import javafx.scene.control.TableView;
 import tradegateway.TradeModel;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 public class TableViewCreator {
@@ -93,23 +94,40 @@ public class TableViewCreator {
      */
     private void viewAllItems() {
         itemsToShow = new ArrayList<>();
-        Set<String> items = tradeModel.getItemManager().getItemsByStage("common");
-        if (tradeModel.getUserManager().getRankByUsername(tradeModel.getCurrentUser()).equals("gold")) {
-            items.addAll(tradeModel.getItemManager().getItemsByStage("early"));
-        }
-        Set<String> userInventory = tradeModel.getItemManager().getInventory(tradeModel.getCurrentUser());
+        String userRank = tradeModel.getUserManager().getRankByUsername(tradeModel.getCurrentUser());
+        Set<String> itemsAvailable = new HashSet<>();
 
-        for (String itemID : items) {
-            String otherUsername = tradeModel.getItemManager().getOwner(itemID);
-            String thisUserCity = tradeModel.getUserManager().getCityByUsername(tradeModel.getCurrentUser());
-            String otherUserCity = tradeModel.getUserManager().getCityByUsername(otherUsername);
-            if (!userInventory.contains(itemID) && thisUserCity.equals(otherUserCity)) {
-                itemsToShow.add(new String[]{itemID,
-                        tradeModel.getItemManager().getName(itemID),
-                        tradeModel.getItemManager().getOwner(itemID),
-                        tradeModel.getItemManager().getDescription(itemID)});
-            }
+        if (tradeModel.getUserManager().getPrivateUser().contains(tradeModel.getCurrentUser())) { // if private user
+            itemsAvailable.addAll(getAvailableItemsPrivateAccount(tradeModel.getItemManager().getAvailableItems(userRank)));
+        } else {  // public user
+            itemsAvailable.addAll(getAvailableItemsPublicAccount(tradeModel.getItemManager().getAvailableItems(userRank)));
         }
+
+        for (String itemID : itemsAvailable) {
+            itemsToShow.add(new String[]{itemID,
+                tradeModel.getItemManager().getName(itemID),
+                tradeModel.getItemManager().getOwner(itemID),
+                tradeModel.getItemManager().getDescription(itemID)});
+        }
+    }
+
+    private Set<String> getAvailableItemsPrivateAccount(Set<String> allItems){
+        Set<String> couldTrade = tradeModel.getUserManager().getFriendList(tradeModel.getCurrentUser());
+        couldTrade.removeIf(user -> tradeModel.getUserManager().getOnVacation().contains(user)); // remove users on vacation
+        couldTrade.removeIf(friend -> !tradeModel.getUserManager().getCityByUsername(tradeModel.getCurrentUser()).equals(tradeModel.getUserManager().getCityByUsername(friend))); // remove different city
+        allItems.removeIf(item -> !couldTrade.contains(tradeModel.getItemManager().getOwner(item)));
+        return allItems;
+    }
+
+    private Set<String> getAvailableItemsPublicAccount(Set<String> allItems){
+        Set<String> couldNotTrade = tradeModel.getUserManager().getPrivateUser(); // add private users
+        couldNotTrade.removeAll(tradeModel.getUserManager().getFriendList(tradeModel.getCurrentUser())); // remove private users who are friends
+        couldNotTrade.addAll(tradeModel.getUserManager().getOnVacation()); // add users on vacation
+        couldNotTrade.add(tradeModel.getCurrentUser()); // add the user itself
+        String thisUserCity = tradeModel.getUserManager().getCityByUsername(tradeModel.getCurrentUser());
+        allItems.removeIf(item -> couldNotTrade.contains(tradeModel.getItemManager().getOwner(item)) |
+                !thisUserCity.equals(tradeModel.getUserManager().getCityByUsername(tradeModel.getItemManager().getOwner(item))));
+        return allItems;
     }
 
     /**

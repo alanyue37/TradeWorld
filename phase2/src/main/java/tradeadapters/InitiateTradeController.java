@@ -8,11 +8,9 @@ import undocomponent.UndoableOperation;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.*;
 
 public class InitiateTradeController implements RunnableController {
@@ -287,8 +285,8 @@ public class InitiateTradeController implements RunnableController {
 
     private Set<String> getAvailableItemsPrivateAccount(Set<String> allItems){
         Set<String> couldTrade = tradeModel.getUserManager().getFriendList(username);
-        couldTrade.removeIf(user -> tradeModel.getUserManager().getOnVacation().contains(user)); //remove vacation and different city
-        couldTrade.removeIf(friend -> !tradeModel.getUserManager().getCityByUsername(username).equals(tradeModel.getUserManager().getCityByUsername(friend)));
+        couldTrade.removeIf(user -> tradeModel.getUserManager().getOnVacation().contains(user)); // remove users on vacation
+        couldTrade.removeIf(friend -> !tradeModel.getUserManager().getCityByUsername(username).equals(tradeModel.getUserManager().getCityByUsername(friend))); // remove different city
         allItems.removeIf(item -> !couldTrade.contains(tradeModel.getItemManager().getOwner(item)));
         return allItems;
     }
