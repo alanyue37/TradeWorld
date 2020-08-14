@@ -56,6 +56,7 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         this.height = height;
         this.tradeModel = tradeModel;
         this.username = tradeModel.getCurrentUser();
+//        this.username = username;
         this.initiateTradeController = new InitiateTradeController(tradeModel);
         this.confirmTradesController = new ConfirmTradesController(tradeModel);
         this.proposedTradesController = new ProposedTradesController(tradeModel);
@@ -129,8 +130,6 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         Text title = new Text("Available items");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 15));
 
-        Map<String, String> infoToId = initiateTradeController.getAvailableItems();
-
         //Vbox
         VBox mainLayout = new VBox();
         mainLayout.setPrefWidth(300);
@@ -139,26 +138,8 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         mainLayout.getChildren().add(title);
         mainLayout.setAlignment(Pos.CENTER);
 
-        ListView<String> list = new ListView<>();
-        ObservableList<String> availableItems = FXCollections.observableArrayList();
-        availableItems.addAll(infoToId.keySet());
-        list.setItems(availableItems);
-        list.setPlaceholder(new Label("There are no available items for trading."));
-
         //Radio buttons for available items
         ScrollPane scrollPane = new ScrollPane();
-        VBox itembuttons = new VBox();
-        itembuttons.setSpacing(20);
-        itembuttons.setAlignment(Pos.CENTER);
-        AtomicReference<String> selected = new AtomicReference<>("");
-        ToggleGroup item = new ToggleGroup();
-        for (String info : availableItems) {
-            RadioButton radioBtn = new RadioButton(info);
-            radioBtn.setToggleGroup(item);
-            itembuttons.getChildren().add(radioBtn);
-            radioBtn.setOnAction(actionEvent -> selected.set(info));
-        }
-        scrollPane.setContent(itembuttons);
         mainLayout.getChildren().add(scrollPane);
 
         //Trade types
@@ -168,91 +149,27 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         Button twoWayTemporary = new Button("Two way temporary");
         Button twoWayPermanent = new Button("Two way permanent");
 
-        if (!initiateTradeController.canTrade()){
-            oneWayPermanent.setDisable(true);
-            oneWayTemporary.setDisable(true);
-            twoWayPermanent.setDisable(true);
-            twoWayTemporary.setDisable(true);
-            Label cannotTrade = new Label("You cannot initiate a trade. Check your account status");
-            mainLayout.getChildren().add(cannotTrade);
-        }
-
         VBox typeButtons = new VBox();
         typeButtons.getChildren().addAll(selectType, oneWayPermanent,oneWayTemporary, twoWayPermanent, twoWayTemporary);
         typeButtons.setAlignment(Pos.CENTER);
         typeButtons.setSpacing(10);
 
+//        if (!initiateTradeController.canTrade()){
+//            oneWayPermanent.setDisable(true);
+//            oneWayTemporary.setDisable(true);
+//            twoWayPermanent.setDisable(true);
+//            twoWayTemporary.setDisable(true);
+//            Label cannotTrade = new Label("You cannot initiate a trade. Check your account status");
+//            mainLayout.getChildren().add(cannotTrade);
+//        }
+
         Label messageBox = new Label();
         messageBox.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
         messageBox.setAlignment(Pos.CENTER);
 
-        oneWayTemporary.setOnAction(actionEvent ->{
-                    if (selected.toString().equals("")){
-                        messageBox.setText("Choose an item to trade.");
-                    } else if (initiateTradeController.isNewAccount(username)){
-                        messageBox.setText("Your first trade must be Two-Way or Lending.");
-                    } else if (!initiateTradeController.canOneWay(username)){
-                        messageBox.setText("You have insufficient credit to borrow. You may not initiate a one-way " +
-                                "trade until you have loaned enough.");
-                    } else{
-                        Map<String, String> tradeInfo = new HashMap<>();
-                        tradeInfo.put("chosen", infoToId.get(selected.toString()));
-                        tradeInfo.put("way", "oneWay");
-                        tradeInfo.put("term", "temporary");
-                        initiateTradeMeetingInfo(tradeInfo);
-                    }
-                }
-        );
-        oneWayPermanent.setOnAction(actionEvent ->{
-                    if (selected.toString().equals("")){
-                        messageBox.setText("Choose an item to trade.");
-                    }
-                    else if (initiateTradeController.isNewAccount(username)){
-                        messageBox.setText("Your first trade must be Two-Way or Lending.");
-                    } else if (!initiateTradeController.canOneWay(username)){
-                        messageBox.setText("You have insufficient credit to borrow. You may not initiate a one-way " +
-                                "trade until you have loaned enough.");
-                    } else{
-                        Map<String, String> tradeInfo = new HashMap<>();
-                        tradeInfo.put("chosen", infoToId.get(selected.toString()));
-                        tradeInfo.put("way", "oneWay");
-                        tradeInfo.put("term", "permanent");
-                        initiateTradeMeetingInfo(tradeInfo);
-                    }
-                }
-        );
-        twoWayTemporary.setOnAction(actionEvent -> {
-                    if (selected.toString().equals("")){
-                        messageBox.setText("Choose an item to trade.");
-                    }
-                    else if (initiateTradeController.getItemsToOffer(tradeModel.getItemManager().getOwner(infoToId.get(selected.toString()))).size() == 0){
-                        messageBox.setText("You cannot make any two way trades. Your inventory is empty");}
-                    else{
-                        Map<String, String> tradeInfo = new HashMap<>();
-                        tradeInfo.put("chosen", infoToId.get(selected.toString()));
-                        tradeInfo.put("way", "twoWay");
-                        tradeInfo.put("term", "temporary");
-                        selectItemTwoWayPage(tradeInfo);
-                        //stage.hide();
-                    }
-                }
-        );
-        twoWayPermanent.setOnAction(actionEvent -> {
-            if (selected.toString().equals("")){
-                messageBox.setText("Choose an item to trade.");
-            }
-            else if (initiateTradeController.getItemsToOffer(tradeModel.getItemManager().getOwner(infoToId.get(selected.toString()))).size() == 0){
-                messageBox.setText("You cannot make any two way trades. Your inventory is empty");
-            } else{
-                Map<String, String> tradeInfo = new HashMap<>();
-                tradeInfo.put("chosen", infoToId.get(selected.toString()));
-                tradeInfo.put("way", "twoWay");
-                tradeInfo.put("term", "permanent");
-                selectItemTwoWayPage(tradeInfo);
-            }
-        });
-
         mainLayout.getChildren().addAll(messageBox, typeButtons);
+
+        configureInitiateButtons(oneWayTemporary, oneWayPermanent, twoWayPermanent, twoWayTemporary, scrollPane, messageBox);
 
         return mainLayout;
     }
@@ -266,7 +183,7 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
 
         ListView<String> proposedTradesListView = new ListView<>();
         proposedTradesListView.setPlaceholder(new Label("No proposed trades"));
-        proposedTradesListView.setItems(proposedTradesInfoObservableList);
+//        proposedTradesListView.setItems(proposedTradesInfoObservableList);
         Button confirmBtn = new Button("Confirm");
         Button editBtn = new Button("Edit");
         Button declineBtn = new Button("Decline");
@@ -279,44 +196,9 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         Label messageBox = new Label();
         messageBox.setFont(Font.font("Tahoma", FontWeight.NORMAL, 13));
 
-        confirmBtn.setOnAction(actionEvent -> {
-            if (proposedTradesListView.getSelectionModel().isEmpty()){
-                messageBox.setText("Please select a trade.");
-            } else if (!tradeModel.getMeetingManager().canChangeMeeting(proposedTradesIDObservableList.get(proposedTradesListView.getSelectionModel().getSelectedIndex()), username)){
-                messageBox.setText("Please wait for the other user to confirm the meeting.");
-            } else {
-                String tradeId = proposedTradesIDObservableList.get(proposedTradesListView.getSelectionModel().getSelectedIndex());
-                proposedTradesController.confirmMeetingTime(tradeId);
-                updateProposedObservableLists();
-                updateToBeConfirmedObservableLists();}
-        });
-        editBtn.setOnAction(actionEvent -> {
-            if (proposedTradesListView.getSelectionModel().isEmpty()){
-                messageBox.setText("Please select a trade.");
-            } else{
-                String tradeId = proposedTradesIDObservableList.get(proposedTradesListView.getSelectionModel().getSelectedIndex());
-                if (!tradeModel.getMeetingManager().canChangeMeeting(tradeId, username)){
-                    messageBox.setText("Please wait for the other user to edit the meeting.");
-                } else if(tradeModel.getMeetingManager().attainedThresholdEdits(tradeModel.getTradeManager().getMeetingOfTrade(tradeId).get(0))){
-                    messageBox.setText("Exceeded the limit of edits to a meeting. Trade was canceled.");
-                    proposedTradesController.declineTrade(tradeId);
-                    updateProposedObservableLists();
-                } else{
-                    editProposedTrade(tradeId);
-                    updateProposedObservableLists();}
-            }
-        });
-        declineBtn.setOnAction(actionEvent -> {
-            if (proposedTradesListView.getSelectionModel().isEmpty()) {
-                messageBox.setText("Please select a trade.");
-            } else{
-                String tradeId = proposedTradesIDObservableList.get(proposedTradesListView.getSelectionModel().getSelectedIndex());
-                proposedTradesController.declineTrade(tradeId);
-                updateProposedObservableLists();}
-        });
-
         grid.add(messageBox, 0, 4, 2, 1);
 
+        configureProposedTradesButtons(confirmBtn, editBtn, declineBtn, messageBox, proposedTradesListView);
         return grid;
     }
 
@@ -330,9 +212,8 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         updateToBeConfirmedObservableLists();
 
         ListView<String> confirmTradesListView = new ListView<>();
-        Map<String, String> trades = confirmTradesController.getToBeConfirmedTrades(username);
         confirmTradesListView.setPlaceholder(new Label("No trades to confirm"));
-        confirmTradesListView.setItems(confirmTradesInfoObservableList);
+//        confirmTradesListView.setItems(confirmTradesInfoObservableList);
         Button confirmBtn = new Button("Confirm");
 
         grid.add(confirmTradesListView, 0, 0, 2, 1);
@@ -341,32 +222,9 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         Label messageBox = new Label();
         messageBox.setFont(Font.font("Tahoma", FontWeight.NORMAL, 13));
 
-        confirmBtn.setOnAction(actionEvent -> {
-            if (confirmTradesListView.getSelectionModel().isEmpty()) {
-                messageBox.setText("Please select a trade.");
-            } else if (!tradeModel.getMeetingManager().canChangeMeeting(confirmTradesIDObservableList.get(confirmTradesListView.getSelectionModel().getSelectedIndex()), username)){
-                messageBox.setText("Already confirmed. Please wait for the other user.");
-            } else {
-                String tradeId = confirmTradesIDObservableList.get(confirmTradesListView.getSelectionModel().getSelectedIndex());
-                try {
-                    JSONObject json = tradeModel.getTradeManager().getTradeInfo(tradeId);
-                    if (json.get("Type").toString().equalsIgnoreCase("temporary") &&
-                            (json.get("Number of meetings").equals("1"))) {
-                        Calendar cal = Calendar.getInstance();
-                        cal.setTime(tradeModel.getMeetingManager().getLastMeetingTime(tradeId));
-                        cal.add(Calendar.DATE, 30);
-                        Date newDate = cal.getTime();
-                        messageBox.setText("The next meeting is on " + newDate + ", 30 days after the first meeting time.");
-                    }
-                    confirmTradesController.confirmTradeHappened(tradeId, trades.get(tradeId));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-            updateToBeConfirmedObservableLists();
-        });
-
         grid.add(messageBox, 0, 2, 2, 1);
+        configureConfirmTradesButtons(confirmBtn, messageBox, confirmTradesListView);
+
         return grid;
     }
 
@@ -406,18 +264,7 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
 
         VBox vbox = new VBox();
         vbox.getChildren().addAll(hBox, messageBox, ongoingTrades, hboxOngoing, completedTrades, hboxCompleted);
-
-        addReview.setOnAction(e -> {
-            if (!ratingInput.getText().matches("[12345]")) {
-                messageBox.setText("Invalid input. Please review your inputs.");
-            } else if (!profileController.canAddReview(tradeIdInput.getText(), username)) {
-                messageBox.setText("You cannot leave a review for this trade");
-            } else {
-                profileController.addReview(tradeIdInput.getText(), Integer.parseInt(ratingInput.getText()), commentInput.getText());
-                messageBox.setText("Review for trade " + tradeIdInput.getText() + " added successfully!");
-            }
-        });
-
+        configureViewButtons(addReview, messageBox,ratingInput, tradeIdInput, commentInput);
         return vbox;
     }
 
@@ -509,7 +356,7 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         confirmTradesInfoObservableList.clear();
         Map<String, String> trades = confirmTradesController.getToBeConfirmedTrades(username);
         confirmTradesIDObservableList.addAll(trades.keySet());
-        List<String> removeChar = new ArrayList<>(Arrays.asList("\"", "{", "}", "[", ",", "]\n"));
+        List<String> removeChar = new ArrayList<>(Arrays.asList("\"", "{", "}", "[", ",", "]"));
         try {
             for (String tradeId : trades.keySet()) {
                 List<JSONObject> allTrade = new ArrayList<>();
@@ -531,7 +378,6 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
             e.printStackTrace();
         }
     }
-
 
     public void selectItemTwoWayPage(Map<String, String> initiateTradeInfo){
 
@@ -794,4 +640,178 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         return list;
     }
 
+    //configure buttons
+    protected void configureInitiateButtons(Button oneWayTemporary, Button oneWayPermanent, Button twoWayPermanent, Button twoWayTemporary, ScrollPane scrollPane, Label messageBox){
+        Map<String, String> infoToId = initiateTradeController.getAvailableItems();
+
+        ObservableList<String> availableItems = FXCollections.observableArrayList();
+        availableItems.addAll(infoToId.keySet());
+
+        if (!initiateTradeController.canTrade()){
+            oneWayPermanent.setDisable(true);
+            oneWayTemporary.setDisable(true);
+            twoWayPermanent.setDisable(true);
+            twoWayTemporary.setDisable(true);
+            messageBox.setText("You cannot initiate a trade. Check your account status");
+        }
+
+        VBox itembuttons = new VBox();
+        itembuttons.setSpacing(20);
+        itembuttons.setAlignment(Pos.CENTER);
+        AtomicReference<String> selected = new AtomicReference<>("");
+        ToggleGroup item = new ToggleGroup();
+        for (String info : availableItems) {
+            RadioButton radioBtn = new RadioButton(info);
+            radioBtn.setToggleGroup(item);
+            itembuttons.getChildren().add(radioBtn);
+            radioBtn.setOnAction(actionEvent -> selected.set(info));
+        }
+        scrollPane.setContent(itembuttons);
+
+        oneWayTemporary.setOnAction(actionEvent ->{
+                    if (selected.toString().equals("")){
+                        messageBox.setText("Choose an item to trade.");
+                    } else if (initiateTradeController.isNewAccount(username)){
+                        messageBox.setText("Your first trade must be Two-Way or Lending.");
+                    } else if (!initiateTradeController.canOneWay(username)){
+                        messageBox.setText("You have insufficient credit to borrow. You may not initiate a one-way " +
+                                "trade until you have loaned enough.");
+                    } else{
+                        Map<String, String> tradeInfo = new HashMap<>();
+                        tradeInfo.put("chosen", infoToId.get(selected.toString()));
+                        tradeInfo.put("way", "oneWay");
+                        tradeInfo.put("term", "temporary");
+                        initiateTradeMeetingInfo(tradeInfo);
+                    }
+                }
+        );
+        oneWayPermanent.setOnAction(actionEvent ->{
+                    if (selected.toString().equals("")){
+                        messageBox.setText("Choose an item to trade.");
+                    }
+                    else if (initiateTradeController.isNewAccount(username)){
+                        messageBox.setText("Your first trade must be Two-Way or Lending.");
+                    } else if (!initiateTradeController.canOneWay(username)){
+                        messageBox.setText("You have insufficient credit to borrow. You may not initiate a one-way " +
+                                "trade until you have loaned enough.");
+                    } else{
+                        Map<String, String> tradeInfo = new HashMap<>();
+                        tradeInfo.put("chosen", infoToId.get(selected.toString()));
+                        tradeInfo.put("way", "oneWay");
+                        tradeInfo.put("term", "permanent");
+                        initiateTradeMeetingInfo(tradeInfo);
+                    }
+                }
+        );
+        twoWayTemporary.setOnAction(actionEvent -> {
+                    if (selected.toString().equals("")){
+                        messageBox.setText("Choose an item to trade.");
+                    }
+                    else if (initiateTradeController.getItemsToOffer(tradeModel.getItemManager().getOwner(infoToId.get(selected.toString()))).size() == 0){
+                        messageBox.setText("You cannot make any two way trades. Your inventory is empty");}
+                    else{
+                        Map<String, String> tradeInfo = new HashMap<>();
+                        tradeInfo.put("chosen", infoToId.get(selected.toString()));
+                        tradeInfo.put("way", "twoWay");
+                        tradeInfo.put("term", "temporary");
+                        selectItemTwoWayPage(tradeInfo);
+                    }
+                }
+        );
+        twoWayPermanent.setOnAction(actionEvent -> {
+            if (selected.toString().equals("")){
+                messageBox.setText("Choose an item to trade.");
+            }
+            else if (initiateTradeController.getItemsToOffer(tradeModel.getItemManager().getOwner(infoToId.get(selected.toString()))).size() == 0){
+                messageBox.setText("You cannot make any two way trades. Your inventory is empty");
+            } else{
+                Map<String, String> tradeInfo = new HashMap<>();
+                tradeInfo.put("chosen", infoToId.get(selected.toString()));
+                tradeInfo.put("way", "twoWay");
+                tradeInfo.put("term", "permanent");
+                selectItemTwoWayPage(tradeInfo);
+            }
+        });
+    }
+
+    protected void configureProposedTradesButtons(Button confirmBtn, Button editBtn, Button declineBtn, Label messageBox, ListView<String> proposedTradesListView){
+        proposedTradesListView.setItems(proposedTradesInfoObservableList);
+        confirmBtn.setOnAction(actionEvent -> {
+            if (proposedTradesListView.getSelectionModel().isEmpty()){
+                messageBox.setText("Please select a trade.");
+            } else if (!tradeModel.getMeetingManager().canChangeMeeting(proposedTradesIDObservableList.get(proposedTradesListView.getSelectionModel().getSelectedIndex()), username)){
+                messageBox.setText("Please wait for the other user to confirm the meeting.");
+            } else {
+                String tradeId = proposedTradesIDObservableList.get(proposedTradesListView.getSelectionModel().getSelectedIndex());
+                proposedTradesController.confirmMeetingTime(tradeId);
+                updateProposedObservableLists();
+                updateToBeConfirmedObservableLists();}
+        });
+        editBtn.setOnAction(actionEvent -> {
+            if (proposedTradesListView.getSelectionModel().isEmpty()){
+                messageBox.setText("Please select a trade.");
+            } else{
+                String tradeId = proposedTradesIDObservableList.get(proposedTradesListView.getSelectionModel().getSelectedIndex());
+                if (!tradeModel.getMeetingManager().canChangeMeeting(tradeId, username)){
+                    messageBox.setText("Please wait for the other user to edit the meeting.");
+                } else if(tradeModel.getMeetingManager().attainedThresholdEdits(tradeModel.getTradeManager().getMeetingOfTrade(tradeId).get(0))){
+                    messageBox.setText("Exceeded the limit of edits to a meeting. Trade was canceled.");
+                    proposedTradesController.declineTrade(tradeId);
+                    updateProposedObservableLists();
+                } else{
+                    editProposedTrade(tradeId);
+                    updateProposedObservableLists();}
+            }
+        });
+        declineBtn.setOnAction(actionEvent -> {
+            if (proposedTradesListView.getSelectionModel().isEmpty()) {
+                messageBox.setText("Please select a trade.");
+            } else{
+                String tradeId = proposedTradesIDObservableList.get(proposedTradesListView.getSelectionModel().getSelectedIndex());
+                proposedTradesController.declineTrade(tradeId);
+                updateProposedObservableLists();}
+        });
+    }
+
+    protected void configureConfirmTradesButtons(Button confirmBtn, Label messageBox, ListView<String> confirmTradesListView){
+        confirmTradesListView.setItems(confirmTradesInfoObservableList);
+        Map<String, String> trades = confirmTradesController.getToBeConfirmedTrades(username);
+        confirmBtn.setOnAction(actionEvent -> {
+            if (confirmTradesListView.getSelectionModel().isEmpty()) {
+                messageBox.setText("Please select a trade.");
+            } else if (!tradeModel.getMeetingManager().canChangeMeeting(confirmTradesIDObservableList.get(confirmTradesListView.getSelectionModel().getSelectedIndex()), username)){
+                messageBox.setText("Already confirmed. Please wait for the other user.");
+            } else {
+                String tradeId = confirmTradesIDObservableList.get(confirmTradesListView.getSelectionModel().getSelectedIndex());
+                try {
+                    JSONObject json = tradeModel.getTradeManager().getTradeInfo(tradeId);
+                    if (json.get("Type").toString().equalsIgnoreCase("temporary") &&
+                            (json.get("Number of meetings").equals("1"))) {
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(tradeModel.getMeetingManager().getLastMeetingTime(tradeId));
+                        cal.add(Calendar.DATE, 30);
+                        Date newDate = cal.getTime();
+                        messageBox.setText("The next meeting is on " + newDate + ", 30 days after the first meeting time.");
+                    }
+                    confirmTradesController.confirmTradeHappened(tradeId, trades.get(tradeId));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            updateToBeConfirmedObservableLists();
+        });
+    }
+
+    protected void configureViewButtons(Button addReview, Label messageBox, TextField ratingInput, TextField tradeIdInput, TextField commentInput){
+        addReview.setOnAction(e -> {
+            if (!ratingInput.getText().matches("[12345]")) {
+                messageBox.setText("Invalid input. Please review your inputs.");
+            } else if (!profileController.canAddReview(tradeIdInput.getText(), username)) {
+                messageBox.setText("You cannot leave a review for this trade");
+            } else {
+                profileController.addReview(tradeIdInput.getText(), Integer.parseInt(ratingInput.getText()), commentInput.getText());
+                messageBox.setText("Review for trade " + tradeIdInput.getText() + " added successfully!");
+            }
+        });
+    }
 }

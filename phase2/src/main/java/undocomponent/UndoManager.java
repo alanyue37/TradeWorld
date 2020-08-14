@@ -39,9 +39,17 @@ public class UndoManager implements Serializable {
      */
     public void execute(String undoId) throws NoLongerUndoableException {
         if (undoableOperations.containsKey(undoId)) {
-            undoableOperations.get(undoId).undo();
-            undoableOperations.remove(undoId);
-            observableDataModel.setChanged();
+            // Propagate exception to GUI but use 'finally' to allow clean up first
+            try {
+                undoableOperations.get(undoId).undo();
+            }
+            catch (NoLongerUndoableException e) {
+                throw new NoLongerUndoableException();
+            }
+            finally {
+                undoableOperations.remove(undoId);
+                observableDataModel.setChanged();
+            }
         }
     }
 

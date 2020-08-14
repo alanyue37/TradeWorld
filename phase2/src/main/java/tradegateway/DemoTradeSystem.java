@@ -4,9 +4,13 @@ import adminadapters.AdminMainGUI;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import loginadapters.LoginGUI;
+import tradeadapters.ConfirmTradesController;
+import tradeadapters.InitiateTradeController;
+import tradeadapters.ProposedTradesController;
 import trademisc.RunnableGUI;
 
 import java.io.IOException;
+import java.util.*;
 
 /**
  * DEMO trading system with pre-inserted users, items, etc. solely for internal testing
@@ -103,6 +107,106 @@ public class DemoTradeSystem {
         for (String itemId : items) {
             tradeModel.getItemManager().confirmItem(itemId);
         }
+
+//        // completed trades
+//        // two-way permanent trade with u2 and u1
+//        String complete1 = tradeModel.getTradeManager().addTrade("twoWay", "permanent", new ArrayList<>(Arrays.asList("u2", "u1", "3", "2")));
+//        String meeting1 = tradeModel.getMeetingManager().createMeeting("toronto", new Date(2020, Calendar.JANUARY, 20, 3, 0), "u2", complete1);
+//        tradeModel.getTradeManager().addMeetingToTrade(complete1, meeting1);
+//        tradeModel.getMeetingManager().confirmAgreement(meeting1);
+//        tradeModel.getMeetingManager().meetingHappened(meeting1, "u1");
+//        tradeModel.getMeetingManager().meetingHappened(meeting1, "u2");
+//        tradeModel.getTradeManager().closeTrade(complete1);
+//        Map<String, List<String>> itemToUsers1 = tradeModel.getTradeManager().itemToUsers(complete1);
+//        for (String item : itemToUsers1.keySet()) {
+//            tradeModel.getUserManager().removeFromWishlist(itemToUsers1.get(item).get(1), item);
+//            tradeModel.getItemManager().setOwner(item, itemToUsers1.get(item).get(1));
+//            tradeModel.getItemManager().setItemAvailable(item, true);
+//            tradeModel.getUserManager().updateCreditByUsername(itemToUsers1.get(item).get(0), true);
+//            tradeModel.getUserManager().updateCreditByUsername(itemToUsers1.get(item).get(1), false);
+//        }
+//
+//        // one-way permanent trade with u2 and u1
+//        String complete2 = tradeModel.getTradeManager().addTrade("oneWay", "permanent", new ArrayList<>(Arrays.asList("u1", "u2", "0")));
+//        String meeting2 = tradeModel.getMeetingManager().createMeeting("toronto", new Date(2020, Calendar.MARCH, 21, 5, 0), "u2", complete2);
+//        tradeModel.getTradeManager().addMeetingToTrade(complete2, meeting2);
+//        tradeModel.getMeetingManager().confirmAgreement(meeting2);
+//        tradeModel.getMeetingManager().meetingHappened(meeting2, "u1");
+//        tradeModel.getMeetingManager().meetingHappened(meeting2, "u2");
+//        tradeModel.getTradeManager().closeTrade(complete2);
+//        Map<String, List<String>> itemToUsers2 = tradeModel.getTradeManager().itemToUsers(complete2);
+//        for (String item : itemToUsers2.keySet()) {
+//            tradeModel.getUserManager().removeFromWishlist(itemToUsers2.get(item).get(1), item);
+//            tradeModel.getItemManager().setOwner(item, itemToUsers2.get(item).get(1));
+//            tradeModel.getItemManager().setItemAvailable(item, true);
+//            tradeModel.getUserManager().updateCreditByUsername(itemToUsers2.get(item).get(0), true);
+//            tradeModel.getUserManager().updateCreditByUsername(itemToUsers2.get(item).get(1), false);
+//        }
+//
+//        // two-way temporary trade with u4 and u3
+//        String complete3 = tradeModel.getTradeManager().addTrade("twoWay", "temporary", new ArrayList<>(Arrays.asList("u4", "u3", "8", "7")));
+//        String meeting31 = tradeModel.getMeetingManager().createMeeting("edmonton", new Date(2020, Calendar.JANUARY, 12, 10, 30), "u4", complete3);
+//        tradeModel.getTradeManager().addMeetingToTrade(complete3, meeting31);
+//        tradeModel.getMeetingManager().confirmAgreement(meeting31);
+//        tradeModel.getMeetingManager().meetingHappened(meeting31, "u4");
+//        tradeModel.getMeetingManager().meetingHappened(meeting31, "u3");
+//        // second meeting
+//        Calendar cal = Calendar.getInstance();
+//        cal.setTime(tradeModel.getMeetingManager().getLastMeetingTime(complete3));
+//        cal.add(Calendar.DATE, 30);
+//        Date newDate = cal.getTime();
+//        String meeting32 = tradeModel.getMeetingManager().createMeeting(tradeModel.getMeetingManager().getLastMeetingLocation(complete3), newDate, "u4", complete3);
+//        tradeModel.getTradeManager().addMeetingToTrade(complete3, meeting32);
+//        tradeModel.getMeetingManager().confirmAgreement(meeting32);
+//        tradeModel.getMeetingManager().meetingHappened(meeting32, "u4");
+//        tradeModel.getMeetingManager().meetingHappened(meeting32, "u3");
+//        tradeModel.getTradeManager().closeTrade(complete3);
+//        Map<String, List<String>> itemToUsers3 = tradeModel.getTradeManager().itemToUsers(complete3);
+//        for (String item : itemToUsers3.keySet()) {
+//            tradeModel.getUserManager().removeFromWishlist(itemToUsers3.get(item).get(1), item);
+//            tradeModel.getItemManager().setOwner(item, itemToUsers3.get(item).get(1));
+//            tradeModel.getItemManager().setItemAvailable(item, true);
+//            tradeModel.getUserManager().updateCreditByUsername(itemToUsers3.get(item).get(0), true);
+//            tradeModel.getUserManager().updateCreditByUsername(itemToUsers3.get(item).get(1), false);
+//        }
+//
+//        // one-way temporary trade with u4 and u3
+//        String complete4 = tradeModel.getTradeManager().addTrade("oneWay", "temporary", new ArrayList<>(Arrays.asList("u3", "u4", "6")));
+//        String meeting41 = tradeModel.getMeetingManager().createMeeting("edmonton", new Date(2019, Calendar.SEPTEMBER, 25, 12, 0), "u4", complete4);
+//        tradeModel.getTradeManager().addMeetingToTrade(complete4, meeting41);
+//        tradeModel.getMeetingManager().confirmAgreement(meeting41);
+//        tradeModel.getMeetingManager().meetingHappened(meeting41, "u4");
+//        tradeModel.getMeetingManager().meetingHappened(meeting41, "u3");
+//        // second meeting
+//        cal.setTime(tradeModel.getMeetingManager().getLastMeetingTime(complete4));
+//        cal.add(Calendar.DATE, 30);
+//        newDate = cal.getTime();
+//        String meeting42 = tradeModel.getMeetingManager().createMeeting(tradeModel.getMeetingManager().getLastMeetingLocation(complete4), newDate, "u4", complete4);
+//        tradeModel.getTradeManager().addMeetingToTrade(complete4, meeting42);
+//        tradeModel.getMeetingManager().confirmAgreement(meeting42);
+//        tradeModel.getMeetingManager().meetingHappened(meeting42, "u3");
+//        tradeModel.getMeetingManager().meetingHappened(meeting42, "u4");
+//        tradeModel.getTradeManager().closeTrade(complete4);
+//        Map<String, List<String>> itemToUsers4 = tradeModel.getTradeManager().itemToUsers(complete4);
+//        for (String item : itemToUsers4.keySet()) {
+//            tradeModel.getUserManager().removeFromWishlist(itemToUsers4.get(item).get(1), item);
+//            tradeModel.getItemManager().setOwner(item, itemToUsers4.get(item).get(1));
+//            tradeModel.getItemManager().setItemAvailable(item, true);
+//            tradeModel.getUserManager().updateCreditByUsername(itemToUsers4.get(item).get(0), true);
+//            tradeModel.getUserManager().updateCreditByUsername(itemToUsers4.get(item).get(1), false);
+//        }
+//
+//        // ongoing trades
+//        // two-way permanent trade with u2 and u1
+//        String ongoing1 = tradeModel.getTradeManager().addTrade("twoWay", "permanent", new ArrayList<>(Arrays.asList("u2", "u1", "4", "1")));
+//        String meeting5 = tradeModel.getMeetingManager().createMeeting("toronto", new Date(2020, Calendar.AUGUST, 1, 5, 45), "u2", ongoing1);
+//        tradeModel.getTradeManager().addMeetingToTrade(ongoing1, meeting5);
+//
+//        // one-way temporary trade with u3 and u4
+//        String ongoing2 = tradeModel.getTradeManager().addTrade("oneWay", "temporary", new ArrayList<>(Arrays.asList("u4", "u3", "9")));
+//        String meeting61 = tradeModel.getMeetingManager().createMeeting("edmonton", new Date(2020, Calendar.MAY, 20, 20, 6), "u3", ongoing2);
+//        tradeModel.getTradeManager().addMeetingToTrade(ongoing2, meeting61);
+
         // DEMO  --- END
     }
 }

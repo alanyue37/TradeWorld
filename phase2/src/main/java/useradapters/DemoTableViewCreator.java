@@ -14,17 +14,26 @@ public class DemoTableViewCreator extends TableViewCreator {
     }
 
     @Override
+    public void viewInventory() {
+        newItemsToShow();
+        getItemsToShow().add(new String[]{"1", "Book", "Software Design for Dummies", "Yes"});
+        getItemsToShow().add(new String[]{"5", "iPad", "BRAND NEW receipt unavailable", "Yes"});
+        getItemsToShow().add(new String[]{"7", "Fork", "Still Shiny", "Yes"});
+    }
+
+    @Override
     public void viewAllItems() {
         newItemsToShow();
-        getItemsToShow().add(new String[]{"1", "Computer", "Rachel", "Sony Vaio Pentium 3 from 2001"});
-        getItemsToShow().add(new String[]{"3", "XBOX", "Bobby", "Comes with 10 games"});
-        getItemsToShow().add(new String[]{"5", "Book", "Sarah", "Software Design for Dummies"});
+        getItemsToShow().add(new String[]{"2", "Desk", "Rachel", "Finished my 207 project on this"});
+        getItemsToShow().add(new String[]{"3", "Spoon", "Ayushi", "Will only trade for a fork"});
+        getItemsToShow().add(new String[]{"4", "Computer", "Bobby", "Sony Vaio Pentium 3"});
+        getItemsToShow().add(new String[]{"6", "XBOX", "Sarah", "Comes with 10 games"});
         }
 
     @Override
     public void viewWishlist() {
         // return empty list
         newItemsToShow();
-        getItemsToShow().add(new String[]{"5", "Book", "Sarah", "Software Design for Dummies"});
+        getItemsToShow().add(new String[]{"3", "Spoon", "Ayushi", "Will only trade for a fork"});
     }
 }
