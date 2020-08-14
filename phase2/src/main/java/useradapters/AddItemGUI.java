@@ -88,7 +88,7 @@ public class AddItemGUI implements RunnableGUI {
         grid.add(message, 0, 10, 2, 1);
         createItemButton.setOnAction(actionEvent -> {
             if (itemNameField.getText().isEmpty() || itemDescriptionField.getText().isEmpty()) {
-                message.setText("Fields cannot be blank. Please try again.");
+                message.setText("Fields cannot be empty. Please try again.");
 //                grid.add(message, 0, 10, 2, 1);
             } else {
                 controller.createItem(tradeModel.getCurrentUser(), itemNameField.getText(), itemDescriptionField.getText());
