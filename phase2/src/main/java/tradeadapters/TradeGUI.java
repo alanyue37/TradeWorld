@@ -356,7 +356,7 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         confirmTradesInfoObservableList.clear();
         Map<String, String> trades = confirmTradesController.getToBeConfirmedTrades(username);
         confirmTradesIDObservableList.addAll(trades.keySet());
-        List<String> removeChar = new ArrayList<>(Arrays.asList("\"", "{", "}", "[", ",", "]\n"));
+        List<String> removeChar = new ArrayList<>(Arrays.asList("\"", "{", "}", "[", ",", "]"));
         try {
             for (String tradeId : trades.keySet()) {
                 List<JSONObject> allTrade = new ArrayList<>();

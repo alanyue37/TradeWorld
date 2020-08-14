@@ -140,9 +140,13 @@ public class ProfileController implements RunnableController {
 
     public void addReview(String tradeId, int rating, String comment){
         String receiver = "";
-        for (List<String> users: tradeModel.getTradeManager().itemToUsers(tradeId).values()){
-            users.remove(tradeModel.getCurrentUser());
-            receiver = users.get(0);
+        for (String item : tradeModel.getTradeManager().itemToUsers(tradeId).keySet()) {
+            List<String> users = tradeModel.getTradeManager().itemToUsers(tradeId).get(item);
+            if (users.get(0).equals(tradeModel.getCurrentUser())) {
+                receiver = users.get(1);
+            } else {
+                receiver = users.get(0);
+            }
         }
         String reviewId = tradeModel.getReviewManager().addReview(rating, comment, tradeId, tradeModel.getCurrentUser(), receiver);
         UndoableOperation undoableOperation = new UndoAddReview(this.tradeModel.getReviewManager(), reviewId);
@@ -155,9 +159,13 @@ public class ProfileController implements RunnableController {
             return false;
         } else {
             String receiver = "";
-            for (List<String> users : tradeModel.getTradeManager().itemToUsers(tradeId).values()) {
-                users.remove(username);
-                receiver = users.get(0);
+            for (String item : tradeModel.getTradeManager().itemToUsers(tradeId).keySet()) {
+                List<String> users = tradeModel.getTradeManager().itemToUsers(tradeId).get(item);
+                if (users.get(0).equals(username)) {
+                    receiver = users.get(1);
+                } else {
+                    receiver = users.get(0);
+                }
             }
             return !tradeModel.getReviewManager().alreadyWroteReview(username, receiver, tradeId);
         }

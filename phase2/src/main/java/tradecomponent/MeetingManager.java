@@ -120,7 +120,6 @@ public class MeetingManager implements Serializable {
             ongoingMeetings.remove(meetingId);
             completedMeetings.put(meetingId, meeting);
         }
-        observableDataModel.setChanged();
     }
 
     /**
