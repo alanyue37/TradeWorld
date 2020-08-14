@@ -70,7 +70,7 @@ public class TableViewCreator {
     /**
      * Sets itemsToShow to the user's own inventory.
      */
-    public void viewInventory() {
+    private void viewInventory() {
         itemsToShow = new ArrayList<>();
         Set<String> userInventory = tradeModel.getItemManager().getInventory(tradeModel.getCurrentUser());
         for (String itemID : userInventory) {
@@ -91,7 +91,7 @@ public class TableViewCreator {
     /**
      * Sets itemsToShow to the system inventory of users in same city (except items in current user's inventory).
      */
-    public void viewAllItems() {
+    private void viewAllItems() {
         itemsToShow = new ArrayList<>();
         Set<String> items = tradeModel.getItemManager().getItemsByStage("common");
         if (tradeModel.getUserManager().getRankByUsername(tradeModel.getCurrentUser()).equals("gold")) {
@@ -115,7 +115,7 @@ public class TableViewCreator {
     /**
      * Sets itemsToShow to the user's wishlist.
      */
-    public void viewWishlist() {
+    private void viewWishlist() {
         itemsToShow = new ArrayList<>();
         Set<String> userWishlist = tradeModel.getUserManager().getWishlistByUsername(tradeModel.getCurrentUser());
         for (String itemID : userWishlist) {
@@ -129,7 +129,7 @@ public class TableViewCreator {
     /**
      * Sets itemsToShow to the pending items.
      */
-    public void viewPending() {
+    private void viewPending() {
         itemsToShow = new ArrayList<>();
         Set<String> userWishlist = tradeModel.getItemManager().getItemsByStage("pending");
         for (String itemID : userWishlist) {
