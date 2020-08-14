@@ -86,17 +86,21 @@ public class AddWishlistGUI implements RunnableGUI {
 
         addButton.setOnAction(actionEvent -> {
             ObservableList<ObservableList<String>> selectedItems = itemSelection.getSelectedItems();
-            System.out.println(selectedItems.get(0).get(1));
-            if (controller.addItemToWishlist(selectedItems.get(0).get(0))) { // new item added to wishlist
-                wishlistTable.getItems().add(selectedItems.get(0));
+            if (selectedItems.size() > 0) {
+//                 System.out.println(selectedItems.get(0).get(1));
+                if (controller.addItemToWishlist(selectedItems.get(0).get(0))) { // new item added to wishlist
+                    wishlistTable.getItems().add(selectedItems.get(0));
+                }
             }
         });
 
         removeButton.setOnAction(actionEvent -> {
             ObservableList<ObservableList<String>> selectedItems = wishlistSelection.getSelectedItems();
-            System.out.println(selectedItems.get(0).get(1));
-            controller.removeItemFromWishlist(selectedItems.get(0).get(0));
-            wishlistTable.getItems().remove(selectedItems.get(0));
+            if (selectedItems.size() > 0) {
+                // System.out.println(selectedItems.get(0).get(1));
+                controller.removeItemFromWishlist(selectedItems.get(0).get(0));
+                wishlistTable.getItems().remove(selectedItems.get(0));
+            }
         });
     }
 }

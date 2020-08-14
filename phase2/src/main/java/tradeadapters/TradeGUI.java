@@ -292,12 +292,18 @@ public class TradeGUI implements RunnableGUI {
         editBtn.setOnAction(actionEvent -> {
             if (proposedTradesListView.getSelectionModel().isEmpty()){
                 messageBox.setText("Please select a trade.");
-            } else if (!tradeModel.getMeetingManager().canChangeMeeting(proposedTradesIDObservableList.get(proposedTradesListView.getSelectionModel().getSelectedIndex()), username)){
-                messageBox.setText("Please wait for the other user to edit the meeting.");
-            } else {
+            } else{
                 String tradeId = proposedTradesIDObservableList.get(proposedTradesListView.getSelectionModel().getSelectedIndex());
-                editProposedTrade(tradeId);
-                updateProposedObservableLists(); }
+                if (!tradeModel.getMeetingManager().canChangeMeeting(tradeId, username)){
+                    messageBox.setText("Please wait for the other user to edit the meeting.");
+                } else if(tradeModel.getMeetingManager().attainedThresholdEdits(tradeModel.getTradeManager().getMeetingOfTrade(tradeId).get(0))){
+                    messageBox.setText("Exceeded the limit of edits to a meeting. Trade was canceled.");
+                    proposedTradesController.declineTrade(tradeId);
+                    updateProposedObservableLists();
+                } else{
+                    editProposedTrade(tradeId);
+                    updateProposedObservableLists();}
+            }
         });
         declineBtn.setOnAction(actionEvent -> {
             if (proposedTradesListView.getSelectionModel().isEmpty()) {
@@ -341,7 +347,20 @@ public class TradeGUI implements RunnableGUI {
                 messageBox.setText("Already confirmed. Please wait for the other user.");
             } else {
                 String tradeId = confirmTradesIDObservableList.get(confirmTradesListView.getSelectionModel().getSelectedIndex());
-                confirmTradesController.confirmTradeHappened(tradeId, trades.get(tradeId));
+                try {
+                    JSONObject json = tradeModel.getTradeManager().getTradeInfo(tradeId);
+                    if (json.get("Type").toString().equalsIgnoreCase("temporary") &&
+                            (json.get("Number of meetings").equals("1"))) {
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(tradeModel.getMeetingManager().getLastMeetingTime(tradeId));
+                        cal.add(Calendar.DATE, 30);
+                        Date newDate = cal.getTime();
+                        messageBox.setText("The next meeting is on " + newDate + ", 30 days after the first meeting time.");
+                    }
+                    confirmTradesController.confirmTradeHappened(tradeId, trades.get(tradeId));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
             updateToBeConfirmedObservableLists();
         });
@@ -463,7 +482,6 @@ public class TradeGUI implements RunnableGUI {
 
         editBtn.setOnAction(actionEvent -> {
             LocalDate date = datePicker.getValue();
-            System.out.println(date);
             String location = locationField.getText();
             String time = timeField.getText();
             if (date == null || location == null || time == null) {
