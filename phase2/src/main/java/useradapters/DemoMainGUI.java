@@ -48,6 +48,7 @@ public class DemoMainGUI extends MainGUI implements RunnableGUI {
         root = new TabPane();
         root.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         // Should we create a demo user account?
+        //TODO: TESTING CODE - DELETE IF REQUIRED
         getTradeModel().getUserManager().createTradingUser("Demo User", "DemoUser", "demo", "Montreal");
         getTradeModel().setCurrentUser("DemoUser");
 
