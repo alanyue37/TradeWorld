@@ -15,16 +15,14 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
+import tradegateway.GUIObserver;
 import tradegateway.TradeModel;
 import trademisc.MainGUI;
 import trademisc.RunnableGUI;
 import undocomponent.NoLongerUndoableException;
 import useradapters.TableViewCreator;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -33,7 +31,7 @@ import java.util.Set;
  * Used code from LifeOnTheFarm.zip in week 10 for reference.
  * Also, used https://docs.oracle.com/javafx/2/ui_controls/list-view.htm.
  */
-public class AdminMainGUI extends MainGUI implements RunnableGUI{
+public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
     private Stage stage;
     private Scene scene;
     private final int width;
@@ -60,6 +58,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI{
     }
 
     public void initializeScreen() {
+        getTradeModel().addObserver(this);
         root.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
         Parent newAdminParent = addNewAdmin();
@@ -87,12 +86,12 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI{
                 new ChangeListener<Tab>() {
                     @Override
                     public void changed(ObservableValue<? extends Tab> observableValue, Tab oldTab, Tab newTab) {
-                        addAdminTab.setContent(addNewAdmin());
+                        /*addAdminTab.setContent(addNewAdmin());
                         freezeUsersTab.setContent(freezeUsers());
                         unfreezeUsersTab.setContent(unfreezeUsers());
                         reviewItemsTab.setContent(reviewItems());
                         thresholdsTab.setContent(setThresholdMenu());
-                        undoActionsTab.setContent(undoActions());
+                        undoActionsTab.setContent(undoActions());*/
 
 
                     }
@@ -117,6 +116,17 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI{
         getStage().setScene(scene);
         getStage().setTitle("TradeWorld - Admin");
         getStage().show();
+    }
+
+    @Override
+    public void update() {
+        root.getTabs().get(0).setContent(addNewAdmin());
+        root.getTabs().get(1).setContent(freezeUsers());
+        root.getTabs().get(2).setContent(unfreezeUsers());
+        root.getTabs().get(3).setContent(unfreezeUsers());
+        root.getTabs().get(4).setContent(setThresholdMenu());
+        root.getTabs().get(5).setContent(undoActions());
+
     }
 
     /**
@@ -159,7 +169,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI{
                         editLimitTab.setContent(setLimitOfEdits());
                         goldLimitTab.setContent(setGoldThreshold());
                         silverLimitTab.setContent(setSilverThreshold());
-                        System.out.println(oldTab.getText() + "->" + newTab.getText() );
+
 
                     }
                 }

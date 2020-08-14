@@ -1,6 +1,8 @@
 package tradegateway;
 
 import itemcomponent.ItemManager;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import tradecomponent.MeetingManager;
 import tradecomponent.TradeManager;
 import undocomponent.UndoManager;
@@ -8,11 +10,14 @@ import usercomponent.UserManager;
 import usercomponent.ReviewManager;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observer;
 
 /**
  * Holder class for the managers.
  */
-public class TradeModel implements Serializable {
+public class TradeModel implements Serializable, ObservableDataModel {
 
     private UserManager userManager;
     private ItemManager itemManager;
@@ -21,6 +26,8 @@ public class TradeModel implements Serializable {
     private ReviewManager reviewManager;
     private UndoManager undoManager;
     private String currentUser;
+    private boolean changed;
+    private List<GUIObserver> observers;
 
     /**
      * Creates a new tradegateway.TradeModel with existing managers.
@@ -36,18 +43,20 @@ public class TradeModel implements Serializable {
         meetingManager = mm;
         reviewManager = rm;
         this.undoManager = undomanager;
+        this.observers = new ArrayList<>();
     }
 
     /**
      * Creates a new tradegateway.TradeModel with no existing managers.
      */
     public TradeModel() {
-        userManager = new UserManager();
-        itemManager = new ItemManager();
-        tradeManager = new TradeManager();
-        meetingManager = new MeetingManager();
-        reviewManager = new ReviewManager();
-        this.undoManager = new UndoManager();
+        userManager = new UserManager(this);
+        itemManager = new ItemManager(this);
+        tradeManager = new TradeManager(this);
+        meetingManager = new MeetingManager(this);
+        reviewManager = new ReviewManager(this);
+        this.undoManager = new UndoManager(this);
+        this.observers = new ArrayList<>();
     }
 
     /**
@@ -140,5 +149,33 @@ public class TradeModel implements Serializable {
      */
     public String getCurrentUser() {
         return currentUser;
+    }
+
+    public boolean hasChanged() {
+        return changed;
+    }
+
+    public void setChanged() {
+        this.changed = true;
+        notifyObservers();
+    }
+
+    private void notifyObservers() {
+        if (hasChanged() && observers != null) {
+            for (GUIObserver o : observers) {
+                o.update();
+            }
+            changed = false;
+        }
+    }
+
+    public void addObserver(GUIObserver observer) {
+        if (!observers.contains(observer)) {
+            observers.add(observer);
+        }
+    }
+
+    public void clearObservers() {
+        observers.clear();
     }
 }

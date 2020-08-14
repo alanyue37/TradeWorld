@@ -27,7 +27,6 @@ public class DemoTradeGUI implements RunnableGUI {
     private final int width;
     private final int height;
     private final TradeModel tradeModel;
-    private final String username;
     private DatePicker datePicker;
     private TabPane root;
     private ObservableList<String> proposedTradesIDObservableList;
@@ -37,12 +36,11 @@ public class DemoTradeGUI implements RunnableGUI {
     private ObservableList<String> userOngoingTradeList;
     private ObservableList<String> userCompletedTradeList;
 
-    public DemoTradeGUI(Stage stage, int width, int height, TradeModel tradeModel, String username) {
+    public DemoTradeGUI(Stage stage, int width, int height, TradeModel tradeModel) {
         this.stage = stage;
         this.width = width;
         this.height = height;
         this.tradeModel = tradeModel;
-        this.username = username;
         this.datePicker = new DatePicker();
         this.proposedTradesIDObservableList = FXCollections.observableArrayList();
         this.proposedTradesInfoObservableList = FXCollections.observableArrayList();

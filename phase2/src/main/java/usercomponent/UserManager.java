@@ -1,5 +1,8 @@
 package usercomponent;
 
+import tradegateway.ObservableDataModel;
+import tradegateway.TradeModel;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,6 +14,7 @@ public class UserManager implements Serializable {
     private final Map<String, TradingUser> tradingUsers;
     private final Map<String, User> adminUsers;
     private final Set<String> unfreezeRequests;
+    private final ObservableDataModel observableDataModel;
     private int tradingThreshold;
     private int goldThreshold;
     private int silverThreshold;
@@ -18,15 +22,16 @@ public class UserManager implements Serializable {
     /**
      * Instantiates a UserManager
      */
-    public UserManager() {
+    public UserManager(ObservableDataModel observableDataModel) {
         tradingUsers = new HashMap<>();
         adminUsers = new HashMap<>();
         unfreezeRequests = new HashSet<>();
-        tradingThreshold = 5;
+        tradingThreshold = 0;
         silverThreshold = 3;
         goldThreshold = 5;
         User initialAdmin = new User("Initial Admin", "ia", "initialize");
         adminUsers.put("ia", initialAdmin);
+        this.observableDataModel = observableDataModel;
     }
 
     /**
@@ -65,6 +70,7 @@ public class UserManager implements Serializable {
         else {
             tradingThreshold = value;
         }
+        observableDataModel.setChanged();
     }
 
     /**
@@ -96,6 +102,7 @@ public class UserManager implements Serializable {
             return false;
         }
         tradingUsers.put(username, new TradingUser(name, username, password, city));
+        observableDataModel.setChanged();
         return true;
     }
 
@@ -112,6 +119,7 @@ public class UserManager implements Serializable {
             return false;
         }
         adminUsers.put(username, new User(name, username, password));
+        observableDataModel.setChanged();
         return true;
     }
 
@@ -160,6 +168,7 @@ public class UserManager implements Serializable {
     public void setPasswordByUsername(String username, String password) {
         User account = getAllUsers().get(username);
         account.setPassword(password);
+        observableDataModel.setChanged();
     }
 
     /**
@@ -185,6 +194,7 @@ public class UserManager implements Serializable {
         } else {
             account.decrementCredit();
         }
+        observableDataModel.setChanged();
     }
 
     /**
@@ -232,6 +242,7 @@ public class UserManager implements Serializable {
             return false;
         }
         account.addToWishlist(id);
+        observableDataModel.setChanged();
         return true;
     }
 
@@ -244,6 +255,7 @@ public class UserManager implements Serializable {
     public void removeFromWishlist(String username, String id) {
         TradingUser account = tradingUsers.get(username);
         account.removeFromWishlist(id);
+        observableDataModel.setChanged();
     }
 
     /**
@@ -271,6 +283,7 @@ public class UserManager implements Serializable {
         if (!frozen) {
             unfreezeRequests.remove(username);
         }
+        observableDataModel.setChanged();
     }
 
     /**
@@ -305,6 +318,7 @@ public class UserManager implements Serializable {
      */
     public void markUserForUnfreezing(String username) {
         unfreezeRequests.add(username);
+        observableDataModel.setChanged();
     }
 
     /**
@@ -325,6 +339,7 @@ public class UserManager implements Serializable {
     public void setOnVacation(String username, boolean vacation) {
         TradingUser account = tradingUsers.get(username);
         account.setVacation(vacation);
+        observableDataModel.setChanged();
     }
 
     /**
@@ -368,6 +383,7 @@ public class UserManager implements Serializable {
     public void setPrivate(String username, boolean privacy){
         TradingUser account = tradingUsers.get(username);
         account.setPrivacy(privacy);
+        observableDataModel.setChanged();
     }
 
     /**
@@ -405,6 +421,7 @@ public class UserManager implements Serializable {
         } else{
             account.removeFromPendingFriends(sendRequestUsername);
         }
+        observableDataModel.setChanged();
     }
 
     /**
@@ -415,5 +432,6 @@ public class UserManager implements Serializable {
     public void sendFriendRequest(String getRequestUsername, String username){
         TradingUser account = tradingUsers.get(getRequestUsername);
         account.addToPendingFriends(username);
+        observableDataModel.setChanged();
     }
 }

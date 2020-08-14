@@ -19,8 +19,10 @@ public class AddWishlistGUI implements RunnableGUI {
     private final UserController controller;
     private final int width;
     private final int height;
-    private final TableViewCreator creator;
+    private TableViewCreator creator;
     private GridPane grid;
+    private TableView<ObservableList<String>> itemTable;
+    private TableView<ObservableList<String>> wishlistTable;
 
     public AddWishlistGUI(Stage stage, int width, int height, TradeModel model) {
         this.stage = stage;
@@ -55,9 +57,6 @@ public class AddWishlistGUI implements RunnableGUI {
         grid.setVgap(10);
         grid.setPadding(new Insets(10, 10, 10, 10));
 
-        TableView<ObservableList<String>> itemTable = creator.create("all items");
-        TableView<ObservableList<String>> wishlistTable = creator.create("wishlist");
-
         Text title1 = new Text("All available items");
         title1.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         grid.add(title1, 0, 0, 2, 1);
@@ -65,6 +64,9 @@ public class AddWishlistGUI implements RunnableGUI {
         Text title2 = new Text("Your wishlist");
         title2.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         grid.add(title2, 6, 0, 2, 1);
+
+        itemTable = creator.create("all items");
+        wishlistTable = creator.create("wishlist");
 
         grid.add(itemTable, 0, 1, 5, 5);
         grid.add(wishlistTable, 6, 1, 5, 5);
@@ -77,26 +79,37 @@ public class AddWishlistGUI implements RunnableGUI {
         itemTable.setPlaceholder(new Label("No items to display"));
         wishlistTable.setPlaceholder(new Label("No items in wishlist"));
 
+        configureButtons(addButton, removeButton);
+    }
+
+    protected void configureButtons(Button addButton, Button removeButton) {
         TableView.TableViewSelectionModel<ObservableList<String>> itemSelection = itemTable.getSelectionModel();
         TableView.TableViewSelectionModel<ObservableList<String>> wishlistSelection = wishlistTable.getSelectionModel();
-
         addButton.setOnAction(actionEvent -> {
             ObservableList<ObservableList<String>> selectedItems = itemSelection.getSelectedItems();
             if (selectedItems.size() > 0) {
-//                 System.out.println(selectedItems.get(0).get(1));
-                if (controller.addItemToWishlist(selectedItems.get(0).get(0))) { // new item added to wishlist
-                    wishlistTable.getItems().add(selectedItems.get(0));
-                }
+                controller.addItemToWishlist(selectedItems.get(0).get(0)); // new item added to wishlist
             }
         });
 
         removeButton.setOnAction(actionEvent -> {
             ObservableList<ObservableList<String>> selectedItems = wishlistSelection.getSelectedItems();
             if (selectedItems.size() > 0) {
-                // System.out.println(selectedItems.get(0).get(1));
                 controller.removeItemFromWishlist(selectedItems.get(0).get(0));
                 wishlistTable.getItems().remove(selectedItems.get(0));
             }
         });
+    }
+
+    protected TableView<ObservableList<String>> getWishlistTable() {
+        return wishlistTable;
+    }
+
+    protected TableView<ObservableList<String>> getItemTable() {
+        return itemTable;
+    }
+
+    protected void setTableViewCreator (TableViewCreator creator) {
+        this.creator = creator;
     }
 }

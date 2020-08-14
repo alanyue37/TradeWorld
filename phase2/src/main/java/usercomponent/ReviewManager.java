@@ -2,6 +2,7 @@ package usercomponent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import tradegateway.ObservableDataModel;
 import undocomponent.NoLongerUndoableException;
 import com.google.gson.Gson;
 
@@ -10,14 +11,16 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ReviewManager implements Serializable {
+    private final ObservableDataModel observableDataModel;
     private Map<String, List<Review>> userToReviews; // maps username to list of reviews
     private final AtomicInteger counter = new AtomicInteger(); // keeps count of reviews for review id
 
     /**
      * Instantiates a ReviewManager.
      */
-    public ReviewManager() {
+    public ReviewManager(ObservableDataModel observableDataModel) {
         userToReviews = new HashMap<>();
+        this.observableDataModel = observableDataModel;
     }
 
     /**
@@ -39,6 +42,7 @@ public class ReviewManager implements Serializable {
             reviews.add(r);
             userToReviews.put(receiver, reviews);
         }
+        observableDataModel.setChanged();
         return r.getId();
     }
 
@@ -115,6 +119,7 @@ public class ReviewManager implements Serializable {
             throw new NoLongerUndoableException();
         }
         userToReviews.get(username).remove(reviewToBeDeleted);
+        observableDataModel.setChanged();
     }
 
     public String getReviewsByUser(String receiverUsername) {

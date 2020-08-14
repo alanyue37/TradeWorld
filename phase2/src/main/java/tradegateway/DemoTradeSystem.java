@@ -30,7 +30,6 @@ public class DemoTradeSystem {
 
             // INITIALIZE TRADEMODEL FOR DEMO
             initializeTradeModel(tradeModel);
-            tradeModel.setCurrentUser("u1");
             Image logo = dataManager.readImage(logoFile);
 
             gui = new LoginGUI(stage, 500, 650, tradeModel, logo);
@@ -46,6 +45,7 @@ public class DemoTradeSystem {
 
     public void persist() {
         try {
+            tradeModel.clearObservers();
             dataManager.saveToFile(tradeModel);
         } catch (IOException e) {
             e.printStackTrace();
@@ -65,7 +65,7 @@ public class DemoTradeSystem {
         tradeModel.getUserManager().createTradingUser("U_1", "u1", "u1", "Toronto");
         tradeModel.getUserManager().createTradingUser("U_2", "u2", "u2", "Toronto");
         tradeModel.getUserManager().createTradingUser("U_3", "u3", "u3", "Edmonton");
-        tradeModel.getUserManager().createTradingUser("U_4", "u4", "u4", "Brampton");
+        tradeModel.getUserManager().createTradingUser("U_4", "u4", "u4", "Edmonton");
         tradeModel.getUserManager().createTradingUser("U_5", "u5", "u5", "Mississauga");
 
         String[] users = new String[] {"u1", "u2", "u3", "u4"};

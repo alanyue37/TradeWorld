@@ -2,6 +2,7 @@ package tradecomponent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import tradegateway.ObservableDataModel;
 
 import java.io.Serializable;
 import java.lang.reflect.Array;
@@ -12,6 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Manages the creation and editing of meetings of trades.
  */
 public class MeetingManager implements Serializable {
+    private final ObservableDataModel observableDataModel;
     private Map<String, Meeting> ongoingMeetings;
     private Map<String, Meeting> completedMeetings;
     private Map<String, List<String>> tradeToMeetings;
@@ -21,11 +23,12 @@ public class MeetingManager implements Serializable {
     /**
      * Constructor for TradeManager.
      */
-    public MeetingManager() {
+    public MeetingManager(ObservableDataModel observableDataModel) {
         this.limitOfEdits = 3;
         this.tradeToMeetings = new HashMap<>();
         this.ongoingMeetings = new HashMap<>();
         this.completedMeetings = new HashMap<>();
+        this.observableDataModel = observableDataModel;
     }
 
     /**
@@ -44,6 +47,7 @@ public class MeetingManager implements Serializable {
      */
     public void changeLimitEdits(int newLimit) {
         this.limitOfEdits = newLimit;
+        observableDataModel.setChanged();
     }
 
     /**
@@ -61,6 +65,7 @@ public class MeetingManager implements Serializable {
         meeting.setTime(time);
         meeting.incrementNumOfEdits();
         meeting.setLastEditUser(username);
+        observableDataModel.setChanged();
     }
 
     /**
@@ -83,6 +88,7 @@ public class MeetingManager implements Serializable {
             meetings.add(meetingId);
             tradeToMeetings.put(tradeId, meetings);
         }
+        observableDataModel.setChanged();
         return meetingId;
     }
 
@@ -95,6 +101,7 @@ public class MeetingManager implements Serializable {
         Meeting meeting = ongoingMeetings.get(meetingId);
         meeting.changeIsConfirmed();
         meeting.setLastEditUser("");
+        observableDataModel.setChanged();
     }
 
     /**
@@ -113,6 +120,7 @@ public class MeetingManager implements Serializable {
             ongoingMeetings.remove(meetingId);
             completedMeetings.put(meetingId, meeting);
         }
+        observableDataModel.setChanged();
     }
 
     /**
@@ -286,6 +294,7 @@ public class MeetingManager implements Serializable {
             }
         }
         tradeToMeetings.remove(tradeId);
+        observableDataModel.setChanged();
     }
 
     /**
