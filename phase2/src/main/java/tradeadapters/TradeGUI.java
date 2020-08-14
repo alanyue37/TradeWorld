@@ -154,14 +154,14 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         typeButtons.setAlignment(Pos.CENTER);
         typeButtons.setSpacing(10);
 
-        if (!initiateTradeController.canTrade()){
-            oneWayPermanent.setDisable(true);
-            oneWayTemporary.setDisable(true);
-            twoWayPermanent.setDisable(true);
-            twoWayTemporary.setDisable(true);
-            Label cannotTrade = new Label("You cannot initiate a trade. Check your account status");
-            mainLayout.getChildren().add(cannotTrade);
-        }
+//        if (!initiateTradeController.canTrade()){
+//            oneWayPermanent.setDisable(true);
+//            oneWayTemporary.setDisable(true);
+//            twoWayPermanent.setDisable(true);
+//            twoWayTemporary.setDisable(true);
+//            Label cannotTrade = new Label("You cannot initiate a trade. Check your account status");
+//            mainLayout.getChildren().add(cannotTrade);
+//        }
 
         Label messageBox = new Label();
         messageBox.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
@@ -183,7 +183,7 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
 
         ListView<String> proposedTradesListView = new ListView<>();
         proposedTradesListView.setPlaceholder(new Label("No proposed trades"));
-        proposedTradesListView.setItems(proposedTradesInfoObservableList);
+//        proposedTradesListView.setItems(proposedTradesInfoObservableList);
         Button confirmBtn = new Button("Confirm");
         Button editBtn = new Button("Edit");
         Button declineBtn = new Button("Decline");
@@ -213,7 +213,7 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
 
         ListView<String> confirmTradesListView = new ListView<>();
         confirmTradesListView.setPlaceholder(new Label("No trades to confirm"));
-        confirmTradesListView.setItems(confirmTradesInfoObservableList);
+//        confirmTradesListView.setItems(confirmTradesInfoObservableList);
         Button confirmBtn = new Button("Confirm");
 
         grid.add(confirmTradesListView, 0, 0, 2, 1);
@@ -647,6 +647,14 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         ObservableList<String> availableItems = FXCollections.observableArrayList();
         availableItems.addAll(infoToId.keySet());
 
+        if (!initiateTradeController.canTrade()){
+            oneWayPermanent.setDisable(true);
+            oneWayTemporary.setDisable(true);
+            twoWayPermanent.setDisable(true);
+            twoWayTemporary.setDisable(true);
+            messageBox.setText("You cannot initiate a trade. Check your account status");
+        }
+
         VBox itembuttons = new VBox();
         itembuttons.setSpacing(20);
         itembuttons.setAlignment(Pos.CENTER);
@@ -727,7 +735,7 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
     }
 
     protected void configureProposedTradesButtons(Button confirmBtn, Button editBtn, Button declineBtn, Label messageBox, ListView<String> proposedTradesListView){
-
+        proposedTradesListView.setItems(proposedTradesInfoObservableList);
         confirmBtn.setOnAction(actionEvent -> {
             if (proposedTradesListView.getSelectionModel().isEmpty()){
                 messageBox.setText("Please select a trade.");
@@ -766,6 +774,7 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
     }
 
     protected void configureConfirmTradesButtons(Button confirmBtn, Label messageBox, ListView<String> confirmTradesListView){
+        confirmTradesListView.setItems(confirmTradesInfoObservableList);
         Map<String, String> trades = confirmTradesController.getToBeConfirmedTrades(username);
         confirmBtn.setOnAction(actionEvent -> {
             if (confirmTradesListView.getSelectionModel().isEmpty()) {

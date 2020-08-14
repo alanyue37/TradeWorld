@@ -57,12 +57,11 @@ public class DemoMainGUI extends MainGUI implements RunnableGUI {
         Parent wishlistParent = wishlistGUI.getRoot();
         Tab wishlistTab = new Tab("Wishlist", wishlistParent);
 
-        //DemoTradeGUI tradeGUI = new DemoTradeGUI(getStage(), 800, 800, getTradeModel());
-        //Parent tradeParent = tradeGUI.getRoot();
-        //Tab tradeTab = new Tab("Trade", tradeParent);
+        DemoTradeGUI tradeGUI = new DemoTradeGUI(getStage(), 800, 800, getTradeModel());
+        Parent tradeParent = tradeGUI.getRoot();
+        Tab tradeTab = new Tab("Trade", tradeParent);
 
-        //root.getTabs().addAll(otherProfilesTab, inventoryTab, wishlistTab, tradeTab);
-        root.getTabs().addAll(otherProfilesTab, inventoryTab, wishlistTab);
+        root.getTabs().addAll(otherProfilesTab, inventoryTab, wishlistTab, tradeTab);
     }
 
 
