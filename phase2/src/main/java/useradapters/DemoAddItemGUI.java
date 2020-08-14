@@ -83,12 +83,30 @@ public class DemoAddItemGUI implements RunnableGUI {
         grid.add(createItemButton, 1, 9);
 
         table.setPlaceholder(new Label("No items in inventory"));
+        Label errorMessage = new Label("You have an invalid input. Please check your input again.");
+        Label successMessage = new Label("demo item would've been added");
 
         createItemButton.setOnAction(actionEvent -> {
-            itemNameField.clear();
-            itemDescriptionField.clear();
-            Text message = new Text("demo item would've been added");
-            grid.add(message, 0, 10, 2, 1);
+            if (itemNameField.getText().isEmpty() | itemDescriptionField.getText().isEmpty()){
+                if (grid.getChildren().contains(successMessage)){
+                    grid.getChildren().remove(successMessage);
+                    grid.add(errorMessage, 0, 10, 2, 1);
+                }
+                if (!grid.getChildren().contains(errorMessage)){
+                    grid.add(errorMessage, 0, 10, 2, 1);
+                }
+            }
+            else {
+                itemNameField.clear();
+                itemDescriptionField.clear();
+                if (grid.getChildren().contains(errorMessage)){
+                    grid.getChildren().remove(errorMessage);
+                    grid.add(successMessage, 0, 10, 2, 1);
+                }
+                if (!grid.getChildren().contains(successMessage)){
+                    grid.add(successMessage, 0, 10, 2, 1);
+                }
+            }
         });
     }
 }
