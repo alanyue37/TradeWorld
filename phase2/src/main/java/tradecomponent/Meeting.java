@@ -148,7 +148,7 @@ class Meeting implements Serializable {
         if (this.IsCompleted) {
             info.put("Status", "completed");
         } else if (this.IsConfirmed) {
-            info.put("Status", "meeting details agreed, waiting for meeting to happen");
+            info.put("Status", "meeting details agreed; waiting for meeting to happen");
         } else {
             info.put("Status", "need to agree on meeting details");
         }
