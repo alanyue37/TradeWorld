@@ -16,21 +16,18 @@ import trademisc.RunnableGUI;
 
 public class DemoAddWishlistGUI implements RunnableGUI {
     private final Stage stage;
-    private Scene scene;
-    private final TradeModel tradeModel;
+    private final UserController controller;
     private final int width;
     private final int height;
-    private String username;
     private final TableViewCreator creator;
     private GridPane grid;
 
-    public DemoAddWishlistGUI(Stage stage, int width, int height, TradeModel model, String username) {
+    public DemoAddWishlistGUI(Stage stage, int width, int height, TradeModel model) {
         this.stage = stage;
-        tradeModel = model;
+        controller = new UserController(model);
         this.width = width;
         this.height = height;
-        this.username = username;
-        creator = new TableViewCreator(tradeModel);
+        creator = new TableViewCreator(model);
     }
 
     @Override
@@ -47,7 +44,7 @@ public class DemoAddWishlistGUI implements RunnableGUI {
 
     @Override
     public void showScreen() {
-        scene = new Scene(grid, width, height);
+        Scene scene = new Scene(grid, width, height);
         stage.setScene(scene);
     }
 
@@ -85,13 +82,21 @@ public class DemoAddWishlistGUI implements RunnableGUI {
 
         addButton.setOnAction(actionEvent -> {
             ObservableList<ObservableList<String>> selectedItems = itemSelection.getSelectedItems();
-            wishlistTable.getItems().add(selectedItems.get(0));
-
+            if (selectedItems.size() > 0) {
+//                 System.out.println(selectedItems.get(0).get(1));
+                if (controller.addItemToWishlist(selectedItems.get(0).get(0))) { // new item added to wishlist
+                    wishlistTable.getItems().add(selectedItems.get(0));
+                }
+            }
         });
 
         removeButton.setOnAction(actionEvent -> {
             ObservableList<ObservableList<String>> selectedItems = wishlistSelection.getSelectedItems();
-            wishlistTable.getItems().remove(selectedItems.get(0));
+            if (selectedItems.size() > 0) {
+                // System.out.println(selectedItems.get(0).get(1));
+                controller.removeItemFromWishlist(selectedItems.get(0).get(0));
+                wishlistTable.getItems().remove(selectedItems.get(0));
+            }
         });
     }
 }
