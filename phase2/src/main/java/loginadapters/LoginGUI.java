@@ -69,7 +69,7 @@ public class LoginGUI implements RunnableGUI {
     }
 
     private void initializeScreen() {
-        stage.setTitle("Trading System - Login");
+        stage.setTitle("TradeWorld - Login");
         changeScreen("login");
     }
 
