@@ -1,5 +1,7 @@
 package tradegateway;
 
+import adminadapters.AdminMainGUI;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import loginadapters.LoginGUI;
 import trademisc.RunnableGUI;
@@ -13,6 +15,7 @@ import java.io.IOException;
 public class DemoTradeSystem {
 
     private final String tradeModelFile = "serializedobjects.ser";
+    private final String logoFile = "logo.png";
     private DataManager dataManager;
     private TradeModel tradeModel;
     private RunnableGUI gui;
@@ -28,10 +31,12 @@ public class DemoTradeSystem {
             // INITIALIZE TRADEMODEL FOR DEMO
             initializeTradeModel(tradeModel);
             tradeModel.setCurrentUser("u1");
+            Image logo = dataManager.readImage(logoFile);
 
-            gui = new LoginGUI(stage, 400, 275, tradeModel);
+            gui = new LoginGUI(stage, 500, 650, tradeModel, logo);
             //gui = new ProfileGUI(stage, 720, 600, tradeModel, false);
             //gui = new LoggedInProfileGUI(stage, 720, 600, tradeModel, false);
+            //gui = new AdminMainGUI(800, 800, tradeModel);
             //gui = new UserMainGUI(800, 800, tradeModel, "u1");
             gui.showScreen();
 

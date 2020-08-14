@@ -8,11 +8,10 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -32,17 +31,19 @@ public class LoginGUI implements RunnableGUI {
     private final int width;
     private final int height;
     private final TradeModel tradeModel;
+    private final Image logo;
     private RunnableGUI nextGUI;
     private GridPane grid;
     private final VBox root;
 
-    public LoginGUI(Stage stage, int width, int height, TradeModel tradeModel) {
+    public LoginGUI(Stage stage, int width, int height, TradeModel tradeModel, Image logo) {
         this.stage = stage;
         this.controller = new LogInController(tradeModel);
         this.width = width;
         this.height = height;
         this.tradeModel = tradeModel;
         this.root = new VBox();
+        this.logo = logo;
     }
 
     @Override
@@ -79,7 +80,7 @@ public class LoginGUI implements RunnableGUI {
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
 
-        grid.add(title, 0, 0, 2, 1);
+        grid.add(title, 0, 1, 2, 1);
 
         Label usernameLabel = new Label("Username:");
         TextField usernameField = new TextField();
@@ -110,13 +111,16 @@ public class LoginGUI implements RunnableGUI {
         hBoxDemo.setAlignment(Pos.BOTTOM_CENTER);
         hBoxDemo.getChildren().add(demoLink);
 
-        grid.add(usernameLabel, 0, 1);
-        grid.add(usernameField, 1, 1);
-        grid.add(passwordLabel, 0, 2);
-        grid.add(passwordField, 1, 2);
-        grid.add(hBoxLoginButton, 1, 4);
-        grid.add(hBoxNewAccount, 0, 4);
-        grid.add(hBoxDemo, 0, 7, 2, 1);
+        HBox logoRow = getLogoRow();
+
+        grid.add(logoRow, 0, 0, 4, 1);
+        grid.add(usernameLabel, 0, 2);
+        grid.add(usernameField, 1, 2);
+        grid.add(passwordLabel, 0, 3);
+        grid.add(passwordField, 1, 3);
+        grid.add(hBoxLoginButton, 1, 5);
+        grid.add(hBoxNewAccount, 0, 5);
+        grid.add(hBoxDemo, 0, 8, 2, 1);
 
         loginButton.setOnAction(actionEvent -> {
             logInHandler(usernameField.getText(), passwordField.getText());
@@ -160,7 +164,7 @@ public class LoginGUI implements RunnableGUI {
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
 
-        grid.add(title, 0, 0, 2, 1);
+        grid.add(title, 0, 1, 2, 1);
 
         Label nameLabel = new Label("Name:");
         TextField nameField = new TextField();
@@ -184,16 +188,19 @@ public class LoginGUI implements RunnableGUI {
         hBoxLogIn.setAlignment(Pos.BOTTOM_RIGHT);
         hBoxLogIn.getChildren().add(logInLink);
 
-        grid.add(nameLabel, 0, 1);
-        grid.add(nameField, 1, 1);
-        grid.add(usernameLabel, 0, 2);
-        grid.add(usernameField, 1, 2);
-        grid.add(passwordLabel, 0, 3);
-        grid.add(passwordField, 1, 3);
-        grid.add(cityLabel, 0, 4);
-        grid.add(cityField, 1, 4);
-        grid.add(hBoxRegisterButton, 1, 5);
-        grid.add(hBoxLogIn, 0, 5);
+        HBox logoRow = getLogoRow();
+
+        grid.add(logoRow, 0, 0, 4, 1);
+        grid.add(nameLabel, 0, 2);
+        grid.add(nameField, 1, 2);
+        grid.add(usernameLabel, 0, 3);
+        grid.add(usernameField, 1, 3);
+        grid.add(passwordLabel, 0, 4);
+        grid.add(passwordField, 1, 4);
+        grid.add(cityLabel, 0, 5);
+        grid.add(cityField, 1, 5);
+        grid.add(hBoxRegisterButton, 1, 6);
+        grid.add(hBoxLogIn, 0, 6);
 
         registerButton.setOnAction(actionEvent -> {
             if (nameField.getText().isEmpty() || usernameField.getText().isEmpty() || passwordField.getText().isEmpty() || cityField.getText().isEmpty()) {
@@ -206,7 +213,6 @@ public class LoginGUI implements RunnableGUI {
             }
         });
 
-        //backButton();
         return grid;
     }
 
@@ -263,5 +269,21 @@ public class LoginGUI implements RunnableGUI {
         if (!grid.getChildren().contains(message)) {
             grid.add(messageBox, 0, 6, 2, 1);
         }
+    }
+
+    private HBox getLogoRow() {
+        if (logo == null) {
+            return new HBox();
+        }
+        // Based on sample code from: https://docs.oracle.com/javase/8/javafx/api/javafx/scene/image/ImageView.html
+        ImageView logoImageView = new ImageView(logo);
+        HBox logoRow = new HBox(logoImageView);
+        HBox.setHgrow(logoImageView, Priority.ALWAYS);
+        logoRow.setAlignment(Pos.CENTER);
+        //logoImageView.setFitWidth(100);
+        logoImageView.setPreserveRatio(true);
+        logoImageView.setSmooth(true);
+        logoImageView.setCache(true);
+        return logoRow;
     }
 }

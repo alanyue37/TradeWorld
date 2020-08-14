@@ -1,5 +1,6 @@
 package tradegateway;
 
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import loginadapters.LogInController;
 import loginadapters.LoginGUI;
@@ -14,6 +15,7 @@ import java.util.Observer;
 public class TradeSystem implements Observer {
 
     private final String tradeModelFile = "serializedobjects.ser";
+    private final String logoFile = "logo.png";
     private LogInController controller;
     private DataManager dataManager;
     private TradeModel tradeModel;
@@ -25,7 +27,8 @@ public class TradeSystem implements Observer {
         try {
             dataManager = new DataManager(tradeModelFile);
             tradeModel = dataManager.readFromFile();
-            LoginGUI gui = new LoginGUI(stage, 275, 300, tradeModel);
+            Image logo = dataManager.readImage(logoFile);
+            LoginGUI gui = new LoginGUI(stage, 275, 300, tradeModel, logo);
             gui.initialScreen();
             } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
