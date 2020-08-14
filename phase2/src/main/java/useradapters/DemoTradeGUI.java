@@ -1,7 +1,5 @@
 package useradapters;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -17,13 +15,9 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.json.JSONException;
-import org.json.JSONObject;
 import tradegateway.TradeModel;
 import trademisc.RunnableGUI;
 
-import java.text.ParseException;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -94,16 +88,6 @@ public class DemoTradeGUI implements RunnableGUI {
         Tab viewTab = new Tab("View Trades", viewParent);
 
         root.getTabs().addAll(initiateTab, proposedTab, confirmTab, viewTab);
-
-        // Listener code below based on https://stackoverflow.com/questions/17522686/javafx-tabpane-how-to-listen-to-selection-changes
-        root.getSelectionModel().selectedItemProperty().addListener(
-                new ChangeListener<Tab>() {
-                    @Override
-                    public void changed(ObservableValue<? extends Tab> observableValue, Tab oldTab, Tab newTab) {
-                        updateScreen();
-                    }
-                }
-        );
     }
 
     public void updateScreen() {
@@ -300,11 +284,13 @@ public class DemoTradeGUI implements RunnableGUI {
         VBox vbox = new VBox();
         vbox.getChildren().addAll(hBox, placeHolder, messageBox, ongoingTrades, hboxOngoing, completedTrades, hboxCompleted);
 
+        Label message = new Label("demo adds review trade");
 
         addReview.setOnAction(e -> {
-            Label message = new Label("demo adds review trade");
-            vbox.getChildren().remove(placeHolder);
-            vbox.getChildren().add(1, message);
+            if (!vbox.getChildren().contains(message)){
+                vbox.getChildren().remove(placeHolder);
+                vbox.getChildren().add(1, message);
+            }
         });
 
         return vbox;
@@ -401,7 +387,7 @@ public class DemoTradeGUI implements RunnableGUI {
                 messageLabel.setText("You have an invalid input. Please check your input again.");
             } else {
                 Label message = new Label("demo confirms trade");
-                grid.getChildren().removeAll(meetingTitle, tradeDate, timeInput, pickDate, userInputHour, tradeLocation, userInputLocation, messageLabel, confirmBtn);
+                grid.getChildren().removeAll(meetingTitle, tradeDate, timeInput, pickDate, userInputHour, tradeLocation, userInputLocation, messageLabel, confirmBtn, confirmBtnReturnItem);
                 grid.add(message,0 , 1, 2, 1);
                 grid.add(exitBtn, 1, 3, 2, 1);
             }
