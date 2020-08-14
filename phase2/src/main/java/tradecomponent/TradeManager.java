@@ -2,6 +2,7 @@ package tradecomponent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import tradegateway.ObservableDataModel;
 
 import java.io.Serializable;
 import java.util.*;
@@ -11,6 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Manages the creation and handling of trades.
  */
 public class TradeManager implements Serializable {
+    private final ObservableDataModel observableDataModel;
     private int limitIncomplete;
     private int limitTransactionPerWeek;
     private TradeFactory factory;
@@ -23,13 +25,14 @@ public class TradeManager implements Serializable {
     /**
      * Constructor for TradeManager.
      */
-    public TradeManager() {
+    public TradeManager(ObservableDataModel observableDataModel) {
         this.limitIncomplete = 3; //or null?
         this.limitTransactionPerWeek = 3; //or null?
         this.ongoingTrades = new HashMap<>();
         this.completedTrades = new HashMap<>();
         this.userToTrades = new HashMap<>();
         this.factory = new TradeFactory();
+        this.observableDataModel = observableDataModel;
     }
 
 
@@ -80,6 +83,7 @@ public class TradeManager implements Serializable {
                 userToTrades.put(user, tradeIds);
             }
         }
+        // observableDataModel.setChanged(); // Only set changed at meeting manager level because trade without any meetings causes update problems
         return trade.getIdOfTrade();
     }
 
@@ -108,6 +112,7 @@ public class TradeManager implements Serializable {
      */
     public void changeLimitIncomplete(int newIncompleteLimit) {
         this.limitIncomplete = newIncompleteLimit;
+        observableDataModel.setChanged();
     }
 
     /**
@@ -117,6 +122,7 @@ public class TradeManager implements Serializable {
      */
     public void changeLimitTransactionPerWeek(int newLimitPerWeek) {
         this.limitTransactionPerWeek = newLimitPerWeek;
+        observableDataModel.setChanged();
     }
 
     /**
@@ -169,6 +175,7 @@ public class TradeManager implements Serializable {
             this.userToTrades.get(user).remove(tradeId);
         }
         this.ongoingTrades.remove(tradeId);
+        observableDataModel.setChanged();
     }
 
     private List<String> sortPartnersList(Map<String, Integer> partners) {
@@ -266,6 +273,7 @@ public class TradeManager implements Serializable {
                 }
             }
         }
+        observableDataModel.setChanged();
     }
 
     /**
@@ -283,6 +291,7 @@ public class TradeManager implements Serializable {
                 }
             }
         }
+        observableDataModel.setChanged();
     }
 
     /**
@@ -337,6 +346,7 @@ public class TradeManager implements Serializable {
         trade.changeIsOpened();
         this.completedTrades.put(tradeId, trade);
         this.ongoingTrades.remove(tradeId, trade);
+        observableDataModel.setChanged();
     }
 
     /**
@@ -359,6 +369,7 @@ public class TradeManager implements Serializable {
     public void addMeetingToTrade(String tradeId, String meetingId) {
         Trade trade = getTrade(tradeId);
         trade.incrementMeetingList(meetingId);
+        observableDataModel.setChanged();
     }
 
     /**

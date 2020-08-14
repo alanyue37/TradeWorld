@@ -93,7 +93,7 @@ public class AddItemGUI implements RunnableGUI {
                 itemNameField.clear();
                 itemDescriptionField.clear();
                 message.setText("Item added");
-                table.setItems(creator.create("own inventory").getItems());
+                //table.setItems(creator.create("own inventory").getItems());
             }
         });
     }

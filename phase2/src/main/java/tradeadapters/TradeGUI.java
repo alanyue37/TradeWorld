@@ -19,6 +19,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.json.JSONException;
 import org.json.JSONObject;
+import tradegateway.GUIObserver;
 import tradegateway.TradeModel;
 import trademisc.RunnableGUI;
 import useradapters.ProfileController;
@@ -29,7 +30,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class TradeGUI implements RunnableGUI {
+public class TradeGUI implements RunnableGUI, GUIObserver {
     private final Stage stage;
     private Scene scene;
     private final int width;
@@ -67,6 +68,7 @@ public class TradeGUI implements RunnableGUI {
         this.confirmTradesInfoObservableList = FXCollections.observableArrayList();
         this.userOngoingTradeList = FXCollections.observableArrayList();
         this.userCompletedTradeList = FXCollections.observableArrayList();
+        tradeModel.addObserver(this);
     }
 
     @Override
@@ -112,13 +114,13 @@ public class TradeGUI implements RunnableGUI {
                 new ChangeListener<Tab>() {
                     @Override
                     public void changed(ObservableValue<? extends Tab> observableValue, Tab oldTab, Tab newTab) {
-                        updateScreen();
+                        //update();
                     }
                 }
         );
     }
 
-    public void updateScreen() {
+    public void update() {
         initializeScreen();
     }
 

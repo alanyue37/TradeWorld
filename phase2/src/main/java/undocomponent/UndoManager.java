@@ -1,5 +1,7 @@
 package undocomponent;
 
+import tradegateway.ObservableDataModel;
+
 import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -7,12 +9,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class UndoManager implements Serializable {
     private final Map<String, UndoableOperation> undoableOperations; // id, undoableOperation pairs
     private final AtomicInteger counter = new AtomicInteger();
+    private final ObservableDataModel observableDataModel;
 
     /**
      * Instantiates an UndoManager
      */
-    public UndoManager() {
+    public UndoManager(ObservableDataModel observableDataModel) {
         this.undoableOperations = new HashMap<>();
+        this.observableDataModel = observableDataModel;
+
     }
 
     /**
@@ -22,6 +27,7 @@ public class UndoManager implements Serializable {
     public void add(UndoableOperation undoableOperation) {
         String id = String.valueOf(counter.getAndIncrement());
         undoableOperations.put(id, undoableOperation);
+        observableDataModel.setChanged();
     }
 
     /**
@@ -35,6 +41,7 @@ public class UndoManager implements Serializable {
         if (undoableOperations.containsKey(undoId)) {
             undoableOperations.get(undoId).undo();
             undoableOperations.remove(undoId);
+            observableDataModel.setChanged();
         }
     }
 

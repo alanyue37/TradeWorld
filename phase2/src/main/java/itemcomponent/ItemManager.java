@@ -1,5 +1,6 @@
 package itemcomponent;
 
+import tradegateway.ObservableDataModel;
 import undocomponent.NoLongerUndoableException;
 
 import java.io.Serializable;
@@ -10,12 +11,14 @@ public class ItemManager implements Serializable {
 
     private final Map<String, Item> items;
     private final AtomicInteger counter = new AtomicInteger();
+    private final ObservableDataModel observableDataModel;
 
     /**
      * Instantiates an ItemManager
      */
-    public ItemManager() {
+    public ItemManager(ObservableDataModel observableDataModel) {
         items = new HashMap<>();
+        this.observableDataModel = observableDataModel;
     }
 
     /**
@@ -108,6 +111,7 @@ public class ItemManager implements Serializable {
     public void setOwner(String itemId, String username) {
         Item item = items.get(itemId);
         item.setOwner(username);
+        observableDataModel.setChanged();
     }
 
     /**
@@ -145,6 +149,7 @@ public class ItemManager implements Serializable {
         String id = String.valueOf(counter.getAndIncrement());
         Item item = new Item(id, name, owner, description);
         items.put(item.getId(), item);
+        observableDataModel.setChanged();
         return item.getId();
     }
 
@@ -158,6 +163,7 @@ public class ItemManager implements Serializable {
         Item item = items.get(itemId);
         item.setStage("early");
         item.setAvailable(true);
+        observableDataModel.setChanged();
     }
 
     /**
@@ -169,6 +175,7 @@ public class ItemManager implements Serializable {
     public void deleteItem(String itemId) throws NoLongerUndoableException {
         if (items.get(itemId).isAvailable() || items.get(itemId).getStage().equals("pending")) {
             items.remove(itemId);
+            observableDataModel.setChanged();
         } else {
             throw new NoLongerUndoableException();
         }
@@ -183,6 +190,7 @@ public class ItemManager implements Serializable {
      */
     public void setItemAvailable(String itemID, boolean available) {
         items.get(itemID).setAvailable(available);
+        observableDataModel.setChanged();
     }
 
     /**
@@ -214,5 +222,6 @@ public class ItemManager implements Serializable {
                 item.setStage("common");
             }
         }
+        observableDataModel.setChanged();
     }
 }

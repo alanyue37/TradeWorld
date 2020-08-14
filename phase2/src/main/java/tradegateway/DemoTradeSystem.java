@@ -46,6 +46,7 @@ public class DemoTradeSystem {
 
     public void persist() {
         try {
+            tradeModel.clearObservers();
             dataManager.saveToFile(tradeModel);
         } catch (IOException e) {
             e.printStackTrace();

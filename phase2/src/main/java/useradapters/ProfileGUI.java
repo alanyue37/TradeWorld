@@ -207,7 +207,7 @@ public class ProfileGUI implements RunnableGUI {
     protected ListView<String> getFriendsListView() {
         // TODO: TESTING CODE - UNCOMMENT IF NECESSARY - DELETE LATER
         UserManager userManager = tradeModel.getUserManager();
-        userManager.sendFriendRequest("u1", "u2");
+        //userManager.sendFriendRequest("u1", "u2");
         //userManager.sendFriendRequest("u1", "u3");
         //userManager.sendFriendRequest("u3", "u1");
         //userManager.setFriendRequest("u1", "u2", true);
@@ -224,8 +224,8 @@ public class ProfileGUI implements RunnableGUI {
 
     protected ListView<String> getReviewsListView() {
         // TODO: TESTING CODE - UNCOMMENT IF NECESSARY - DELETE LATER
-        ReviewManager reviewManager = tradeModel.getReviewManager();
-        reviewManager.addReview(3, "Amazing guy", "3", "u1", "u2");
+        //ReviewManager reviewManager = tradeModel.getReviewManager();
+        //reviewManager.addReview(3, "Amazing guy", "3", "u1", "u2");
 
         updateReviewsObservableList();
         ListView<String> list = new ListView<>();
