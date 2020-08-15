@@ -1,4 +1,4 @@
-package useradapters;
+package profileadapters;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -7,7 +7,10 @@ import undocomponent.UndoAddReview;
 import undocomponent.UndoableOperation;
 
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class ProfileController  {
     // TODO: Clean up unnecessary methods

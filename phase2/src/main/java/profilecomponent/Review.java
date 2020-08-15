@@ -1,4 +1,4 @@
-package usercomponent;
+package profilecomponent;
 
 import java.io.Serializable;
 

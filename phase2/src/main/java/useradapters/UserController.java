@@ -1,20 +1,8 @@
 package useradapters;
 
-import tradeadapters.ConfirmTradesController;
-import tradeadapters.InitiateTradeController;
-import tradeadapters.ProposedTradesController;
 import tradegateway.TradeModel;
-import trademisc.RunnableController;
-import undocomponent.UndoAddInventoryItem;
 import undocomponent.UndoAddWishlistItem;
 import undocomponent.UndoableOperation;
-import viewingadapters.ViewingMenuController;
-import viewingadapters.ViewingTradesController;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.*;
 
 public class UserController {
 

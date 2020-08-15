@@ -2,14 +2,12 @@ package useradapters;
 
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import profileadapters.ProfileGUI;
 import tradegateway.TradeModel;
 import trademisc.MainGUI;
 import trademisc.RunnableGUI;
-
-import static javafx.collections.FXCollections.observableArrayList;
 
 public class DemoMainGUI extends MainGUI implements RunnableGUI {
     private TabPane root;

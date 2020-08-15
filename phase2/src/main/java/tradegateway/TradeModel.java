@@ -1,18 +1,15 @@
 package tradegateway;
 
 import itemcomponent.ItemManager;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
+import profilecomponent.ReviewManager;
 import tradecomponent.MeetingManager;
 import tradecomponent.TradeManager;
 import undocomponent.UndoManager;
 import usercomponent.UserManager;
-import usercomponent.ReviewManager;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observer;
 
 /**
  * Holder class for the managers.
