@@ -213,7 +213,7 @@ public class LoginGUI implements RunnableGUI {
                 errorMessage.setText("Please try again");
             } else if(controller.newTradingUser(nameField.getText(), usernameField.getText(), passwordField.getText(), cityField.getText())){
                 tradeModel.setCurrentUser(usernameField.getText());
-                nextGUI = new UserMainGUI(800, 800, tradeModel);
+                nextGUI = new UserMainGUI(1000, 800, tradeModel);
                 errorMessage.setText(""); // clear the error message
                 nextGUI.showScreen();
                 stage.hide();
@@ -227,7 +227,7 @@ public class LoginGUI implements RunnableGUI {
     }
 
     private void demoUserLogIn() {
-        nextGUI = new DemoMainGUI(800, 800, tradeModel);
+        nextGUI = new DemoMainGUI(1000, 800, tradeModel);
         nextGUI.showScreen();
     }
 
@@ -240,10 +240,10 @@ public class LoginGUI implements RunnableGUI {
         if (userInfo.get("authenticated").equals("true")) {
             tradeModel.setCurrentUser(username);
             if (userInfo.get("userType").equals("admin")) {
-                nextGUI = new AdminMainGUI( 800, 800, tradeModel);
+                nextGUI = new AdminMainGUI( 1000, 800, tradeModel);
             }
             else {
-                nextGUI = new UserMainGUI(800, 800, tradeModel);
+                nextGUI = new UserMainGUI(1000, 800, tradeModel);
             }
             errorMessage.setText(""); // clear the error message
             nextGUI.showScreen();

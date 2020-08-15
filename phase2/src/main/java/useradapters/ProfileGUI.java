@@ -88,15 +88,11 @@ public class ProfileGUI implements RunnableGUI {
 
         // Rows
         HBox usernamesRow;
-        //HBox accountProfileContainer;
 
         // Set username selector if not own profile
         usernamesRow = getUsernamesRow();
 
         accountProfileContainer = getContainerForAccountProfile();
-
-
-        //HBox rankHBox = getUserRankBox();
 
         root.getChildren().addAll(usernamesRow, accountProfileContainer);
     }
@@ -208,10 +204,9 @@ public class ProfileGUI implements RunnableGUI {
     protected ListView<String> getFriendsListView() {
         ListView<String> list = new ListView<>();
         list.setPlaceholder(new Label("No friends"));
+        list.prefWidthProperty().bind(stage.widthProperty());
         updateFriendsObservableList();
         list.setItems(friends);
-        list.setPrefWidth(300);
-        list.setPrefHeight(200);
         return list;
     }
 
@@ -219,10 +214,9 @@ public class ProfileGUI implements RunnableGUI {
         updateReviewsObservableList();
         ListView<String> list = new ListView<>();
         list.setPlaceholder(new Label("No reviews"));
+        list.prefWidthProperty().bind(stage.widthProperty());
         List<String> l = new ArrayList<>();
         list.setItems(reviews);
-        list.setPrefWidth(300);
-        list.setPrefHeight(200);
         return list;
     }
 
