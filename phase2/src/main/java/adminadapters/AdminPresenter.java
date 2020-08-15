@@ -196,3 +196,22 @@ public class AdminPresenter extends TextPresenter {
         options.add("Set the limit of number of edits to a meeting");
         return options;
     }*/
+
+
+/*Parent reviewItemsTabParent = reviewItems();
+        Tab lendingLimitTab = new Tab("Review Items", reviewItemsTabParent);
+
+        Parent newAdminParent = setLimitOfTransactionsThreshold();
+        Tab initiateTab = new Tab("Weekly Transactions Threshold", newAdminParent);
+
+        Parent proposedParent = setLimitOfIncompleteTrades();
+        Tab proposedTab = new Tab("Incomplete Trade Threshold", proposedParent);
+
+        Parent confirmParent = setLimitOfEdits();
+        Tab confirmTab = new Tab("Edit Threshold", confirmParent);
+
+        Parent viewParent = setGoldThreshold();
+        Tab viewTab = new Tab("Gold Threshold", viewParent);
+
+        Parent confirmParent = setSilverThreshold();
+        Tab confirmTab = new Tab("Silver Threshold", confirmParent);*/

@@ -9,6 +9,7 @@ import tradeadapters.InitiateTradeController;
 import tradeadapters.ProposedTradesController;
 import trademisc.RunnableGUI;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -19,7 +20,6 @@ import java.util.*;
 public class DemoTradeSystem {
 
     private final String tradeModelFile = "serializedobjects.ser";
-    private final String logoFile = "logo.png";
     private DataManager dataManager;
     private TradeModel tradeModel;
     private RunnableGUI gui;
@@ -30,19 +30,19 @@ public class DemoTradeSystem {
     public void run(Stage stage) {
         try {
             dataManager = new DataManager(tradeModelFile);
-            tradeModel = dataManager.readFromFile();
+            //tradeModel = dataManager.readFromFile();
+            TradeModel tradeModel = new TradeModel();
 
             // INITIALIZE TRADEMODEL FOR DEMO
             initializeTradeModel(tradeModel);
-            Image logo = dataManager.readImage(logoFile);
+            Image logo = dataManager.readImage("logoFile");
 
-            gui = new LoginGUI(stage, 500, 650, tradeModel, logo);
+            AdminMainGUI gui = new AdminMainGUI(400, 275, tradeModel);
             //gui = new ProfileGUI(stage, 720, 600, tradeModel, false);
             //gui = new LoggedInProfileGUI(stage, 720, 600, tradeModel, false);
-            //gui = new AdminMainGUI(800, 800, tradeModel);
             //gui = new UserMainGUI(800, 800, tradeModel, "u1");
             gui.showScreen();
-        } catch (IOException | ClassNotFoundException ex) {
+        } catch (IOException | ClassNotFoundException ex) {//| ClassNotFoundException ex) {
             ex.printStackTrace();
         }
     }

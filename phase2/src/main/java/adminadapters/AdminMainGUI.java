@@ -15,14 +15,15 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
-import tradegateway.GUIObserver;
 import tradegateway.TradeModel;
 import trademisc.MainGUI;
 import trademisc.RunnableGUI;
 import undocomponent.NoLongerUndoableException;
-import useradapters.TableViewCreator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -31,7 +32,7 @@ import java.util.*;
  * Used code from LifeOnTheFarm.zip in week 10 for reference.
  * Also, used https://docs.oracle.com/javafx/2/ui_controls/list-view.htm.
  */
-public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
+public class AdminMainGUI extends MainGUI implements RunnableGUI{
     private Stage stage;
     private Scene scene;
     private final int width;
@@ -58,7 +59,6 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
     }
 
     public void initializeScreen() {
-        getTradeModel().addObserver(this);
         root.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
         Parent newAdminParent = addNewAdmin();
@@ -86,12 +86,12 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
                 new ChangeListener<Tab>() {
                     @Override
                     public void changed(ObservableValue<? extends Tab> observableValue, Tab oldTab, Tab newTab) {
-                        /*addAdminTab.setContent(addNewAdmin());
+                        addAdminTab.setContent(addNewAdmin());
                         freezeUsersTab.setContent(freezeUsers());
                         unfreezeUsersTab.setContent(unfreezeUsers());
                         reviewItemsTab.setContent(reviewItems());
                         thresholdsTab.setContent(setThresholdMenu());
-                        undoActionsTab.setContent(undoActions());*/
+                        undoActionsTab.setContent(undoActions());
 
 
                     }
@@ -114,18 +114,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         initializeScreen();
         scene = new Scene(root, width, height);
         getStage().setScene(scene);
-        getStage().setTitle("TradeWorld - Admin");
         getStage().show();
-    }
-
-    @Override
-    public void update() {
-        root.getTabs().get(0).setContent(addNewAdmin());
-        root.getTabs().get(1).setContent(freezeUsers());
-        root.getTabs().get(2).setContent(unfreezeUsers());
-        root.getTabs().get(3).setContent(reviewItems());
-        root.getTabs().get(4).setContent(setThresholdMenu());
-        root.getTabs().get(5).setContent(undoActions());
     }
 
     /**
@@ -168,73 +157,13 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
                         editLimitTab.setContent(setLimitOfEdits());
                         goldLimitTab.setContent(setGoldThreshold());
                         silverLimitTab.setContent(setSilverThreshold());
-
+                        System.out.println(oldTab.getText() + "->" + newTab.getText() );
 
                     }
                 }
         );
         return subRoot;
     }
-
-
-
-       /* stage.setTitle("Admin");
-
-        Text title = new Text("What threshold do you want to set?");
-        title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-
-        GridPane grid = new GridPane();
-        grid.setAlignment(Pos.CENTER);
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(25, 25, 25, 25));
-        grid.add(title, 0, 0, 2, 1);
-        // grid.add(tabPane(), 0, 0);
-
-       *//* Button addNewAdmins = new Button("Add new admins");
-        Button freezeUsers = new Button("Freeze users");
-        Button unfreezeUsers = new Button("Unfreeze users");
-        Button reviewItems = new Button("Review items");*//*
-        Button lendingThreshold = new Button("Set lending threshold");
-        Button weeklyThreshold = new Button("Set weekly threshold");
-        Button incompleteThreshold = new Button("Set incomplete transactions threshold");
-        Button editThreshold = new Button("Set edit threshold");
-        Button goldThreshold = new Button("Set gold threshold");
-        Button silverThreshold = new Button("Set silver threshold");
-       *//* Button undoOperations = new Button("Undo Actions");
-        Button logOut = new Button("Log Out");*//*
-
-
-      *//*  grid.add(addNewAdmins, 0, 1, 2, 1);
-        grid.add(freezeUsers, 0, 2, 2, 1);
-        grid.add(unfreezeUsers, 0, 3, 2, 1);
-        grid.add(reviewItems, 0, 4, 2, 1);*//*
-        grid.add(lendingThreshold, 0, 5, 2, 1);
-        grid.add(weeklyThreshold, 0, 6, 2, 1);
-        grid.add(incompleteThreshold, 0, 7, 2, 1);
-        grid.add(editThreshold, 0, 8, 2, 1);
-        grid.add(goldThreshold, 0, 9, 2, 1);
-        grid.add(silverThreshold, 0, 10, 2, 1);
-        *//*grid.add(undoOperations, 0, 11, 2, 1);
-        grid.add(logOut, 0, 12, 2, 1);*//*
-
-        *//*addNewAdmins.setOnAction(actionEvent -> addNewAdmin());
-        freezeUsers.setOnAction(actionEvent -> freezeUsers());
-        unfreezeUsers.setOnAction(actionEvent -> unfreezeUsers());
-        reviewItems.setOnAction(actionEvent -> reviewItems());*//*
-        lendingThreshold.setOnAction(actionEvent -> setLendingThreshold());
-        weeklyThreshold.setOnAction(actionEvent -> setLimitOfTransactionsThreshold());
-        incompleteThreshold.setOnAction(actionEvent -> setLimitOfIncompleteTrades());
-        editThreshold.setOnAction(actionEvent -> setLimitOfEdits());
-        goldThreshold.setOnAction(actionEvent -> setGoldThreshold());
-        silverThreshold.setOnAction(actionEvent -> setSilverThreshold());
-        *//*undoOperations.setOnAction(actionEvent -> undoActions());
-        logOut.setOnAction(actionEvent -> {
-            grid.getChildren().clear();
-            logOutScreen();
-        });*//*
-
-        return grid;*/
 
     /**
      * This method informs the admin that they have logout/ exited successfully.
@@ -439,82 +368,6 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         return grid;
     }
 
-//    OLD REVIEW ITEMS
-//    /**
-//     * This method allows the Admin user to select items that should be added to the system.
-//     */
-//    public Parent reviewItems() {
-//        Text title = new Text("Review Items");
-//        title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-//
-//        ListView<String> list = new ListView<>();
-//        ObservableList<String> reviewItems = FXCollections.observableArrayList();
-//
-//        Set<String> items = model.getItemManager().getItemsByStage("pending");
-//        List<String> itemsInList = new ArrayList<>(items);
-//
-//        for (String itemID : items) {
-//            String itemInfo = model.getItemManager().getItemInfo(itemID);
-//            reviewItems.addAll(itemInfo);
-//        }
-//        list.setItems(reviewItems);
-//        list.setPlaceholder(new Label("There are no items to be reviewed."));
-//        Text heading = new Text("These items are pending to be added. Unselected items will be deleted.\n Hold down shift to add multiple items to the system.");
-//
-//        GridPane grid = new GridPane();
-//        grid.setAlignment(Pos.CENTER);
-//        grid.setHgap(10);
-//        grid.setVgap(10);
-//        grid.setPadding(new Insets(25, 25, 25, 25));
-//        grid.add(title, 0, 0, 2, 1);
-//        list.setPrefHeight(height - 50); // we could change this
-//        list.setPrefWidth(width - 50);   // we could change this
-//
-//        Button addItemsButton = new Button("Add these Items");
-//        HBox hBoxAddItemsButton = new HBox(10);
-//
-//        hBoxAddItemsButton.setAlignment(Pos.BOTTOM_RIGHT);
-//        hBoxAddItemsButton.getChildren().add(addItemsButton);
-//
-//        grid.add(heading, 0, 1);
-//        grid.add(list, 0, 2);
-//        grid.add(hBoxAddItemsButton, 0, 3);
-//
-//        Label message = new Label();
-//        message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
-//        message.setAlignment(Pos.CENTER);
-//        grid.add(message, 0, 11, 1, 1);
-//
-//        list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-//        addItemsButton.setOnAction(actionEvent -> {
-//            ObservableList<Integer> selectedItems = list.getSelectionModel().getSelectedIndices();
-//            ArrayList<Integer> conversion = new ArrayList<>(selectedItems);
-//            ArrayList<String> selected = new ArrayList<>();
-//            ArrayList<String> notSelected = new ArrayList<>();
-//            for (Integer itemID : conversion) {
-//                selected.add(itemsInList.get(itemID));
-//            }
-//            for (String itemID : itemsInList) {
-//                if (!selected.contains(itemID)) {
-//                    notSelected.add(itemID);
-//                }
-//            }
-//            if (!selected.isEmpty() || !notSelected.isEmpty()) {
-//                try {
-//                    controller.askAdminToReviewItems(selected, notSelected);
-//                } catch (NoLongerUndoableException e) {
-//                    e.printStackTrace();
-//                }
-//                message.setText("Selected items have been added to the system.");
-//                reviewItems.clear();
-//            } else {
-//                message.setText("No items are added to the system.");
-//            }
-//        });
-//
-//        return grid;
-//    }
-
     /**
      * This method allows the Admin user to select items that should be added to the system.
      */
@@ -522,10 +375,18 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         Text title = new Text("Review Items");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
-        TableViewCreator creator = new TableViewCreator(model);
-        TableView<ObservableList<String>> table = creator.create("pending");
-        table.setPlaceholder(new Label("There are no items to be reviewed."));
+        ListView<String> list = new ListView<>();
+        ObservableList<String> reviewItems = FXCollections.observableArrayList();
 
+        Set<String> items = model.getItemManager().getItemsByStage("pending");
+        List<String> itemsInList = new ArrayList<>(items);
+
+        for (String itemID : items) {
+            String itemInfo = model.getItemManager().getItemInfo(itemID);
+            reviewItems.addAll(itemInfo);
+        }
+        list.setItems(reviewItems);
+        list.setPlaceholder(new Label("There are no items to be reviewed."));
         Text heading = new Text("These items are pending to be added. Unselected items will be deleted.\n Hold down shift to add multiple items to the system.");
 
         GridPane grid = new GridPane();
@@ -534,63 +395,48 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
         grid.add(title, 0, 0, 2, 1);
-        table.setPrefHeight(height - 50); // we could change this
-        table.setPrefWidth(width - 50);   // we could change this
+        list.setPrefHeight(height - 50); // we could change this
+        list.setPrefWidth(width - 50);   // we could change this
 
-        Button addItemsButton = new Button("Accept these items");
-//        HBox hBoxAddItemsButton = new HBox(10);
-        Button removeItemsButton = new Button("Reject these items");
+        Button addItemsButton = new Button("Add these Items");
+        HBox hBoxAddItemsButton = new HBox(10);
 
-//        hBoxAddItemsButton.setAlignment(Pos.BOTTOM_RIGHT);
-//        hBoxAddItemsButton.getChildren().add(addItemsButton);
+        hBoxAddItemsButton.setAlignment(Pos.BOTTOM_RIGHT);
+        hBoxAddItemsButton.getChildren().add(addItemsButton);
 
         grid.add(heading, 0, 1);
-        grid.add(table, 0, 2, 2, 1);
-//        grid.add(hBoxAddItemsButton, 0, 3);
-        grid.add(addItemsButton, 0, 3);
-        grid.add(removeItemsButton, 1, 3);
+        grid.add(list, 0, 2);
+        grid.add(hBoxAddItemsButton, 0, 3);
 
         Label message = new Label();
         message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
         message.setAlignment(Pos.CENTER);
         grid.add(message, 0, 11, 1, 1);
 
-        TableView.TableViewSelectionModel<ObservableList<String>> itemSelection = table.getSelectionModel();
-        table.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-
+        list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         addItemsButton.setOnAction(actionEvent -> {
-            ObservableList<ObservableList<String>> selectedItems = itemSelection.getSelectedItems();
-            int size = selectedItems.size();
-//            System.out.println(selectedItems.size());
-            for (ObservableList<String> item : new ArrayList<>(selectedItems)) {
-                controller.askAdminToAcceptItem(item.get(0));
-                table.getItems().remove(item);
-//                System.out.println(item.get(0));
+            ObservableList<Integer> selectedItems = list.getSelectionModel().getSelectedIndices();
+            ArrayList<Integer> conversion = new ArrayList<>(selectedItems);
+            ArrayList<String> selected = new ArrayList<>();
+            ArrayList<String> notSelected = new ArrayList<>();
+            for (Integer itemID : conversion) {
+                selected.add(itemsInList.get(itemID));
             }
-            if (size > 0) {
-                message.setText("Selected items have been added to the system.");
-            } else {
-                message.setText("No items are added to the system.");
+            for (String itemID : itemsInList) {
+                if (!selected.contains(itemID)) {
+                    notSelected.add(itemID);
+                }
             }
-        });
-
-        removeItemsButton.setOnAction(actionEvent -> {
-            ObservableList<ObservableList<String>> selectedItems = itemSelection.getSelectedItems();
-            int size = selectedItems.size();
-//            System.out.println(selectedItems.size());
-            for (ObservableList<String> item : new ArrayList<>(selectedItems)) {
+            if (!selected.isEmpty() || !notSelected.isEmpty()) {
                 try {
-                    controller.askAdminToDeleteItem(item.get(0));
+                    controller.askAdminToReviewItems(selected, notSelected);
                 } catch (NoLongerUndoableException e) {
                     e.printStackTrace();
                 }
-                table.getItems().remove(item);
-//                System.out.println(item.get(0));
-            }
-            if (size > 0) {
-                message.setText("Selected items have been removed from the system.");
+                message.setText("Selected items have been added to the system.");
+                reviewItems.clear();
             } else {
-                message.setText("No items are removed to the system.");
+                message.setText("No items are added to the system.");
             }
         });
 
@@ -950,7 +796,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
 
         ListView<String> list = new ListView<>();
 
-        //list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        list.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         ObservableList<String> reviewItems = FXCollections.observableArrayList();
         Text heading = new Text("The following are outstanding undo actions.");
 
@@ -988,7 +834,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
             String selected = list.getSelectionModel().getSelectedItem();
             if (selected != null) { // Is this the right check? Should we check for null instead?
                 try {
-                    controller.undoOperation(selected);
+                    controller.undoOperations(selected);
                     reviewItems.remove(selected);
                 } catch (NoLongerUndoableException e) {
                     e.printStackTrace();
