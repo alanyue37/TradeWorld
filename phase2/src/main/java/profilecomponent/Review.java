@@ -1,7 +1,10 @@
-package usercomponent;
+package profilecomponent;
 
 import java.io.Serializable;
 
+/**
+ * Represents a review for a trade
+ */
 public class Review implements Serializable {
     private final String id;
     private int rating;
@@ -12,7 +15,7 @@ public class Review implements Serializable {
 
     /**
      * Initiate a new review.
-     * @param id id of the review
+     * @param id ID of the review
      * @param rating numerical rating (1-5) of the trade experience
      * @param comment comment on the trade experience
      * @param tradeId trade id of the trade this review is related to
@@ -29,16 +32,16 @@ public class Review implements Serializable {
     }
 
     /**
-     * Returns the id of the review
-     * @return  The id of the review
+     * Returns the ID of the review
+     * @return  The ID of the review
      */
     public String getId() {
         return id;
     }
 
     /**
-     * Returns the id of the trade that this review is related to.
-     * @return id of trade
+     * Returns the ID of the trade that this review is related to.
+     * @return ID of trade
      */
     public String getTradeId(){
         return tradeId;
@@ -64,5 +67,3 @@ public class Review implements Serializable {
         return author;
     }
 }
-
-

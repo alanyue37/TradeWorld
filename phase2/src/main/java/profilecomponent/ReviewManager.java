@@ -1,19 +1,23 @@
-package usercomponent;
+package profilecomponent;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.Gson;
 import tradegateway.ObservableDataModel;
 import undocomponent.NoLongerUndoableException;
-import com.google.gson.Gson;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Manages the creation and handling of reviews for trades.
+ */
 public class ReviewManager implements Serializable {
     private final ObservableDataModel observableDataModel;
     private Map<String, List<Review>> userToReviews; // maps username to list of reviews
-    private final AtomicInteger counter = new AtomicInteger(); // keeps count of reviews for review id
+    private final AtomicInteger counter = new AtomicInteger(); // keeps count of reviews for review ID
 
     /**
      * Instantiates a ReviewManager.
@@ -27,10 +31,10 @@ public class ReviewManager implements Serializable {
      * Creates a new review and adds it to the receiver's list of reviews.
      * @param rating rating of review
      * @param comment comment of review
-     * @param tradeId trade id of review
+     * @param tradeId trade ID of review
      * @param author author of review
      * @param receiver receiver of review
-     * @return id of the review
+     * @return ID of the review
      */
     public String addReview(int rating, String comment, String tradeId, String author, String receiver) {
         String id = String.valueOf(counter.getAndIncrement());
@@ -122,6 +126,11 @@ public class ReviewManager implements Serializable {
         observableDataModel.setChanged();
     }
 
+    /**
+     * Gets a String representation of the reviews for a user
+     * @param receiverUsername username of the user to get their reviews
+     * @return String of the reviews for user with username "receiverUsername"
+     */
     public String getReviewsByUser(String receiverUsername) {
         Gson gson = new Gson();
         List<Review> reviews = userToReviews.get(receiverUsername);
@@ -150,11 +159,5 @@ public class ReviewManager implements Serializable {
         averageRatingMap.put("average", String.format("%.2f", averageRating));
 
         return gson.toJson(reviewMaps);
-    }
-
-    public String getAverageRatingByUser(String receiverUsername) {
-        List<Review> reviews = userToReviews.get(receiverUsername);
-        float averageRating = (float)1/3;
-        return String.format("%.2f", averageRating);
     }
 }

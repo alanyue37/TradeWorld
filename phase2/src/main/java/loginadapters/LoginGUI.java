@@ -20,7 +20,7 @@ import javafx.stage.Stage;
 import tradegateway.TradeModel;
 import trademisc.RunnableGUI;
 import trademisc.UserMainGUI;
-import useradapters.DemoMainGUI;
+import demoadapters.DemoMainGUI;
 
 import java.lang.reflect.Type;
 import java.util.Map;

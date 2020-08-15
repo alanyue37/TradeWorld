@@ -19,6 +19,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.json.JSONException;
 import org.json.JSONObject;
+import profileadapters.ProfileController;
 import tradegateway.GUIObserver;
 import tradegateway.TradeModel;
 import trademisc.RunnableGUI;
@@ -103,9 +104,6 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         stage.show();
     }
 
-    /**
-     * Trade menu in the TabPane which provides options.
-     */
     private void initializeScreen() {
         updateProposedObservableLists();
         root = new TabPane();
