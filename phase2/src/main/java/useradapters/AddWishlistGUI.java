@@ -68,6 +68,11 @@ public class AddWishlistGUI implements RunnableGUI {
         itemTable = creator.create("all items");
         wishlistTable = creator.create("wishlist");
 
+//        itemTable.prefHeightProperty().bind(stage.heightProperty());
+        itemTable.prefWidthProperty().bind(stage.widthProperty());
+//        wishlistTable.prefHeightProperty().bind(stage.heightProperty());
+        wishlistTable.prefWidthProperty().bind(stage.widthProperty());
+
         grid.add(itemTable, 0, 1, 5, 5);
         grid.add(wishlistTable, 6, 1, 5, 5);
 

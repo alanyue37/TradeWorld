@@ -66,6 +66,7 @@ public class TradeHistoryGUI implements RunnableGUI {
 
     private ListView<String> getItemHistory(int count) {
         ListView<String> result = new ListView<>();
+        result.prefWidthProperty().bind(stage.widthProperty());
         result.setPlaceholder(new Label("No past trades to display."));
 
         List<String> trades = tradeModel.getTradeManager().getTradesOfUser(username, "completed");
@@ -87,6 +88,7 @@ public class TradeHistoryGUI implements RunnableGUI {
 
     private ListView<String> getPartnerHistory(int count) {
         ListView<String> result = new ListView<>();
+        result.prefWidthProperty().bind(stage.widthProperty());
         result.setPlaceholder(new Label("No past trading partners to display."));
 
         List<String> trades = tradeModel.getTradeManager().getTradesOfUser(username, "completed");

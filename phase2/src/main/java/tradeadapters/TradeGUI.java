@@ -96,7 +96,7 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         root.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
         Parent initiateParent = viewInitiateTrades();
-        Tab initiateTab = new Tab("Initiate", initiateParent);
+        Tab initiateTab = new Tab("Initiate Trade", initiateParent);
 
         Parent proposedParent = viewProposedTrades();
         Tab proposedTab = new Tab("Proposed Trades", proposedParent);
@@ -127,16 +127,19 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
     // Main tab methods
 
     private Parent viewInitiateTrades() {
-        Text title = new Text("Available items");
-        title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 15));
+        Text title = new Text("Initiate a trade");
+        title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+
+        Text subtitle = new Text("Available items");
+        subtitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 15));
 
         //Vbox
         VBox mainLayout = new VBox();
         mainLayout.setPrefWidth(300);
         mainLayout.setSpacing(10);
         mainLayout.setPadding(new Insets(25, 25, 25, 25));
-        mainLayout.getChildren().add(title);
-        mainLayout.setAlignment(Pos.CENTER);
+        mainLayout.getChildren().addAll(title, subtitle);
+//        mainLayout.setAlignment(Pos.CENTER);
 
         //Radio buttons for available items
         ScrollPane scrollPane = new ScrollPane();
@@ -151,7 +154,7 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
 
         VBox typeButtons = new VBox();
         typeButtons.getChildren().addAll(selectType, oneWayPermanent,oneWayTemporary, twoWayPermanent, twoWayTemporary);
-        typeButtons.setAlignment(Pos.CENTER);
+//        typeButtons.setAlignment(Pos.CENTER);
         typeButtons.setSpacing(10);
 
 //        if (!initiateTradeController.canTrade()){
@@ -175,6 +178,9 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
     }
 
     private Parent viewProposedTrades() {
+        Text title = new Text("Proposed trades");
+        title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
@@ -183,15 +189,17 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
 
         ListView<String> proposedTradesListView = new ListView<>();
         proposedTradesListView.setPlaceholder(new Label("No proposed trades"));
+        proposedTradesListView.prefWidthProperty().bind(stage.widthProperty());
 //        proposedTradesListView.setItems(proposedTradesInfoObservableList);
         Button confirmBtn = new Button("Confirm");
         Button editBtn = new Button("Edit");
         Button declineBtn = new Button("Decline");
 
-        grid.add(proposedTradesListView, 0, 0, 2, 1);
-        grid.add(confirmBtn, 0, 1, 2, 1);
-        grid.add(editBtn, 0, 2, 2, 1);
-        grid.add(declineBtn, 0, 3, 2, 1);
+        grid.add(title, 0, 0, 2, 1);
+        grid.add(proposedTradesListView, 0, 1, 2, 1);
+        grid.add(confirmBtn, 0, 2, 2, 1);
+        grid.add(editBtn, 0, 3, 2, 1);
+        grid.add(declineBtn, 0, 4, 2, 1);
 
         Label messageBox = new Label();
         messageBox.setFont(Font.font("Tahoma", FontWeight.NORMAL, 13));
@@ -203,6 +211,9 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
     }
 
     private Parent viewConfirmTrades() {
+        Text title = new Text("Confirm trades");
+        title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
@@ -212,12 +223,14 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         updateToBeConfirmedObservableLists();
 
         ListView<String> confirmTradesListView = new ListView<>();
+        confirmTradesListView.prefWidthProperty().bind(stage.widthProperty());
         confirmTradesListView.setPlaceholder(new Label("No trades to confirm"));
 //        confirmTradesListView.setItems(confirmTradesInfoObservableList);
         Button confirmBtn = new Button("Confirm");
 
-        grid.add(confirmTradesListView, 0, 0, 2, 1);
-        grid.add(confirmBtn, 0, 1, 2, 1);
+        grid.add(title, 0, 0, 2, 1);
+        grid.add(confirmTradesListView, 0, 1, 2, 1);
+        grid.add(confirmBtn, 0, 2, 2, 1);
 
         Label messageBox = new Label();
         messageBox.setFont(Font.font("Tahoma", FontWeight.NORMAL, 13));
@@ -229,8 +242,12 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
     }
 
     public Parent viewAllTrades() {
+        Text title = new Text("View all trades");
+        title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+
         // Review
         Label addReviewLabel = new Label("Enter your review.");
+        addReviewLabel.setMinSize(Label.USE_PREF_SIZE, Label.USE_PREF_SIZE);
         TextField commentInput = new TextField();
         commentInput.setPromptText("Leave a comment");
         TextField ratingInput = new TextField();
@@ -240,6 +257,7 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         Label messageBox = new Label();
         messageBox.setFont(Font.font("Tahoma", FontWeight.BOLD, 15));
         Button addReview = new Button("Add Review");
+        addReview.setMinSize(Button.USE_PREF_SIZE, Button.USE_PREF_SIZE);
 
         HBox hBox = new HBox();
         hBox.setPadding(new Insets(25, 25, 25, 25));
@@ -262,10 +280,11 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         hboxOngoing.getChildren().addAll(getOngoingTradesListView());
         hboxCompleted.getChildren().addAll(getCompletedTradesListView());
 
-        VBox vbox = new VBox();
-        vbox.getChildren().addAll(hBox, messageBox, ongoingTrades, hboxOngoing, completedTrades, hboxCompleted);
+        VBox vBox = new VBox();
+        vBox.getChildren().addAll(title, hBox, messageBox, ongoingTrades, hboxOngoing, completedTrades, hboxCompleted);
         configureViewButtons(addReview, messageBox,ratingInput, tradeIdInput, commentInput);
-        return vbox;
+        vBox.setPadding(new Insets(25, 25, 25, 25));
+        return vBox;
     }
 
     // Helper methods used by different tabs
@@ -398,6 +417,7 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         mainLayout.setAlignment(Pos.CENTER);
 
         ListView<String> list = new ListView<>();
+        list.prefWidthProperty().bind(stage.widthProperty());
         ObservableList<String> availableItems = FXCollections.observableArrayList();
         availableItems.addAll(infoToId.keySet());
         list.setItems(availableItems);
@@ -601,6 +621,7 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         list.setItems(userOngoingTradeList);
         list.setPrefWidth(300);
         list.setPrefHeight(200);
+        list.prefWidthProperty().bind(stage.widthProperty());
         return list;
     }
 
@@ -637,6 +658,7 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         list.setItems(userCompletedTradeList);
         list.setPrefWidth(300);
         list.setPrefHeight(200);
+        list.prefWidthProperty().bind(stage.widthProperty());
         return list;
     }
 

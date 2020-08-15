@@ -26,7 +26,7 @@ public class AddItemGUI implements RunnableGUI {
     private TableViewCreator creator;
     private GridPane grid;
     private TextField itemNameField;
-    private TextArea itemDescriptionField;
+    private TextField itemDescriptionField;
     private Text message;
     TableView<ObservableList<String>> inventoryTable;
 
@@ -66,19 +66,22 @@ public class AddItemGUI implements RunnableGUI {
 
         inventoryTable = creator.create("own inventory");
 
+//        inventoryTable.prefHeightProperty().bind(stage.heightProperty());
+        inventoryTable.prefWidthProperty().bind(stage.widthProperty());
+
         Text title = new Text("Current Inventory");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         grid.add(title, 0, 0, 2, 1);
 
-        grid.add(inventoryTable, 0, 1, 5, 5);
+        grid.add(inventoryTable, 0, 1, 4, 5);
 
         Text prompt = new Text("Add item to inventory");
         prompt.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
-        Label itemNameLabel = new Label("Item name");
+        Label itemNameLabel = new Label("Item name:");
         itemNameField = new TextField();
-        Label itemDescriptionLabel = new Label("Item description");
-        itemDescriptionField = new TextArea();
+        Label itemDescriptionLabel = new Label("Item description:");
+        itemDescriptionField = new TextField();
 
         Button createItemButton = new Button("Create Item");
 
