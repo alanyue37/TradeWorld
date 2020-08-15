@@ -23,7 +23,6 @@ import profileadapters.ProfileController;
 import tradegateway.GUIObserver;
 import tradegateway.TradeModel;
 import trademisc.RunnableGUI;
-import useradapters.ProfileController;
 
 import java.text.ParseException;
 import java.time.LocalDate;
