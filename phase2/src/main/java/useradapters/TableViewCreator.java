@@ -71,8 +71,8 @@ public class TableViewCreator {
     /**
      * Sets itemsToShow to the user's own inventory.
      */
-    private void viewInventory() {
-        itemsToShow = new ArrayList<>();
+    protected void viewInventory() {
+        newItemsToShow();
         Set<String> userInventory = tradeModel.getItemManager().getInventory(tradeModel.getCurrentUser());
         for (String itemID : userInventory) {
             if (tradeModel.getItemManager().getAvailable(itemID)) {
@@ -92,8 +92,8 @@ public class TableViewCreator {
     /**
      * Sets itemsToShow to the system inventory of users in same city (except items in current user's inventory).
      */
-    private void viewAllItems() {
-        itemsToShow = new ArrayList<>();
+    protected void viewAllItems() {
+        newItemsToShow();
         String userRank = tradeModel.getUserManager().getRankByUsername(tradeModel.getCurrentUser());
         Set<String> itemsAvailable = new HashSet<>();
 
@@ -133,8 +133,8 @@ public class TableViewCreator {
     /**
      * Sets itemsToShow to the user's wishlist.
      */
-    private void viewWishlist() {
-        itemsToShow = new ArrayList<>();
+    protected void viewWishlist() {
+        newItemsToShow();
         Set<String> userWishlist = tradeModel.getUserManager().getWishlistByUsername(tradeModel.getCurrentUser());
         for (String itemID : userWishlist) {
             itemsToShow.add(new String[]{itemID,
@@ -147,8 +147,8 @@ public class TableViewCreator {
     /**
      * Sets itemsToShow to the pending items.
      */
-    private void viewPending() {
-        itemsToShow = new ArrayList<>();
+    protected void viewPending() {
+        newItemsToShow();
         Set<String> userWishlist = tradeModel.getItemManager().getItemsByStage("pending");
         for (String itemID : userWishlist) {
             itemsToShow.add(new String[]{itemID,

@@ -14,7 +14,7 @@ public class DemoTableViewCreator extends TableViewCreator {
     }
 
     @Override
-    public void viewInventory() {
+    protected void viewInventory() {
         newItemsToShow();
         getItemsToShow().add(new String[]{"1", "Book", "Software Design for Dummies", "Yes"});
         getItemsToShow().add(new String[]{"5", "iPad", "BRAND NEW receipt unavailable", "Yes"});
@@ -22,7 +22,7 @@ public class DemoTableViewCreator extends TableViewCreator {
     }
 
     @Override
-    public void viewAllItems() {
+    protected void viewAllItems() {
         newItemsToShow();
         getItemsToShow().add(new String[]{"2", "Desk", "Rachel", "Finished my 207 project on this"});
         getItemsToShow().add(new String[]{"3", "Spoon", "Ayushi", "Will only trade for a fork"});
@@ -31,7 +31,7 @@ public class DemoTableViewCreator extends TableViewCreator {
         }
 
     @Override
-    public void viewWishlist() {
+    protected void viewWishlist() {
         // return empty list
         newItemsToShow();
         getItemsToShow().add(new String[]{"3", "Spoon", "Ayushi", "Will only trade for a fork"});
