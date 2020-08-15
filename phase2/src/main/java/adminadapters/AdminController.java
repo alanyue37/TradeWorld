@@ -331,19 +331,19 @@ public class AdminController {
     }
 
     /**
-     * This method provides an admin user all the undo operations (i.e., undo add inventory item, undo add proposed
+     * Allows admin user to undo a given undo operation (i.e., undo add inventory item, undo add proposed
      * trade, undo add review, and undo add wishlist item).
+     *
+     * @param undoAction toString representation of the given UndoableOperation
      * @throws NoLongerUndoableException If the undo no longer exists.
      */
-    protected void undoOperations(String undoActions) throws NoLongerUndoableException {
-        tradeModel.getUndoManager().execute(undoActions);
-      /*  Set<String> undo = tradeModel.getUndoManager().getUndoableOperations().keySet();
-        ArrayList<String> undoActionsCopy = new ArrayList<>(undo);
-        for (String undoID : undoActions) {
-            if (undoActionsCopy.contains(undoID)) {
-
-                undoActionsCopy.remove(undoID);
-                undoActions.remove(undoID);*/
+    protected void undoOperation(String undoAction) throws NoLongerUndoableException {
+        List<String> undoIds = new ArrayList<>(tradeModel.getUndoManager().getUndoableOperations().keySet());
+        for (String undoId : undoIds) {
+            if (undoAction.equals(tradeModel.getUndoManager().getUndoableOperation(undoId).toString())) {
+                tradeModel.getUndoManager().execute(undoId);
+            }
+        }
     }
 
     /**
