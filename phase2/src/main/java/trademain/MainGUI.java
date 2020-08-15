@@ -1,8 +1,6 @@
-package trademisc;
+package trademain;
 
-import javafx.scene.control.TabPane;
 import javafx.stage.Stage;
-import tradeadapters.TradeGUI;
 import tradegateway.TradeModel;
 
 public abstract class MainGUI implements RunnableGUI {

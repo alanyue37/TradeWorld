@@ -9,10 +9,9 @@ import java.util.Map;
  * Represents a one way trade, where one user gives an item to another user
  */
 class OneWayTrade extends Trade {
-    private String itemId;
-    private String giverUsername;
-    private String receiverUsername;
-
+    private final String itemId;
+    private final String giverUsername;
+    private final String receiverUsername;
 
     /**
      * @param type the type (temporary or permanent) of this Trade

@@ -1,4 +1,4 @@
-package trademisc;
+package trademain;
 
 import javafx.scene.Parent;
 

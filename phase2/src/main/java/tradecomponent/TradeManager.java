@@ -15,12 +15,11 @@ public class TradeManager implements Serializable {
     private final ObservableDataModel observableDataModel;
     private int limitIncomplete;
     private int limitTransactionPerWeek;
-    private TradeFactory factory;
+    private final TradeFactory factory;
     private final Map<String, Trade> ongoingTrades;
     private final Map<String, Trade> completedTrades;
     private final Map<String, List<String>> userToTrades;
     private final AtomicInteger counter = new AtomicInteger();
-
 
     /**
      * Constructor for TradeManager.
@@ -34,7 +33,6 @@ public class TradeManager implements Serializable {
         this.factory = new TradeFactory();
         this.observableDataModel = observableDataModel;
     }
-
 
     /**
      * Given the ID of a trade, returns the trade
@@ -60,7 +58,6 @@ public class TradeManager implements Serializable {
     public Map<String, List<String>> itemToUsers(String tradeId) {
         return getTrade(tradeId).itemToTrader();
     }
-
 
     /**
      * Adds a trade to the map of trades in TradeManager.

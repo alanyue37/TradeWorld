@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+// TODO: javadoc
 public class TableViewCreator {
 
     private final TradeModel tradeModel;

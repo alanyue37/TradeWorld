@@ -21,7 +21,6 @@ class User implements Serializable {
         this.password = password;
     }
 
-
     /**
      * Gets the name of this User
      *

@@ -6,10 +6,10 @@ import java.util.*;
  * Represents a two way trade, where two users give an item and receive the other's item
  */
 class TwoWayTrade extends Trade {
-    private String user1;
-    private String user2;
-    private String item1;
-    private String item2;
+    private final String user1;
+    private final String user2;
+    private final String item1;
+    private final String item2;
 
     /** Constructs a two way trade
      * @param type the type (temporary or permanent) of this Trade

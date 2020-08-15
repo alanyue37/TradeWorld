@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class ReviewManager implements Serializable {
     private final ObservableDataModel observableDataModel;
-    private Map<String, List<Review>> userToReviews; // maps username to list of reviews
+    private final Map<String, List<Review>> userToReviews; // maps username to list of reviews
     private final AtomicInteger counter = new AtomicInteger(); // keeps count of reviews for review ID
 
     /**

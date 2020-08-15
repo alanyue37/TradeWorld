@@ -22,7 +22,7 @@ import org.json.JSONObject;
 import profileadapters.ProfileController;
 import tradegateway.GUIObserver;
 import tradegateway.TradeModel;
-import trademisc.RunnableGUI;
+import trademain.RunnableGUI;
 
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -694,10 +694,10 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
                         messageBox.setText("Choose an item to trade.");
                     } else if (initiateTradeController.isNewAccount(username)){
                         messageBox.setText("Your first trade must be Two-Way or Lending.");
-                    } else if (!initiateTradeController.canOneWay(username)){
+                    } else if (initiateTradeController.cannotOneWay(username)){
                         messageBox.setText("You have insufficient credit to borrow. You may not initiate a one-way " +
                                 "trade until you have loaned enough.");
-                    } else{
+                    } else {
                         Map<String, String> tradeInfo = new HashMap<>();
                         tradeInfo.put("chosen", infoToId.get(selected.toString()));
                         tradeInfo.put("way", "oneWay");
@@ -712,7 +712,7 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
                     }
                     else if (initiateTradeController.isNewAccount(username)){
                         messageBox.setText("Your first trade must be Two-Way or Lending.");
-                    } else if (!initiateTradeController.canOneWay(username)){
+                    } else if (initiateTradeController.cannotOneWay(username)){
                         messageBox.setText("You have insufficient credit to borrow. You may not initiate a one-way " +
                                 "trade until you have loaned enough.");
                     } else{

@@ -6,13 +6,11 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import profileadapters.ProfileGUI;
 import tradegateway.TradeModel;
-import trademisc.MainGUI;
-import trademisc.RunnableGUI;
+import trademain.MainGUI;
+import trademain.RunnableGUI;
 
 public class DemoMainGUI extends MainGUI implements RunnableGUI {
     private TabPane root;
-
-    private RunnableGUI nextGUI;
 
     public DemoMainGUI(int width, int height, TradeModel model) {
         super(width, height, model);
@@ -61,8 +59,4 @@ public class DemoMainGUI extends MainGUI implements RunnableGUI {
 
         root.getTabs().addAll(otherProfilesTab, inventoryTab, wishlistTab, tradeTab);
     }
-
-
-
 }
-

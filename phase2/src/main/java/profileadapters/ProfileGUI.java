@@ -17,7 +17,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import tradegateway.TradeModel;
-import trademisc.RunnableGUI;
+import trademain.RunnableGUI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,7 +121,6 @@ public class ProfileGUI implements RunnableGUI {
         HBox accountStandingRow;
         HBox friendsAndReviewsRow;
 
-
         // Set title
         titleRow = new HBox();
         Label titleLabel = new Label(userProfile + "'s Profile");
@@ -157,12 +156,10 @@ public class ProfileGUI implements RunnableGUI {
         container.getChildren().addAll(titleRow, profileInfoRow, accountStandingRow, friendsAndReviewsRow);
         row.getChildren().add(container);
         return row;
-
     }
 
     protected void updateScreen() {
         userProfile = usernameSelector.getSelectionModel().getSelectedItem();
-        //initializeScreen();
         HBox oldAccountProfileContainer = accountProfileContainer;
         HBox newAccountProfileContainer = getContainerForAccountProfile();
         oldAccountProfileContainer.getChildren().setAll(newAccountProfileContainer.getChildren());
@@ -181,7 +178,6 @@ public class ProfileGUI implements RunnableGUI {
         viewButton.setOnAction(actionEvent -> {
             if (!usernames.isEmpty()) {
                 userProfile = usernameSelector.getSelectionModel().getSelectedItem();
-                //initializeScreen();
                 HBox oldAccountProfileContainer = accountProfileContainer;
                 HBox newAccountProfileContainer = getContainerForAccountProfile();
                 oldAccountProfileContainer.getChildren().setAll(newAccountProfileContainer.getChildren());
@@ -240,7 +236,6 @@ public class ProfileGUI implements RunnableGUI {
         return stage;
     }
 
-
     protected int getWidth() {
         return width;
     }
@@ -270,8 +265,4 @@ public class ProfileGUI implements RunnableGUI {
         reviews.clear();
         reviews.addAll(profileController.getReviews(userProfile));
     }
-
 }
-
-
-

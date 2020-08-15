@@ -27,7 +27,7 @@ public class LogInController {
      * Check key "userType" to see if account is "trading" or "admin"
      * @param user username to log in with
      * @param pass password to log in with
-     * @return JSON string of login success and account info. Get key "authenticted
+     * @return JSON string of login success and account info. Get key "authenticated" // TODO: what does this mean?
      */
     public String logIn(String user, String pass) {
         Gson gson = new Gson();

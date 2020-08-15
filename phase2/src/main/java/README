@@ -1,8 +1,8 @@
 RUNNING THE PROGRAM
 A pre-made system with admins, users, and items can be found in the DemoTradeSystem in the package tradegateway and
-can be run using DemoMain in the package trademisc.
+can be run using DemoMain in the package trademain.
 
-To run the program without anything premade, run the program from Main.java in package trademisc.
+To run the program without anything premade, run the program from Main.java in package trademain.
 
 IMPORTANT: Make sure File -> Project Structure -> Project compiler output ends in phase1/out
 Make sure there is a folder named "resources" in phase1/src/main. If there is not, create an empty folder with that

@@ -14,9 +14,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class MeetingManager implements Serializable {
     private final ObservableDataModel observableDataModel;
-    private Map<String, Meeting> ongoingMeetings;
-    private Map<String, Meeting> completedMeetings;
-    private Map<String, List<String>> tradeToMeetings;
+    private final Map<String, Meeting> ongoingMeetings;
+    private final Map<String, Meeting> completedMeetings;
+    private final Map<String, List<String>> tradeToMeetings;
     private int limitOfEdits;
     private final AtomicInteger counter = new AtomicInteger();
 

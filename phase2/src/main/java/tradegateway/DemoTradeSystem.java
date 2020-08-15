@@ -1,16 +1,11 @@
 package tradegateway;
 
-import adminadapters.AdminMainGUI;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import loginadapters.LoginGUI;
-import tradeadapters.ConfirmTradesController;
-import tradeadapters.InitiateTradeController;
-import tradeadapters.ProposedTradesController;
-import trademisc.RunnableGUI;
+import trademain.RunnableGUI;
 
 import java.io.IOException;
-import java.util.*;
 
 /**
  * DEMO trading system with pre-inserted users, items, etc. solely for internal testing

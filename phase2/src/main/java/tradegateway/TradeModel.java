@@ -24,7 +24,7 @@ public class TradeModel implements Serializable, ObservableDataModel {
     private UndoManager undoManager;
     private String currentUser;
     private boolean changed;
-    private List<GUIObserver> observers;
+    private final List<GUIObserver> observers;
 
     /**
      * Creates a new tradegateway.TradeModel with existing managers.

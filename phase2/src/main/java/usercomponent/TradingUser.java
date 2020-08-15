@@ -8,11 +8,11 @@ class TradingUser extends User {
     private final Set<String> wishlist;
     private boolean frozen;
     private int credit;
-    private String city;
+    private final String city;
     private boolean vacation;
     private boolean privacy;
-    private Set<String> friends;
-    private Set<String> pendingFriends;
+    private final Set<String> friends;
+    private final Set<String> pendingFriends;
 
     /**
      * Instantiates a new TradingUser
@@ -213,6 +213,4 @@ class TradingUser extends User {
     protected void removeFromPendingFriends(String username){
         this.pendingFriends.remove(username);
     }
-
-
 }

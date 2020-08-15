@@ -11,9 +11,11 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import tradegateway.TradeModel;
-import trademisc.RunnableGUI;
 
+import tradegateway.TradeModel;
+import trademain.RunnableGUI;
+
+// TODO: javadoc
 public class AddWishlistGUI implements RunnableGUI {
     private final Stage stage;
     private final UserController controller;
@@ -34,8 +36,8 @@ public class AddWishlistGUI implements RunnableGUI {
 
     @Override
     public void initialScreen(){
-        initializeScreen();
-        showScreen();
+//        initializeScreen();
+//        showScreen();
     }
 
     @Override

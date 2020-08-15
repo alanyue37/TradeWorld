@@ -17,8 +17,8 @@ import javafx.stage.Stage;
 import javafx.scene.Scene;
 import tradegateway.GUIObserver;
 import tradegateway.TradeModel;
-import trademisc.MainGUI;
-import trademisc.RunnableGUI;
+import trademain.MainGUI;
+import trademain.RunnableGUI;
 import undocomponent.NoLongerUndoableException;
 import useradapters.TableViewCreator;
 
@@ -392,15 +392,10 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         table.setPrefWidth(width - 50);   // we could change this
 
         Button addItemsButton = new Button("Accept these items");
-//        HBox hBoxAddItemsButton = new HBox(10);
         Button removeItemsButton = new Button("Reject these items");
-
-//        hBoxAddItemsButton.setAlignment(Pos.BOTTOM_RIGHT);
-//        hBoxAddItemsButton.getChildren().add(addItemsButton);
 
         grid.add(heading, 0, 1);
         grid.add(table, 0, 2, 2, 1);
-//        grid.add(hBoxAddItemsButton, 0, 3);
         grid.add(addItemsButton, 0, 3);
         grid.add(removeItemsButton, 1, 3);
 
@@ -415,11 +410,9 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         addItemsButton.setOnAction(actionEvent -> {
             ObservableList<ObservableList<String>> selectedItems = itemSelection.getSelectedItems();
             int size = selectedItems.size();
-//            System.out.println(selectedItems.size());
             for (ObservableList<String> item : new ArrayList<>(selectedItems)) {
                 controller.askAdminToAcceptItem(item.get(0));
                 table.getItems().remove(item);
-//                System.out.println(item.get(0));
             }
             if (size > 0) {
                 message.setText("Selected items have been added to the system.");
@@ -431,7 +424,6 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         removeItemsButton.setOnAction(actionEvent -> {
             ObservableList<ObservableList<String>> selectedItems = itemSelection.getSelectedItems();
             int size = selectedItems.size();
-//            System.out.println(selectedItems.size());
             for (ObservableList<String> item : new ArrayList<>(selectedItems)) {
                 try {
                     controller.askAdminToDeleteItem(item.get(0));
@@ -439,7 +431,6 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
                     e.printStackTrace();
                 }
                 table.getItems().remove(item);
-//                System.out.println(item.get(0));
             }
             if (size > 0) {
                 message.setText("Selected items have been removed from the system.");
@@ -489,7 +480,6 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         grid.add(lendingThresholdField, 0, 2);
         grid.add(hBoxSetThreshold, 0, 3);
 
-        //Label message = new Label();
         Label message = messages.get(tabNames.get(5));
         message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
         message.setAlignment(Pos.CENTER);
@@ -827,7 +817,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
 
         confirmToUndo.setOnAction(actionEvent -> {
             String selected = list.getSelectionModel().getSelectedItem();
-            if (selected != null) { // Is this the right check? Should we check for null instead?
+            if (selected != null) { // TODO: Is this the right check? Should we check for null instead?
                 try {
                     controller.undoOperation(selected);
                     reviewItems.remove(selected);
@@ -842,8 +832,8 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
        return grid;
     }
 
+    // Clear messages stored for each tab
     private void clearMessages() {
-        // Clear messages stored for each tab
         for (String tabName : tabNames) {
             if (messages.containsKey(tabName)) {
                 messages.get(tabName).setText("");

@@ -17,7 +17,7 @@ class Meeting implements Serializable {
     private boolean IsCompleted; // real life meeting is completed
     private boolean IsConfirmed; // time/place is confirmed by the other user
     private String lastEditUser;
-    private String meetingId;
+    private final String meetingId;
 
     /**
      * Initiates a new meeting

@@ -1,4 +1,4 @@
-package trademisc;
+package trademain;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -22,13 +22,11 @@ public class UserMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
     private final HashMap<Tab, RunnableGUI> tabToGUI;
     private TabPane root;
 
-//    TODO: remove username from constructor call?
     public UserMainGUI(int width, int height, TradeModel tradeModel) {
         super(width, height, tradeModel);
         this.root = new TabPane();
         tabToGUI = new HashMap<>();
     }
-
 
     @Override
     public void initialScreen() {
@@ -109,7 +107,7 @@ public class UserMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
 
     @Override
     public void update() {
-        System.out.println("Trademodel changed");
+        System.out.println("TradeModel changed");
         for (Tab t: tabToGUI.keySet()) {
             t.setContent(tabToGUI.get(t).getRoot());
         }

@@ -1,13 +1,7 @@
 package demoadapters;
 
-import javafx.collections.ObservableList;
-import javafx.scene.control.TableView;
 import tradegateway.TradeModel;
 import useradapters.TableViewCreator;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 public class DemoTableViewCreator extends TableViewCreator {
     public DemoTableViewCreator(TradeModel tm) {
@@ -33,7 +27,6 @@ public class DemoTableViewCreator extends TableViewCreator {
 
     @Override
     protected void viewWishlist() {
-        // return empty list
         newItemsToShow();
         getItemsToShow().add(new String[]{"3", "Spoon", "Ayushi", "Will only trade for a fork"});
     }

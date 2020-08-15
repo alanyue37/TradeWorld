@@ -11,8 +11,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
 import tradegateway.TradeModel;
-import trademisc.RunnableGUI;
+import trademain.RunnableGUI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +29,9 @@ public class AddItemGUI implements RunnableGUI {
     private TextField itemNameField;
     private TextField itemDescriptionField;
     private Text message;
-    TableView<ObservableList<String>> inventoryTable;
+    private TableView<ObservableList<String>> inventoryTable;
 
+    // TODO: javadoc
     public AddItemGUI(Stage stage, int width, int height, TradeModel model) {
         this.stage = stage;
         controller = new UserController(model);
@@ -40,7 +42,7 @@ public class AddItemGUI implements RunnableGUI {
     }
 
     @Override
-    public void initialScreen(){
+    public void initialScreen() {
 
     }
 
@@ -100,7 +102,7 @@ public class AddItemGUI implements RunnableGUI {
 
     }
 
-    protected  void configureButtons(Button createItemButton) {
+    protected void configureButtons(Button createItemButton) {
         createItemButton.setOnAction(actionEvent -> {
             if (invalidInput()) {
                 setMessage("Fields cannot be empty. Please try again.");
@@ -108,7 +110,7 @@ public class AddItemGUI implements RunnableGUI {
                 controller.createItem(tradeModel.getCurrentUser(), itemNameField.getText(), itemDescriptionField.getText());
                 clearInputFields();
                 setMessage("Item added");
-                //table.setItems(creator.create("own inventory").getItems());
+                // table.setItems(creator.create("own inventory").getItems());
             }
         });
     }

@@ -186,6 +186,7 @@ public class LoggedInProfileGUI extends ProfileGUI {
         privacyRow.setSpacing(20);
         return privacyRow;
     }
+
     private HBox getStatusesRow() {
         HBox row = new HBox();
         VBox statusesColumn = new VBox();
@@ -215,7 +216,6 @@ public class LoggedInProfileGUI extends ProfileGUI {
         ObservableList<Integer> selectedItems =  list.getSelectionModel().getSelectedIndices();
 
         requestsColumn.getChildren().addAll(requestsLabel, list);
-
 
         VBox buttonsColumn = new VBox();
         buttonsColumn.setAlignment(Pos.CENTER);
@@ -279,6 +279,4 @@ public class LoggedInProfileGUI extends ProfileGUI {
         friendsRequests.clear();
         friendsRequests.addAll(FXCollections.observableArrayList(requests));
     }
-
-
 }

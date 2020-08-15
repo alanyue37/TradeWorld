@@ -18,8 +18,8 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import tradegateway.TradeModel;
-import trademisc.RunnableGUI;
-import trademisc.UserMainGUI;
+import trademain.RunnableGUI;
+import trademain.UserMainGUI;
 import demoadapters.DemoMainGUI;
 
 import java.lang.reflect.Type;
@@ -126,9 +126,7 @@ public class LoginGUI implements RunnableGUI {
         grid.add(hBoxNewAccount, 0, 5, 1, 1);
         grid.add(hBoxDemo, 0, 8, 2, 1);
 
-        loginButton.setOnAction(actionEvent -> {
-            logInHandler(usernameField.getText(), passwordField.getText());
-        });
+        loginButton.setOnAction(actionEvent -> logInHandler(usernameField.getText(), passwordField.getText()));
 
         usernameField.setOnKeyPressed(event -> {
             if(event.getCode() == KeyCode.ENTER){
@@ -209,7 +207,6 @@ public class LoginGUI implements RunnableGUI {
 
         registerButton.setOnAction(actionEvent -> {
             if (nameField.getText().isEmpty() || usernameField.getText().isEmpty() || passwordField.getText().isEmpty() || cityField.getText().isEmpty()) {
-//                tryAgain();
                 errorMessage.setText("Please try again");
             } else if(controller.newTradingUser(nameField.getText(), usernameField.getText(), passwordField.getText(), cityField.getText())){
                 tradeModel.setCurrentUser(usernameField.getText());
@@ -218,7 +215,6 @@ public class LoginGUI implements RunnableGUI {
                 nextGUI.showScreen();
                 stage.hide();
             } else {
-//                usernameTaken(usernameField.getText());
                 errorMessage.setText("Username " + usernameField.getText() + " is already taken");
             }
         });
@@ -250,42 +246,9 @@ public class LoginGUI implements RunnableGUI {
             stage.hide();
         }
         else {
-//            invalidAccount();
             errorMessage.setText("Incorrect username or password");
         }
     }
-
-//    public void invalidAccount(){
-//        Text message = new Text("Incorrect username or password");
-//        message.setFill(Color.RED);
-//        HBox messageBox = new HBox(message);
-////        messageBox.setAlignment(Pos.CENTER);
-//        System.out.println("invalid account");
-//        if(!grid.getChildren().contains(message)){
-//            System.out.println("add messagebox");
-//            grid.add(messageBox, 0, 4, 2, 1);
-//        }
-//    }
-
-//    public void usernameTaken(String username) {
-//        Text message = new Text("Username " + username + " is already taken");
-//        message.setFill(Color.RED);
-//        HBox messageBox = new HBox(message);
-//        messageBox.setAlignment(Pos.CENTER);
-//        if(!grid.getChildren().contains(message)){
-//            grid.add(message, 0, 6, 2, 1);
-//        }
-//    }
-
-//    public void tryAgain() {
-//        Text message = new Text("Please try again");
-//        message.setFill(Color.RED);
-//        HBox messageBox = new HBox(message);
-//        messageBox.setAlignment(Pos.CENTER);
-//        if (!grid.getChildren().contains(message)) {
-//            grid.add(messageBox, 0, 6, 2, 1);
-//        }
-//    }
 
     private HBox getLogoRow() {
         if (logo == null) {

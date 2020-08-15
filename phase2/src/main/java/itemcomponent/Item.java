@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 import org.json.*;
 
-
 class Item implements Serializable {
     private final String id;
     private final String name;

@@ -98,8 +98,7 @@ public class ProfileController  {
         Gson gson = new Gson();
         Type type = new TypeToken<List<Map<String, String>>>(){}.getType();
         List<Map<String, String>> reviewMaps = gson.fromJson(json, type);
-        String averageRating = reviewMaps.get(0).get("average");
-        return averageRating;
+        return reviewMaps.get(0).get("average");
     }
 
     /**
@@ -200,6 +199,4 @@ public class ProfileController  {
         otherUserIds.sort(String.CASE_INSENSITIVE_ORDER);
         return otherUserIds;
     }
-
 }
-

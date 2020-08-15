@@ -4,7 +4,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
@@ -14,11 +13,9 @@ import javafx.stage.Stage;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import tradegateway.DemoTradeSystem;
 import tradegateway.TradeModel;
-import trademisc.RunnableGUI;
+import trademain.RunnableGUI;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class TradeHistoryGUI implements RunnableGUI {
@@ -36,6 +33,17 @@ public class TradeHistoryGUI implements RunnableGUI {
         this.height = height;
         this.tradeModel = model;
         this.username = username;
+    }
+
+    @Override
+    public void initialScreen() {
+
+    }
+
+    @Override
+    public Parent getRoot() {
+        initializeScreen();
+        return root;
     }
 
     @Override
@@ -110,16 +118,5 @@ public class TradeHistoryGUI implements RunnableGUI {
             result.getItems().add("An error occurred.");
         } catch (IndexOutOfBoundsException ignored) {} // Ignored because if user has fewer than 10 trades in history, we show all of them
         return result;
-    }
-
-    @Override
-    public Parent getRoot() {
-        initializeScreen();
-        return root;
-    }
-
-    @Override
-    public void initialScreen() {
-
     }
 }

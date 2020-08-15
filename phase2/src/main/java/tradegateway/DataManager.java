@@ -18,7 +18,7 @@ class DataManager {
      * @param fileName the name of the file containing the serialized objects
      * @throws IOException if a problem occurs decoding the filepath
      */
-    DataManager(String fileName) throws IOException {
+    public DataManager(String fileName) throws IOException {
         filePath = getFilePath(fileName);
     }
 
@@ -48,7 +48,7 @@ class DataManager {
      * @throws IOException if IOException occurs
      * @throws ClassNotFoundException if ClassNotFoundException occurs
      */
-    TradeModel readFromFile() throws IOException, ClassNotFoundException {
+    protected TradeModel readFromFile() throws IOException, ClassNotFoundException {
         File file = new File(filePath);
         TradeModel tradeModel;
         if (file.createNewFile()) {
@@ -70,14 +70,12 @@ class DataManager {
      *
      * @return the Image read in.
      * @throws IOException if IOException occurs
-     * @throws ClassNotFoundException if ClassNotFoundException occurs
      */
-    public Image readImage(String imageFile) throws IOException {
+    protected Image readImage(String imageFile) throws IOException {
         File file = new File(getFilePath(imageFile));
         if (file.exists()) {
             InputStream fileStream = new FileInputStream(file);
-            Image image = new Image(fileStream);
-            return image;
+            return new Image(fileStream);
         }
         return null;
     }
@@ -88,7 +86,7 @@ class DataManager {
      * @param tm the tradegateway.TradeModel to save.
      * @throws IOException if IOException occurs.
      */
-    void saveToFile(TradeModel tm) throws IOException {
+    protected void saveToFile(TradeModel tm) throws IOException {
         OutputStream fileStream = new FileOutputStream(filePath);
         OutputStream buffer = new BufferedOutputStream(fileStream);
         ObjectOutput output = new ObjectOutputStream(buffer);

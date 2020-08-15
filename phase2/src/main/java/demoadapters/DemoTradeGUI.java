@@ -6,7 +6,7 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import tradeadapters.TradeGUI;
 import tradegateway.TradeModel;
-import trademisc.RunnableGUI;
+import trademain.RunnableGUI;
 
 public class DemoTradeGUI extends TradeGUI implements RunnableGUI {
 
@@ -44,5 +44,4 @@ public class DemoTradeGUI extends TradeGUI implements RunnableGUI {
         tradeIdInput.setPromptText("You would enter trade Id here.");
         commentInput.setPromptText("You would enter comment here");
     }
-
 }

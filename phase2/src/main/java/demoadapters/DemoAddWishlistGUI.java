@@ -4,7 +4,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import tradegateway.TradeModel;
-import trademisc.RunnableGUI;
+import trademain.RunnableGUI;
 import useradapters.AddWishlistGUI;
 
 public class DemoAddWishlistGUI extends AddWishlistGUI implements RunnableGUI {
@@ -20,6 +20,7 @@ public class DemoAddWishlistGUI extends AddWishlistGUI implements RunnableGUI {
         // switch items without making changes at backend
         TableView.TableViewSelectionModel<ObservableList<String>> itemSelection = getItemTable().getSelectionModel();
         TableView.TableViewSelectionModel<ObservableList<String>> wishlistSelection = getWishlistTable().getSelectionModel();
+
         addButton.setOnAction(actionEvent -> {
             ObservableList<ObservableList<String>> selectedItems = itemSelection.getSelectedItems();
             if (selectedItems.size() > 0) {
