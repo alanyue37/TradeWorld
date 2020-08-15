@@ -1,11 +1,9 @@
 package tradegateway;
 
-import adminadapters.AdminMainGUI;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import loginadapters.LogInController;
 import loginadapters.LoginGUI;
-import trademisc.RunnableController;
 
 import java.io.IOException;
 import java.util.Observable;
@@ -28,11 +26,10 @@ public class TradeSystem implements Observer {
     public void run(Stage stage) {
         try {
             dataManager = new DataManager(tradeModelFile);
-           // tradeModel = dataManager.readFromFile();
-            TradeModel tradeModel = new TradeModel();
+            tradeModel = dataManager.readFromFile();
             Image logo = dataManager.readImage(logoFile);
-            AdminMainGUI gui = new AdminMainGUI(275, 300, tradeModel);
-            gui.showScreen();
+            LoginGUI gui = new LoginGUI(stage, 275, 300, tradeModel, logo);
+            gui.initialScreen();
             } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
