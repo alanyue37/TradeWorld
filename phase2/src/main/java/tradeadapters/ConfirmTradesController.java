@@ -1,21 +1,16 @@
 package tradeadapters;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import tradegateway.TradeModel;
-import trademisc.RunnableController;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.reflect.Array;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Manages input from the user to confirm trades happened in real life.
  */
-public class ConfirmTradesController implements RunnableController {
-    private final BufferedReader br;
+public class ConfirmTradesController {
     private final TradeModel tradeModel;
     private final String username;
 
@@ -24,46 +19,8 @@ public class ConfirmTradesController implements RunnableController {
      * @param tradeModel tradeModel
      */
     public ConfirmTradesController(TradeModel tradeModel) {
-        br = new BufferedReader(new InputStreamReader(System.in));
         this.tradeModel = tradeModel;
         this.username = tradeModel.getCurrentUser();
-    }
-
-    /**
-     * Overrides run() method in the trademisc.RunnableController interface.
-     */
-    @Override
-    public void run() {
-        try {
-            confirmTrades();
-        } catch (IOException | JSONException e) {
-            System.out.println("Something bad happened.");
-        }
-    }
-
-    private boolean confirmTrades() throws IOException, JSONException {
-        Map<String, String> trades = getToBeConfirmedTrades(username);
-        for (String tradeId : trades.keySet()) {
-            List<JSONObject> allTrade = new ArrayList<>();
-            allTrade.add(tradeModel.getTradeManager().getTradeInfo(tradeId));
-            allTrade.addAll(tradeModel.getMeetingManager().getMeetingsInfo(tradeId));
-            StringBuilder allTradeInfo = new StringBuilder();
-            for (JSONObject details : allTrade) {
-                allTradeInfo.append(details.toString(4));
-            }
-            String input = br.readLine();
-            switch(input) {
-                case "1":
-                    confirmTradeHappened(tradeId, trades.get(tradeId));
-                    break;
-                case "2":
-                    break;
-                case "exit":
-                    return false;
-                default:
-            }
-        }
-        return true;
     }
 
     protected Map<String, String> getToBeConfirmedTrades(String username){
