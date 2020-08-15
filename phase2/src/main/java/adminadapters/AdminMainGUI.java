@@ -40,6 +40,8 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
     private final TradeModel model;
     private final TabPane root;
     private TabPane subRoot;
+    private List<String> tabNames;
+    private Map<String, Label> messages;
 
     /**
      * A constructor for AdminGUI class.
@@ -55,6 +57,11 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         this.model = model;
         this.root = new TabPane();
         this.subRoot = new TabPane();
+        this.messages = new HashMap<>(); // Store this as field so messages are not cleared on automatic refresh
+        this.tabNames = Arrays.asList("Add Admin", "Freeze Users", "Unfreeze Users", "Review Items", "Set Thresholds",
+                "Lending Threshold", "Weekly Transactions Threshold", "Incomplete Trade Threshold", "Edit Threshold",
+                "Gold Threshold", "Silver Threshold", "Undo Actions");
+        clearMessages();
     }
 
     /**
@@ -65,22 +72,22 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         root.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
         Parent newAdminParent = addNewAdmin();
-        Tab addAdminTab = new Tab("Add Admin", newAdminParent);
+        Tab addAdminTab = new Tab(tabNames.get(0), newAdminParent);
 
         Parent freezeParent = freezeUsers();
-        Tab freezeUsersTab = new Tab("Freeze Users", freezeParent);
+        Tab freezeUsersTab = new Tab(tabNames.get(1), freezeParent);
 
         Parent unfreezeParent = unfreezeUsers();
-        Tab unfreezeUsersTab = new Tab("Unfreeze Users", unfreezeParent);
+        Tab unfreezeUsersTab = new Tab(tabNames.get(2), unfreezeParent);
 
         Parent reviewItemsTabParent = reviewItems();
-        Tab reviewItemsTab = new Tab("Review Items", reviewItemsTabParent);
+        Tab reviewItemsTab = new Tab(tabNames.get(3), reviewItemsTabParent);
 
         Parent thresholdsTabParent = setThresholdMenu();
-        Tab thresholdsTab = new Tab("Set Thresholds", thresholdsTabParent);
+        Tab thresholdsTab = new Tab(tabNames.get(4), thresholdsTabParent);
 
         Parent undoActionsParent = undoActions();
-        Tab undoActionsTab = new Tab("Undo Actions", undoActionsParent);
+        Tab undoActionsTab = new Tab(tabNames.get(11), undoActionsParent);
 
         root.getTabs().addAll(addAdminTab, freezeUsersTab, unfreezeUsersTab, reviewItemsTab, thresholdsTab, undoActionsTab);
 
@@ -89,14 +96,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
                 new ChangeListener<Tab>() {
                     @Override
                     public void changed(ObservableValue<? extends Tab> observableValue, Tab oldTab, Tab newTab) {
-                        /*addAdminTab.setContent(addNewAdmin());
-                        freezeUsersTab.setContent(freezeUsers());
-                        unfreezeUsersTab.setContent(unfreezeUsers());
-                        reviewItemsTab.setContent(reviewItems());
-                        thresholdsTab.setContent(setThresholdMenu());
-                        undoActionsTab.setContent(undoActions());*/
-
-
+                        clearMessages();
                     }
                 }
         );
@@ -140,8 +140,17 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         root.getTabs().get(1).setContent(freezeUsers());
         root.getTabs().get(2).setContent(unfreezeUsers());
         root.getTabs().get(3).setContent(reviewItems());
-        root.getTabs().get(4).setContent(setThresholdMenu());
         root.getTabs().get(5).setContent(undoActions());
+
+        // Update subroot tabs separately so that update doesn't switch back to first subroot tab automatically
+        subRoot.getTabs().get(0).setContent(setLendingThreshold());
+        subRoot.getTabs().get(1).setContent(setLimitOfTransactionsThreshold());
+        subRoot.getTabs().get(2).setContent(setLimitOfIncompleteTrades());
+        subRoot.getTabs().get(3).setContent(setLimitOfEdits());
+        subRoot.getTabs().get(4).setContent(setGoldThreshold());
+        subRoot.getTabs().get(5).setContent(setSilverThreshold());
+
+        System.out.println("Trademodel changed");
     }
 
     /**
@@ -155,22 +164,22 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         subRoot.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
         Parent lendingLimitParent = setLendingThreshold();
-        Tab lendingLimitTab = new Tab("Lending Threshold", lendingLimitParent);
+        Tab lendingLimitTab = new Tab(tabNames.get(5), lendingLimitParent);
 
         Parent weeklyLimitParent = setLimitOfTransactionsThreshold();
-        Tab weeklyLimitTab = new Tab("Weekly Transactions Threshold", weeklyLimitParent);
+        Tab weeklyLimitTab = new Tab(tabNames.get(6), weeklyLimitParent);
 
         Parent incompleteLimitParent = setLimitOfIncompleteTrades();
-        Tab incompleteTradeLimitTab = new Tab("Incomplete Trade Threshold", incompleteLimitParent);
+        Tab incompleteTradeLimitTab = new Tab(tabNames.get(7), incompleteLimitParent);
 
         Parent editLimitParent = setLimitOfEdits();
-        Tab editLimitTab = new Tab("Edit Threshold", editLimitParent);
+        Tab editLimitTab = new Tab(tabNames.get(8), editLimitParent);
 
         Parent goldLimitParent = setGoldThreshold();
-        Tab goldLimitTab = new Tab("Gold Threshold", goldLimitParent);
+        Tab goldLimitTab = new Tab(tabNames.get(9), goldLimitParent);
 
         Parent silverLimitParent = setSilverThreshold();
-        Tab silverLimitTab = new Tab("Silver Threshold", silverLimitParent);
+        Tab silverLimitTab = new Tab(tabNames.get(10), silverLimitParent);
 
         subRoot.getTabs().addAll(lendingLimitTab, weeklyLimitTab, incompleteTradeLimitTab, editLimitTab, goldLimitTab, silverLimitTab);
 
@@ -179,14 +188,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
                 new ChangeListener<Tab>() {
                     @Override
                     public void changed(ObservableValue<? extends Tab> observableValue, Tab oldTab, Tab newTab) {
-                        lendingLimitTab.setContent(setLendingThreshold());
-                        weeklyLimitTab.setContent(setLimitOfTransactionsThreshold());
-                        incompleteTradeLimitTab.setContent(setLimitOfIncompleteTrades());
-                        editLimitTab.setContent(setLimitOfEdits());
-                        goldLimitTab.setContent(setGoldThreshold());
-                        silverLimitTab.setContent(setSilverThreshold());
-
-
+                        clearMessages();
                     }
                 }
         );
@@ -227,7 +229,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         grid.add(passwordField, 0, 6);
         grid.add(hBoxCreateAdmin, 0, 7);
 
-        Label message = new Label();
+        Label message = messages.get(tabNames.get(0));
         message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
         message.setAlignment(Pos.CENTER);
         grid.add(message, 0, 11, 1, 1);
@@ -287,7 +289,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         grid.add(list, 0, 2);
         grid.add(freezeHBox, 0, 3);
 
-        Label message = new Label();
+        Label message = messages.get(tabNames.get(1));
         message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
         message.setAlignment(Pos.CENTER);
         grid.add(message, 0, 11, 1, 1);
@@ -345,7 +347,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         grid.add(list, 0, 2);
         grid.add(unfreezeHBox, 0, 3);
 
-        Label message = new Label();
+        Label message = messages.get(tabNames.get(2));
         message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
         message.setAlignment(Pos.CENTER);
         grid.add(message, 0, 11, 1, 1);
@@ -402,7 +404,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         grid.add(addItemsButton, 0, 3);
         grid.add(removeItemsButton, 1, 3);
 
-        Label message = new Label();
+        Label message = messages.get(tabNames.get(3));
         message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
         message.setAlignment(Pos.CENTER);
         grid.add(message, 0, 11, 1, 1);
@@ -487,7 +489,8 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         grid.add(lendingThresholdField, 0, 2);
         grid.add(hBoxSetThreshold, 0, 3);
 
-        Label message = new Label();
+        //Label message = new Label();
+        Label message = messages.get(tabNames.get(5));
         message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
         message.setAlignment(Pos.CENTER);
         grid.add(message, 0, 11, 1, 1);
@@ -543,7 +546,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         grid.add(limitThresholdField, 0, 2);
         grid.add(hBoxSetThreshold, 0, 3);
 
-        Label message = new Label();
+        Label message = messages.get(tabNames.get(6));
         message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
         message.setAlignment(Pos.CENTER);
         grid.add(message, 0, 11, 1, 1);
@@ -597,7 +600,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         grid.add(limitThresholdField, 0, 2);
         grid.add(hBoxSetThreshold, 0, 3);
 
-        Label message = new Label();
+        Label message = messages.get(tabNames.get(7));
         message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
         message.setAlignment(Pos.CENTER);
         grid.add(message, 0, 11, 1, 1);
@@ -652,7 +655,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         grid.add(limitThresholdField, 0, 2);
         grid.add(hBoxSetThreshold, 0, 3);
 
-        Label message = new Label();
+        Label message = messages.get(tabNames.get(8));
         message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
         message.setAlignment(Pos.CENTER);
         grid.add(message, 0, 11, 1, 1);
@@ -705,7 +708,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         grid.add(limitThresholdField, 0, 2);
         grid.add(hBoxSetThreshold, 0, 3);
 
-        Label message = new Label();
+        Label message = messages.get(tabNames.get(9));
         message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
         message.setAlignment(Pos.CENTER);
         grid.add(message, 0, 11, 1, 1);
@@ -758,7 +761,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         grid.add(limitThresholdField, 0, 2);
         grid.add(hBoxSetThreshold, 0, 3);
 
-        Label message = new Label();
+        Label message = messages.get(tabNames.get(10));
         message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
         message.setAlignment(Pos.CENTER);
         grid.add(message, 0, 11, 1, 1);
@@ -817,7 +820,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         grid.add(list, 0, 2);
         grid.add(hBoxConfirmToUndo, 0, 4);
 
-        Label message = new Label();
+        Label message = messages.get(tabNames.get(11));
         message.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
         message.setAlignment(Pos.CENTER);
         grid.add(message, 0, 11, 1, 1);
@@ -828,14 +831,27 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
                 try {
                     controller.undoOperation(selected);
                     reviewItems.remove(selected);
+                    message.setText("Reversed the selected actions.");
                 } catch (NoLongerUndoableException e) {
-                    e.printStackTrace();
                     message.setText("The selected operation can no longer be reversed");
-                } message.setText("Reversed the selected actions.");
+                }
             } else {
                 message.setText("No undo actions selected.");
             }
         });
        return grid;
     }
+
+    private void clearMessages() {
+        // Clear messages stored for each tab
+        for (String tabName : tabNames) {
+            if (messages.containsKey(tabName)) {
+                messages.get(tabName).setText("");
+            }
+            else {
+                messages.put(tabName, new Label());
+            }
+        }
+    }
+
 }
