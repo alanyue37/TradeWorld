@@ -1,17 +1,10 @@
 package tradeadapters;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import tradegateway.TradeModel;
-import trademisc.RunnableController;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -19,8 +12,7 @@ import java.util.Map;
 /**
  * Manages input from the user to confirm or edit the meeting time(s) of proposed trades.
  */
-public class ProposedTradesController implements RunnableController {
-    private final BufferedReader br;
+public class ProposedTradesController {
     private final TradeModel tradeModel;
     private final String username;
 
@@ -30,55 +22,8 @@ public class ProposedTradesController implements RunnableController {
      * @param tradeModel tradeModel
      */
     public ProposedTradesController(TradeModel tradeModel) {
-        br = new BufferedReader(new InputStreamReader(System.in));
         this.tradeModel = tradeModel;
         this.username = tradeModel.getCurrentUser();
-    }
-
-    /**
-     * Overrides run() method in the trademisc.RunnableController interface.
-     */
-    @Override
-    public void run() {
-        try {
-            browseMeetings();
-        } catch (IOException | JSONException e) {
-            System.out.println("Something bad happened.");
-        }
-    }
-
-    private boolean browseMeetings() throws IOException, JSONException {
-        List<String> trades = tradeModel.getMeetingManager().getToCheckTrades(tradeModel.getTradeManager().getTradesOfUser(username, "ongoing"), "proposed");
-        for (String tradeId : trades) {
-            List<JSONObject> allTrade = new ArrayList<>();
-            allTrade.add(tradeModel.getTradeManager().getTradeInfo(tradeId));
-            allTrade.addAll(tradeModel.getMeetingManager().getMeetingsInfo(tradeId));
-            StringBuilder allTradeInfo = new StringBuilder();
-            for (JSONObject details : allTrade) {
-                allTradeInfo.append(details.toString(4));
-            }
-            String input = br.readLine();
-            switch (input) {
-                case "1": // confirm meeting times
-                    confirmMeetingTime(tradeId);
-                    break;
-                case "2": // edit meeting time
-                    if (tradeModel.getMeetingManager().canChangeMeeting(tradeId, username)) {
-                        List<String> details = getMeetingDetails(tradeId);
-                        if (details.size() > 0) {
-                            editMeetingTime(tradeId, details); }
-                    } else {
-                    }
-                    break;
-                case "3": // decline/cancel trade
-                    declineTrade(tradeId);
-                    break;
-                case "exit":
-                    return false;
-                default:
-            }
-        }
-        return true;
     }
 
     /**
@@ -109,47 +54,19 @@ public class ProposedTradesController implements RunnableController {
         }
     }
 
-    private List<String> getMeetingDetails(String tradeId) throws IOException {
-        if (tradeModel.getMeetingManager().attainedThresholdEdits(tradeModel.getTradeManager().getMeetingOfTrade(tradeId).get(0))) {
-            tradeModel.getTradeManager().cancelTrade(tradeId);
-            tradeModel.getMeetingManager().cancelMeetingsOfTrade(tradeId);
-            return new ArrayList<>();
-        } else {
-            List<String> details = new ArrayList<>();
-            String location = br.readLine();
-            details.add(location);
-
-            String dateString = null;
-            Date date = null;
-            do {
-                try {
-                    dateString = br.readLine();
-                    DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-                    date = format.parse(dateString); // check formatting is valid
-                } catch (ParseException e) {
-                }
-            } while (date == null);
-            details.add(dateString);
-            return details;
-        }
-    }
-
-
     protected void editMeetingTime(String tradeId, List<String> details) {
         try {
             DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
             Date time = format.parse(details.get(1));
             String meetingId = tradeModel.getTradeManager().getMeetingOfTrade(tradeId).get(tradeModel.getTradeManager().getMeetingOfTrade(tradeId).size() - 1);
             tradeModel.getMeetingManager().changeMeeting(meetingId, details.get(0), time, username);
-//            presenter.editedMeeting();
         } catch (ParseException e) {
-//            System.out.println("Invalid date and time!");
+            e.printStackTrace();
         }
     }
 
     protected void declineTrade(String tradeId){
         tradeModel.getTradeManager().cancelTrade(tradeId);
         tradeModel.getMeetingManager().cancelMeetingsOfTrade(tradeId);
-//        presenter.canceledTrade();
     }
 }

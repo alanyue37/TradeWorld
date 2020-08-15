@@ -1,20 +1,16 @@
 package tradeadapters;
 
 import tradegateway.TradeModel;
-import trademisc.RunnableController;
 import undocomponent.UndoAddProposedTrade;
 import undocomponent.UndoableOperation;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class InitiateTradeController implements RunnableController {
+public class InitiateTradeController {
     private final TradeModel tradeModel;
-    private final BufferedReader br;
     private final String username;
 
     /**
@@ -24,20 +20,7 @@ public class InitiateTradeController implements RunnableController {
      */
     public InitiateTradeController(TradeModel tradeModel) {
         this.tradeModel = tradeModel;
-        this.br = new BufferedReader(new InputStreamReader(System.in));
         this.username = tradeModel.getCurrentUser();
-    }
-
-    /**
-     * The main run method to call when this controller is initiated.
-     */
-    @Override
-    public void run() {
-//        try {
-//            initiateTrade();
-//        } catch (IOException e) {
-//            System.out.println("Something went wrong!");
-//        }
     }
 
     protected boolean canTrade() {
@@ -77,24 +60,6 @@ public class InitiateTradeController implements RunnableController {
             else{return userItemsAvailable;}
     }
 
-    private Date parseDateString(String dateString) throws ParseException {
-        DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-        return format.parse(dateString);
-    }
-
-
-    private List<String> getUserAvailableItems(String username) {
-        String userRank = tradeModel.getUserManager().getRankByUsername(username);
-        Set<String> itemsAvailable = tradeModel.getItemManager().getAvailableItems(userRank);
-        List<String> userItemsAvailable = new ArrayList<>();
-        for (String itemId: itemsAvailable) {
-            if (tradeModel.getItemManager().getOwner(itemId).equals(username)) {
-                userItemsAvailable.add(itemId);
-            }
-        }
-        return userItemsAvailable;
-    }
-
     protected Map<String, String> getAvailableItems(){
         Map<String, String> infoToId = new HashMap<>();
         String userRank = tradeModel.getUserManager().getRankByUsername(username);
@@ -108,25 +73,6 @@ public class InitiateTradeController implements RunnableController {
             infoToId.put(tradeModel.getItemManager().getItemInfo(item), item);
         }
         return infoToId;
-    }
-
-    private Set<String> getAvailableItemsPrivateAccount(Set<String> allItems){
-        Set<String> couldTrade = tradeModel.getUserManager().getFriendList(username);
-        couldTrade.removeIf(user -> tradeModel.getUserManager().getOnVacation().contains(user)); // remove users on vacation
-        couldTrade.removeIf(friend -> !tradeModel.getUserManager().getCityByUsername(username).equalsIgnoreCase(tradeModel.getUserManager().getCityByUsername(friend))); // remove different city
-        allItems.removeIf(item -> !couldTrade.contains(tradeModel.getItemManager().getOwner(item)));
-        return allItems;
-    }
-
-    private Set<String> getAvailableItemsPublicAccount(Set<String> allItems){
-        Set<String> couldNotTrade = tradeModel.getUserManager().getPrivateUser();
-        couldNotTrade.removeAll(tradeModel.getUserManager().getFriendList(username));
-        couldNotTrade.addAll(tradeModel.getUserManager().getOnVacation()); //vacation
-        couldNotTrade.add(username);
-        String thisUserCity = tradeModel.getUserManager().getCityByUsername(username);
-        allItems.removeIf(item -> couldNotTrade.contains(tradeModel.getItemManager().getOwner(item)) |
-                !thisUserCity.equalsIgnoreCase(tradeModel.getUserManager().getCityByUsername(tradeModel.getItemManager().getOwner(item))));
-        return allItems;
     }
 
     protected void createTrade(Map<String, String> otherInfo) throws ParseException {
@@ -153,6 +99,42 @@ public class InitiateTradeController implements RunnableController {
         UndoableOperation undoableOperation = new UndoAddProposedTrade(this.tradeModel.getTradeManager(), tradeModel.getMeetingManager(), tradeId);
         this.tradeModel.getUndoManager().add(undoableOperation);
 
+    }
+
+    private Date parseDateString(String dateString) throws ParseException {
+        DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        return format.parse(dateString);
+    }
+
+    private List<String> getUserAvailableItems(String username) {
+        String userRank = tradeModel.getUserManager().getRankByUsername(username);
+        Set<String> itemsAvailable = tradeModel.getItemManager().getAvailableItems(userRank);
+        List<String> userItemsAvailable = new ArrayList<>();
+        for (String itemId: itemsAvailable) {
+            if (tradeModel.getItemManager().getOwner(itemId).equals(username)) {
+                userItemsAvailable.add(itemId);
+            }
+        }
+        return userItemsAvailable;
+    }
+
+    private Set<String> getAvailableItemsPrivateAccount(Set<String> allItems){
+        Set<String> couldTrade = tradeModel.getUserManager().getFriendList(username);
+        couldTrade.removeIf(user -> tradeModel.getUserManager().getOnVacation().contains(user)); // remove users on vacation
+        couldTrade.removeIf(friend -> !tradeModel.getUserManager().getCityByUsername(username).equalsIgnoreCase(tradeModel.getUserManager().getCityByUsername(friend))); // remove different city
+        allItems.removeIf(item -> !couldTrade.contains(tradeModel.getItemManager().getOwner(item)));
+        return allItems;
+    }
+
+    private Set<String> getAvailableItemsPublicAccount(Set<String> allItems){
+        Set<String> couldNotTrade = tradeModel.getUserManager().getPrivateUser();
+        couldNotTrade.removeAll(tradeModel.getUserManager().getFriendList(username));
+        couldNotTrade.addAll(tradeModel.getUserManager().getOnVacation()); //vacation
+        couldNotTrade.add(username);
+        String thisUserCity = tradeModel.getUserManager().getCityByUsername(username);
+        allItems.removeIf(item -> couldNotTrade.contains(tradeModel.getItemManager().getOwner(item)) |
+                !thisUserCity.equalsIgnoreCase(tradeModel.getUserManager().getCityByUsername(tradeModel.getItemManager().getOwner(item))));
+        return allItems;
     }
 
 }

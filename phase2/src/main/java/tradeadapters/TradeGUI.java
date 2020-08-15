@@ -19,11 +19,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.json.JSONException;
 import org.json.JSONObject;
+import profileadapters.ProfileController;
 import tradegateway.GUIObserver;
 import tradegateway.TradeModel;
 import trademisc.RunnableGUI;
-import useradapters.ProfileController;
-import viewingadapters.ViewingTradesController;
 
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -466,8 +465,8 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
 
         //confirm button
         Button confirmBtnReturnItem = new Button("Confirm");
-        Button exitBtn = new Button("Exit");
-        exitBtn.setOnAction(actionEvent -> stage2.close());
+        Button backBtn = new Button("Go back");
+        backBtn.setOnAction(actionEvent -> stage2.close());
 
         Label messageLabel = new Label();
 
@@ -498,7 +497,7 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
                 Label createdTrade = new Label("Trade initiated successfully! ");
                 grid.getChildren().removeAll(tradeDate, timeInput, pickDate, userInputHour, tradeLocation, userInputLocation, messageLabel, confirmBtnReturnItem, meetingTitle);
                 grid.add(createdTrade, 0, 1, 2, 1);
-                grid.add(exitBtn, 0, 2, 2, 1);
+                grid.add(backBtn, 0, 2, 2, 1);
             }
         });
 

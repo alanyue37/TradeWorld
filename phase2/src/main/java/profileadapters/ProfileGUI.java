@@ -1,33 +1,26 @@
-package useradapters;
+package profileadapters;
 
-import com.google.gson.reflect.TypeToken;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.beans.value.ObservableStringValue;
+import com.google.gson.Gson;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import tradegateway.TradeModel;
-import com.google.gson.Gson;
 import trademisc.RunnableGUI;
-import usercomponent.ReviewManager;
-import usercomponent.UserManager;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Observable;
 
 public class ProfileGUI implements RunnableGUI {
     private final Stage stage;
@@ -88,15 +81,11 @@ public class ProfileGUI implements RunnableGUI {
 
         // Rows
         HBox usernamesRow;
-        //HBox accountProfileContainer;
 
         // Set username selector if not own profile
         usernamesRow = getUsernamesRow();
 
         accountProfileContainer = getContainerForAccountProfile();
-
-
-        //HBox rankHBox = getUserRankBox();
 
         root.getChildren().addAll(usernamesRow, accountProfileContainer);
     }
@@ -208,10 +197,9 @@ public class ProfileGUI implements RunnableGUI {
     protected ListView<String> getFriendsListView() {
         ListView<String> list = new ListView<>();
         list.setPlaceholder(new Label("No friends"));
+        list.prefWidthProperty().bind(stage.widthProperty());
         updateFriendsObservableList();
         list.setItems(friends);
-        list.setPrefWidth(300);
-        list.setPrefHeight(200);
         return list;
     }
 
@@ -219,10 +207,9 @@ public class ProfileGUI implements RunnableGUI {
         updateReviewsObservableList();
         ListView<String> list = new ListView<>();
         list.setPlaceholder(new Label("No reviews"));
+        list.prefWidthProperty().bind(stage.widthProperty());
         List<String> l = new ArrayList<>();
         list.setItems(reviews);
-        list.setPrefWidth(300);
-        list.setPrefHeight(200);
         return list;
     }
 

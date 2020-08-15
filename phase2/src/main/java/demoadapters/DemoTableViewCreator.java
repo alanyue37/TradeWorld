@@ -1,8 +1,9 @@
-package useradapters;
+package demoadapters;
 
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableView;
 import tradegateway.TradeModel;
+import useradapters.TableViewCreator;
 
 import java.util.ArrayList;
 import java.util.HashSet;

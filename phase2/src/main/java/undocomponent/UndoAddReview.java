@@ -1,6 +1,6 @@
 package undocomponent;
 
-import usercomponent.ReviewManager;
+import profilecomponent.ReviewManager;
 
 import java.io.Serializable;
 

@@ -1,4 +1,4 @@
-package useradapters;
+package profileadapters;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -50,6 +50,9 @@ public class LoggedInProfileGUI extends ProfileGUI {
         // Additional rows
         HBox statusesRow;
         HBox friendsRow;
+
+        row.setSpacing(20);
+        container.setSpacing(20);
 
         // Set statusesRow
         // vacation + public/private
@@ -206,8 +209,7 @@ public class LoggedInProfileGUI extends ProfileGUI {
         updateFriendsRequestsObservableList();
 
         list.setItems(friendsRequests);
-        list.setPrefWidth(300);
-        list.setPrefHeight(200);
+        list.prefWidthProperty().bind(getStage().widthProperty().divide(2.2));
 
         list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         ObservableList<Integer> selectedItems =  list.getSelectionModel().getSelectedIndices();

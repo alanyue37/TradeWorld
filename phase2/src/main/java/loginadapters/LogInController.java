@@ -21,7 +21,14 @@ public class LogInController {
         this.tradeModel = tradeModel;
     }
 
-    // Logging in - returns JSON
+    /**
+     * Checks if username and password is correct and returns account info Map of String pairs in JSON.
+     * Check key "authenticated" is true or false to see if username and password combination exists.
+     * Check key "userType" to see if account is "trading" or "admin"
+     * @param user username to log in with
+     * @param pass password to log in with
+     * @return JSON string of login success and account info. Get key "authenticted
+     */
     public String logIn(String user, String pass) {
         Gson gson = new Gson();
         Map<String, String> userInfo = new HashMap<>();
@@ -41,7 +48,14 @@ public class LogInController {
         return gson.toJson(userInfo);
     }
 
-    // Create new account
+    /**
+     * Create a new username with the given info
+     * @param name name of new user
+     * @param user username of new user
+     * @param pass password of new user
+     * @param city city of new user
+     * @return true if new account was created; false if username already exists
+     */
     boolean newTradingUser(String name, String user, String pass, String city) {
         return tradeModel.getUserManager().createTradingUser(name, user, pass, city);
     }

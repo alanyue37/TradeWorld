@@ -1,13 +1,14 @@
-package usercomponent;
+package profilecomponent;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.Gson;
 import tradegateway.ObservableDataModel;
 import undocomponent.NoLongerUndoableException;
-import com.google.gson.Gson;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ReviewManager implements Serializable {
