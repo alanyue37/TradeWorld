@@ -23,10 +23,6 @@ public class ConfirmTradesController {
         this.username = tradeModel.getCurrentUser();
     }
 
-    /**
-     * Gets a map that maps the trades of a user that need to be confirmed to the trade type (permanent or temporary)
-     * @param username the username of the user
-     */
     protected Map<String, String> getToBeConfirmedTrades(String username){
         List<String> userOngoing = tradeModel.getTradeManager().getTradesOfUser(username, "ongoing");
         List<String> userToBeConfirmed = tradeModel.getMeetingManager().getToCheckTrades(userOngoing, "needConfirm");
@@ -35,8 +31,7 @@ public class ConfirmTradesController {
 
     /**
      * Allows the user to confirm that the real life meeting happened.
-     * @param tradeId ID of the trade
-     * @param type the type of trade (temporary or permanent)
+     * @param tradeId id of the trade
      */
     protected void confirmTradeHappened(String tradeId, String type) {
         if (tradeModel.getMeetingManager().canChangeMeeting(tradeId, username)) {
@@ -64,7 +59,7 @@ public class ConfirmTradesController {
 
     /**
      * Creates the mandatory return meeting, 30 days after the first meeting time at the same location
-     * @param tradeId ID of the trade
+     * @param tradeId id of the trade
      */
     private void createMandatoryReturnMeeting(String tradeId){
         Calendar cal = Calendar.getInstance();
@@ -78,8 +73,7 @@ public class ConfirmTradesController {
 
     /**
      * Makes the necessary changes of the item and user status once a trade is completed.
-     * @param tradeId ID of the trade
-     * @param type the type of trade (temporary or permanent)
+     * @param tradeId id of the trade
      */
     private void completedTradeChanges(String tradeId, String type){
         Map<String, List<String>> itemToUsers = tradeModel.getTradeManager().itemToUsers(tradeId);
