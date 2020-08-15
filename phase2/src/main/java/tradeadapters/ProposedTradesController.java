@@ -18,7 +18,6 @@ public class ProposedTradesController {
 
     /**
      * Initiates the ProposedTradesController.
-     *
      * @param tradeModel tradeModel
      */
     public ProposedTradesController(TradeModel tradeModel) {
@@ -28,8 +27,7 @@ public class ProposedTradesController {
 
     /**
      * Allows user to confirm with the suggested meeting details (time, place)
-     *
-     * @param tradeId id of the trade
+     * @param tradeId ID of the trade
      */
     protected void confirmMeetingTime(String tradeId) {
         if (tradeModel.getMeetingManager().canChangeMeeting(tradeId, username)) {
@@ -43,8 +41,7 @@ public class ProposedTradesController {
     /**
      * Makes the changes that are necessary for availability of the items of the users when the trade
      * meeting time/place is confirmed.
-     *
-     * @param tradeId id of the trade
+     * @param tradeId ID of the trade
      */
     private void changeItemUnavailable(String tradeId) {
         Map<String, List<String>> itemToUsers = tradeModel.getTradeManager().itemToUsers(tradeId);
@@ -54,6 +51,11 @@ public class ProposedTradesController {
         }
     }
 
+    /**
+     * Edits the information of the proposed meeting in a trade
+     * @param tradeId ID of the trade
+     * @param details a list that contains the new location and time
+     */
     protected void editMeetingTime(String tradeId, List<String> details) {
         try {
             DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -65,6 +67,10 @@ public class ProposedTradesController {
         }
     }
 
+    /**
+     * Declines (cancels) a trade
+     * @param tradeId ID of the trade
+     */
     protected void declineTrade(String tradeId){
         tradeModel.getTradeManager().cancelTrade(tradeId);
         tradeModel.getMeetingManager().cancelMeetingsOfTrade(tradeId);
