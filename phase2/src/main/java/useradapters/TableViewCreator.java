@@ -114,7 +114,7 @@ public class TableViewCreator {
     private Set<String> getAvailableItemsPrivateAccount(Set<String> allItems){
         Set<String> couldTrade = tradeModel.getUserManager().getFriendList(tradeModel.getCurrentUser());
         couldTrade.removeIf(user -> tradeModel.getUserManager().getOnVacation().contains(user)); // remove users on vacation
-        couldTrade.removeIf(friend -> !tradeModel.getUserManager().getCityByUsername(tradeModel.getCurrentUser()).equals(tradeModel.getUserManager().getCityByUsername(friend))); // remove different city
+        couldTrade.removeIf(friend -> !tradeModel.getUserManager().getCityByUsername(tradeModel.getCurrentUser()).equalsIgnoreCase(tradeModel.getUserManager().getCityByUsername(friend))); // remove different city
         allItems.removeIf(item -> !couldTrade.contains(tradeModel.getItemManager().getOwner(item)));
         return allItems;
     }
@@ -126,7 +126,7 @@ public class TableViewCreator {
         couldNotTrade.add(tradeModel.getCurrentUser()); // add the user itself
         String thisUserCity = tradeModel.getUserManager().getCityByUsername(tradeModel.getCurrentUser());
         allItems.removeIf(item -> couldNotTrade.contains(tradeModel.getItemManager().getOwner(item)) |
-                !thisUserCity.equals(tradeModel.getUserManager().getCityByUsername(tradeModel.getItemManager().getOwner(item))));
+                !thisUserCity.equalsIgnoreCase(tradeModel.getUserManager().getCityByUsername(tradeModel.getItemManager().getOwner(item))));
         return allItems;
     }
 
