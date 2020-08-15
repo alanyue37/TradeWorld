@@ -34,7 +34,6 @@ public class ProposedTradesController {
             String meetingId = tradeModel.getTradeManager().getMeetingOfTrade(tradeId).get(tradeModel.getTradeManager().getMeetingOfTrade(tradeId).size() - 1);
             tradeModel.getMeetingManager().confirmAgreement(meetingId);
             changeItemUnavailable(tradeId);
-        } else {
         }
     }
 
@@ -76,3 +75,4 @@ public class ProposedTradesController {
         tradeModel.getMeetingManager().cancelMeetingsOfTrade(tradeId);
     }
 }
+
