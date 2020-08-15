@@ -27,6 +27,7 @@ public class DemoMainGUI extends MainGUI implements RunnableGUI {
         initializeScreen();
         Scene scene = new Scene(root, getWidth(), getHeight());
         getStage().setScene(scene);
+        getStage().setTitle("TradeWorld - Demo");
         getStage().show();
     }
 
