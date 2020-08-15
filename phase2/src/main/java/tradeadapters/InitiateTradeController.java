@@ -23,6 +23,10 @@ public class InitiateTradeController {
         this.username = tradeModel.getCurrentUser();
     }
 
+    /**
+     * Returns whether a user can trade or not.
+     * @return true iif a user can initiate a trade (i.e not on vacation or frozen). Otherwise, returns false.
+     */
     protected boolean canTrade() {
         boolean success = true;
         if (tradeModel.getUserManager().isFrozen(username)) {
@@ -34,17 +38,33 @@ public class InitiateTradeController {
         return success;
     }
 
+    /**
+     * Returns whether a user is a new account.
+     * @param username username of TradingUser
+     * @return true iif the TradingUser account is a new account. Otherwise, returns false.
+     */
     protected boolean isNewAccount(String username){
         int numOngoing = tradeModel.getTradeManager().getTradesOfUser(username, "ongoing").size();
         int numCompleted = tradeModel.getTradeManager().getTradesOfUser(username, "completed").size();
         return numOngoing == 0 && numCompleted == 0;
     }
 
+    /**
+     * Returns whether a user cannot initiate a one way trade.
+     * @param username username of TradingUser
+     * @return true iif user cannot initiate a one way trade.
+     */
     protected boolean cannotOneWay(String username){
         int credit = tradeModel.getUserManager().getCreditByUsername(username);
         return credit < 0;
     }
 
+    /**
+     * Returns a list of item ids to offer to the other TradingUser in a two way trade
+     * @param otherUsername the other TradingUser's username
+     * @return list of item Ids to offer. If there are overlapping between this TradingUser's inventory and the other
+     * user's wishlist, returns the list of overlapping items. Otherwise, returns this user's inventory.
+     */
     protected List<String> getItemsToOffer(String otherUsername) {
         // two way requires user to propose item from other user's wishlist
         Set<String> otherWishlist = tradeModel.getUserManager().getWishlistByUsername(otherUsername);
@@ -57,9 +77,14 @@ public class InitiateTradeController {
         }
         if (overlappingItems.size() > 0) {
             return overlappingItems; }
-            else{return userItemsAvailable;}
+        else{ return userItemsAvailable;}
     }
 
+    /**
+     * Returns a map of items info to the id of the item that are available for this TradingUser to trade (i.e. filters
+     * vacation, private/public, rank)
+     * @return map of items' info to id of the item
+     */
     protected Map<String, String> getAvailableItems(){
         Map<String, String> infoToId = new HashMap<>();
         String userRank = tradeModel.getUserManager().getRankByUsername(username);
@@ -75,6 +100,11 @@ public class InitiateTradeController {
         return infoToId;
     }
 
+    /**
+     * Creates a trade.
+     * @param otherInfo map of information for the trade (type of trade, items involved, date, location)
+     * @throws ParseException exception for parsing date
+     */
     protected void createTrade(Map<String, String> otherInfo) throws ParseException {
         String way = otherInfo.get("way");
         String type = otherInfo.get("term");
@@ -100,11 +130,22 @@ public class InitiateTradeController {
         this.tradeModel.getUndoManager().add(undoableOperation);
     }
 
+    /**
+     * Parse the string date to date format.
+     * @param dateString date in a string format
+     * @return Date
+     * @throws ParseException exception for parsing date
+     */
     private Date parseDateString(String dateString) throws ParseException {
         DateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         return format.parse(dateString);
     }
 
+    /**
+     * Get the available items of a user's inventory
+     * @param username username of user
+     * @return available items of a user's inventory (not filtered by other user's wishlist)
+     */
     private List<String> getUserAvailableItems(String username) {
         String userRank = tradeModel.getUserManager().getRankByUsername(username);
         Set<String> itemsAvailable = tradeModel.getItemManager().getAvailableItems(userRank);
@@ -117,6 +158,11 @@ public class InitiateTradeController {
         return userItemsAvailable;
     }
 
+    /**
+     * Returns a set of items that are available for this TradingUser to trade/borrow if they are private status.
+     * @param allItems all items in the system available for trading
+     * @return set of items available for this TradingUser to trade (filtered by city, vacation, privacy)
+     */
     private Set<String> getAvailableItemsPrivateAccount(Set<String> allItems){
         Set<String> couldTrade = tradeModel.getUserManager().getFriendList(username);
         couldTrade.removeIf(user -> tradeModel.getUserManager().getOnVacation().contains(user)); // remove users on vacation
@@ -125,6 +171,11 @@ public class InitiateTradeController {
         return allItems;
     }
 
+    /**
+     * Returns a set of items that are available for this TradingUser to trade/borrow if they are public status.
+     * @param allItems all items in the system available for trading
+     * @return set of items available for this TradingUser to trade (filtered by city, vacation, privacy)
+     */
     private Set<String> getAvailableItemsPublicAccount(Set<String> allItems){
         Set<String> couldNotTrade = tradeModel.getUserManager().getPrivateUser();
         couldNotTrade.removeAll(tradeModel.getUserManager().getFriendList(username));
