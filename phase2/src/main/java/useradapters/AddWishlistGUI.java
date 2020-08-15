@@ -15,7 +15,9 @@ import javafx.stage.Stage;
 import tradegateway.TradeModel;
 import trademain.RunnableGUI;
 
-// TODO: javadoc
+/**
+ * The GUI for a trading user's wishlist tab.
+ */
 public class AddWishlistGUI implements RunnableGUI {
     private final Stage stage;
     private final UserController controller;
@@ -26,6 +28,14 @@ public class AddWishlistGUI implements RunnableGUI {
     private TableView<ObservableList<String>> itemTable;
     private TableView<ObservableList<String>> wishlistTable;
 
+    /**
+     * Creates a new AddItemGUI with a specified width and height and the current TradeModel.
+     *
+     * @param stage The stage to show the resulting scene on
+     * @param width The width of the stage
+     * @param height The height of the stage
+     * @param model The current TradeModel
+     */
     public AddWishlistGUI(Stage stage, int width, int height, TradeModel model) {
         this.stage = stage;
         controller = new UserController(model);
@@ -36,22 +46,32 @@ public class AddWishlistGUI implements RunnableGUI {
 
     @Override
     public void initialScreen(){
-//        initializeScreen();
-//        showScreen();
+
     }
 
+    /**
+     * Gets the Parent to be shown.
+     *
+     * @return the resulting Parent
+     */
     @Override
     public Parent getRoot() {
         initializeScreen();
         return grid;
     }
 
+    /**
+     * Sets the scene of the stage to this GUI.
+     */
     @Override
     public void showScreen() {
         Scene scene = new Scene(grid, width, height);
         stage.setScene(scene);
     }
 
+    /**
+     * Initializes a new GridPane with the objects to be displayed in the GUI.
+     */
     private void initializeScreen() {
         grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -89,6 +109,12 @@ public class AddWishlistGUI implements RunnableGUI {
         configureButtons(addButton, removeButton);
     }
 
+    /**
+     * Sets the action listener for the buttons depending on items selected.
+     *
+     * @param addButton the button for adding an item to the wishlist
+     * @param removeButton the button for removing an item from the wishlist
+     */
     protected void configureButtons(Button addButton, Button removeButton) {
         TableView.TableViewSelectionModel<ObservableList<String>> itemSelection = itemTable.getSelectionModel();
         TableView.TableViewSelectionModel<ObservableList<String>> wishlistSelection = wishlistTable.getSelectionModel();
@@ -108,15 +134,30 @@ public class AddWishlistGUI implements RunnableGUI {
         });
     }
 
+    /**
+     * Sets the TableViewCreator that will create the TableView.
+     *
+     * @param creator the TableViewCreator to use
+     */
+    protected void setTableViewCreator (TableViewCreator creator) {
+        this.creator = creator;
+    }
+
+    /**
+     * Gets the TableView with the current user's wishlist that should be displayed in the GUI.
+     *
+     * @return the TableView that should be displayed
+     */
     protected TableView<ObservableList<String>> getWishlistTable() {
         return wishlistTable;
     }
 
+    /**
+     * Gets the TableView with the all items the current user can trade that should be displayed in the GUI.
+     *
+     * @return the TableView that should be displayed
+     */
     protected TableView<ObservableList<String>> getItemTable() {
         return itemTable;
-    }
-
-    protected void setTableViewCreator (TableViewCreator creator) {
-        this.creator = creator;
     }
 }
