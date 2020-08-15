@@ -235,7 +235,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         grid.add(message, 0, 11, 1, 1);
 
         createButton.setOnAction(actionEvent -> {
-            if (nameField.getText().isEmpty() || usernameField.getText().isEmpty() || passwordField.getText().isEmpty()) {
+            if (nameField.getText().trim().isEmpty() || usernameField.getText().trim().isEmpty() || passwordField.getText().trim().isEmpty()) {
                 message.setText("Please try again!");
             } else if (controller.askAdminToAddNewAdmin(nameField.getText(), usernameField.getText(), passwordField.getText())) {
                 message.setText("New admin account created: " + usernameField.getText());
