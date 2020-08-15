@@ -19,11 +19,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.json.JSONException;
 import org.json.JSONObject;
+import profileadapters.ProfileController;
 import tradegateway.GUIObserver;
 import tradegateway.TradeModel;
 import trademisc.RunnableGUI;
-import useradapters.ProfileController;
-import viewingadapters.ViewingTradesController;
 
 import java.text.ParseException;
 import java.time.LocalDate;

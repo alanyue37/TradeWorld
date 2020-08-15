@@ -1,10 +1,11 @@
-package useradapters;
+package demoadapters;
 
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import tradegateway.TradeModel;
 import trademisc.RunnableGUI;
+import useradapters.AddWishlistGUI;
 
 public class DemoAddWishlistGUI extends AddWishlistGUI implements RunnableGUI {
 

@@ -4,17 +4,18 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.stage.Stage;
+import profileadapters.LoggedInProfileGUI;
+import profileadapters.ProfileGUI;
 import tradeadapters.TradeGUI;
 import tradegateway.GUIObserver;
 import tradegateway.TradeModel;
-import useradapters.*;
+import useradapters.AddItemGUI;
+import useradapters.AddWishlistGUI;
+import useradapters.TradeHistoryGUI;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class UserMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
 

@@ -1,4 +1,4 @@
-package usercomponent;
+package profilecomponent;
 
 import com.google.gson.Gson;
 import tradegateway.ObservableDataModel;
