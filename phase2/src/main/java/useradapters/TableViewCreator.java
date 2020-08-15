@@ -11,7 +11,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-// TODO: javadoc
+/**
+ * Manages the creation of TableView tables used in various GUIs.
+ */
 public class TableViewCreator {
 
     private final TradeModel tradeModel;
@@ -19,11 +21,22 @@ public class TableViewCreator {
     private double[] widths;
     private ArrayList<String[]> itemsToShow;
 
+    /**
+     * Instantiates a new TableViewCreator.
+     *
+     * @param tm The current TradeModel
+     */
     public TableViewCreator (TradeModel tm) {
         tradeModel = tm;
         itemsToShow = new ArrayList<>();
     }
 
+    /**
+     * Returns a new TableView that is filled with Strings.
+     *
+     * @param type The type of table to create: one of "own inventory", "all items", "wishlist", or "pending"
+     * @return the created table
+     */
     public TableView<ObservableList<String>> create(String type) {
 
         switch(type) {
@@ -70,7 +83,7 @@ public class TableViewCreator {
     }
 
     /**
-     * Sets itemsToShow to the user's own inventory.
+     * Sets itemsToShow to the current user's own inventory.
      */
     protected void viewInventory() {
         newItemsToShow();
@@ -91,7 +104,7 @@ public class TableViewCreator {
     }
 
     /**
-     * Sets itemsToShow to the system inventory of users in same city (except items in current user's inventory).
+     * Sets itemsToShow to the items that the current user can trade with.
      */
     protected void viewAllItems() {
         newItemsToShow();
@@ -100,7 +113,7 @@ public class TableViewCreator {
 
         if (tradeModel.getUserManager().getPrivateUser().contains(tradeModel.getCurrentUser())) { // if private user
             itemsAvailable.addAll(getAvailableItemsPrivateAccount(tradeModel.getItemManager().getAvailableItems(userRank)));
-        } else {  // public user
+        } else { // public user
             itemsAvailable.addAll(getAvailableItemsPublicAccount(tradeModel.getItemManager().getAvailableItems(userRank)));
         }
 
@@ -132,7 +145,7 @@ public class TableViewCreator {
     }
 
     /**
-     * Sets itemsToShow to the user's wishlist.
+     * Sets itemsToShow to the current user's wishlist.
      */
     protected void viewWishlist() {
         newItemsToShow();
@@ -159,12 +172,19 @@ public class TableViewCreator {
         }
     }
 
+    /**
+     * Sets itemsToShow to the pending items.
+     *
+     * @return the items to show in the table
+     */
     protected ArrayList<String[]> getItemsToShow() {
         return itemsToShow;
     }
 
+    /**
+     * Clears all the items in itemsToShow.
+     */
     protected void newItemsToShow() {
         itemsToShow = new ArrayList<>();
     }
-
 }
