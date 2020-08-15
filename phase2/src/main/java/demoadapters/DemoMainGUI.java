@@ -1,4 +1,4 @@
-package useradapters;
+package demoadapters;
 
 import javafx.scene.Parent;
 import javafx.scene.Scene;
