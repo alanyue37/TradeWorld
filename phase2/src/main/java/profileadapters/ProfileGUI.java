@@ -77,8 +77,6 @@ public class ProfileGUI implements RunnableGUI {
         root.setSpacing(20);
         root.setPadding(new Insets(25, 25, 25, 25));
 
-        stage.setTitle("Profile");
-
         // Rows
         HBox usernamesRow;
 
