@@ -3,6 +3,7 @@ package useradapters;
 
 import javafx.scene.control.*;
 
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import tradeadapters.TradeGUI;
 import tradegateway.TradeModel;
@@ -38,11 +39,17 @@ public class DemoTradeGUI extends TradeGUI implements RunnableGUI {
     }
 
     @Override
-    protected void configureViewButtons(Button addReview, Label messageBox, TextField ratingInput, TextField tradeIdInput, TextField commentInput){
+    protected void configureViewButtons(Button addReview, Label messageBox, TextField ratingInput, TextField tradeIdInput, TextField commentInput, HBox ongoing, HBox completed){
         addReview.setOnAction(actionEvent -> messageBox.setText("The review would be added."));
         ratingInput.setPromptText("You would enter rating here.");
         tradeIdInput.setPromptText("You would enter trade Id here.");
         commentInput.setPromptText("You would enter comment here");
+        ListView listOngoing = new ListView<>();
+        listOngoing.setPlaceholder(new Label("Your ongoing trades would be here."));
+        ListView listCompleted = new ListView<>();
+        listCompleted.setPlaceholder(new Label("Your completed trades would be here."));
+        ongoing.getChildren().add(listOngoing);
+        completed.getChildren().add(listCompleted);
     }
 
 }

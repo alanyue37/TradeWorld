@@ -23,7 +23,6 @@ import tradegateway.GUIObserver;
 import tradegateway.TradeModel;
 import trademisc.RunnableGUI;
 import useradapters.ProfileController;
-import viewingadapters.ViewingTradesController;
 
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -50,13 +49,19 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
     private ObservableList<String> userOngoingTradeList;
     private ObservableList<String> userCompletedTradeList;
 
+    /**
+     * Initiates the TradeGUI.
+     * @param stage stage of TradeGUI
+     * @param width width of the window
+     * @param height height of the window
+     * @param tradeModel tradeModel
+     */
     public TradeGUI(Stage stage, int width, int height, TradeModel tradeModel) {
         this.stage = stage;
         this.width = width;
         this.height = height;
         this.tradeModel = tradeModel;
         this.username = tradeModel.getCurrentUser();
-//        this.username = username;
         this.initiateTradeController = new InitiateTradeController(tradeModel);
         this.confirmTradesController = new ConfirmTradesController(tradeModel);
         this.proposedTradesController = new ProposedTradesController(tradeModel);
@@ -71,17 +76,25 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         tradeModel.addObserver(this);
     }
 
+    //TODO: deleted?
     @Override
     public void initialScreen() {
 
     }
 
+    /**
+     * Returns the TabPane consisting of the Admin menu options.
+     * @return Returns the TabPane consisting of Admin menu options.
+     */
     @Override
     public Parent getRoot() {
         initializeScreen();
         return root;
     }
 
+    /**
+     * Sets up the screen.
+     */
     @Override
     public void showScreen() {
         initializeScreen();
@@ -90,6 +103,9 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         stage.show();
     }
 
+    /**
+     * Trade menu in the TabPane which provides options.
+     */
     private void initializeScreen() {
         updateProposedObservableLists();
         root = new TabPane();
@@ -120,6 +136,9 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         );
     }
 
+    /**
+     * Refreshes/ updates the all the Admin screens.
+     */
     public void update() {
         initializeScreen();
     }
@@ -139,7 +158,6 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         mainLayout.setSpacing(10);
         mainLayout.setPadding(new Insets(25, 25, 25, 25));
         mainLayout.getChildren().addAll(title, subtitle);
-//        mainLayout.setAlignment(Pos.CENTER);
 
         //Radio buttons for available items
         ScrollPane scrollPane = new ScrollPane();
@@ -154,17 +172,7 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
 
         VBox typeButtons = new VBox();
         typeButtons.getChildren().addAll(selectType, oneWayPermanent,oneWayTemporary, twoWayPermanent, twoWayTemporary);
-//        typeButtons.setAlignment(Pos.CENTER);
         typeButtons.setSpacing(10);
-
-//        if (!initiateTradeController.canTrade()){
-//            oneWayPermanent.setDisable(true);
-//            oneWayTemporary.setDisable(true);
-//            twoWayPermanent.setDisable(true);
-//            twoWayTemporary.setDisable(true);
-//            Label cannotTrade = new Label("You cannot initiate a trade. Check your account status");
-//            mainLayout.getChildren().add(cannotTrade);
-//        }
 
         Label messageBox = new Label();
         messageBox.setFont(Font.font("Tahoma", FontWeight.BOLD, 10));
@@ -190,7 +198,6 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         ListView<String> proposedTradesListView = new ListView<>();
         proposedTradesListView.setPlaceholder(new Label("No proposed trades"));
         proposedTradesListView.prefWidthProperty().bind(stage.widthProperty());
-//        proposedTradesListView.setItems(proposedTradesInfoObservableList);
         Button confirmBtn = new Button("Confirm");
         Button editBtn = new Button("Edit");
         Button declineBtn = new Button("Decline");
@@ -204,7 +211,7 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         Label messageBox = new Label();
         messageBox.setFont(Font.font("Tahoma", FontWeight.NORMAL, 13));
 
-        grid.add(messageBox, 0, 4, 2, 1);
+        grid.add(messageBox, 0, 5, 2, 1);
 
         configureProposedTradesButtons(confirmBtn, editBtn, declineBtn, messageBox, proposedTradesListView);
         return grid;
@@ -225,7 +232,6 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         ListView<String> confirmTradesListView = new ListView<>();
         confirmTradesListView.prefWidthProperty().bind(stage.widthProperty());
         confirmTradesListView.setPlaceholder(new Label("No trades to confirm"));
-//        confirmTradesListView.setItems(confirmTradesInfoObservableList);
         Button confirmBtn = new Button("Confirm");
 
         grid.add(title, 0, 0, 2, 1);
@@ -235,7 +241,7 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         Label messageBox = new Label();
         messageBox.setFont(Font.font("Tahoma", FontWeight.NORMAL, 13));
 
-        grid.add(messageBox, 0, 2, 2, 1);
+        grid.add(messageBox, 0, 3, 2, 1);
         configureConfirmTradesButtons(confirmBtn, messageBox, confirmTradesListView);
 
         return grid;
@@ -275,14 +281,9 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         hboxCompleted.setPadding(new Insets(25, 25, 25, 25));
         hboxCompleted.setSpacing(10);
 
-        updateCompletedTradesObservableList();
-        updateOngoingTradesObservableList();
-        hboxOngoing.getChildren().addAll(getOngoingTradesListView());
-        hboxCompleted.getChildren().addAll(getCompletedTradesListView());
-
         VBox vBox = new VBox();
         vBox.getChildren().addAll(title, hBox, messageBox, ongoingTrades, hboxOngoing, completedTrades, hboxCompleted);
-        configureViewButtons(addReview, messageBox,ratingInput, tradeIdInput, commentInput);
+        configureViewButtons(addReview, messageBox,ratingInput, tradeIdInput, commentInput, hboxOngoing, hboxCompleted);
         vBox.setPadding(new Insets(25, 25, 25, 25));
         return vBox;
     }
@@ -398,7 +399,7 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         }
     }
 
-    public void selectItemTwoWayPage(Map<String, String> initiateTradeInfo){
+    private void selectItemTwoWayPage(Map<String, String> initiateTradeInfo){
 
         List<String> itemsToOffer = initiateTradeController.getItemsToOffer(tradeModel.getItemManager().getOwner(initiateTradeInfo.get("chosen")));
         Stage stage2 = new Stage();
@@ -663,6 +664,16 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
     }
 
     //configure buttons
+
+    /**
+     * Configures the buttons for initiate trade layout.
+     * @param oneWayTemporary Button to initiate one way temporary trade.
+     * @param oneWayPermanent Button to initiate one way permanent trade.
+     * @param twoWayPermanent Button to initiate two way permanent trade.
+     * @param twoWayTemporary Button to initiate two way temporary trade.
+     * @param scrollPane ScrollPane for items
+     * @param messageBox Label to notify TradingUser.
+     */
     protected void configureInitiateButtons(Button oneWayTemporary, Button oneWayPermanent, Button twoWayPermanent, Button twoWayTemporary, ScrollPane scrollPane, Label messageBox){
         Map<String, String> infoToId = initiateTradeController.getAvailableItems();
 
@@ -756,6 +767,14 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         });
     }
 
+    /**
+     * Configures the buttons for proposed trades layout.
+     * @param confirmBtn Button to confirm the trade.
+     * @param editBtn Button to edit the trade.
+     * @param declineBtn Button to decline the trade.
+     * @param messageBox Label to notify TradingUser.
+     * @param proposedTradesListView List of proposed trades.
+     */
     protected void configureProposedTradesButtons(Button confirmBtn, Button editBtn, Button declineBtn, Label messageBox, ListView<String> proposedTradesListView){
         proposedTradesListView.setItems(proposedTradesInfoObservableList);
         confirmBtn.setOnAction(actionEvent -> {
@@ -795,6 +814,12 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         });
     }
 
+    /**
+     * Configures the buttons for confirmed trades layout.
+     * @param confirmBtn Button to confirm the trade.
+     * @param messageBox Label to notify TradingUser.
+     * @param confirmTradesListView List of trades waiting to be confirmed.
+     */
     protected void configureConfirmTradesButtons(Button confirmBtn, Label messageBox, ListView<String> confirmTradesListView){
         confirmTradesListView.setItems(confirmTradesInfoObservableList);
         Map<String, String> trades = confirmTradesController.getToBeConfirmedTrades(username);
@@ -824,7 +849,20 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         });
     }
 
-    protected void configureViewButtons(Button addReview, Label messageBox, TextField ratingInput, TextField tradeIdInput, TextField commentInput){
+    /**
+     * Configures the buttons for view trades and add review layout.
+     * @param addReview Button to add review.
+     * @param messageBox Label to notify TradingUser.
+     * @param ratingInput Input of rating for review.
+     * @param tradeIdInput Input of trade id for review.
+     * @param commentInput Input of comment for review.
+     */
+    protected void configureViewButtons(Button addReview, Label messageBox, TextField ratingInput, TextField tradeIdInput, TextField commentInput, HBox hboxOngoing, HBox hboxCompleted){
+        updateCompletedTradesObservableList();
+        updateOngoingTradesObservableList();
+        hboxOngoing.getChildren().addAll(getOngoingTradesListView());
+        hboxCompleted.getChildren().addAll(getCompletedTradesListView());
+
         addReview.setOnAction(e -> {
             if (!ratingInput.getText().matches("[12345]")) {
                 messageBox.setText("Invalid input. Please review your inputs.");
