@@ -44,11 +44,6 @@ public class AddWishlistGUI implements RunnableGUI {
         creator = new TableViewCreator(model);
     }
 
-    @Override
-    public void initialScreen(){
-
-    }
-
     /**
      * Gets the Parent to be shown.
      *

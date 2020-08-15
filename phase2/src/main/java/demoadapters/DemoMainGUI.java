@@ -17,11 +17,6 @@ public class DemoMainGUI extends MainGUI implements RunnableGUI {
     }
 
     @Override
-    public void initialScreen() {
-
-    }
-
-    @Override
     public Parent getRoot() {
         initializeScreen();
         return root;

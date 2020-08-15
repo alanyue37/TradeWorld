@@ -51,11 +51,6 @@ public class AddItemGUI implements RunnableGUI {
         creator = new TableViewCreator(tradeModel);
     }
 
-    @Override
-    public void initialScreen() {
-
-    }
-
     /**
      * Gets the Parent to be shown.
      *

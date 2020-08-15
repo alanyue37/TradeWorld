@@ -103,13 +103,6 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
     }
 
     /**
-     * This is the initial screen. TODO: SHOULD BE DELETED?
-     */
-    @Override
-    public void initialScreen() {
-    }
-
-    /**
      * Returns the TabPane consisting of the Admin menu options.
      * @return Returns the TabPane consisting of Admin menu options.
      */

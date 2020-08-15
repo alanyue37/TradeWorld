@@ -50,11 +50,6 @@ public class LoginGUI implements RunnableGUI {
     }
 
     @Override
-    public void initialScreen() {
-
-    }
-
-    @Override
     public Parent getRoot() {
         initializeScreen();
         return root;

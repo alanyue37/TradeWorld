@@ -29,8 +29,9 @@ public class TradeSystem implements Observer {
             tradeModel = dataManager.readFromFile();
             Image logo = dataManager.readImage(logoFile);
             LoginGUI gui = new LoginGUI(stage, 275, 300, tradeModel, logo);
-            gui.initialScreen();
-            } catch (IOException | ClassNotFoundException ex) {
+            gui.showScreen();
+            }
+        catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
     }
