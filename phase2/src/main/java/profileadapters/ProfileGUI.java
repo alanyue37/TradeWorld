@@ -1,6 +1,7 @@
 package profileadapters;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -21,6 +22,7 @@ import trademain.RunnableGUI;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ProfileGUI implements RunnableGUI {
     private final Stage stage;
@@ -31,13 +33,14 @@ public class ProfileGUI implements RunnableGUI {
     private final int width;
     private final int height;
     private String userProfile;
-    private Gson gson;
     private VBox root;
     private ObservableList<String> friends;
     private ObservableList<String> reviews;
     private ObservableList<String> usernames;
     private HBox accountProfileContainer;
     private ComboBox<String> usernameSelector;
+    private Gson gson;
+    Map<String, String> profileInfo;
 
     public ProfileGUI(Stage stage, int width, int height, TradeModel tradeModel, boolean ownProfile) {
         this.stage = stage;
@@ -50,6 +53,7 @@ public class ProfileGUI implements RunnableGUI {
         friends = FXCollections.observableArrayList();
         reviews = FXCollections.observableArrayList();
         usernames = FXCollections.observableArrayList();
+        gson = new Gson();
     }
 
     @Override
@@ -96,6 +100,7 @@ public class ProfileGUI implements RunnableGUI {
             // Remains at null if no other userProfiles
             userProfile = profileController.getOtherUsersWithProfiles().get(0);
         }
+        profileInfo = gson.fromJson(profileController.getProfileInfo(userProfile), new TypeToken<Map<String, String>>() {}.getType());
     }
 
     protected boolean noUsers() {
@@ -121,7 +126,7 @@ public class ProfileGUI implements RunnableGUI {
 
         // Set title
         titleRow = new HBox();
-        Label titleLabel = new Label(userProfile + "'s Profile");
+        Label titleLabel = new Label(profileInfo.get("name") + " Profile");
         titleLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         titleRow.getChildren().add(titleLabel);
 
@@ -140,7 +145,7 @@ public class ProfileGUI implements RunnableGUI {
 
         VBox reviewsColumn = new VBox();
         Label reviewsLabel = new Label("Reviews");
-        Label averageRatingLabel = new Label("(Average Rating: " + profileController.getAverageRating(userProfile) + ")");
+        Label averageRatingLabel = new Label("(Average Rating: " + profileInfo.get("averageRating") + ")");
         averageRatingLabel.setAlignment(Pos.BOTTOM_RIGHT);
         HBox reviewsLabelsRow = new HBox(reviewsLabel, averageRatingLabel);
 
@@ -156,13 +161,6 @@ public class ProfileGUI implements RunnableGUI {
         return row;
     }
 
-    protected void updateScreen() {
-        userProfile = usernameSelector.getSelectionModel().getSelectedItem();
-        HBox oldAccountProfileContainer = accountProfileContainer;
-        HBox newAccountProfileContainer = getContainerForAccountProfile();
-        oldAccountProfileContainer.getChildren().setAll(newAccountProfileContainer.getChildren());
-    }
-
     protected HBox getUsernamesRow() {
         HBox row = new HBox();
         row.setSpacing(20);
@@ -176,13 +174,11 @@ public class ProfileGUI implements RunnableGUI {
         viewButton.setOnAction(actionEvent -> {
             if (!usernames.isEmpty()) {
                 userProfile = usernameSelector.getSelectionModel().getSelectedItem();
+                profileInfo = gson.fromJson(profileController.getProfileInfo(userProfile), new TypeToken<Map<String, String>>() {}.getType());
                 HBox oldAccountProfileContainer = accountProfileContainer;
                 HBox newAccountProfileContainer = getContainerForAccountProfile();
                 oldAccountProfileContainer.getChildren().setAll(newAccountProfileContainer.getChildren());
                 }
-            else {
-                System.out.println("empty");
-            }
         });
         row.getChildren().addAll(usernameSelector, viewButton);
         return row;
@@ -210,7 +206,7 @@ public class ProfileGUI implements RunnableGUI {
     protected HBox getAccountStandingRow() {
         HBox row = new HBox();
         Label standingLabel;
-        if (profileController.getFrozenStatus(userProfile)) {
+        if (profileInfo.get("frozen").equals("true")) {
             standingLabel = new Label("Account Standing: Frozen");
         }
         else {
@@ -223,8 +219,8 @@ public class ProfileGUI implements RunnableGUI {
     protected HBox getProfileInfoRow() {
         HBox row = new HBox();
         VBox profileInfoColumn = new VBox();
-        Label cityLabel = new Label("City: " + profileController.getCity(userProfile));
-        Label rankLabel = new Label("User Rank: " + profileController.getRank(userProfile));
+        Label cityLabel = new Label("City: " + profileInfo.get("city"));
+        Label rankLabel = new Label("User Rank: " + profileInfo.get("rank"));
         profileInfoColumn.getChildren().addAll(cityLabel, rankLabel);
         row.getChildren().add(profileInfoColumn);
         return row;
@@ -246,8 +242,8 @@ public class ProfileGUI implements RunnableGUI {
         return userProfile;
     }
 
-    protected void addRow(HBox row) {
-        root.getChildren().add(row);
+    protected Map<String, String> getProfileInfo() {
+        return profileInfo;
     }
 
     protected ProfileController getProfileController() {
@@ -256,7 +252,11 @@ public class ProfileGUI implements RunnableGUI {
 
     protected void updateFriendsObservableList() {
         friends.clear();
-        friends.addAll(profileController.getFriends(userProfile));
+        List<String> friendsUsernames = profileController.getFriends(userProfile);
+        for (String u : friendsUsernames) {
+            Map<String, String> info = gson.fromJson(profileController.getProfileInfo(u), new TypeToken<Map<String, String>>() {}.getType());
+            friends.add(info.get("name") + " (" + u + ")");
+        }
     }
 
     protected void updateReviewsObservableList() {

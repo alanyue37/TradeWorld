@@ -84,7 +84,7 @@ public class LoggedInProfileGUI extends ProfileGUI {
     protected HBox getAccountStandingRow() {
         HBox row =  super.getAccountStandingRow();
         // If frozen and own profile add Request Unfreeze link
-        if (getProfileController().getFrozenStatus(getUserProfile()) && getProfileController().isOwnProfile(getUserProfile())) {
+        if (getProfileInfo().get("frozen").equals("true") && getProfileController().isOwnProfile(getUserProfile())) {
             Hyperlink requestUnfreeze = new Hyperlink("Request unfreeze");
             requestUnfreeze.setBorder(Border.EMPTY);
             requestUnfreeze.setPadding(new Insets(0, 0, 0, 20));
@@ -105,7 +105,7 @@ public class LoggedInProfileGUI extends ProfileGUI {
         offVacationButton.setUserData(false);
         onVacationButton.setToggleGroup(vacationGroup);
         offVacationButton.setToggleGroup(vacationGroup);
-        if (getProfileController().getVacationMode(getUserProfile())) {
+        if (getProfileInfo().get("vacation").equals("true")) {
             vacationValueLabel = new Label("On");
             onVacationButton.setSelected(true);
         }
@@ -152,7 +152,7 @@ public class LoggedInProfileGUI extends ProfileGUI {
         onPrivacyButton.setToggleGroup(privacyGroup);
         offPrivacyButton.setToggleGroup(privacyGroup);
 
-        if (getProfileController().getPrivacyMode(getUserProfile())) {
+        if (getProfileInfo().get("private").equals("true")) {
             privacyValueLabel = new Label("On");
             onPrivacyButton.setSelected(true);
         }

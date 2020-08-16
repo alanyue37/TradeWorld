@@ -7,14 +7,10 @@ import undocomponent.UndoAddReview;
 import undocomponent.UndoableOperation;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ProfileController  {
-    // TODO: Clean up unnecessary methods
-    // TODO: Combine some getters for profileGUI into one or more JSON replies time permitting
+
     private final TradeModel tradeModel;
 
     public ProfileController(TradeModel tradeModel) {
@@ -93,20 +89,12 @@ public class ProfileController  {
         return reviewStrings;
     }
 
-    protected String getAverageRating(String username) {
-        String json = tradeModel.getReviewManager().getReviewsByUser(username);
-        Gson gson = new Gson();
-        Type type = new TypeToken<List<Map<String, String>>>(){}.getType();
-        List<Map<String, String>> reviewMaps = gson.fromJson(json, type);
-        return reviewMaps.get(0).get("average");
-    }
-
     /**
      * Get friends of user with username
      * Precondition: valid username
      *
      * @param username user's friends to get
-     * @return JSON representation of friends list
+     * @return list of usernames of given user's friends
      */
     protected List<String> getFriends(String username) {
         List<String> friendsList = new ArrayList<>(tradeModel.getUserManager().getFriendList(username));
@@ -115,30 +103,31 @@ public class ProfileController  {
     }
 
     /**
-     * Get rank of user with username
+     * Returns JSON representation of Map of string key-value pairs with following keys: name, city,
+     * frozen (true/false), rank (gold/silver/bronze), private (true/false), vacation (true/false), averageRating
+     *
      * Precondition: valid username
      *
-     * @param username user's rank to get
-     * @return user's rank
+     * @param username user's friends to get
+     * @return list of usernames of given user's friends
      */
-    protected String getRank(String username) {
-        return tradeModel.getUserManager().getRankByUsername(username);
-    }
+    protected String getProfileInfo(String username) {
+        // Returns name, city, frozen, rank, vacation, privacy, , averageRating Map in JSON
+        Gson gson = new Gson();
+        Map<String, String> info = new HashMap<>();
+        info.put("name", tradeModel.getUserManager().getName(username));
+        info.put("city", tradeModel.getUserManager().getCityByUsername(username));
+        info.put("frozen", String.valueOf(tradeModel.getUserManager().isFrozen(username)));
+        info.put("rank", tradeModel.getUserManager().getRankByUsername(username));
+        info.put("private", String.valueOf(tradeModel.getUserManager().getPrivateUser().contains(username)));
+        info.put("vacation", String.valueOf(tradeModel.getUserManager().getOnVacation().contains(username)));
 
-    protected String getCity(String username) {
-        return tradeModel.getUserManager().getCityByUsername(username);
-    }
+        String json = tradeModel.getReviewManager().getReviewsByUser(username);
+        Type type = new TypeToken<List<Map<String, String>>>(){}.getType();
+        List<Map<String, String>> reviewMaps = gson.fromJson(json, type);
+        info.put("averageRating", reviewMaps.get(0).get("average"));
 
-    protected boolean getFrozenStatus(String username) {
-        return tradeModel.getUserManager().isFrozen(username);
-    }
-
-    protected boolean getVacationMode(String username) {
-        return tradeModel.getUserManager().getOnVacation().contains(username);
-    }
-
-    protected boolean getPrivacyMode(String username) {
-        return tradeModel.getUserManager().getPrivateUser().contains(username);
+        return gson.toJson(info);
     }
 
     protected void setVacationMode(boolean vacation) {
