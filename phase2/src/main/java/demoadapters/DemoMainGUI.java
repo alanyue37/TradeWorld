@@ -12,6 +12,12 @@ import trademain.RunnableGUI;
 public class DemoMainGUI extends MainGUI implements RunnableGUI {
     private TabPane root;
 
+    /**
+     * Creates an instance of DemoMainGUI -- the main screen for demo users.
+     * @param width the width of the window
+     * @param height the hieght of the window
+     * @param model reference to TradeModel instance
+     */
     public DemoMainGUI(int width, int height, TradeModel model) {
         super(width, height, model);
     }

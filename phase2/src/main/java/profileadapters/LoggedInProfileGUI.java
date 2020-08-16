@@ -25,18 +25,19 @@ public class LoggedInProfileGUI extends ProfileGUI {
 
     private ObservableList<String> friendsRequests;
 
+    /**
+     * Creates an instance of LoggedInProfileGUI -- profile view for a user who is logged in
+     * @param stage stage to show GUI on
+     * @param width width of window
+     * @param height height of window
+     * @param tradeModel reference to TradeModel instance
+     * @param ownProfile true iff looking at user is looking at own profile
+     */
     public LoggedInProfileGUI(Stage stage, int width, int height, TradeModel tradeModel, boolean ownProfile) {
         super(stage, width, height, tradeModel, ownProfile);
         friendsRequests = FXCollections.observableArrayList();
     }
 
-    @Override
-    public void showScreen() {
-        initializeScreen();
-        Scene scene = new Scene(getRoot(), getWidth(), getHeight());
-        getStage().setScene(scene);
-        getStage().show();
-    }
 
     @Override
     protected HBox getContainerForAccountProfile() {
@@ -139,67 +140,6 @@ public class LoggedInProfileGUI extends ProfileGUI {
         return vacationRow;
     }
 
-    private HBox getPrivacyRow() {
-        HBox privacyRow = new HBox();
-        Label privacyLabel = new Label("Private Mode:\t\t");
-        Label privacyValueLabel;
-        ToggleGroup privacyGroup = new ToggleGroup();
-        RadioButton onPrivacyButton = new RadioButton("On");
-        RadioButton offPrivacyButton = new RadioButton("Off");
-        onPrivacyButton.setUserData(true);
-        offPrivacyButton.setUserData(false);
-
-        onPrivacyButton.setToggleGroup(privacyGroup);
-        offPrivacyButton.setToggleGroup(privacyGroup);
-
-        if (getProfileInfo().get("private").equals("true")) {
-            privacyValueLabel = new Label("On");
-            onPrivacyButton.setSelected(true);
-        }
-        else {
-            privacyValueLabel = new Label("Off");
-            offPrivacyButton.setSelected(true);
-        }
-
-        // Add event handlers for radio buttons
-        // Based on sample code from: https://docs.oracle.com/javafx/2/ui_controls/radio-button.htm
-
-        privacyGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>(){
-            public void changed(ObservableValue<? extends Toggle> ov,
-                                Toggle old_toggle, Toggle new_toggle) {
-                if (privacyGroup.getSelectedToggle() != null) {
-                    boolean privacy = (boolean) privacyGroup.getSelectedToggle().getUserData();
-                    getProfileController().setPrivacyMode(privacy);
-                }
-
-            }
-        });
-
-        if (getProfileController().isOwnProfile(getUserProfile())) {
-            privacyRow.getChildren().addAll(privacyLabel, offPrivacyButton, onPrivacyButton);
-
-        }
-        else {
-            privacyRow.getChildren().addAll(privacyLabel, privacyValueLabel);
-        }
-
-        privacyRow.setSpacing(20);
-        return privacyRow;
-    }
-
-    private HBox getStatusesRow() {
-        HBox row = new HBox();
-        VBox statusesColumn = new VBox();
-
-        HBox vacationRow = getVacationStatusRow();
-        HBox privacyRow = getPrivacyRow();
-
-        statusesColumn.getChildren().addAll(vacationRow, privacyRow);
-
-        row.getChildren().add(statusesColumn);
-        return row;
-    }
-
     protected HBox getFriendsRequestsRow() {
         HBox row = new HBox();
         VBox requestsColumn = new VBox();
@@ -261,6 +201,76 @@ public class LoggedInProfileGUI extends ProfileGUI {
         return row;
     }
 
+    protected void updateFriendsRequestsObservableList() {
+        String json = getProfileController().getFriendRequests();
+        Gson gson = new Gson();
+        Type type = new TypeToken<List<String>>(){}.getType();
+        List<String> requests = gson.fromJson(json, type);
+        friendsRequests.clear();
+        friendsRequests.addAll(FXCollections.observableArrayList(requests));
+    }
+
+    private HBox getStatusesRow() {
+        HBox row = new HBox();
+        VBox statusesColumn = new VBox();
+
+        HBox vacationRow = getVacationStatusRow();
+        HBox privacyRow = getPrivacyRow();
+
+        statusesColumn.getChildren().addAll(vacationRow, privacyRow);
+
+        row.getChildren().add(statusesColumn);
+        return row;
+    }
+
+    private HBox getPrivacyRow() {
+        HBox privacyRow = new HBox();
+        Label privacyLabel = new Label("Private Mode:\t\t");
+        Label privacyValueLabel;
+        ToggleGroup privacyGroup = new ToggleGroup();
+        RadioButton onPrivacyButton = new RadioButton("On");
+        RadioButton offPrivacyButton = new RadioButton("Off");
+        onPrivacyButton.setUserData(true);
+        offPrivacyButton.setUserData(false);
+
+        onPrivacyButton.setToggleGroup(privacyGroup);
+        offPrivacyButton.setToggleGroup(privacyGroup);
+
+        if (getProfileInfo().get("private").equals("true")) {
+            privacyValueLabel = new Label("On");
+            onPrivacyButton.setSelected(true);
+        }
+        else {
+            privacyValueLabel = new Label("Off");
+            offPrivacyButton.setSelected(true);
+        }
+
+        // Add event handlers for radio buttons
+        // Based on sample code from: https://docs.oracle.com/javafx/2/ui_controls/radio-button.htm
+
+        privacyGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>(){
+            public void changed(ObservableValue<? extends Toggle> ov,
+                                Toggle old_toggle, Toggle new_toggle) {
+                if (privacyGroup.getSelectedToggle() != null) {
+                    boolean privacy = (boolean) privacyGroup.getSelectedToggle().getUserData();
+                    getProfileController().setPrivacyMode(privacy);
+                }
+
+            }
+        });
+
+        if (getProfileController().isOwnProfile(getUserProfile())) {
+            privacyRow.getChildren().addAll(privacyLabel, offPrivacyButton, onPrivacyButton);
+
+        }
+        else {
+            privacyRow.getChildren().addAll(privacyLabel, privacyValueLabel);
+        }
+
+        privacyRow.setSpacing(20);
+        return privacyRow;
+    }
+
     private void acceptOrIgnoreFriendsRequest(ObservableList<Integer> selectedRequests, boolean accept) {
         List<String> usernames = new ArrayList<>();
         for (Integer i: selectedRequests) {
@@ -269,14 +279,5 @@ public class LoggedInProfileGUI extends ProfileGUI {
         getProfileController().acceptOrIgnoreFriendsRequests(usernames, accept);
         updateFriendsRequestsObservableList();
         updateFriendsObservableList();
-    }
-
-    protected void updateFriendsRequestsObservableList() {
-        String json = getProfileController().getFriendRequests();
-        Gson gson = new Gson();
-        Type type = new TypeToken<List<String>>(){}.getType();
-        List<String> requests = gson.fromJson(json, type);
-        friendsRequests.clear();
-        friendsRequests.addAll(FXCollections.observableArrayList(requests));
     }
 }

@@ -32,10 +32,6 @@ public class DemoTradeSystem {
             Image logo = dataManager.readImage(logoFile);
 
             gui = new LoginGUI(stage, 500, 650, tradeModel, logo);
-            //gui = new ProfileGUI(stage, 720, 600, tradeModel, false);
-            //gui = new LoggedInProfileGUI(stage, 720, 600, tradeModel, false);
-            //gui = new AdminMainGUI(800, 800, tradeModel);
-            //gui = new UserMainGUI(800, 800, tradeModel, "u1");
             gui.showScreen();
         } catch (IOException | ClassNotFoundException ex) {
             ex.printStackTrace();
