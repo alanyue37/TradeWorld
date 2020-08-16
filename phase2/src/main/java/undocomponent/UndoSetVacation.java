@@ -3,6 +3,9 @@ package undocomponent;
 import usercomponent.UserManager;
 import java.io.Serializable;
 
+/**
+ * An undoable operation representing a user setting their vacation status.
+ */
 public class UndoSetVacation implements UndoableOperation, Serializable{
 
     private final String username;
@@ -10,7 +13,7 @@ public class UndoSetVacation implements UndoableOperation, Serializable{
     private final UserManager userManager;
 
     /**
-     * Instantiates a new UndoSetVacation operation
+     * Instantiates a new UndoSetVacation operation.
      * @param username username of the user
      * @param userManager the UserManager containing the user
      */

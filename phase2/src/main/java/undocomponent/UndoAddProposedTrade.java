@@ -7,13 +7,16 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * An undoable operation representing a user proposing a trade.
+ */
 public class UndoAddProposedTrade implements UndoableOperation, Serializable {
     private final TradeManager tradeManager;
     private final MeetingManager meetingManager;
     private final String tradeId;
 
     /**
-     * Instantiates UndoAddProposedTrade
+     * Instantiates a new UndoAddProposedTrade operation.
      * @param tradeManager reference to TradeManager instance
      * @param meetingManager reference to MeetingManager instance
      * @param tradeId id of trade proposed
@@ -26,8 +29,8 @@ public class UndoAddProposedTrade implements UndoableOperation, Serializable {
 
     /**
      * Deletes a proposed trade with tradeId.
-     * Throws NoLongerUndoableException if the trade has already progressed to a later stage, such as meeting time has
-     * been confirmed or trade has completed.
+     * @throws NoLongerUndoableException if the trade has already progressed to a later stage, such as meeting time has
+     * been confirmed or trade has completed
      */
     @Override
     public void undo() throws NoLongerUndoableException {

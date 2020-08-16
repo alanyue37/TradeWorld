@@ -3,6 +3,9 @@ package undocomponent;
 import usercomponent.UserManager;
 import java.io.Serializable;
 
+/**
+ * An undoable operation representing a user adding a friend.
+ */
 public class UndoAddFriend implements UndoableOperation, Serializable{
 
     private final String userOne;
@@ -10,7 +13,7 @@ public class UndoAddFriend implements UndoableOperation, Serializable{
     private final UserManager userManager;
 
     /**
-     * Instantiates a new UndoAddFriend operation
+     * Instantiates a new UndoAddFriend operation.
      * @param userOne username of one friend
      * @param userTwo username of other friend
      * @param userManager the UserManager containing the users
@@ -22,7 +25,7 @@ public class UndoAddFriend implements UndoableOperation, Serializable{
     }
 
     /**
-     * Removes a friend of a TradingUser
+     * Removes a friend of a TradingUser.
      */
     @Override
     public void undo(){

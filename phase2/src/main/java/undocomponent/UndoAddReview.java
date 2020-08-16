@@ -4,13 +4,16 @@ import profilecomponent.ReviewManager;
 
 import java.io.Serializable;
 
+/**
+ * An undoable operation representing a user adding a review.
+ */
 public class UndoAddReview implements UndoableOperation, Serializable {
 
     private final ReviewManager reviewManager;
     private final String reviewId;
 
     /**
-     * Instantiates UndoAddReview
+     * Instantiates a new UndoAddReview operation.
      * @param reviewManager reference to ReviewManager instance
      * @param reviewId id of review added
      */
@@ -20,8 +23,8 @@ public class UndoAddReview implements UndoableOperation, Serializable {
     }
 
     /**
-     * Deletes review with reviewId
-     * Throws NoLongerUndoableException if the review no longer exists.
+     * Deletes review with reviewId.
+     * @throws NoLongerUndoableException if the review no longer exists
      */
     @Override
     public void undo() throws NoLongerUndoableException{
