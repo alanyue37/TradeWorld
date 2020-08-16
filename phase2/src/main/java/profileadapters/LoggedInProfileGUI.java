@@ -9,7 +9,6 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
@@ -37,7 +36,6 @@ public class LoggedInProfileGUI extends ProfileGUI {
         super(stage, width, height, tradeModel, ownProfile);
         friendsRequests = FXCollections.observableArrayList();
     }
-
 
     @Override
     protected HBox getContainerForAccountProfile() {

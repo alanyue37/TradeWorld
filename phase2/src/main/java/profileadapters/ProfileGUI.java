@@ -66,19 +66,12 @@ public class ProfileGUI implements RunnableGUI {
         gson = new Gson();
     }
 
-    /**
-     * Returns the parent node this GUI of which this GUI is composed
-     * @return Parent node of all other nodes in this GUI
-     */
     @Override
     public Parent getRoot() {
         initializeScreen();
         return root;
     }
 
-    /**
-     * Shows a new window for this GUI
-     */
     @Override
     public void showScreen() {
         initializeScreen();
