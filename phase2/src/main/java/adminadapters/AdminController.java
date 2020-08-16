@@ -141,7 +141,7 @@ public class AdminController {
      * meeting place and time. It prompts the Admin user to enter a number that is an integer greater than
      * or equal to zero.
      */
-    public void askAdminToSetLimitOfEdits(String editLimit) {
+    protected void askAdminToSetLimitOfEdits(String editLimit) {
         int editThreshold = Integer.parseInt(editLimit);
         tradeModel.getMeetingManager().changeLimitEdits(editThreshold);
     }
