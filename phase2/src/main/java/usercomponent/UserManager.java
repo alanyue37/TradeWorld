@@ -24,7 +24,6 @@ public class UserManager implements Serializable {
 
     /**
      * Creates a UserManager.
-     *
      * @param observableDataModel the ObservableDataModel to use
      */
     public UserManager(ObservableDataModel observableDataModel) {
@@ -40,11 +39,11 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Gets the specified threshold value
+     * Gets the specified threshold value.
      * Precondition: The requested threshold must be valid.
      *
      * @param which threshold is being requested
-     * @return The requested threshold value
+     * @return the requested threshold value
      */
     public int getThreshold(String which) {
         if (which.equals("gold")) {
@@ -63,7 +62,7 @@ public class UserManager implements Serializable {
      * Precondition: The requested threshold must be valid.
      *
      * @param which threshold is being requested
-     * @param value The new value
+     * @param value the new value
      */
     public void setThreshold(String which, int value) {
         if (which.equals("gold")) {
@@ -80,10 +79,9 @@ public class UserManager implements Serializable {
 
     /**
      * Gets the name of a user given their username.
-     * Precondition: The username must be valid.
      *
      * @param username the username of the user
-     * @return The name of the user
+     * @return the name of the user
      */
     public String getName(String username) {
         if (tradingUsers.containsKey(username)) {
@@ -94,13 +92,13 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Creates a TradingUser and adds it to the set of TradingUsers if the username is unique
+     * Creates a TradingUser and adds it to the set of TradingUsers if the username is unique.
      *
-     * @param name     The name of the TradingUser
-     * @param username The username of the TradingUser
-     * @param password The password of the TradingUser
-     * @param city     The city of thr TradingUser
-     * @return Whether or not the TradingUser was successfully added
+     * @param name the name of the TradingUser
+     * @param username the username of the TradingUser
+     * @param password the password of the TradingUser
+     * @param city the city of thr TradingUser
+     * @return whether or not the TradingUser was successfully added
      */
     public boolean createTradingUser(String name, String username, String password, String city) {
         if (tradingUsers.containsKey(username) | adminUsers.containsKey(username)) {
@@ -112,12 +110,12 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Creates an administrative user and adds it to the set of administrative users if the username is unique
+     * Creates an administrative user and adds it to the set of administrative users if the username is unique.
      *
-     * @param name     The name of the administrative user
-     * @param username The username of the administrative user
-     * @param password The password of the administrative user
-     * @return Whether or not the administrative user was successfully added
+     * @param name the name of the administrative user
+     * @param username the username of the administrative user
+     * @param password the password of the administrative user
+     * @return whether or not the administrative user was successfully added
      */
     public boolean createAdminUser(String name, String username, String password) {
         if (tradingUsers.containsKey(username) | adminUsers.containsKey(username)) {
@@ -129,10 +127,10 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Returns whether a particular user has admin capabilities
+     * Returns whether a particular user has admin capabilities.
      *
-     * @param username The username of the chosen user.
-     * @return Whether the User is an admin
+     * @param username the username of the chosen user
+     * @return whether the user is an admin
      */
     public boolean isAdmin(String username) {
         return adminUsers.containsKey(username);
@@ -146,9 +144,8 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Gets the set of all TradingUsers
-     *
-     * @return The set of all TradingUsers
+     * Gets the set of all TradingUsers.
+     * @return the set of all TradingUsers
      */
     public Set<String> getAllTradingUsers() {
         return tradingUsers.keySet();
@@ -157,9 +154,9 @@ public class UserManager implements Serializable {
     /**
      * Checks a User's username and password on login.
      *
-     * @param username The submitted username.
-     * @param password The submitted password.
-     * @return Whether or not the username/password combination is valid.
+     * @param username The submitted username
+     * @param password The submitted password
+     * @return Whether or not the username/password combination is valid
      */
     public boolean login(String username, String password) {
         User account = getAllUsers().get(username);
@@ -170,10 +167,10 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Sets the password of a particular User
+     * Sets the password of a particular User.
      *
-     * @param username The username of the chosen User. Must be a valid username for an existing User.
-     * @param password The intended password
+     * @param username the username of the chosen User
+     * @param password the new password
      */
     public void setPasswordByUsername(String username, String password) {
         User account = getAllUsers().get(username);
@@ -183,7 +180,7 @@ public class UserManager implements Serializable {
 
     /**
      * Gets a chosen TradingUser's credit attribute.
-     * @param username The username of the chosen TradingUser. Must be a valid username for an existing TradingUser.
+     * @param username the username of the chosen TradingUser
      * @return the TradingUser's credit value.
      */
     public int getCreditByUsername(String username) {
@@ -192,10 +189,10 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Updates a chosen TradingUser's credit attribute
+     * Updates a given TradingUser's credit attribute.
      *
-     * @param username The username of the chosen TradingUser. Must be a valid username for an existing TradingUser.
-     * @param increment Whether to increment or decrement
+     * @param username the username of the chosen TradingUser
+     * @param increment whether to increment or decrement
      */
     public void updateCreditByUsername(String username, boolean increment) {
         TradingUser account = tradingUsers.get(username);
@@ -209,10 +206,9 @@ public class UserManager implements Serializable {
 
     /**
      * Gets the current rank of a particular TradingUser
-     * Precondition: A TradingUser with the specified username must exist.
      *
-     * @param username The username of the chosen TradingUser
-     * @return The user's rank
+     * @param username the username of the given TradingUser
+     * @return the user's rank
      */
     public String getRankByUsername(String username) {
         TradingUser account = tradingUsers.get(username);
@@ -228,10 +224,10 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Gets the wishlist of a particular TradingUser
+     * Gets the wishlist of a particular TradingUser.
      *
-     * @param username The username of the chosen TradingUser. Must be a valid username for an existing TradingUser.
-     * @return The wishlist of a particular TradingUser
+     * @param username the username of the chosen TradingUser
+     * @return the wishlist of a particular TradingUser
      */
     public Set<String> getWishlistByUsername(String username) {
         TradingUser account = tradingUsers.get(username);
@@ -242,9 +238,9 @@ public class UserManager implements Serializable {
      * Adds the id of a particular item to the wishlist of a particular TradingUser. Returns false if item was
      * already in their wishlist.
      *
-     * @param username The username of the chosen TradingUser. Must be a valid username for an existing TradingUser.
-     * @param id       The id of the given item
-     * @return Whether the item was successfully added
+     * @param username the username of the chosen TradingUser
+     * @param id the id of the given item
+     * @return whether the item was successfully added
      */
     public boolean addToWishlist(String username, String id) {
         TradingUser account = tradingUsers.get(username);
@@ -257,10 +253,10 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Removes the id of a particular item from the wishlist of a particular TradingUser
+     * Removes the id of a particular item from the wishlist of a particular TradingUser.
      *
-     * @param username The username of the chosen TradingUser. Must be a valid username for an existing TradingUser.
-     * @param id       The id of the given item
+     * @param username the username of the chosen TradingUser
+     * @param id the id of the given item
      */
     public void removeFromWishlist(String username, String id) {
         TradingUser account = tradingUsers.get(username);
@@ -269,11 +265,10 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Returns whether a particular TradingUser is currently frozen
+     * Returns whether a particular TradingUser is currently frozen.
      *
-     * @param username The username of the TradingUser checking their status. Must be a valid username for an existing
-     *                 TradingUser.
-     * @return Whether the TradingUser is currently frozen
+     * @param username the username of the TradingUser checking their status
+     * @return whether the TradingUser is currently frozen
      */
     public boolean isFrozen(String username) {
         TradingUser account = tradingUsers.get(username);
@@ -282,10 +277,9 @@ public class UserManager implements Serializable {
 
     /**
      * Freezes or unfreezes the account of a particular TradingUser and removes them from the set of TradingUsers who've
-     * requested to be unfrozen if it's the latter
-     *
-     * @param username The username of the TradingUser involved. Must be a valid username for an existing TradingUser.
-     * @param frozen   Whether or not the intended account should be frozen or unfrozen
+     * requested to be unfrozen if it's the latter.
+     * @param username the username of the TradingUser involved
+     * @param frozen whether or not the intended account should be frozen or unfrozen
      */
     public void setFrozen(String username, boolean frozen) {
         TradingUser account = tradingUsers.get(username);
@@ -297,9 +291,8 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Gets a set of the usernames of TradingUsers who are below the borrowing ratio and are not currently frozen
-     *
-     * @return A set of the usernames of TradingUsers who are below the borrowing ratio and are not currently frozen
+     * Gets a set of the usernames of TradingUsers who are below the borrowing ratio and are not currently frozen.
+     * @return the set of the usernames of TradingUsers who are below the borrowing ratio and are not currently frozen
      */
     public Set<String> getUsersForFreezing() {
         Set<String> result = new HashSet<>();
@@ -312,9 +305,8 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Gets the set of all TradingUsers who have requested to be unfrozen
-     *
-     * @return The set of all TradingUsers who have requested to be unfrozen
+     * Gets the set of all TradingUsers who have requested to be unfrozen.
+     * @return the set of all TradingUsers who have requested to be unfrozen
      */
     public Set<String> getUnfreezeRequests() {
         return unfreezeRequests;
@@ -322,9 +314,7 @@ public class UserManager implements Serializable {
 
     /**
      * Adds a TradingUser to the unfreeze request queue.
-     *
-     * @param username The username of the TradingUser requesting an unfreeze. Must be a valid username for an existing
-     *                 TradingUser.
+     * @param username the username of the TradingUser requesting an unfreeze
      */
     public void markUserForUnfreezing(String username) {
         unfreezeRequests.add(username);
@@ -332,8 +322,8 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Returns the city of a given TradingUser
-     * @param username The username of the given TradingUser.
+     * Returns the city of a given TradingUser.
+     * @param username the username of the given TradingUser
      */
     public String getCityByUsername(String username) {
         TradingUser account = tradingUsers.get(username);
@@ -343,8 +333,8 @@ public class UserManager implements Serializable {
 
     /**
      * Sets or unset the account on vacation mode.
-     * @param username The username of the given TradingUser.
-     * @param vacation Whether or not the intended account is set to vacation mode.
+     * @param username the username of the given TradingUser
+     * @param vacation whether or not the intended account is set to vacation mode
      */
     public void setOnVacation(String username, boolean vacation) {
         TradingUser account = tradingUsers.get(username);
@@ -354,7 +344,7 @@ public class UserManager implements Serializable {
 
     /**
      * Gets a set of the usernames of TradingUsers who are on vacation mode.
-     * @return A set of the usernames of TradingUsers who are on vacation mode.
+     * @return the set of the usernames of TradingUsers who are on vacation mode
      */
     public Set<String> getOnVacation(){
         Set<String> result = new HashSet<>();
@@ -367,9 +357,9 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Returns whether there exists a user with *username*
+     * Returns whether there exists a user with the given username.
      * @param username username of user
-     * @return true iff there exists an user with this username, returns false otherwise.
+     * @return true iff there exists an user with this username, returns false otherwise
      */
     public boolean containsTradingUser(String username){
         return this.tradingUsers.containsKey(username);
@@ -388,7 +378,7 @@ public class UserManager implements Serializable {
     /**
      * Sets the TradingUser with *username* to private or public.
      * @param username username of TradingUser
-     * @param privacy true if we want to set it to private. If we want to set it to public, then false.
+     * @param privacy true if we want to set it to private. If we want to set it to public, then false
      */
     public void setPrivate(String username, boolean privacy){
         TradingUser account = tradingUsers.get(username);
@@ -407,7 +397,7 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Gets the set of friends of a TradingUser
+     * Gets the set of friends of a TradingUser.
      * @param username username of TradingUser
      * @return set of friend
      */
@@ -417,7 +407,7 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Sets a friend request of a TradingUser
+     * Sets a friend request of a TradingUser.
      * @param getRequestUsername username of user who received the friend request
      * @param sendRequestUsername username of user who sent the friend request
      * @param accept true if getRequestUser accepts friend request and false if declines the friend request
@@ -446,7 +436,7 @@ public class UserManager implements Serializable {
     }
 
     /**
-     * Removes a friend of a TradingUser
+     * Removes a friend of a TradingUser.
      * @param userOne username of one friend
      * @param userTwo username of other friend
      */
