@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Manages the creation and editing of meetings of trades.
+ * The class responsible for managing the creation and editing of meetings of trades.
  */
 public class MeetingManager implements Serializable {
     private final ObservableDataModel observableDataModel;

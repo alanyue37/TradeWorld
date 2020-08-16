@@ -35,7 +35,7 @@ public class AddItemGUI implements RunnableGUI {
     private TableView<ObservableList<String>> inventoryTable;
 
     /**
-     * Creates a new AddItemGUI with a specified width and height and the current TradeModel.
+     * Creates a new AddItemGUI.
      *
      * @param stage The stage to show the resulting scene on
      * @param width The width of the stage
@@ -76,7 +76,6 @@ public class AddItemGUI implements RunnableGUI {
 
         inventoryTable = creator.create("own inventory");
 
-//        inventoryTable.prefHeightProperty().bind(stage.heightProperty());
         inventoryTable.prefWidthProperty().bind(stage.widthProperty());
 
         Text title = new Text("Current Inventory");

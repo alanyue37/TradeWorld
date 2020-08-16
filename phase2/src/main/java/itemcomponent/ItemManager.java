@@ -8,6 +8,9 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * The class responsible for managing the creation and handling of items.
+ */
 public class ItemManager implements Serializable {
 
     private final Map<String, Item> items;
@@ -15,7 +18,9 @@ public class ItemManager implements Serializable {
     private final ObservableDataModel observableDataModel;
 
     /**
-     * Instantiates an ItemManager
+     * Creates an ItemManager.
+     *
+     * @param observableDataModel the ObservableDataModel to use
      */
     public ItemManager(ObservableDataModel observableDataModel) {
         items = new HashMap<>();
@@ -25,8 +30,9 @@ public class ItemManager implements Serializable {
     /**
      * Returns item info as JSON representation of Map of string key-value pairs with following keys:
      * itemId, name, description, owner, available, stage, dateCreated
-     * frozen (true/false), rank (gold/silver/bronze), private (true/false), vacation (true/false), averageRating
+     * frozen (true/false), rank (gold/silver/bronze), private (true/false), vacation (true/false), averageRating.
      * Returns null if the item doesn't exist.
+     *
      * @param itemId    The id of the item
      * @return  The information of the item in JSON format
      */
@@ -47,7 +53,7 @@ public class ItemManager implements Serializable {
     }
 
     /**
-     * Gets a set of item IDs that correspond to items in a particular stage
+     * Gets a set of item IDs that correspond to items in a particular stage.
      * Precondition: This must be a valid stage for an item.
      *
      * @param stage The given stage to filter by
@@ -90,7 +96,7 @@ public class ItemManager implements Serializable {
     }
 
     /**
-     * Sets the owner for the item
+     * Sets the owner for the item.
      * Precondition: An item with the given ID must exist.
      *
      * @param itemId    The id of the item
@@ -103,7 +109,8 @@ public class ItemManager implements Serializable {
     }
 
     /**
-     * Creates a new item and adds it to the current set of items
+     * Creates a new item and adds it to the current set of items.
+     *
      * @param name  The name of the item
      * @param owner The owner of the item
      * @param description   The description of the item
@@ -118,7 +125,7 @@ public class ItemManager implements Serializable {
     }
 
     /**
-     * Changes the stage of an item with the associated ID to "early" access and set it to available
+     * Changes the stage of an item with the associated ID to "early" access and set it to available.
      * Precondition: An item with the given ID must exist.
      *
      * @param itemId    The id of the item
@@ -131,9 +138,10 @@ public class ItemManager implements Serializable {
     }
 
     /**
-     * Deletes the item from the system
+     * Deletes an item from the system.
      * Precondition: An item with the given ID must exist.
-     * @param itemId    The id of the item
+     *
+     * @param itemId The id of the item
      * @throws NoLongerUndoableException if item is both confirmed and unavailable (i.e. part of active trade)
      */
     public void deleteItem(String itemId) throws NoLongerUndoableException {
@@ -146,11 +154,11 @@ public class ItemManager implements Serializable {
     }
 
     /**
-     * Sets the availability of an item
+     * Sets the availability of an item.
      * Precondition: An item with the given ID must exist.
      *
-     * @param itemID    The id of the item
-     * @param available     The availability of the item
+     * @param itemID The id of the item
+     * @param available The availability of the item
      */
     public void setItemAvailable(String itemID, boolean available) {
         items.get(itemID).setAvailable(available);
@@ -158,7 +166,7 @@ public class ItemManager implements Serializable {
     }
 
     /**
-     * Gets a set of all item IDs whose corresponding items are owned by a particular user
+     * Gets a set of all item IDs whose corresponding items are owned by a particular user.
      *
      * @param username The given username
      * @return A set of all item IDs whose corresponding items are owned by a particular user
@@ -175,7 +183,7 @@ public class ItemManager implements Serializable {
 
     /**
      * Updates all items in the "early" access stage so they are changed to "common" if it has been more than two days
-     * since an item was added to the system
+     * since an item was added to the system.
      */
     public void updateEarlyItems() {
         long twoDayMilliseconds = 172800000;

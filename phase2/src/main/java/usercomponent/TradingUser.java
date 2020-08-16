@@ -3,6 +3,9 @@ package usercomponent;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * The entity class that represents a trading user in the trading system.
+ */
 class TradingUser extends User {
 
     private final Set<String> wishlist;
@@ -15,7 +18,7 @@ class TradingUser extends User {
     private final Set<String> pendingFriends;
 
     /**
-     * Instantiates a new TradingUser
+     * Instantiates a new TradingUser.
      *
      * @param name The given name
      * @param username The given username
@@ -35,68 +38,68 @@ class TradingUser extends User {
     }
 
     /**
-     * Gets the wishlist of this TradingUser
+     * Gets the wishlist of this TradingUser.
      *
-     * @return The wishlist of this TradingUser
+     * @return the wishlist of this TradingUser
      */
     protected Set<String> getWishlist(){
         return wishlist;
     }
 
     /**
-     * Adds an item to the wishlist of this TradingUser
+     * Adds an item to the wishlist of this TradingUser.
      *
-     * @param itemID The id of the item to be added
+     * @param itemID the id of the item to be added
      */
     protected void addToWishlist(String itemID){
         wishlist.add(itemID);
     }
 
     /**
-     * Removes an item from the wishlist of this TradingUser
+     * Removes an item from the wishlist of this TradingUser.
      *
-     * @param itemID The id of the item to be removed
+     * @param itemID the id of the item to be removed
      */
     protected void removeFromWishlist(String itemID){
         wishlist.remove(itemID);
     }
 
     /**
-     * Returns whether this TradingUser is currently frozen and prevented from making trades
+     * Returns whether this TradingUser is currently frozen and prevented from making trades.
      *
-     * @return Whether this TradingUser is currently frozen
+     * @return whether this TradingUser is currently frozen
      */
     protected boolean isFrozen(){
         return frozen;
     }
 
     /**
-     * Sets the frozen status of this TradingUser
+     * Sets the frozen status of this TradingUser.
      *
-     * @param frozen Whether or not this TradingUser should be frozen
+     * @param frozen whether or not this TradingUser should be frozen
      */
     protected void setFrozen(boolean frozen){
         this.frozen = frozen;
     }
 
     /**
-     * Gets the current credit standing of this TradingUser
+     * Gets the current credit standing of this TradingUser.
      *
-     * @return The current credit standing of this TradingUser
+     * @return the current credit standing of this TradingUser
      */
     protected int getCredit(){
         return credit;
     }
 
     /**
-     * Increments the current credit standing of this TradingUser by 1
+     * Increments the current credit standing of this TradingUser by one.
      */
     protected void incrementCredit(){
         credit++;
     }
 
     /**
-     * Decrements the current credit standing of this TradingUser by 1
+     * Decrements the current credit standing of this TradingUser by one.
      */
     protected void decrementCredit(){
         credit--;
@@ -104,14 +107,14 @@ class TradingUser extends User {
 
     /**
      * Returns the city of this TradingUser.
-     * @return The current city of this TradingUser.
+     * @return the current city of this TradingUser
      */
     protected String getCity() {
         return city;
     }
 
     /**
-     * Returns whether this TradingUser is an admin
+     * Returns whether this TradingUser is an admin.
      * @return whether this TradingUser is an admin
      */
     @Override
@@ -120,9 +123,10 @@ class TradingUser extends User {
     }
 
     /**
-     * Returns the TradingUser's current status and credit as a toString.
-     * @return TradingUser's current status
+     * Returns the string representation of this TradingUser with their current status and credit.
+     * @return the string representation of this TradingUser
      */
+    @Override
     public String toString() {
         String status;
         if (isFrozen()) {
@@ -136,15 +140,15 @@ class TradingUser extends User {
 
     /**
      * Returns whether this TradingUser is on vacation mode.
-     * @return true iff this user is on vacation. Otherwise, returns false.
+     * @return true iff this user is on vacation, otherwise false
      */
     protected boolean isOnVacation(){
         return this.vacation;
     }
 
     /**
-     * Sets the vacation mode of this TradingUser
-     * @param vacation Whether or not this TradingUser is on vacation
+     * Sets the vacation mode of this TradingUser.
+     * @param vacation whether or not this TradingUser is on vacation
      */
     protected void setVacation(boolean vacation){
         this.vacation = vacation;
@@ -152,15 +156,15 @@ class TradingUser extends User {
 
     /**
      * Returns whether this TradingUser is a private account.
-     * @return true iff this TradingUser's account is private. Otherwise, returns false.
+     * @return true iff this TradingUser's account is private, otherwise false
      */
     protected boolean isPrivate(){
         return this.privacy;
     }
 
     /**
-     * Sets the privacy of this TradingUser
-     * @param privacy whether or not this TradingUser's account is private.
+     * Sets the privacy of this TradingUser.
+     * @param privacy whether or not this TradingUser's account is private
      */
     protected void setPrivacy(boolean privacy){
         this.privacy = privacy;
@@ -168,7 +172,7 @@ class TradingUser extends User {
 
     /**
      * Returns the set of friends of this TradingUser.
-     * @return set of friends
+     * @return the set of friends of this TradingUser
      */
     protected Set<String> getFriends(){
         return this.friends;
@@ -176,23 +180,23 @@ class TradingUser extends User {
 
     /**
      * Returns the set of friend requests of this TradingUser.
-     * @return the set of friend requests
+     * @return the set of friend requests of this TradingUser
      */
     protected Set<String> getPendingFriends(){
         return this.pendingFriends;
     }
 
     /**
-     * Adds a user to a given TradingUser's list of friends
-     * @param username username of TradingUser to add to friend list
+     * Adds a user to a given TradingUser's list of friends.
+     * @param username username of TradingUser to add to the friend list
      */
     protected void addToFriends(String username){
         this.friends.add(username);
     }
 
     /**
-     * Remove a user to given TradingUser
-     * @param username username of TradingUser to remove from friend list
+     * Remove a user to given TradingUser.
+     * @param username username of TradingUser to remove from the friend list
      */
     protected void removeFromFriends(String username){
         this.friends.remove(username);
@@ -200,7 +204,7 @@ class TradingUser extends User {
 
     /**
      * Adds a user to a given TradingUser's pending friend list.
-     * @param username username of TradingUser to add to pending friend list.
+     * @param username username of TradingUser to add to pending friend list
      */
     protected void addToPendingFriends(String username){
         this.pendingFriends.add(username);
@@ -208,7 +212,7 @@ class TradingUser extends User {
 
     /**
      * Removes a user to a given TradingUser's pending friend list.
-     * @param username username of TradingUser to remove from pending friend list.
+     * @param username username of TradingUser to remove from pending friend list
      */
     protected void removeFromPendingFriends(String username){
         this.pendingFriends.remove(username);

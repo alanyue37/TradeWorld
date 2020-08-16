@@ -29,7 +29,7 @@ public class AddWishlistGUI implements RunnableGUI {
     private TableView<ObservableList<String>> wishlistTable;
 
     /**
-     * Creates a new AddItemGUI with a specified width and height and the current TradeModel.
+     * Creates a new AddItemGUI.
      *
      * @param stage The stage to show the resulting scene on
      * @param width The width of the stage
