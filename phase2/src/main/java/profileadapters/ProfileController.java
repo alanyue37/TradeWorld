@@ -102,13 +102,13 @@ public class ProfileController  {
     }
 
     /**
-     * Returns JSON representation of Map of string key-value pairs with following keys: name, city,
-     * frozen (true/false), rank (gold/silver/bronze), private (true/false), vacation (true/false), averageRating
+     * Returns profile info of given user as JSON representation of Map of string key-value pairs with following keys:
+     * name, city, frozen (true/false), rank (gold/silver/bronze), private (true/false), vacation (true/false), averageRating
      *
      * Precondition: valid username
      *
-     * @param username user's friends to get
-     * @return list of usernames of given user's friends
+     * @param username username of user's profile requested
+     * @return user profile info in JSON
      */
     protected String getProfileInfo(String username) {
         // Returns name, city, frozen, rank, vacation, privacy, , averageRating Map in JSON
