@@ -18,6 +18,9 @@ import trademain.RunnableGUI;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The GUI for a trading user's inventory tab.
+ */
 public class AddItemGUI implements RunnableGUI {
     private final Stage stage;
     private final UserController controller;
@@ -31,7 +34,14 @@ public class AddItemGUI implements RunnableGUI {
     private Text message;
     private TableView<ObservableList<String>> inventoryTable;
 
-    // TODO: javadoc
+    /**
+     * Creates a new AddItemGUI with a specified width and height and the current TradeModel.
+     *
+     * @param stage The stage to show the resulting scene on
+     * @param width The width of the stage
+     * @param height The height of the stage
+     * @param model The current TradeModel
+     */
     public AddItemGUI(Stage stage, int width, int height, TradeModel model) {
         this.stage = stage;
         controller = new UserController(model);
@@ -41,17 +51,20 @@ public class AddItemGUI implements RunnableGUI {
         creator = new TableViewCreator(tradeModel);
     }
 
-    @Override
-    public void initialScreen() {
-
-    }
-
+    /**
+     * Gets the Parent to be shown.
+     *
+     * @return the resulting Parent
+     */
     @Override
     public Parent getRoot() {
         initializeScreen();
         return grid;
     }
 
+    /**
+     * Sets the scene of the stage to this GUI.
+     */
     @Override
     public void showScreen() {
         initializeScreen();
@@ -59,6 +72,9 @@ public class AddItemGUI implements RunnableGUI {
         stage.setScene(scene);
     }
 
+    /**
+     * Initializes a new GridPane with the objects to be displayed in the GUI.
+     */
     public void initializeScreen() {
         grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -102,6 +118,11 @@ public class AddItemGUI implements RunnableGUI {
 
     }
 
+    /**
+     * Sets the action listener for the createItemButton depending on user input.
+     *
+     * @param createItemButton the button for creating an item
+     */
     protected void configureButtons(Button createItemButton) {
         createItemButton.setOnAction(actionEvent -> {
             if (invalidInput()) {
@@ -115,27 +136,53 @@ public class AddItemGUI implements RunnableGUI {
         });
     }
 
+    /**
+     * Gets whether one or both of the item name or descriptions fields are empty.
+     *
+     * @return whether the fields are empty
+     */
     protected boolean invalidInput() {
         return itemNameField.getText().isEmpty() || itemDescriptionField.getText().isEmpty();
     }
 
+    /**
+     * Sets the message corresponding to whether an item was successfully added or not.
+     */
     protected void setMessage(String text) {
         message.setText(text);
     }
 
+    /**
+     * Clears the item name and description fields.
+     */
     protected void clearInputFields() {
         itemNameField.clear();
         itemDescriptionField.clear();
     }
 
-    protected void setTableViewCreator (TableViewCreator creator) {
+    /**
+     * Sets the TableViewCreator that will create the TableView.
+     *
+     * @param creator the TableViewCreator to use
+     */
+    protected void setTableViewCreator(TableViewCreator creator) {
         this.creator = creator;
     }
 
+    /**
+     * Gets the TableView with the user's inventory that should be displayed in the GUI.
+     *
+     * @return the TableView that should be displayed
+     */
     protected TableView<ObservableList<String>> getInventoryTable() {
         return inventoryTable;
     }
 
+    /**
+     * Gets the inputs in the item name and description fields.
+     *
+     * @return a list with the inputs
+     */
     protected List<String> getInputStrings() {
         List<String> inputStrings = new ArrayList<>();
         inputStrings.add(itemNameField.getText());

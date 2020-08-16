@@ -20,17 +20,12 @@ import java.util.HashMap;
 public class UserMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
 
     private final HashMap<Tab, RunnableGUI> tabToGUI;
-    private TabPane root;
+    private final TabPane root;
 
     public UserMainGUI(int width, int height, TradeModel tradeModel) {
         super(width, height, tradeModel);
         this.root = new TabPane();
         tabToGUI = new HashMap<>();
-    }
-
-    @Override
-    public void initialScreen() {
-
     }
 
     @Override
@@ -102,7 +97,6 @@ public class UserMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
                     }
                 }
         );
-
     }
 
     @Override

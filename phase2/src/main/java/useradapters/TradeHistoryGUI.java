@@ -20,12 +20,11 @@ import java.util.List;
 
 public class TradeHistoryGUI implements RunnableGUI {
     private GridPane root;
-    private Stage stage;
-    private Scene scene;
-    private int width;
-    private int height;
-    private TradeModel tradeModel;
-    private String username;
+    private final Stage stage;
+    private final int width;
+    private final int height;
+    private final TradeModel tradeModel;
+    private final String username;
 
     public TradeHistoryGUI(Stage stage, int width, int height, TradeModel model, String username){
         this.stage = stage;
@@ -33,11 +32,6 @@ public class TradeHistoryGUI implements RunnableGUI {
         this.height = height;
         this.tradeModel = model;
         this.username = username;
-    }
-
-    @Override
-    public void initialScreen() {
-
     }
 
     @Override
@@ -49,7 +43,7 @@ public class TradeHistoryGUI implements RunnableGUI {
     @Override
     public void showScreen() {
         initializeScreen();
-        scene = new Scene(root, width, height);
+        Scene scene = new Scene(root, width, height);
         stage.setScene(scene);
         stage.show();
     }
