@@ -1,13 +1,16 @@
-package trademain;
+package trademain;//hello!
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-
 import tradegateway.TradeSystem;
 
-public class Main extends Application {
+public class Main extends Application{
 
     private TradeSystem ts;
+
+    public static void main(String[] args) {
+        launch(args);
+    }
 
     @Override
     public void start(Stage stage) {

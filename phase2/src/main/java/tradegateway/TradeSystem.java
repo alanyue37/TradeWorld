@@ -17,7 +17,6 @@ public class TradeSystem {
 
     private final String tradeModelFile = "serializedobjects.ser";
     private final String logoFile = "logo.png";
-    private LogInController controller;
     private DataManager dataManager;
     private TradeModel tradeModel;
     private RunnableGUI gui;
@@ -48,4 +47,14 @@ public class TradeSystem {
             e.printStackTrace();
         }
     }
+
+    public void persist() {
+        try {
+            tradeModel.clearState();
+            dataManager.saveToFile(tradeModel);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

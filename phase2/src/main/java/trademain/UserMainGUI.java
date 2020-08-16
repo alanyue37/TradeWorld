@@ -1,11 +1,10 @@
 package trademain;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+
 import profileadapters.LoggedInProfileGUI;
 import profileadapters.ProfileGUI;
 import tradeadapters.TradeGUI;

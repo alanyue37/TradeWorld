@@ -76,19 +76,12 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         tradeModel.addObserver(this);
     }
 
-    /**
-     * Returns the TabPane consisting of the Admin menu options.
-     * @return Returns the TabPane consisting of Admin menu options.
-     */
     @Override
     public Parent getRoot() {
         initializeScreen();
         return root;
     }
 
-    /**
-     * Sets up the screen.
-     */
     @Override
     public void showScreen() {
         initializeScreen();
