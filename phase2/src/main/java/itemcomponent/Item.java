@@ -2,7 +2,6 @@ package itemcomponent;
 
 import java.io.Serializable;
 import java.util.Date;
-import org.json.*;
 
 class Item implements Serializable {
     private final String id;
@@ -14,7 +13,7 @@ class Item implements Serializable {
     private final Date dateCreated;
 
     /**
-     * Initiates a new item
+     * Creates a new item with a given id, name, owner, and description.
      * @param id    The id of the item
      * @param name  The name of the item
      * @param owner The owner of the item
@@ -32,7 +31,7 @@ class Item implements Serializable {
 
     /**
      * Returns the id of the item
-     * @return  The id of the item
+     * @return the id of the item
      */
     protected String getId() {
         return id;
@@ -40,7 +39,7 @@ class Item implements Serializable {
 
     /**
      * Returns the name of the item
-     * @return  The name of the item
+     * @return the name of the item
      */
     protected String getName() {
         return name;
@@ -48,7 +47,7 @@ class Item implements Serializable {
 
     /**
      * Returns the owner of the item
-     * @return  The owner of the item
+     * @return the owner of the item
      */
     protected String getOwner() {
         return owner;
@@ -56,7 +55,7 @@ class Item implements Serializable {
 
     /**
      * Returns the description of the item
-     * @return  The description of the item
+     * @return the description of the item
      */
     protected String getDescription() {
         return description;
@@ -64,7 +63,7 @@ class Item implements Serializable {
 
     /**
      * Gets the current stage of this item
-     * @return  The current stage of this item
+     * @return the current stage of this item
      */
     protected String getStage() {
         return stage;
@@ -72,7 +71,7 @@ class Item implements Serializable {
 
     /**
      * Returns true if the item is available or false if the item is not available
-     * @return  Whether the item is available or not
+     * @return whether the item is available or not
      */
     protected boolean isAvailable() {
         return available;
@@ -80,7 +79,7 @@ class Item implements Serializable {
 
     /**
      * Gets when this item was created
-     * @return When this item was created
+     * @return when this item was created
      */
     protected Date getDateCreated() {
         return dateCreated;
@@ -114,7 +113,7 @@ class Item implements Serializable {
 
     /**
      * Returns a string which includes the itemId, name, description, and its availability
-     * @return  The string in identifying the itemId, name, description, and its availability
+     * @return  the string in identifying the itemId, name, description, and its availability
      */
     public String toString() {
         return "Item ID: " + id + "\nName: " + name + "\nOwner: " + owner + "\nDescription: " + description + "\nAvailable: " + available;

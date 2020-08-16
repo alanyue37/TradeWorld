@@ -12,10 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Holder class for the managers.
+ * Facade class that stores all the information relating to the Trading system.
  */
 public class TradeModel implements Serializable, ObservableDataModel {
-//TODO: add javadocs
+
     private UserManager userManager;
     private ItemManager itemManager;
     private TradeManager tradeManager;
@@ -27,25 +27,28 @@ public class TradeModel implements Serializable, ObservableDataModel {
     private final List<GUIObserver> observers;
 
     /**
-     * Creates a new tradegateway.TradeModel with existing managers.
+     * Creates a new TradeModel with existing managers.
      *
-     * @param um the UserManager.
-     * @param im the ItemManager.
-     * @param tm the TradeManager.
+     * @param um the UserManager
+     * @param im the ItemManager
+     * @param tm the TradeManager
+     * @param mm the MeetingManager
+     * @param rm the ReviewManager
+     * @param undoManager the UndoManager
      */
-    public TradeModel(UserManager um, ItemManager im, TradeManager tm, MeetingManager mm, ReviewManager rm, UndoManager undomanager) {
+    public TradeModel(UserManager um, ItemManager im, TradeManager tm, MeetingManager mm, ReviewManager rm, UndoManager undoManager) {
         userManager = um;
         itemManager = im;
         tradeManager = tm;
         meetingManager = mm;
         reviewManager = rm;
-        this.undoManager = undomanager;
+        this.undoManager = undoManager;
         this.observers = new ArrayList<>();
         this.currentUser = null;
     }
 
     /**
-     * Creates a new tradegateway.TradeModel with no existing managers.
+     * Creates a new TradeModel with no existing managers.
      */
     public TradeModel() {
         userManager = new UserManager(this);
@@ -59,83 +62,83 @@ public class TradeModel implements Serializable, ObservableDataModel {
     }
 
     /**
-     * Set the UserManager for the tradegateway.TradeModel.
-     * @param userManager the updated userManager
+     * Sets the UserManager for this TradeModel.
+     * @param userManager the updated UserManager
      */
     public void setUserManager(UserManager userManager) { this.userManager = userManager; }
 
     /**
-     * Return the UserManager for the tradegateway.TradeModel.
-     * @return userManager
+     * Returns the UserManager for this TradeModel.
+     * @return the UserManager for this TradeModel
      */
     public UserManager getUserManager() {
         return userManager;
     }
 
     /**
-     * Set the ItemManager for the tradegateway.TradeModel.
-     * @param itemManager the updated itemManager
+     * Sets the ItemManager for this TradeModel.
+     * @param itemManager the updated ItemManager
      */
     public void setItemManager(ItemManager itemManager) { this.itemManager = itemManager; }
 
     /**
-     * Return the ItemManager for the tradegateway.TradeModel.
-     * @return itemManager
+     * Returns the ItemManager for this TradeModel.
+     * @return the ItemManager for this TradeModel.
      */
     public ItemManager getItemManager() {
         return itemManager;
     }
 
     /**
-     * Set the TradeManager for the tradegateway.TradeModel.
-     * @param tradeManager the updated tradeManager
+     * Sets the TradeManager for the TradeModel.
+     * @param tradeManager the updated TradeManager
      */
     public void setTradeManager(TradeManager tradeManager) { this.tradeManager = tradeManager; }
 
     /**
-     * Return the TradeManager for the tradegateway.TradeModel.
-     * @return tradeManager
+     * Returns the TradeManager for this TradeModel.
+     * @return the TradeManager for this TradeModel
      */
     public TradeManager getTradeManager() { return tradeManager; }
 
     /**
-     * Set the MeetingManager for the tradegateway.TradeModel.
-     * @param meetingManager the updated meetingManager
+     * Sets the MeetingManager for this TradeModel.
+     * @param meetingManager the updated MeetingManager
      */
     public void setMeetingManager(MeetingManager meetingManager) { this.meetingManager = meetingManager; }
 
     /**
-     * Return the MeetingManager for the tradegateway.TradeModel.
-     * @return meetingManager
+     * Returns the MeetingManager for this TradeModel.
+     * @return the MeetingManager for this TradeModel.
      */
     public MeetingManager getMeetingManager() { return meetingManager; }
 
     /**
-     * Set the ReviewManager for the tradegateway.TradeModel.
-     * @param reviewManager the updated reviewManager
+     * Sets the ReviewManager for this TradeModel.
+     * @param reviewManager the updated ReviewManager
      */
     public void setReviewManager(ReviewManager reviewManager) { this.reviewManager = reviewManager; }
 
     /**
-     * Return the ReviewManager for the tradegateway.TradeModel.
-     * @return reviewManager
+     * Returns the ReviewManager for this TradeModel.
+     * @return the ReviewManager for this TradeModel
      */
     public ReviewManager getReviewManager() { return reviewManager; }
 
     /**
-     * Set the UndoManager for the tradegateway.TradeModel.
-     * @param undoManager the new undoManager
+     * Set the UndoManager for this TradeModel.
+     * @param undoManager the updated UndoManager
      */
     public void setUndoManager(UndoManager undoManager) { this.undoManager = undoManager; }
 
     /**
-     * Return the UndoManager for the tradegateway.TradeModel.
-     * @return undoManager
+     * Returns the UndoManager for this TradeModel.
+     * @return the UndoManager for this TradeModel
      */
     public UndoManager getUndoManager() { return undoManager; }
 
     /**
-     * Set the username of the user currently logged in.
+     * Sets currentUser to the username of the user currently logged in.
      * @param currentUser the username of logged in user
      */
     public void setCurrentUser(String currentUser) {
@@ -143,22 +146,32 @@ public class TradeModel implements Serializable, ObservableDataModel {
     }
 
     /**
-     * Return the username of the user currently logged in.
-     * @return undoManager
+     * Gets the username of the user currently logged in.
+     * @return the username of the current user
      */
     public String getCurrentUser() {
         return currentUser;
     }
 
+    /**
+     * Gets whether the TradeModel has changed.
+     * @return whether Trademodel has changed
+     */
     public boolean hasChanged() {
         return changed;
     }
 
+    /**
+     * Sets changed to true and notifies the observers.
+     */
     public void setChanged() {
         this.changed = true;
         notifyObservers();
     }
 
+    /**
+     * Notifies the observers that a change may have happened.
+     */
     private void notifyObservers() {
         if (hasChanged() && observers != null) {
             for (GUIObserver o : observers) {
@@ -168,16 +181,27 @@ public class TradeModel implements Serializable, ObservableDataModel {
         }
     }
 
+    /**
+     * Adds a GUIObserver to the list of observers.
+     * @param observer the GUIObserver to add
+     */
     public void addObserver(GUIObserver observer) {
         if (!observers.contains(observer)) {
             observers.add(observer);
         }
     }
 
+    /**
+     * Removes all observers.
+     */
     public void clearObservers() {
         observers.clear();
     }
 
+    /**
+     * Clears this TradeModel of the current user and observers.
+     * Used when a user logs out.
+     */
     public void clearState() {
         clearObservers();
         this.currentUser = null;

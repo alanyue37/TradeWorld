@@ -140,6 +140,11 @@ public class UserManager implements Serializable {
         return allUsers;
     }
 
+    /**
+     * Gets the set of all TradingUsers
+     *
+     * @return The set of all TradingUsers
+     */
     public Set<String> getAllTradingUsers() {
         return tradingUsers.keySet();
     }
