@@ -175,6 +175,59 @@ public class TradeManager implements Serializable {
         observableDataModel.setChanged();
     }
 
+    private List<String> sortPartnersList(Map<String, Integer> partners) {
+        List<String> sorted = new ArrayList<>();
+        for (String partner : partners.keySet()) {
+            if (sorted.size() == 0) {
+                sorted.add(partner);
+            } else {
+                int i = 0;
+                while ((i < sorted.size()) && partners.get(partner) < partners.get(sorted.get(i))) {
+                    i++;
+                }
+                sorted.add(i, partner);
+            }
+        }
+        return sorted;
+    }
+
+    /**
+     * Returns list of the top given number of most frequent trading partners of a user
+     *
+     * @param num  the number of most frequent trading partners wanted
+     * @param user the username of the user to get their most frequent trading partners
+     * @return list of usernames that are the most frequent trading partners of user "user." If "num" is greater
+     * than the number of trading partners that "user" has, all of their trading partners are returned.
+     */
+    public List<String> getFrequentPartners(int num, String user) {
+        List<String> completed = getTradesOfUser(user, "completed");
+        Map<String, Integer> partners = userToNumTradesInvolved(completed);
+        partners.remove(user);
+        List<String> frequentPartners = sortPartnersList(partners); // assumes that sort partners give best partner first
+        if (num >= frequentPartners.size()) {
+            return frequentPartners;
+        }
+        return frequentPartners.subList(0, num);
+    }
+    // only looks at completed trades
+
+    /**
+     * Returns list of the IDs of the most recent given number of (completed) trades of a user
+     *
+     * @param num the number of IDs of most recent trades wanted
+     * @return list of IDs of most recent (completed) trades involving user "user." If "num" is greater
+     * than the number of trades that "user" has been in, all of the trade IDs are returned.
+     */
+    public List<String> getRecentTrades(int num, List<String> sortedCompletedTrades) {
+        List<String> recentTrades = new ArrayList<>();
+        int i = sortedCompletedTrades.size() - 1;
+        while (i >= sortedCompletedTrades.size() - num && i >= 0) {
+            recentTrades.add(sortedCompletedTrades.get(i));
+            i--;
+        }
+        return recentTrades;
+    }
+
     /**
      * Returns a JSON object with all the information about the trade (type, status, number of meetings, creation date, items
      * and users involved)

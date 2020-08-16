@@ -142,6 +142,8 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         subRoot.getTabs().get(3).setContent(setLimitOfEdits());
         subRoot.getTabs().get(4).setContent(setGoldThreshold());
         subRoot.getTabs().get(5).setContent(setSilverThreshold());
+
+        System.out.println("Trademodel changed");
     }
 
     /**

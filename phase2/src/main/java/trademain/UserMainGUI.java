@@ -87,6 +87,7 @@ public class UserMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
 
     @Override
     public void update() {
+        System.out.println("TradeModel changed");
         for (Tab t: tabToGUI.keySet()) {
             t.setContent(tabToGUI.get(t).getRoot());
         }
