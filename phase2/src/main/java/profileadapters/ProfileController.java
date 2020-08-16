@@ -3,9 +3,7 @@ package profileadapters;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import tradegateway.TradeModel;
-import undocomponent.UndoAddFriend;
-import undocomponent.UndoAddReview;
-import undocomponent.UndoableOperation;
+import undocomponent.*;
 
 import java.lang.reflect.Type;
 import java.util.*;
@@ -133,10 +131,14 @@ public class ProfileController  {
 
     protected void setVacationMode(boolean vacation) {
         tradeModel.getUserManager().setOnVacation(tradeModel.getCurrentUser(), vacation);
+        UndoableOperation undoVacation = new UndoSetVacation(tradeModel.getCurrentUser(), tradeModel.getUserManager());
+        tradeModel.getUndoManager().add(undoVacation);
     }
 
     protected void setPrivacyMode(boolean privacy) {
         tradeModel.getUserManager().setPrivate(tradeModel.getCurrentUser(), privacy);
+        UndoableOperation undoPrivacy = new UndoSetPrivacy(tradeModel.getCurrentUser(), tradeModel.getUserManager());
+        tradeModel.getUndoManager().add(undoPrivacy);
     }
 
     protected void requestUnfreeze() {
