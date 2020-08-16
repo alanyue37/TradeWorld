@@ -3,14 +3,17 @@ package undocomponent;
 import usercomponent.UserManager;
 import java.io.Serializable;
 
-public class UndoSetPrivacy implements UndoableOperation, Serializable{
+/**
+ * An undoable operation representing a user setting their privacy status.
+ */
+public class UndoSetPrivacy implements UndoableOperation, Serializable {
 
     private final String username;
     private final boolean status;
     private final UserManager userManager;
 
     /**
-     * Instantiates a new UndoSetPrivacy operation
+     * Instantiates a new UndoSetPrivacy operation.
      * @param username username of the user
      * @param userManager the UserManager containing the user
      */
