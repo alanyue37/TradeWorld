@@ -116,15 +116,6 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
 
         root.getTabs().addAll(initiateTab, proposedTab, confirmTab, viewTab);
 
-        // Listener code below based on https://stackoverflow.com/questions/17522686/javafx-tabpane-how-to-listen-to-selection-changes
-        root.getSelectionModel().selectedItemProperty().addListener(
-                new ChangeListener<Tab>() {
-                    @Override
-                    public void changed(ObservableValue<? extends Tab> observableValue, Tab oldTab, Tab newTab) {
-                        //update();
-                    }
-                }
-        );
     }
 
     /**

@@ -14,11 +14,11 @@ import org.json.JSONObject;
  * Represents a trade to exchange item(s)
  */
 abstract class Trade implements Serializable {
-    private String type;
-    private String idOfTrade;
+    private final String type;
+    private final String idOfTrade;
     private boolean IsOpened;
     private List<String> meeting;
-    private Date creationDate;
+    private final Date creationDate;
 
     /** Constructs trade given the type (temporary or permanent)
      * @param type temporary or permanent trade
