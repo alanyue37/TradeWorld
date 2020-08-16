@@ -22,6 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The GUI for a trading user's trade history.
+ */
 public class TradeHistoryGUI implements RunnableGUI {
     private GridPane root;
     private final Stage stage;
@@ -29,14 +32,21 @@ public class TradeHistoryGUI implements RunnableGUI {
     private final int height;
     private final TradeModel tradeModel;
     private final String username;
-    private Gson gson;
+    private final Gson gson;
 
-    public TradeHistoryGUI(Stage stage, int width, int height, TradeModel model, String username){
+    /**
+     * Creates a new TradeHistoryGUI.
+     * @param stage The stage to show the resulting scene on
+     * @param width The width of the stage
+     * @param height The height of the stage
+     * @param model The current TradeModel
+     */
+    public TradeHistoryGUI(Stage stage, int width, int height, TradeModel model){
         this.stage = stage;
         this.width = width;
         this.height = height;
         this.tradeModel = model;
-        this.username = username;
+        this.username = tradeModel.getCurrentUser();
         gson = new Gson();
     }
 
