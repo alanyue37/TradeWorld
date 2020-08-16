@@ -95,26 +95,21 @@ public class TradeHistoryGUI implements RunnableGUI {
         return result;
     }
 
-
-
     private ListView<String> getPartnerHistory(int count) {
         ListView<String> result = new ListView<>();
         result.prefWidthProperty().bind(stage.widthProperty());
         result.setPlaceholder(new Label("No past trading partners to display."));
 
-        result.getItems().addAll(getFrequentPartners(count));
-        return result;
-    }
-
-    private List<String> getFrequentPartners(int num) {
         List<String> completed = tradeModel.getTradeManager().getTradesOfUser(username, "completed");
         Map<String, Integer> partners = tradeModel.getTradeManager().userToNumTradesInvolved(completed);
         partners.remove(username);
         List<String> frequentPartners = sortPartnersList(partners); // assumes that sort partners give best partner first
-        if (num >= frequentPartners.size()) {
-            return frequentPartners;
+        if (count >= frequentPartners.size()){
+            result.getItems().addAll(frequentPartners);
+        } else{
+            result.getItems().addAll(frequentPartners.subList(0, count));
         }
-        return frequentPartners.subList(0, num);
+        return result;
     }
 
     private List<String> sortPartnersList(Map<String, Integer> partners) {
