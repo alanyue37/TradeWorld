@@ -15,7 +15,7 @@ import java.util.List;
  * Holder class for the managers.
  */
 public class TradeModel implements Serializable, ObservableDataModel {
-
+//TODO: add javadocs
     private UserManager userManager;
     private ItemManager itemManager;
     private TradeManager tradeManager;
@@ -41,6 +41,7 @@ public class TradeModel implements Serializable, ObservableDataModel {
         reviewManager = rm;
         this.undoManager = undomanager;
         this.observers = new ArrayList<>();
+        this.currentUser = null;
     }
 
     /**
@@ -54,6 +55,7 @@ public class TradeModel implements Serializable, ObservableDataModel {
         reviewManager = new ReviewManager(this);
         this.undoManager = new UndoManager(this);
         this.observers = new ArrayList<>();
+        this.currentUser = null;
     }
 
     /**
@@ -174,5 +176,11 @@ public class TradeModel implements Serializable, ObservableDataModel {
 
     public void clearObservers() {
         observers.clear();
+    }
+
+    public void clearState() {
+        clearObservers();
+        this.currentUser = null;
+        this.changed = false;
     }
 }
