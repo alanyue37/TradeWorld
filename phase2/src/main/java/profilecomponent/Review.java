@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Represents a review for a trade
  */
-public class Review implements Serializable {
+class Review implements Serializable {
     private final String id;
     private int rating;
     private String comment;
