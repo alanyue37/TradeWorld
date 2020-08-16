@@ -4,6 +4,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import loginadapters.LogInController;
 import loginadapters.LoginGUI;
+import trademain.RunnableGUI;
 
 import java.io.IOException;
 import java.util.Observable;
@@ -16,9 +17,9 @@ public class TradeSystem implements Observer {
 
     private final String tradeModelFile = "serializedobjects.ser";
     private final String logoFile = "logo.png";
-    private LogInController controller;
     private DataManager dataManager;
     private TradeModel tradeModel;
+    private RunnableGUI gui;
 
     /**
      * Run the trading system.
@@ -28,7 +29,7 @@ public class TradeSystem implements Observer {
             dataManager = new DataManager(tradeModelFile);
             tradeModel = dataManager.readFromFile();
             Image logo = dataManager.readImage(logoFile);
-            LoginGUI gui = new LoginGUI(stage, 275, 300, tradeModel, logo);
+            gui = new LoginGUI(stage, 500, 650, tradeModel, logo);
             gui.showScreen();
             }
         catch (IOException | ClassNotFoundException ex) {
@@ -44,4 +45,14 @@ public class TradeSystem implements Observer {
             e.printStackTrace();
         }
     }
+
+    public void persist() {
+        try {
+            tradeModel.clearState();
+            dataManager.saveToFile(tradeModel);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
