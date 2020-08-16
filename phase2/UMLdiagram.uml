@@ -1,0 +1,997 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>adminadapters</OriginalElement>
+  <nodes>
+    <node x="2776.6471702365943" y="998.0">tradegateway.TradeModel</node>
+    <node x="2129.7305035699274" y="998.0">undocomponent.UndoAddProposedTrade</node>
+    <node x="2549.25641025641" y="2084.0">demoadapters.DemoTradeGUI</node>
+    <node x="2572.0588492808006" y="274.0">tradecomponent.Meeting</node>
+    <node x="2406.725515947467" y="606.0">profilecomponent.ReviewManager</node>
+    <node x="4041.421331737015" y="1320.0">adminadapters.AdminController</node>
+    <node x="2848.167614609648" y="606.0">undocomponent.UndoManager</node>
+    <node x="550.5" y="998.0">undocomponent.UndoAddWishlistItem</node>
+    <node x="592.208923218798" y="1320.0">profileadapters.ProfileController</node>
+    <node x="4408.819994639507" y="274.0">tradecomponent.TradeFactory</node>
+    <node x="2578.725515947467" y="606.0">tradecomponent.MeetingManager</node>
+    <node x="2907.098508918591" y="1320.0">useradapters.TableViewCreator</node>
+    <node x="2564.073076923077" y="1320.0">trademain.RunnableGUI</node>
+    <node x="2727.007567229519" y="274.0">tradegateway.ObservableDataModel</node>
+    <node x="406.0848725549549" y="606.0">usercomponent.UserManager</node>
+    <node x="993.208923218798" y="1792.0">useradapters.TradeHistoryGUI</node>
+    <node x="3862.6503126954344" y="2266.0">adminadapters.AdminMainGUI</node>
+    <node x="4369.319994639507" y="0.0">tradecomponent.Trade</node>
+    <node x="2390.0588492808006" y="274.0">profilecomponent.Review</node>
+    <node x="2765.062794632877" y="1792.0">useradapters.AddWishlistGUI</node>
+    <node x="378.5" y="998.0">undocomponent.UndoAddFriend</node>
+    <node x="10.5" y="998.0">undocomponent.UndoSetPrivacy</node>
+    <node x="2310.1217382410805" y="1320.0">useradapters.UserController</node>
+    <node x="1193.208923218798" y="274.0">undocomponent.UndoableOperation</node>
+    <node x="1270.7153334752081" y="998.0">undocomponent.UndoAddReview</node>
+    <node x="3441.160356127259" y="2084.0">trademain.Main</node>
+    <node x="1438.8397435897436" y="1320.0">tradeadapters.InitiateTradeController</node>
+    <node x="1953.1730769230771" y="1320.0">tradeadapters.ProposedTradesController</node>
+    <node x="3317.160356127259" y="2084.0">trademain.MainGUI</node>
+    <node x="361.16820588828796" y="274.0">usercomponent.TradingUser</node>
+    <node x="2105.698508918591" y="1792.0">tradeadapters.TradeGUI</node>
+    <node x="3684.421331737015" y="1320.0">tradegateway.DataManager</node>
+    <node x="3563.221331737015" y="1792.0">tradegateway.TradeSystem</node>
+    <node x="4519.819994639507" y="606.0">itemcomponent.ItemManager</node>
+    <node x="4303.284280353793" y="998.0">undocomponent.UndoAddInventoryItem</node>
+    <node x="3324.723475415509" y="122.0">tradegateway.GUIObserver</node>
+    <node x="4412.819994639507" y="122.0">tradecomponent.OneWayTrade</node>
+    <node x="2081.25641025641" y="2266.0">trademain.UserMainGUI</node>
+    <node x="3852.421331737015" y="1320.0">loginadapters.LogInController</node>
+    <node x="2400.25641025641" y="1792.0">useradapters.AddItemGUI</node>
+    <node x="3719.221331737015" y="1792.0">tradegateway.DemoTradeSystem</node>
+    <node x="2893.25641025641" y="2084.0">demoadapters.DemoAddWishlistGUI</node>
+    <node x="4273.569994639507" y="606.0">tradecomponent.TradeManager</node>
+    <node x="190.5" y="998.0">undocomponent.UndoSetVacation</node>
+    <node x="2725.25641025641" y="2266.0">demoadapters.DemoMainGUI</node>
+    <node x="3569.160356127259" y="2084.0">trademain.DemoMain</node>
+    <node x="845.208923218798" y="1792.0">profileadapters.ProfileGUI</node>
+    <node x="460.58288452230863" y="122.0">usercomponent.User</node>
+    <node x="1690.8397435897436" y="1320.0">tradeadapters.ConfirmTradesController</node>
+    <node x="3104.098508918591" y="1792.0">demoadapters.DemoTableViewCreator</node>
+    <node x="2713.25641025641" y="2084.0">demoadapters.DemoAddItemGUI</node>
+    <node x="4585.819994639507" y="274.0">itemcomponent.Item</node>
+    <node x="2947.007567229519" y="274.0">undocomponent.NoLongerUndoableException</node>
+    <node x="4256.819994639507" y="122.0">tradecomponent.TwoWayTrade</node>
+    <node x="731.3651755852575" y="2084.0">profileadapters.LoggedInProfileGUI</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="profileadapters.ProfileGUI" target="tradegateway.TradeModel">
+      <point x="32.0" y="-26.0" />
+      <point x="941.208923218798" y="1772.0" />
+      <point x="936.0422565521312" y="1772.0" />
+      <point x="936.0422565521312" y="1150.0" />
+      <point x="2790.695950724399" y="1150.0" />
+      <point x="-49.951219512195166" y="26.0" />
+    </edge>
+    <edge source="useradapters.UserController" target="undocomponent.UndoableOperation">
+      <point x="-20.0" y="-26.0" />
+      <point x="2370.1217382410805" y="1070.0" />
+      <point x="1770.5897435897436" y="1070.0" />
+      <point x="1770.5897435897436" y="486.0" />
+      <point x="1299.3627693726442" y="486.0" />
+      <point x="14.153846153846189" y="26.0" />
+    </edge>
+    <edge source="loginadapters.LogInController" target="tradegateway.TradeModel">
+      <point x="-42.0" y="-26.0" />
+      <point x="3894.421331737015" y="1140.0" />
+      <point x="2887.4764385292774" y="1140.0" />
+      <point x="46.82926829268308" y="26.0" />
+    </edge>
+    <edge source="useradapters.UserController" target="undocomponent.UndoAddWishlistItem">
+      <point x="-60.0" y="-26.0" />
+      <point x="2330.1217382410805" y="1080.0" />
+      <point x="650.5" y="1080.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="tradegateway.TradeModel" target="usercomponent.UserManager">
+      <point x="-54.85714285714312" y="-26.0" />
+      <point x="2785.790027379451" y="768.0" />
+      <point x="523.5394180095004" y="768.0" />
+      <point x="49.454545454545496" y="26.0" />
+    </edge>
+    <edge source="tradecomponent.TradeManager" target="tradegateway.ObservableDataModel">
+      <point x="-36.0" y="-26.0" />
+      <point x="4309.569994639507" y="406.0" />
+      <point x="2888.5460287679803" y="406.0" />
+      <point x="61.53846153846143" y="26.0" />
+    </edge>
+    <edge source="undocomponent.UndoAddProposedTrade" target="tradecomponent.MeetingManager">
+      <point x="-17.333333333333485" y="-26.0" />
+      <point x="2216.397170236594" y="828.0" />
+      <point x="2626.725515947467" y="828.0" />
+      <point x="-32.0" y="26.0" />
+    </edge>
+    <edge source="trademain.UserMainGUI" target="trademain.MainGUI">
+      <point x="55.25" y="-26.0" />
+      <point x="2204.50641025641" y="2216.0" />
+      <point x="3325.8270227939256" y="2216.0" />
+      <point x="-43.333333333333485" y="26.0" />
+    </edge>
+    <edge source="useradapters.TradeHistoryGUI" target="trademain.RunnableGUI">
+      <point x="56.0" y="-26.0" />
+      <point x="1133.208923218798" y="1662.0" />
+      <point x="2577.673076923077" y="1662.0" />
+      <point x="-54.40000000000009" y="26.0" />
+    </edge>
+    <edge source="useradapters.TableViewCreator" target="tradegateway.TradeModel">
+      <point x="-44.0" y="-26.0" />
+      <point x="2951.098508918591" y="1280.0" />
+      <point x="2843.7691214561064" y="1280.0" />
+      <point x="3.121951219512084" y="26.0" />
+    </edge>
+    <edge source="profileadapters.LoggedInProfileGUI" target="profileadapters.ProfileGUI">
+      <point x="64.0" y="-26.0" />
+      <point x="891.3651755852575" y="2064.0" />
+      <point x="883.6089232187978" y="2064.0" />
+      <point x="-25.600000000000023" y="26.0" />
+    </edge>
+    <edge source="demoadapters.DemoTableViewCreator" target="useradapters.TableViewCreator">
+      <point x="-69.33333333333348" y="-26.0" />
+      <point x="3138.7651755852576" y="1772.0" />
+      <point x="3021.498508918591" y="1772.0" />
+      <point x="26.40000000000009" y="26.0" />
+    </edge>
+    <edge source="demoadapters.DemoMainGUI" target="tradegateway.TradeModel">
+      <point x="39.666666666666515" y="-26.0" />
+      <point x="2832.9230769230767" y="2206.0" />
+      <point x="3115.2173858661668" y="2206.0" />
+      <point x="3115.2173858661668" y="2004.0" />
+      <point x="3520.349380517503" y="2004.0" />
+      <point x="3520.349380517503" y="1220.0" />
+      <point x="2862.50082877318" y="1220.0" />
+      <point x="21.8536585365855" y="26.0" />
+    </edge>
+    <edge source="undocomponent.UndoSetPrivacy" target="undocomponent.UndoableOperation">
+      <point x="-53.333333333333485" y="-26.0" />
+      <point x="37.166666666666515" y="918.0" />
+      <point x="181.7177089370507" y="918.0" />
+      <point x="181.7177089370507" y="436.0" />
+      <point x="1200.285846295721" y="436.0" />
+      <point x="-84.9230769230769" y="26.0" />
+    </edge>
+    <edge source="demoadapters.DemoTradeGUI" target="tradeadapters.TradeGUI">
+      <point x="-18.0" y="-26.0" />
+      <point x="2603.25641025641" y="1894.0" />
+      <point x="2203.698508918591" y="1894.0" />
+      <point x="42.0" y="26.0" />
+    </edge>
+    <edge source="useradapters.AddWishlistGUI" target="tradegateway.TradeModel">
+      <point x="0.0" y="-26.0" />
+      <point x="2845.062794632877" y="1712.0" />
+      <point x="2896.598508918591" y="1712.0" />
+      <point x="2896.598508918591" y="1290.0" />
+      <point x="2840.6471702365943" y="1290.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="itemcomponent.ItemManager" target="tradegateway.ObservableDataModel">
+      <point x="-34.0" y="-26.0" />
+      <point x="4553.819994639507" y="376.0" />
+      <point x="2919.315259537211" y="376.0" />
+      <point x="92.30769230769238" y="26.0" />
+    </edge>
+    <edge source="useradapters.AddItemGUI" target="useradapters.UserController">
+      <point x="-24.0" y="-26.0" />
+      <point x="2440.25641025641" y="1502.0" />
+      <point x="2330.1217382410805" y="1502.0" />
+      <point x="-60.0" y="26.0" />
+    </edge>
+    <edge source="tradeadapters.TradeGUI" target="tradegateway.GUIObserver">
+      <point x="-32.66666666666674" y="-26.0" />
+      <point x="2129.031842251924" y="1612.0" />
+      <point x="1182.708923218798" y="1612.0" />
+      <point x="1182.708923218798" y="244.0" />
+      <point x="3358.723475415509" y="244.0" />
+      <point x="-34.0" y="26.0" />
+    </edge>
+    <edge source="itemcomponent.ItemManager" target="undocomponent.NoLongerUndoableException">
+      <point x="-11.33333333333303" y="-26.0" />
+      <point x="4576.486661306175" y="366.0" />
+      <point x="3133.007567229519" y="366.0" />
+      <point x="62.0" y="26.0" />
+    </edge>
+    <edge source="trademain.UserMainGUI" target="trademain.RunnableGUI">
+      <point x="12.75" y="-26.0" />
+      <point x="2162.00641025641" y="2166.0" />
+      <point x="2389.75641025641" y="2166.0" />
+      <point x="2389.75641025641" y="1692.0" />
+      <point x="2604.8730769230774" y="1692.0" />
+      <point x="-27.199999999999818" y="26.0" />
+    </edge>
+    <edge source="tradegateway.TradeModel" target="itemcomponent.ItemManager">
+      <point x="54.85714285714266" y="-26.0" />
+      <point x="2895.5043130937365" y="938.0" />
+      <point x="4560.619994639508" y="938.0" />
+      <point x="-27.199999999999818" y="26.0" />
+    </edge>
+    <edge source="demoadapters.DemoAddWishlistGUI" target="tradegateway.TradeModel">
+      <point x="76.80000000000018" y="-26.0" />
+      <point x="3066.0564102564103" y="1994.0" />
+      <point x="3402.278361475923" y="1994.0" />
+      <point x="3402.278361475923" y="1230.0" />
+      <point x="2859.3788775536677" y="1230.0" />
+      <point x="18.731707317073415" y="26.0" />
+    </edge>
+    <edge source="trademain.Main" target="tradegateway.TradeSystem">
+      <point x="20.0" y="-26.0" />
+      <point x="3501.160356127259" y="2044.0" />
+      <point x="3665.221331737015" y="2044.0" />
+      <point x="34.0" y="26.0" />
+    </edge>
+    <edge source="undocomponent.UndoAddReview" target="undocomponent.UndoableOperation">
+      <point x="-50.66666666666674" y="-26.0" />
+      <point x="1296.0486668085414" y="978.0" />
+      <point x="1283.6320001418749" y="978.0" />
+      <point x="1283.6320001418749" y="486.0" />
+      <point x="1285.208923218798" y="486.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="demoadapters.DemoAddItemGUI" target="demoadapters.DemoTableViewCreator">
+      <point x="32.0" y="-26.0" />
+      <point x="2825.25641025641" y="1964.0" />
+      <point x="3156.098508918591" y="1964.0" />
+      <point x="-52.0" y="26.0" />
+    </edge>
+    <edge source="adminadapters.AdminController" target="undocomponent.UndoableOperation">
+      <point x="63.0" y="-26.0" />
+      <point x="4188.421331737015" y="1300.0" />
+      <point x="4666.319994639507" y="1300.0" />
+      <point x="4666.319994639507" y="356.0" />
+      <point x="1370.1320001418749" y="356.0" />
+      <point x="84.9230769230769" y="26.0" />
+    </edge>
+    <edge source="tradecomponent.TradeManager" target="tradecomponent.TradeFactory">
+      <point x="12.0" y="-26.0" />
+      <point x="4357.569994639507" y="566.0" />
+      <point x="4444.819994639507" y="566.0" />
+      <point x="-36.0" y="26.0" />
+    </edge>
+    <edge source="profileadapters.ProfileGUI" target="profileadapters.ProfileController">
+      <point x="-32.0" y="-26.0" />
+      <point x="877.208923218798" y="1762.0" />
+      <point x="647.408923218798" y="1762.0" />
+      <point x="-36.799999999999955" y="26.0" />
+    </edge>
+    <edge source="tradecomponent.MeetingManager" target="tradegateway.ObservableDataModel">
+      <point x="32.0" y="-26.0" />
+      <point x="2690.725515947467" y="536.0" />
+      <point x="2796.238336460288" y="536.0" />
+      <point x="-30.769230769230944" y="26.0" />
+    </edge>
+    <edge source="trademain.UserMainGUI" target="tradeadapters.TradeGUI">
+      <point x="-4.25" y="-26.0" />
+      <point x="2145.00641025641" y="2176.0" />
+      <point x="2139.198508918591" y="2176.0" />
+      <point x="2139.198508918591" y="2064.0" />
+      <point x="2119.698508918591" y="2064.0" />
+      <point x="-42.0" y="26.0" />
+    </edge>
+    <edge source="useradapters.AddWishlistGUI" target="useradapters.UserController">
+      <point x="-45.71428571428578" y="-26.0" />
+      <point x="2799.348508918591" y="1472.0" />
+      <point x="2450.1217382410805" y="1472.0" />
+      <point x="60.0" y="26.0" />
+    </edge>
+    <edge source="tradeadapters.TradeGUI" target="trademain.RunnableGUI">
+      <point x="51.333333333333485" y="-26.0" />
+      <point x="2213.0318422519244" y="1682.0" />
+      <point x="2595.8064102564103" y="1682.0" />
+      <point x="-36.26666666666688" y="26.0" />
+    </edge>
+    <edge source="demoadapters.DemoAddItemGUI" target="trademain.RunnableGUI">
+      <point x="0.0" y="-26.0" />
+      <point x="2793.25641025641" y="1864.0" />
+      <point x="2747.062794632877" y="1864.0" />
+      <point x="2747.062794632877" y="1702.0" />
+      <point x="2641.139743589744" y="1702.0" />
+      <point x="9.066666666666606" y="26.0" />
+    </edge>
+    <edge source="trademain.MainGUI" target="tradegateway.TradeModel">
+      <point x="34.666666666666515" y="-26.0" />
+      <point x="3403.8270227939256" y="2024.0" />
+      <point x="3534.471331737015" y="2024.0" />
+      <point x="3534.471331737015" y="1200.0" />
+      <point x="2868.744731212204" y="1200.0" />
+      <point x="28.097560975609667" y="26.0" />
+    </edge>
+    <edge source="tradegateway.TradeSystem" target="trademain.RunnableGUI">
+      <point x="-51.0" y="-26.0" />
+      <point x="3580.221331737015" y="1422.0" />
+      <point x="2686.4730769230773" y="1422.0" />
+      <point x="54.40000000000009" y="26.0" />
+    </edge>
+    <edge source="tradecomponent.TwoWayTrade" target="tradecomponent.Trade">
+      <point x="-34.0" y="-26.0" />
+      <point x="4290.819994639507" y="92.0" />
+      <point x="4388.17713749665" y="92.0" />
+      <point x="-25.142857142856883" y="26.0" />
+    </edge>
+    <edge source="adminadapters.AdminMainGUI" target="useradapters.TableViewCreator">
+      <point x="-13.090909090908553" y="-26.0" />
+      <point x="3921.559403604526" y="2206.0" />
+      <point x="3908.721331737015" y="2206.0" />
+      <point x="3908.721331737015" y="1392.0" />
+      <point x="3074.298508918591" y="1392.0" />
+      <point x="79.19999999999982" y="26.0" />
+    </edge>
+    <edge source="tradegateway.TradeModel" target="tradecomponent.MeetingManager">
+      <point x="-12.190476190476147" y="-26.0" />
+      <point x="2828.456694046118" y="698.0" />
+      <point x="2722.725515947467" y="698.0" />
+      <point x="64.0" y="26.0" />
+    </edge>
+    <edge source="tradeadapters.ConfirmTradesController" target="tradegateway.TradeModel">
+      <point x="58.0" y="-26.0" />
+      <point x="1864.8397435897436" y="1220.0" />
+      <point x="2812.5496092609847" y="1220.0" />
+      <point x="-28.097560975609667" y="26.0" />
+    </edge>
+    <edge source="tradeadapters.InitiateTradeController" target="undocomponent.UndoAddProposedTrade">
+      <point x="-29.0" y="-26.0" />
+      <point x="1525.8397435897436" y="1100.0" />
+      <point x="2233.7305035699274" y="1100.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="undocomponent.UndoSetPrivacy" target="usercomponent.UserManager">
+      <point x="53.333333333333314" y="-26.0" />
+      <point x="143.83333333333348" y="938.0" />
+      <point x="424.63032710040943" y="938.0" />
+      <point x="-49.45454545454544" y="26.0" />
+    </edge>
+    <edge source="undocomponent.UndoSetVacation" target="undocomponent.UndoableOperation">
+      <point x="-56.0" y="-26.0" />
+      <point x="218.5" y="918.0" />
+      <point x="323.99955118897515" y="918.0" />
+      <point x="323.99955118897515" y="446.0" />
+      <point x="1214.4396924495672" y="446.0" />
+      <point x="-70.76923076923072" y="26.0" />
+    </edge>
+    <edge source="undocomponent.UndoAddWishlistItem" target="usercomponent.UserManager">
+      <point x="0.0" y="-26.0" />
+      <point x="650.5" y="958.0" />
+      <point x="498.8121452822279" y="958.0" />
+      <point x="24.727272727272748" y="26.0" />
+    </edge>
+    <edge source="tradeadapters.InitiateTradeController" target="tradegateway.TradeModel">
+      <point x="87.0" y="-26.0" />
+      <point x="1641.8397435897436" y="1200.0" />
+      <point x="2806.3057068219596" y="1200.0" />
+      <point x="-34.34146341463429" y="26.0" />
+    </edge>
+    <edge source="tradegateway.DemoTradeSystem" target="tradegateway.TradeModel">
+      <point x="67.19999999999982" y="-26.0" />
+      <point x="3870.421331737015" y="1772.0" />
+      <point x="3841.921331737015" y="1772.0" />
+      <point x="3841.921331737015" y="1150.0" />
+      <point x="2884.3544873097653" y="1150.0" />
+      <point x="43.707317073171" y="26.0" />
+    </edge>
+    <edge source="adminadapters.AdminMainGUI" target="tradegateway.TradeModel">
+      <point x="39.27272727272748" y="-26.0" />
+      <point x="3973.923039968162" y="2226.0" />
+      <point x="4219.921331737015" y="2226.0" />
+      <point x="4219.921331737015" y="1090.0" />
+      <point x="2903.086194626838" y="1090.0" />
+      <point x="62.43902439024396" y="26.0" />
+    </edge>
+    <edge source="useradapters.AddWishlistGUI" target="useradapters.TableViewCreator">
+      <point x="68.57142857142844" y="-26.0" />
+      <point x="2913.6342232043053" y="1772.0" />
+      <point x="3003.8985089185912" y="1772.0" />
+      <point x="8.800000000000182" y="26.0" />
+    </edge>
+    <edge source="undocomponent.UndoManager" target="undocomponent.UndoableOperation">
+      <point x="-34.0" y="-26.0" />
+      <point x="2882.167614609648" y="446.0" />
+      <point x="1355.9781539880287" y="446.0" />
+      <point x="70.76923076923072" y="26.0" />
+    </edge>
+    <edge source="tradeadapters.TradeGUI" target="tradeadapters.ProposedTradesController">
+      <point x="42.0" y="-26.0" />
+      <point x="2203.698508918591" y="1532.0" />
+      <point x="2133.173076923077" y="1532.0" />
+      <point x="60.0" y="26.0" />
+    </edge>
+    <edge source="adminadapters.AdminMainGUI" target="trademain.RunnableGUI">
+      <point x="-39.272727272727025" y="-26.0" />
+      <point x="3895.3775854227074" y="2226.0" />
+      <point x="3691.660356127259" y="2226.0" />
+      <point x="3691.660356127259" y="1994.0" />
+      <point x="3509.349380517503" y="1994.0" />
+      <point x="3509.349380517503" y="1432.0" />
+      <point x="2677.4064102564107" y="1432.0" />
+      <point x="45.333333333333485" y="26.0" />
+    </edge>
+    <edge source="itemcomponent.ItemManager" target="itemcomponent.Item">
+      <point x="56.66666666666697" y="-26.0" />
+      <point x="4644.486661306175" y="586.0" />
+      <point x="4652.486661306175" y="586.0" />
+      <point x="26.66666666666697" y="26.0" />
+    </edge>
+    <edge source="demoadapters.DemoMainGUI" target="profileadapters.ProfileGUI">
+      <point x="-62.333333333333485" y="-26.0" />
+      <point x="2730.9230769230767" y="2206.0" />
+      <point x="2484.75641025641" y="2206.0" />
+      <point x="2484.75641025641" y="1924.0" />
+      <point x="934.8089232187981" y="1924.0" />
+      <point x="25.600000000000136" y="26.0" />
+    </edge>
+    <edge source="tradecomponent.TradeFactory" target="tradecomponent.OneWayTrade">
+      <point x="0.0" y="-26.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="profileadapters.ProfileController" target="undocomponent.UndoableOperation">
+      <point x="0.0" y="-26.0" />
+      <point x="684.208923218798" y="1090.0" />
+      <point x="761.0" y="1090.0" />
+      <point x="761.0" y="476.0" />
+      <point x="1256.9012309111056" y="476.0" />
+      <point x="-28.307692307692378" y="26.0" />
+    </edge>
+    <edge source="tradeadapters.TradeGUI" target="profileadapters.ProfileController">
+      <point x="-42.0" y="-26.0" />
+      <point x="2119.698508918591" y="1622.0" />
+      <point x="757.8089232187981" y="1622.0" />
+      <point x="73.60000000000002" y="26.0" />
+    </edge>
+    <edge source="demoadapters.DemoTradeGUI" target="tradegateway.TradeModel">
+      <point x="54.0" y="-26.0" />
+      <point x="2675.25641025641" y="1954.0" />
+      <point x="3093.598508918591" y="1954.0" />
+      <point x="3093.598508918591" y="1260.0" />
+      <point x="2850.0130238951306" y="1260.0" />
+      <point x="9.365853658536707" y="26.0" />
+    </edge>
+    <edge source="tradegateway.TradeModel" target="profilecomponent.ReviewManager">
+      <point x="-42.666666666666515" y="-26.0" />
+      <point x="2797.9805035699274" y="748.0" />
+      <point x="2482.725515947467" y="748.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="undocomponent.UndoAddFriend" target="usercomponent.UserManager">
+      <point x="-50.66666666666666" y="-26.0" />
+      <point x="403.8333333333335" y="968.0" />
+      <point x="461.72123619131844" y="968.0" />
+      <point x="-12.363636363636374" y="26.0" />
+    </edge>
+    <edge source="trademain.UserMainGUI" target="tradegateway.GUIObserver">
+      <point x="-63.75" y="-26.0" />
+      <point x="2085.50641025641" y="2246.0" />
+      <point x="0.0" y="2246.0" />
+      <point x="0.0" y="234.0" />
+      <point x="3336.0568087488423" y="234.0" />
+      <point x="-56.666666666666515" y="26.0" />
+    </edge>
+    <edge source="trademain.UserMainGUI" target="useradapters.AddItemGUI">
+      <point x="29.75" y="-26.0" />
+      <point x="2179.00641025641" y="2186.0" />
+      <point x="2436.50641025641" y="2186.0" />
+      <point x="2436.50641025641" y="2064.0" />
+      <point x="2448.25641025641" y="2064.0" />
+      <point x="-16.0" y="26.0" />
+    </edge>
+    <edge source="profileadapters.ProfileController" target="undocomponent.UndoAddReview">
+      <point x="26.28571428571422" y="-26.0" />
+      <point x="710.4946375045122" y="1100.0" />
+      <point x="1346.7153334752081" y="1100.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="tradegateway.TradeModel" target="tradegateway.ObservableDataModel">
+      <point x="-6.095238095238074" y="-26.0" />
+      <point x="2834.551932141356" y="688.0" />
+      <point x="2797.4755159474676" y="688.0" />
+      <point x="2797.4755159474676" y="556.0" />
+      <point x="2827.007567229519" y="556.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="profilecomponent.ReviewManager" target="profilecomponent.Review">
+      <point x="-63.333333333333485" y="-26.0" />
+      <point x="2419.3921826141336" y="486.0" />
+      <point x="2406.0588492808006" y="486.0" />
+      <point x="-32.0" y="26.0" />
+    </edge>
+    <edge source="usercomponent.UserManager" target="usercomponent.User">
+      <point x="-42.5" y="-26.0" />
+      <point x="431.5848725549549" y="416.0" />
+      <point x="350.66820588828796" y="416.0" />
+      <point x="350.66820588828796" y="204.0" />
+      <point x="484.58288452230863" y="204.0" />
+      <point x="-16.0" y="26.0" />
+    </edge>
+    <edge source="adminadapters.AdminMainGUI" target="trademain.MainGUI">
+      <point x="-65.45454545454504" y="-26.0" />
+      <point x="3869.1957672408894" y="2246.0" />
+      <point x="3395.160356127259" y="2246.0" />
+      <point x="26.0" y="26.0" />
+    </edge>
+    <edge source="profileadapters.ProfileGUI" target="trademain.RunnableGUI">
+      <point x="53.33333333333337" y="-26.0" />
+      <point x="962.5422565521312" y="1652.0" />
+      <point x="2568.6064102564105" y="1652.0" />
+      <point x="-63.4666666666667" y="26.0" />
+    </edge>
+    <edge source="undocomponent.UndoAddProposedTrade" target="undocomponent.UndoableOperation">
+      <point x="-86.66666666666652" y="-26.0" />
+      <point x="2147.063836903261" y="788.0" />
+      <point x="1874.9550715744135" y="788.0" />
+      <point x="1874.9550715744135" y="476.0" />
+      <point x="1313.5166155264903" y="476.0" />
+      <point x="28.307692307692378" y="26.0" />
+    </edge>
+    <edge source="tradeadapters.TradeGUI" target="tradegateway.TradeModel">
+      <point x="23.333333333333485" y="-26.0" />
+      <point x="2185.0318422519244" y="1552.0" />
+      <point x="1942.6730769230771" y="1552.0" />
+      <point x="1942.6730769230771" y="1240.0" />
+      <point x="2818.793511700009" y="1240.0" />
+      <point x="-21.8536585365855" y="26.0" />
+    </edge>
+    <edge source="demoadapters.DemoAddItemGUI" target="tradegateway.TradeModel">
+      <point x="64.0" y="-26.0" />
+      <point x="2857.25641025641" y="1984.0" />
+      <point x="3333.598508918591" y="1984.0" />
+      <point x="3333.598508918591" y="1240.0" />
+      <point x="2856.2569263341547" y="1240.0" />
+      <point x="15.609756097560876" y="26.0" />
+    </edge>
+    <edge source="useradapters.TradeHistoryGUI" target="tradegateway.TradeModel">
+      <point x="-56.0" y="-26.0" />
+      <point x="1021.208923218798" y="1642.0" />
+      <point x="1000.1032321618873" y="1642.0" />
+      <point x="1000.1032321618873" y="1160.0" />
+      <point x="2793.8179019439112" y="1160.0" />
+      <point x="-46.82926829268308" y="26.0" />
+    </edge>
+    <edge source="demoadapters.DemoTableViewCreator" target="tradegateway.TradeModel">
+      <point x="69.33333333333348" y="-26.0" />
+      <point x="3277.4318422519245" y="1772.0" />
+      <point x="3279.1564102564103" y="1772.0" />
+      <point x="3279.1564102564103" y="1250.0" />
+      <point x="2853.1349751146427" y="1250.0" />
+      <point x="12.487804878048792" y="26.0" />
+    </edge>
+    <edge source="tradecomponent.TradeManager" target="tradecomponent.Trade">
+      <point x="-12.0" y="-26.0" />
+      <point x="4333.569994639507" y="396.0" />
+      <point x="4246.319994639507" y="396.0" />
+      <point x="4246.319994639507" y="82.0" />
+      <point x="4375.605708925223" y="82.0" />
+      <point x="-37.714285714285325" y="26.0" />
+    </edge>
+    <edge source="profileadapters.LoggedInProfileGUI" target="tradegateway.TradeModel">
+      <point x="-64.0" y="-26.0" />
+      <point x="763.3651755852575" y="2064.0" />
+      <point x="786.708923218798" y="2064.0" />
+      <point x="786.708923218798" y="1130.0" />
+      <point x="2784.452048285375" y="1130.0" />
+      <point x="-56.195121951219335" y="26.0" />
+    </edge>
+    <edge source="undocomponent.UndoSetVacation" target="usercomponent.UserManager">
+      <point x="56.0" y="-26.0" />
+      <point x="330.5" y="958.0" />
+      <point x="449.35759982768195" y="958.0" />
+      <point x="-24.727272727272748" y="26.0" />
+    </edge>
+    <edge source="demoadapters.DemoMainGUI" target="demoadapters.DemoTradeGUI">
+      <point x="-28.333333333333485" y="-26.0" />
+      <point x="2764.9230769230767" y="2176.0" />
+      <point x="2585.25641025641" y="2176.0" />
+      <point x="-36.0" y="26.0" />
+    </edge>
+    <edge source="demoadapters.DemoAddWishlistGUI" target="useradapters.AddWishlistGUI">
+      <point x="-38.40000000000009" y="-26.0" />
+      <point x="2950.85641025641" y="1934.0" />
+      <point x="2905.062794632877" y="1934.0" />
+      <point x="60.0" y="26.0" />
+    </edge>
+    <edge source="useradapters.AddWishlistGUI" target="trademain.RunnableGUI">
+      <point x="-22.857142857142662" y="-26.0" />
+      <point x="2822.205651775734" y="1462.0" />
+      <point x="2650.2064102564104" y="1462.0" />
+      <point x="18.133333333333212" y="26.0" />
+    </edge>
+    <edge source="undocomponent.UndoAddProposedTrade" target="tradecomponent.TradeManager">
+      <point x="52.0" y="-26.0" />
+      <point x="2285.7305035699274" y="868.0" />
+      <point x="4283.855708925223" y="868.0" />
+      <point x="-61.714285714285325" y="26.0" />
+    </edge>
+    <edge source="undocomponent.UndoAddWishlistItem" target="undocomponent.UndoableOperation">
+      <point x="66.66666666666652" y="-26.0" />
+      <point x="717.1666666666665" y="978.0" />
+      <point x="681.448508918591" y="978.0" />
+      <point x="681.448508918591" y="466.0" />
+      <point x="1242.7473847572594" y="466.0" />
+      <point x="-42.46153846153857" y="26.0" />
+    </edge>
+    <edge source="demoadapters.DemoMainGUI" target="demoadapters.DemoAddWishlistGUI">
+      <point x="28.333333333333485" y="-26.0" />
+      <point x="2821.5897435897436" y="2196.0" />
+      <point x="3037.25641025641" y="2196.0" />
+      <point x="48.0" y="26.0" />
+    </edge>
+    <edge source="tradegateway.TradeModel" target="undocomponent.UndoManager">
+      <point x="6.095238095238074" y="-26.0" />
+      <point x="2846.742408331832" y="818.0" />
+      <point x="2916.167614609648" y="818.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="demoadapters.DemoMainGUI" target="trademain.RunnableGUI">
+      <point x="-39.666666666666515" y="-26.0" />
+      <point x="2753.5897435897436" y="2186.0" />
+      <point x="2538.75641025641" y="2186.0" />
+      <point x="2538.75641025641" y="1712.0" />
+      <point x="2623.0064102564106" y="1712.0" />
+      <point x="-9.066666666666606" y="26.0" />
+    </edge>
+    <edge source="tradegateway.ObservableDataModel" target="tradegateway.GUIObserver">
+      <point x="0.0" y="-26.0" />
+      <point x="2827.007567229519" y="254.0" />
+      <point x="3381.3901420821753" y="254.0" />
+      <point x="-11.333333333333485" y="26.0" />
+    </edge>
+    <edge source="adminadapters.AdminController" target="tradegateway.TradeModel">
+      <point x="-21.0" y="-26.0" />
+      <point x="4104.421331737015" y="1100.0" />
+      <point x="2899.9642434073257" y="1100.0" />
+      <point x="59.317073170731874" y="26.0" />
+    </edge>
+    <edge source="tradegateway.DemoTradeSystem" target="tradegateway.DataManager">
+      <point x="0.0" y="-26.0" />
+      <point x="51.0" y="26.0" />
+    </edge>
+    <edge source="profileadapters.ProfileController" target="undocomponent.UndoSetPrivacy">
+      <point x="-78.85714285714289" y="-26.0" />
+      <point x="605.3517803616551" y="1300.0" />
+      <point x="90.5" y="1300.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="undocomponent.UndoAddInventoryItem" target="undocomponent.UndoableOperation">
+      <point x="-83.19999999999982" y="-26.0" />
+      <point x="4324.084280353793" y="678.0" />
+      <point x="2358.372951844903" y="678.0" />
+      <point x="2358.372951844903" y="466.0" />
+      <point x="1327.6704616803363" y="466.0" />
+      <point x="42.46153846153834" y="26.0" />
+    </edge>
+    <edge source="tradecomponent.TradeFactory" target="tradecomponent.Trade">
+      <point x="48.0" y="-26.0" />
+      <point x="4528.819994639507" y="254.0" />
+      <point x="4564.319994639507" y="254.0" />
+      <point x="4564.319994639507" y="82.0" />
+      <point x="4438.462851782364" y="82.0" />
+      <point x="25.142857142856883" y="26.0" />
+    </edge>
+    <edge source="undocomponent.UndoAddInventoryItem" target="tradecomponent.TradeManager">
+      <point x="0.0" y="-26.0" />
+      <point x="61.714285714285325" y="26.0" />
+    </edge>
+    <edge source="usercomponent.TradingUser" target="usercomponent.User">
+      <point x="-34.0" y="-26.0" />
+      <point x="395.16820588828796" y="214.0" />
+      <point x="500.58288452230863" y="214.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="undocomponent.UndoAddReview" target="profilecomponent.ReviewManager">
+      <point x="0.0" y="-26.0" />
+      <point x="1346.7153334752081" y="798.0" />
+      <point x="2421.925515947467" y="798.0" />
+      <point x="-60.80000000000018" y="26.0" />
+    </edge>
+    <edge source="trademain.UserMainGUI" target="profileadapters.LoggedInProfileGUI">
+      <point x="-55.25" y="-26.0" />
+      <point x="2094.00641025641" y="2236.0" />
+      <point x="827.3651755852575" y="2236.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="demoadapters.DemoMainGUI" target="trademain.MainGUI">
+      <point x="62.333333333333485" y="-26.0" />
+      <point x="2855.5897435897436" y="2246.0" />
+      <point x="3377.8270227939256" y="2246.0" />
+      <point x="8.666666666666515" y="26.0" />
+    </edge>
+    <edge source="usercomponent.UserManager" target="usercomponent.TradingUser">
+      <point x="-8.5" y="-26.0" />
+      <point x="465.5848725549549" y="396.0" />
+      <point x="429.16820588828796" y="396.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="profilecomponent.ReviewManager" target="undocomponent.NoLongerUndoableException">
+      <point x="63.333333333333485" y="-26.0" />
+      <point x="2546.0588492808006" y="566.0" />
+      <point x="2967.6742338961853" y="566.0" />
+      <point x="-103.33333333333348" y="26.0" />
+    </edge>
+    <edge source="useradapters.UserController" target="tradegateway.TradeModel">
+      <point x="20.0" y="-26.0" />
+      <point x="2410.1217382410805" y="1290.0" />
+      <point x="2834.40326779757" y="1290.0" />
+      <point x="-6.243902439024168" y="26.0" />
+    </edge>
+    <edge source="adminadapters.AdminMainGUI" target="undocomponent.NoLongerUndoableException">
+      <point x="52.36363636363649" y="-26.0" />
+      <point x="3987.013949059071" y="2236.0" />
+      <point x="4546.520618028054" y="2236.0" />
+      <point x="4546.520618028054" y="978.0" />
+      <point x="4677.319994639507" y="978.0" />
+      <point x="4677.319994639507" y="346.0" />
+      <point x="3174.3409005628523" y="346.0" />
+      <point x="103.33333333333348" y="26.0" />
+    </edge>
+    <edge source="useradapters.AddItemGUI" target="trademain.RunnableGUI">
+      <point x="8.0" y="-26.0" />
+      <point x="2472.25641025641" y="1702.0" />
+      <point x="2613.939743589744" y="1702.0" />
+      <point x="-18.133333333333212" y="26.0" />
+    </edge>
+    <edge source="profileadapters.ProfileController" target="undocomponent.UndoSetVacation">
+      <point x="-52.571428571428555" y="-26.0" />
+      <point x="631.6374946473693" y="1290.0" />
+      <point x="274.5" y="1290.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="undocomponent.UndoAddProposedTrade" target="undocomponent.NoLongerUndoableException">
+      <point x="17.333333333333485" y="-26.0" />
+      <point x="2251.063836903261" y="838.0" />
+      <point x="3091.6742338961853" y="838.0" />
+      <point x="20.666666666666515" y="26.0" />
+    </edge>
+    <edge source="adminadapters.AdminController" target="undocomponent.UndoAddInventoryItem">
+      <point x="21.0" y="-26.0" />
+      <point x="4146.421331737015" y="1290.0" />
+      <point x="4407.284280353793" y="1290.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="useradapters.AddItemGUI" target="useradapters.TableViewCreator">
+      <point x="56.0" y="-26.0" />
+      <point x="2520.25641025641" y="1742.0" />
+      <point x="2951.098508918591" y="1742.0" />
+      <point x="-44.0" y="26.0" />
+    </edge>
+    <edge source="profileadapters.ProfileController" target="undocomponent.UndoAddFriend">
+      <point x="-26.285714285714334" y="-26.0" />
+      <point x="657.9232089330835" y="1280.0" />
+      <point x="454.5" y="1280.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="usercomponent.UserManager" target="tradegateway.ObservableDataModel">
+      <point x="42.5" y="-26.0" />
+      <point x="516.5848725549549" y="496.0" />
+      <point x="2734.6998749218264" y="496.0" />
+      <point x="-92.30769230769238" y="26.0" />
+    </edge>
+    <edge source="demoadapters.DemoAddWishlistGUI" target="demoadapters.DemoTableViewCreator">
+      <point x="38.40000000000009" y="-26.0" />
+      <point x="3027.6564102564103" y="1974.0" />
+      <point x="3260.098508918591" y="1974.0" />
+      <point x="52.0" y="26.0" />
+    </edge>
+    <edge source="tradecomponent.OneWayTrade" target="tradecomponent.Trade">
+      <point x="-34.0" y="-26.0" />
+      <point x="4446.819994639507" y="102.0" />
+      <point x="4413.319994639507" y="102.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="adminadapters.AdminMainGUI" target="adminadapters.AdminController">
+      <point x="26.18181818181847" y="-26.0" />
+      <point x="3960.832130877253" y="2216.0" />
+      <point x="4094.421331737015" y="2216.0" />
+      <point x="4094.421331737015" y="1772.0" />
+      <point x="4167.421331737015" y="1772.0" />
+      <point x="42.0" y="26.0" />
+    </edge>
+    <edge source="tradeadapters.TradeGUI" target="tradeadapters.ConfirmTradesController">
+      <point x="-4.666666666666515" y="-26.0" />
+      <point x="2157.0318422519244" y="1582.0" />
+      <point x="1748.8397435897436" y="1582.0" />
+      <point x="-58.0" y="26.0" />
+    </edge>
+    <edge source="undocomponent.UndoAddInventoryItem" target="itemcomponent.ItemManager">
+      <point x="41.600000000000364" y="-26.0" />
+      <point x="4448.884280353794" y="958.0" />
+      <point x="4615.019994639508" y="958.0" />
+      <point x="27.199999999999818" y="26.0" />
+    </edge>
+    <edge source="tradeadapters.TradeGUI" target="tradeadapters.InitiateTradeController">
+      <point x="-23.333333333333485" y="-26.0" />
+      <point x="2138.3651755852575" y="1602.0" />
+      <point x="1496.8397435897436" y="1602.0" />
+      <point x="-58.0" y="26.0" />
+    </edge>
+    <edge source="tradegateway.DemoTradeSystem" target="trademain.RunnableGUI">
+      <point x="-67.19999999999982" y="-26.0" />
+      <point x="3736.0213317370153" y="1412.0" />
+      <point x="2695.539743589744" y="1412.0" />
+      <point x="63.4666666666667" y="26.0" />
+    </edge>
+    <edge source="demoadapters.DemoTradeGUI" target="trademain.RunnableGUI">
+      <point x="18.0" y="-26.0" />
+      <point x="2639.25641025641" y="1712.0" />
+      <point x="2632.073076923077" y="1712.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="undocomponent.UndoManager" target="tradegateway.ObservableDataModel">
+      <point x="-11.333333333333485" y="-26.0" />
+      <point x="2904.8342812763144" y="436.0" />
+      <point x="2842.392182614134" y="436.0" />
+      <point x="15.384615384615245" y="26.0" />
+    </edge>
+    <edge source="tradegateway.TradeModel" target="tradecomponent.TradeManager">
+      <point x="30.476190476190368" y="-26.0" />
+      <point x="2871.1233607127842" y="888.0" />
+      <point x="4324.9985660680795" y="888.0" />
+      <point x="-20.57142857142844" y="26.0" />
+    </edge>
+    <edge source="undocomponent.UndoManager" target="undocomponent.NoLongerUndoableException">
+      <point x="56.666666666666515" y="-26.0" />
+      <point x="2972.8342812763144" y="586.0" />
+      <point x="3050.3409005628523" y="586.0" />
+      <point x="-20.666666666666515" y="26.0" />
+    </edge>
+    <edge source="trademain.UserMainGUI" target="profileadapters.ProfileGUI">
+      <point x="-46.75" y="-26.0" />
+      <point x="2102.50641025641" y="2226.0" />
+      <point x="933.8651755852575" y="2226.0" />
+      <point x="933.8651755852575" y="2064.0" />
+      <point x="909.208923218798" y="2064.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="trademain.UserMainGUI" target="useradapters.AddWishlistGUI">
+      <point x="38.25" y="-26.0" />
+      <point x="2187.50641025641" y="2196.0" />
+      <point x="2465.25641025641" y="2196.0" />
+      <point x="2465.25641025641" y="1934.0" />
+      <point x="2785.062794632877" y="1934.0" />
+      <point x="-60.0" y="26.0" />
+    </edge>
+    <edge source="tradegateway.DataManager" target="tradegateway.TradeModel">
+      <point x="-34.0" y="-26.0" />
+      <point x="3718.421331737015" y="1180.0" />
+      <point x="2874.988633651228" y="1180.0" />
+      <point x="34.34146341463429" y="26.0" />
+    </edge>
+    <edge source="trademain.DemoMain" target="tradegateway.DemoTradeSystem">
+      <point x="-28.0" y="-26.0" />
+      <point x="3597.160356127259" y="2054.0" />
+      <point x="3761.221331737015" y="2054.0" />
+      <point x="-42.0" y="26.0" />
+    </edge>
+    <edge source="tradeadapters.InitiateTradeController" target="undocomponent.UndoableOperation">
+      <point x="-87.0" y="-26.0" />
+      <point x="1467.8397435897436" y="1090.0" />
+      <point x="1260.2153334752081" y="1090.0" />
+      <point x="1260.2153334752081" y="486.0" />
+      <point x="1271.0550770649518" y="486.0" />
+      <point x="-14.153846153846189" y="26.0" />
+    </edge>
+    <edge source="tradegateway.TradeModel" target="tradegateway.GUIObserver">
+      <point x="24.380952380952294" y="-26.0" />
+      <point x="2865.0281226175466" y="858.0" />
+      <point x="3443.473475415509" y="858.0" />
+      <point x="3443.473475415509" y="254.0" />
+      <point x="3426.723475415509" y="254.0" />
+      <point x="34.0" y="26.0" />
+    </edge>
+    <edge source="undocomponent.UndoAddFriend" target="undocomponent.UndoableOperation">
+      <point x="50.666666666666515" y="-26.0" />
+      <point x="505.1666666666665" y="978.0" />
+      <point x="569.948508918591" y="978.0" />
+      <point x="569.948508918591" y="456.0" />
+      <point x="1228.5935386034134" y="456.0" />
+      <point x="-56.61538461538453" y="26.0" />
+    </edge>
+    <edge source="tradegateway.TradeSystem" target="tradegateway.DataManager">
+      <point x="17.0" y="-26.0" />
+      <point x="3648.221331737015" y="1762.0" />
+      <point x="3701.421331737015" y="1762.0" />
+      <point x="-51.0" y="26.0" />
+    </edge>
+    <edge source="profileadapters.ProfileController" target="tradegateway.TradeModel">
+      <point x="52.571428571428555" y="-26.0" />
+      <point x="736.7803517902266" y="1110.0" />
+      <point x="2778.20814584635" y="1110.0" />
+      <point x="-62.43902439024396" y="26.0" />
+    </edge>
+    <edge source="tradecomponent.TradeFactory" target="tradecomponent.TwoWayTrade">
+      <point x="-48.0" y="-26.0" />
+      <point x="4432.819994639507" y="254.0" />
+      <point x="4324.819994639507" y="254.0" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="tradecomponent.MeetingManager" target="tradecomponent.Meeting">
+      <point x="-64.0" y="-26.0" />
+      <point x="2594.725515947467" y="486.0" />
+      <point x="2589.392182614134" y="486.0" />
+      <point x="-34.666666666666515" y="26.0" />
+    </edge>
+    <edge source="trademain.UserMainGUI" target="tradegateway.TradeModel">
+      <point x="-21.25" y="-26.0" />
+      <point x="2128.00641025641" y="2196.0" />
+      <point x="1171.708923218798" y="2196.0" />
+      <point x="1171.708923218798" y="1180.0" />
+      <point x="2800.0618043829354" y="1180.0" />
+      <point x="-40.58536585365846" y="26.0" />
+    </edge>
+    <edge source="tradeadapters.ProposedTradesController" target="tradegateway.TradeModel">
+      <point x="-60.0" y="-26.0" />
+      <point x="2013.1730769230771" y="1250.0" />
+      <point x="2821.915462919521" y="1250.0" />
+      <point x="-18.73170731707296" y="26.0" />
+    </edge>
+    <edge source="useradapters.AddItemGUI" target="tradegateway.TradeModel">
+      <point x="-40.0" y="-26.0" />
+      <point x="2424.25641025641" y="1512.0" />
+      <point x="2214.673076923077" y="1512.0" />
+      <point x="2214.673076923077" y="1280.0" />
+      <point x="2831.281316578057" y="1280.0" />
+      <point x="-9.365853658536707" y="26.0" />
+    </edge>
+    <edge source="demoadapters.DemoMainGUI" target="demoadapters.DemoAddItemGUI">
+      <point x="-5.666666666666515" y="-26.0" />
+      <point x="2787.5897435897436" y="2156.0" />
+      <point x="2753.25641025641" y="2156.0" />
+      <point x="-40.0" y="26.0" />
+    </edge>
+    <edge source="trademain.UserMainGUI" target="useradapters.TradeHistoryGUI">
+      <point x="-38.25" y="-26.0" />
+      <point x="2111.00641025641" y="2216.0" />
+      <point x="1072.958923218798" y="2216.0" />
+      <point x="1072.958923218798" y="2064.0" />
+      <point x="1035.208923218798" y="2064.0" />
+      <point x="-42.0" y="26.0" />
+    </edge>
+    <edge source="profilecomponent.ReviewManager" target="tradegateway.ObservableDataModel">
+      <point x="12.666666666666515" y="-26.0" />
+      <point x="2495.3921826141336" y="516.0" />
+      <point x="2765.4691056910574" y="516.0" />
+      <point x="-61.53846153846143" y="26.0" />
+    </edge>
+    <edge source="demoadapters.DemoAddWishlistGUI" target="trademain.RunnableGUI">
+      <point x="0.0" y="-26.0" />
+      <point x="2989.25641025641" y="1944.0" />
+      <point x="2963.948508918591" y="1944.0" />
+      <point x="2963.948508918591" y="1452.0" />
+      <point x="2659.273076923077" y="1452.0" />
+      <point x="27.199999999999818" y="26.0" />
+    </edge>
+    <edge source="tradegateway.TradeSystem" target="tradegateway.TradeModel">
+      <point x="-17.0" y="-26.0" />
+      <point x="3614.221331737015" y="1190.0" />
+      <point x="2871.866682431716" y="1190.0" />
+      <point x="31.219512195122206" y="26.0" />
+    </edge>
+    <edge source="adminadapters.AdminMainGUI" target="tradegateway.GUIObserver">
+      <point x="65.4545454545455" y="-26.0" />
+      <point x="4000.10485814998" y="2246.0" />
+      <point x="4688.319994639507" y="2246.0" />
+      <point x="4688.319994639507" y="244.0" />
+      <point x="3449.3901420821753" y="244.0" />
+      <point x="56.666666666666515" y="26.0" />
+    </edge>
+    <edge source="trademain.MainGUI" target="trademain.RunnableGUI">
+      <point x="-34.666666666666515" y="-26.0" />
+      <point x="3334.4936894605926" y="1974.0" />
+      <point x="3322.598508918591" y="1974.0" />
+      <point x="3322.598508918591" y="1442.0" />
+      <point x="2668.3397435897436" y="1442.0" />
+      <point x="36.266666666666424" y="26.0" />
+    </edge>
+    <edge source="demoadapters.DemoAddItemGUI" target="useradapters.AddItemGUI">
+      <point x="-64.0" y="-26.0" />
+      <point x="2729.25641025641" y="1884.0" />
+      <point x="2480.25641025641" y="1884.0" />
+      <point x="16.0" y="26.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.8" x="968.7500000000001" y="876.75" />
+  <SelectedNodes />
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
