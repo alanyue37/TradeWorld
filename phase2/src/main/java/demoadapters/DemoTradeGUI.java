@@ -44,9 +44,9 @@ public class DemoTradeGUI extends TradeGUI implements RunnableGUI {
         ratingInput.setPromptText("You would enter rating here.");
         tradeIdInput.setPromptText("You would enter trade Id here.");
         commentInput.setPromptText("You would enter comment here");
-        ListView listOngoing = new ListView<>();
+        ListView<String> listOngoing = new ListView<>();
         listOngoing.setPlaceholder(new Label("Your ongoing trades would be here."));
-        ListView listCompleted = new ListView<>();
+        ListView<String> listCompleted = new ListView<>();
         listCompleted.setPlaceholder(new Label("Your completed trades would be here."));
         ongoing.getChildren().add(listOngoing);
         completed.getChildren().add(listCompleted);

@@ -5,7 +5,6 @@ import org.json.JSONObject;
 import tradegateway.ObservableDataModel;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -309,29 +308,6 @@ public class MeetingManager implements Serializable {
             }
         }
         return true;
-    }
-
-    /**
-     * Takes in a list of trade IDs and returns a sorted list of the IDs, going from the trade with the oldest last
-     * meeting time to the trade with the most recent last meeting time
-     *
-     * @param tradeIds list of trade IDs
-     * @return list of trade IDs sorted by last meeting time
-     */
-    public List<String> sortedMeeting(List<String> tradeIds){
-        List<String> sorted = new ArrayList<>();
-        if (tradeIds.size() == 0){
-            return sorted;
-        }
-        sorted.add(tradeIds.get(0));
-        for (int i = 1; i < tradeIds.size(); i++) {
-            int ii = 0;
-            while (ii < sorted.size() && getLastMeetingTime(sorted.get(ii)).before(getLastMeetingTime(tradeIds.get(i)))) {
-                ii++;
-            }
-            sorted.add(ii, tradeIds.get(i));
-        }
-        return sorted;
     }
     // goes from oldest (index 0) to newest
 }
