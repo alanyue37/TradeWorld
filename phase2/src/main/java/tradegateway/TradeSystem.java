@@ -48,13 +48,4 @@ public class TradeSystem {
         }
     }
 
-    public void persist() {
-        try {
-            tradeModel.clearState();
-            dataManager.saveToFile(tradeModel);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 }
