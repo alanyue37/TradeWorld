@@ -1,0 +1,106 @@
+FEATURES
+
+MANDATORY EXTENSIONS
+- Give the admin user the ability to undo every action taken by regular users that can reasonably be undone.
+    - Can undo adding an item to inventory, adding an item to wishlist, making a proposed trade, adding a review to a
+    trade, adding friends, setting privacy mode, setting vacation mode.
+- Have your program automatically suggest items to lend to a given user, if there is something that is both on one
+person's wishlist and the other's lending list.
+- Create a new type of account that allows a user to look at the various parts of the program without being able to
+trade or communicate with the admin user: Demo user.
+- Admin can adjust thresholds inside program.
+- Additional status: users have a vacation mode to disallow trades with them
+
+EXTENSIONS WE CAN CHOOSE FROM
+- Users can put their home city to only trade with users in the same city.
+- Points system for users to become silver or gold status. New users are bronze status. Gold and silver status
+are allowed two more trades per week. Gold users also have early access to items (two days earlier than regular users).
+- GUI
+
+NEW FEATURES
+- Users have a profile and can leave/receive reviews (rating and comment) from trading partners.
+They can search for other user’s profiles.
+- Users have a friend list, can send friend requests to other users and become friends. They can also
+change their account status to private/public. If they change their status to private, their items are
+only viewable by their friends.
+- Can now decline a trade (without needing to edit 3 times)
+
+
+DESIGN PATTERNS
+
+FACTORY (TradeFactory)
+We used the Factory design pattern to encapsulate the constructor calls for Trades, so when the constructors for a
+trade (one way or two way) are called, higher level classes (i.e. controller) don’t need to know which type of trade
+is returned. The TradeManager calls the TradeFactory when called to create a trade, and the TradeFactory calls the
+constructors for OneWayTrade or TwoWayTrade and returns them as a Trade object.
+
+OBSERVER (GUI)
+We used the Observer design pattern to indicate to GUIs that the data in the backend has updated. We originally
+started by refreshing scenes manually but this quickly became too cumbersome.
+The TradeModel is the observable entity and implements the ObservableDataModel interface. We opted for this
+interface over Java’s standard Observable class because this can be used by classes which already inherit
+from other classes.
+Since the TradeModel is just a facade for the use case classes which store all persistable data, we store a
+reference to the TradeModel in each use case class. This way each use case class can set the TradeModel as
+changed. In order to follow proper dependency in clean architecture, we refer to TradeModel by the interface
+ObservableDataModel in the use case classes to flip the dependency.
+Any GUI which requires to be automatically updated can register itself as an observer and implement the
+GUIObserver interface so that it can automatically be updated using the update method of the interface.
+Each GUI may implement it as required to get its screen(s) to refresh.
+
+COMMAND (UndoableOperation)
+We used the Command design pattern for the undo feature. We originally thought of using Memento but that was too
+crude of a method since it would get rid of all other changes between two states in time.
+Specific classes: UndoAddFriend, UndoAddItem, UndoProposedTrade, UndoAddReview, UndoAddWishlistItem, UndoSetPrivacy,
+UndoSetVacation.
+Each of these classes neatly encapsulates all the information required to execute the undo at a later stage.
+The interface UndoableOperation is implemented by individual classes which represent a type of undo (the command).
+This allows extensibility as every new undo feature can be created as a new class that implements this interface.
+The receiver in this design pattern is the appropriate use case class. References to the required use case classes
+are stored in each instance of UndoableOperation. This is allowed under the Command design pattern and is different
+from typical class composition.
+The invoker is the UndoManager use case class which stores all the UndoableOperations. When client code asks it to
+execute one with a given id, it does so without having to know about the specific type or implementation of that
+given undo because they are only referred to by the interface.
+The client is the admin controller which asks the UndoManager to execute the undo selected by the admin.
+
+FACADE (TradeModel)
+We used the Facade design pattern to encapsulate all data (use case classes and, by composition, entities).
+This streamlined the process of accessing the data, persisting it, and implementing the above observer design pattern.
+This is implemented by TradeModel.
+
+CHAIN OF COMMAND
+We used the chain of command design pattern to help modularize the GUI. Instead of having a monolithic structure
+that decides upfront the structure and flow of the program we used the RunnableGUI interface we created to allow
+the creation of components of the GUI separately from one another.
+This helped make collaboration easier since different people can work on different screens or even entire windows.
+As long as each GUI class implements the RunnableGUI interface, another GUI class can either ask it to display
+in a new window using showScreen() or get its root node using getRoot() and display it within its own screen.
+This allowed us to easily create several different windows with tabs of such classes, including subtabs.
+Each GUI only has to have a reference to the next GUI class(es) it wishes to display.
+
+
+IMPROVEMENTS TO PHASE 1 CODE
+
+We removed the use of enums and associated switch statements within the usercomponent and had all methods that could
+act on both TradingUsers and admins utilize polymorphism. Similarly, we put all the items into one map within
+temManager and introduced a “stage” variable that kept track of what stage the item was in after being added.
+This way, when the program runs a method that acts on any given User or Item, it doesn’t need to know what type or
+subclass it is and we have thus, minimized the need for enums or additional parameters specifying this.
+
+We have removed the inventory attribute from TradingUser because each item already had a reference to the username
+of the TradingUser who owned it. In this way, we were able to reduce coupling because we don’t have to change both
+the item’s owner and a user’s inventory every time an item is updated. The wishlist still exists as an attribute
+within each TradingUser because unlike an item’s owner, an item never needs to know who has wished for it, but a
+TradingUser must be able to see all the items it has in its wishlist.
+
+As suggested, we’ve also replaced the toString methods within Item, Trade, and Meeting with JSON to make them easier
+for the program to parse. This is highly used in our GUIs to pass information. This also allows future migration to
+other UI frameworks easier since JSON is widely compatible with many other frameworks and languages.
+
+We removed Meeting entities from inside Trades and removed MeetingManager from TradeManager. Meetings are now
+stored inside MeetingManager and Trades now contain references (IDs) to Meetings, in order to reduce coupling and
+make TradeManager smaller.
+
+
+
