@@ -70,7 +70,7 @@ public class UserMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         Tab tradeTab = new Tab("Trade", tradeParent);
         tabToGUI.put(tradeTab, tradeGUI);
 
-        TradeHistoryGUI tradeHistoryGUI = new TradeHistoryGUI(getStage(), 800, 800, getTradeModel(), getTradeModel().getCurrentUser());
+        TradeHistoryGUI tradeHistoryGUI = new TradeHistoryGUI(getStage(), 800, 800, getTradeModel());
         Parent tradeHistoryParent = tradeHistoryGUI.getRoot();
         Tab tradeHistoryTab = new Tab("Trading History", tradeHistoryParent);
         tabToGUI.put(tradeHistoryTab, tradeHistoryGUI);
