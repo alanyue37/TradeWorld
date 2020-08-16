@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Manages the creation and handling of reviews for trades.
+ * The class responsible for managing the creation and handling of reviews for trades.
  */
 public class ReviewManager implements Serializable {
     private final ObservableDataModel observableDataModel;

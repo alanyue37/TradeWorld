@@ -6,8 +6,7 @@ import java.io.*;
 import java.net.URLDecoder;
 
 /**
- * Manages the saving and loading of tradegateway.TradeModel.
- * Structure of some methods copied from logging.
+ * The class responsible for managing the saving and loading of TradeModel.
  */
 class DataManager {
 
@@ -26,9 +25,7 @@ class DataManager {
     private String getFilePath(String fileName) throws UnsupportedEncodingException {
         ClassLoader loader = DataManager.class.getClassLoader();
         String filePath = String.valueOf(loader.getResource("tradegateway"));
-//        System.out.println(filePath);
         String decodedPath = URLDecoder.decode(filePath, "UTF-8"); // support for spaces in file path
-//        System.out.println(decodedPath);
         String[] tokens = decodedPath.split("/");
         StringBuilder sb = new StringBuilder();
         sb.append("/");
@@ -41,10 +38,10 @@ class DataManager {
     }
 
     /**
-     * Reads the tradegateway.TradeModel from file at filePath, or creates a new file
-     * with an empty tradegateway.TradeModel if it does not exist.
+     * Reads the TradeModel from file at filePath, or creates a new file
+     * with an empty TradeModel if it does not exist.
      *
-     * @return the TradeManager read in.
+     * @return the TradeManager read in
      * @throws IOException if IOException occurs
      * @throws ClassNotFoundException if ClassNotFoundException occurs
      */
@@ -58,7 +55,7 @@ class DataManager {
             InputStream fileStream = new FileInputStream(file);
             InputStream buffer = new BufferedInputStream(fileStream);
             ObjectInput input = new ObjectInputStream(buffer);
-            // deserialize and return the tradegateway.TradeModel
+            // deserialize and return the TradeModel
             tradeModel = (TradeModel) input.readObject();
             input.close();
         }
@@ -68,7 +65,7 @@ class DataManager {
     /**
      * Reads a image file at filePath.
      *
-     * @return the Image read in.
+     * @return the Image read in
      * @throws IOException if IOException occurs
      */
     protected Image readImage(String imageFile) throws IOException {
@@ -81,17 +78,17 @@ class DataManager {
     }
 
     /**
-     * Writes the tradegateway.TradeModel to file at filePath.
+     * Writes the TradeModel to file at filePath.
      *
-     * @param tm the tradegateway.TradeModel to save.
-     * @throws IOException if IOException occurs.
+     * @param tm the TradeModel to save
+     * @throws IOException if IOException occurs
      */
     protected void saveToFile(TradeModel tm) throws IOException {
         OutputStream fileStream = new FileOutputStream(filePath);
         OutputStream buffer = new BufferedOutputStream(fileStream);
         ObjectOutput output = new ObjectOutputStream(buffer);
 
-        // serialize the tradegateway.TradeModel
+        // serialize the TradeModel
         output.writeObject(tm);
         output.close();
     }

@@ -2,13 +2,10 @@ package tradegateway;
 
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import loginadapters.LogInController;
 import loginadapters.LoginGUI;
 import trademain.RunnableGUI;
 
 import java.io.IOException;
-import java.util.Observable;
-import java.util.Observer;
 
 /**
  * The entire trading system.

@@ -9,6 +9,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * The class responsible for managing the creation and handling of users.
+ */
 public class UserManager implements Serializable {
 
     private final Map<String, TradingUser> tradingUsers;
@@ -20,7 +23,9 @@ public class UserManager implements Serializable {
     private int silverThreshold;
 
     /**
-     * Instantiates a UserManager
+     * Creates a UserManager.
+     *
+     * @param observableDataModel the ObservableDataModel to use
      */
     public UserManager(ObservableDataModel observableDataModel) {
         tradingUsers = new HashMap<>();

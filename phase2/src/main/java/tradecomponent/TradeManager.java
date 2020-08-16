@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Manages the creation and handling of trades.
+ * The class responsible for managing the creation and handling of trades.
  */
 public class TradeManager implements Serializable {
     private final ObservableDataModel observableDataModel;
