@@ -1,5 +1,7 @@
 package useradapters;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -17,6 +19,7 @@ import tradegateway.TradeModel;
 import trademain.RunnableGUI;
 
 import java.util.List;
+import java.util.Map;
 
 public class TradeHistoryGUI implements RunnableGUI {
     private GridPane root;
@@ -25,6 +28,7 @@ public class TradeHistoryGUI implements RunnableGUI {
     private final int height;
     private final TradeModel tradeModel;
     private final String username;
+    private Gson gson;
 
     public TradeHistoryGUI(Stage stage, int width, int height, TradeModel model, String username){
         this.stage = stage;
@@ -32,6 +36,7 @@ public class TradeHistoryGUI implements RunnableGUI {
         this.height = height;
         this.tradeModel = model;
         this.username = username;
+        gson = new Gson();
     }
 
     @Override
@@ -78,7 +83,8 @@ public class TradeHistoryGUI implements RunnableGUI {
                     JSONObject tradeInfo = tradeModel.getTradeManager().getTradeInfo(trades.get(i));
                     StringBuilder builder = new StringBuilder();
                     JSONArray items = (JSONArray) tradeInfo.get("Items involved");
-                    builder.append(tradeModel.getItemManager().getName(items.getString(0)));
+                    Map<String, String> itemInfo = gson.fromJson(tradeModel.getItemManager().getItemInfoJSON(items.getString(0)), new TypeToken<Map<String, String>>() {}.getType());
+                    builder.append(itemInfo.get("name"));
                     result.getItems().add(builder.toString());
                 }
             }

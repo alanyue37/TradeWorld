@@ -1,5 +1,7 @@
 package useradapters;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,6 +11,7 @@ import tradegateway.TradeModel;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -20,6 +23,7 @@ public class TableViewCreator {
     private String[] colTitles;
     private double[] widths;
     private ArrayList<String[]> itemsToShow;
+    private Gson gson;
 
     /**
      * Instantiates a new TableViewCreator.
@@ -29,6 +33,7 @@ public class TableViewCreator {
     public TableViewCreator (TradeModel tm) {
         tradeModel = tm;
         itemsToShow = new ArrayList<>();
+        gson = new Gson();
     }
 
     /**
@@ -89,15 +94,15 @@ public class TableViewCreator {
         newItemsToShow();
         Set<String> userInventory = tradeModel.getItemManager().getInventory(tradeModel.getCurrentUser());
         for (String itemID : userInventory) {
-            if (tradeModel.getItemManager().getAvailable(itemID)) {
+            if (getItemInfo(itemID).get("available").equals("true")) {
                 itemsToShow.add(new String[]{itemID,
-                        tradeModel.getItemManager().getName(itemID),
-                        tradeModel.getItemManager().getDescription(itemID),
+                        getItemInfo(itemID).get("name"),
+                        getItemInfo(itemID).get("description"),
                         "Yes"});
             } else {
                 itemsToShow.add(new String[]{itemID,
-                        tradeModel.getItemManager().getName(itemID),
-                        tradeModel.getItemManager().getDescription(itemID),
+                        getItemInfo(itemID).get("name"),
+                        getItemInfo(itemID).get("description"),
                         "No"});
             }
         }
@@ -119,9 +124,10 @@ public class TableViewCreator {
 
         for (String itemID : itemsAvailable) {
             itemsToShow.add(new String[]{itemID,
-                tradeModel.getItemManager().getName(itemID),
-                tradeModel.getItemManager().getOwner(itemID),
-                tradeModel.getItemManager().getDescription(itemID)});
+                getItemInfo(itemID).get("name"),
+                getItemInfo(itemID).get("owner"),
+                getItemInfo(itemID).get("description"),
+                });
         }
     }
 
@@ -129,7 +135,7 @@ public class TableViewCreator {
         Set<String> couldTrade = tradeModel.getUserManager().getFriendList(tradeModel.getCurrentUser());
         couldTrade.removeIf(user -> tradeModel.getUserManager().getOnVacation().contains(user)); // remove users on vacation
         couldTrade.removeIf(friend -> !tradeModel.getUserManager().getCityByUsername(tradeModel.getCurrentUser()).equalsIgnoreCase(tradeModel.getUserManager().getCityByUsername(friend))); // remove different city
-        allItems.removeIf(item -> !couldTrade.contains(tradeModel.getItemManager().getOwner(item)));
+        allItems.removeIf(item -> !couldTrade.contains(getItemInfo(item).get("owner")));
         return allItems;
     }
 
@@ -139,8 +145,8 @@ public class TableViewCreator {
         couldNotTrade.addAll(tradeModel.getUserManager().getOnVacation()); // add users on vacation
         couldNotTrade.add(tradeModel.getCurrentUser()); // add the user itself
         String thisUserCity = tradeModel.getUserManager().getCityByUsername(tradeModel.getCurrentUser());
-        allItems.removeIf(item -> couldNotTrade.contains(tradeModel.getItemManager().getOwner(item)) |
-                !thisUserCity.equalsIgnoreCase(tradeModel.getUserManager().getCityByUsername(tradeModel.getItemManager().getOwner(item))));
+        allItems.removeIf(item -> couldNotTrade.contains(getItemInfo(item).get("owner")) |
+                !thisUserCity.equalsIgnoreCase(tradeModel.getUserManager().getCityByUsername(getItemInfo(item).get("owner"))));
         return allItems;
     }
 
@@ -152,9 +158,9 @@ public class TableViewCreator {
         Set<String> userWishlist = tradeModel.getUserManager().getWishlistByUsername(tradeModel.getCurrentUser());
         for (String itemID : userWishlist) {
             itemsToShow.add(new String[]{itemID,
-                    tradeModel.getItemManager().getName(itemID),
-                    tradeModel.getItemManager().getOwner(itemID),
-                    tradeModel.getItemManager().getDescription(itemID)});
+                    getItemInfo(itemID).get("name"),
+                    getItemInfo(itemID).get("owner"),
+                    getItemInfo(itemID).get("description")});
         }
     }
 
@@ -166,9 +172,9 @@ public class TableViewCreator {
         Set<String> userWishlist = tradeModel.getItemManager().getItemsByStage("pending");
         for (String itemID : userWishlist) {
             itemsToShow.add(new String[]{itemID,
-                    tradeModel.getItemManager().getName(itemID),
-                    tradeModel.getItemManager().getOwner(itemID),
-                    tradeModel.getItemManager().getDescription(itemID)});
+                    getItemInfo(itemID).get("name"),
+                    getItemInfo(itemID).get("owner"),
+                    getItemInfo(itemID).get("description"),});
         }
     }
 
@@ -186,5 +192,9 @@ public class TableViewCreator {
      */
     protected void newItemsToShow() {
         itemsToShow = new ArrayList<>();
+    }
+
+    private Map<String, String> getItemInfo(String itemID) {
+        return gson.fromJson(tradeModel.getItemManager().getItemInfoJSON(itemID), new TypeToken<Map<String, String>>() {}.getType());
     }
 }

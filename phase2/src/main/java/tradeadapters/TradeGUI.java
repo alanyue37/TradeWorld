@@ -1,7 +1,7 @@
 package tradeadapters;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -383,14 +383,11 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
 
     private void selectItemTwoWayPage(Map<String, String> initiateTradeInfo){
 
-        List<String> itemsToOffer = initiateTradeController.getItemsToOffer(tradeModel.getItemManager().getOwner(initiateTradeInfo.get("chosen")));
+        List<String> itemsToOffer = initiateTradeController.getItemsToOffer(getItemInfo(initiateTradeInfo.get("chosen")).get("owner"));
         Stage stage2 = new Stage();
         Text title = new Text("Select an item to exchange.");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-        Map<String, String> infoToId = new HashMap<>();
-        for (String id: itemsToOffer){
-            infoToId.put(tradeModel.getItemManager().getItemInfo(id), id);
-        }
+        Map<String, String> summaryToId = getSummaryToId(itemsToOffer);
 
         //Vbox
         VBox mainLayout = new VBox();
@@ -402,7 +399,7 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
         ListView<String> list = new ListView<>();
         list.prefWidthProperty().bind(stage.widthProperty());
         ObservableList<String> availableItems = FXCollections.observableArrayList();
-        availableItems.addAll(infoToId.keySet());
+        availableItems.addAll(summaryToId.keySet());
         list.setItems(availableItems);
 
         Button confirmBtn = new Button("Confirm");
@@ -490,7 +487,7 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
             if (selected.toString().equals("")){
                 messageText.setText("Choose an item to trade.");
             } else {
-                initiateTradeInfo.put("giving", infoToId.get(selected.toString()));
+                initiateTradeInfo.put("giving", summaryToId.get(selected.toString()));
                 mainLayout.getChildren().removeAll(title, scrollPane, messageText, confirmBtn);
                 mainLayout.getChildren().add(grid);
             }
@@ -657,10 +654,10 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
      * @param messageBox Label to notify TradingUser.
      */
     protected void configureInitiateButtons(Button oneWayTemporary, Button oneWayPermanent, Button twoWayPermanent, Button twoWayTemporary, ScrollPane scrollPane, Label messageBox){
-        Map<String, String> infoToId = initiateTradeController.getAvailableItems();
+        Map<String, String> summaryToId = getSummaryToId(initiateTradeController.getAvailableItems().values());
 
         ObservableList<String> availableItems = FXCollections.observableArrayList();
-        availableItems.addAll(infoToId.keySet());
+        availableItems.addAll(summaryToId.keySet());
 
         if (!initiateTradeController.canTrade()){
             oneWayPermanent.setDisable(true);
@@ -693,7 +690,7 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
                                 "trade until you have loaned enough.");
                     } else {
                         Map<String, String> tradeInfo = new HashMap<>();
-                        tradeInfo.put("chosen", infoToId.get(selected.toString()));
+                        tradeInfo.put("chosen", summaryToId.get(selected.toString()));
                         tradeInfo.put("way", "oneWay");
                         tradeInfo.put("term", "temporary");
                         initiateTradeMeetingInfo(tradeInfo);
@@ -711,7 +708,7 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
                                 "trade until you have loaned enough.");
                     } else{
                         Map<String, String> tradeInfo = new HashMap<>();
-                        tradeInfo.put("chosen", infoToId.get(selected.toString()));
+                        tradeInfo.put("chosen", summaryToId.get(selected.toString()));
                         tradeInfo.put("way", "oneWay");
                         tradeInfo.put("term", "permanent");
                         initiateTradeMeetingInfo(tradeInfo);
@@ -722,11 +719,11 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
                     if (selected.toString().equals("")){
                         messageBox.setText("Choose an item to trade.");
                     }
-                    else if (initiateTradeController.getItemsToOffer(tradeModel.getItemManager().getOwner(infoToId.get(selected.toString()))).size() == 0){
+                    else if (initiateTradeController.getItemsToOffer(getItemInfo(summaryToId.get(selected.toString())).get("owner")).size() == 0){
                         messageBox.setText("You cannot make any two way trades. Your inventory is empty");}
                     else{
                         Map<String, String> tradeInfo = new HashMap<>();
-                        tradeInfo.put("chosen", infoToId.get(selected.toString()));
+                        tradeInfo.put("chosen", summaryToId.get(selected.toString()));
                         tradeInfo.put("way", "twoWay");
                         tradeInfo.put("term", "temporary");
                         selectItemTwoWayPage(tradeInfo);
@@ -737,11 +734,11 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
             if (selected.toString().equals("")){
                 messageBox.setText("Choose an item to trade.");
             }
-            else if (initiateTradeController.getItemsToOffer(tradeModel.getItemManager().getOwner(infoToId.get(selected.toString()))).size() == 0){
+            else if (initiateTradeController.getItemsToOffer(getItemInfo(summaryToId.get(selected.toString())).get("owner")).size() == 0){
                 messageBox.setText("You cannot make any two way trades. Your inventory is empty");
             } else{
                 Map<String, String> tradeInfo = new HashMap<>();
-                tradeInfo.put("chosen", infoToId.get(selected.toString()));
+                tradeInfo.put("chosen", summaryToId.get(selected.toString()));
                 tradeInfo.put("way", "twoWay");
                 tradeInfo.put("term", "permanent");
                 selectItemTwoWayPage(tradeInfo);
@@ -856,4 +853,20 @@ public class TradeGUI implements RunnableGUI, GUIObserver {
             }
         });
     }
+
+    private Map<String, String> getItemInfo(String itemID) {
+        Gson gson = new Gson();
+        return gson.fromJson(tradeModel.getItemManager().getItemInfoJSON(itemID), new TypeToken<Map<String, String>>() {}.getType());
+    }
+
+    private Map<String, String> getSummaryToId(Collection<String> itemIds) {
+        Map<String, String> summaryToId = new HashMap<>();
+        for (String id: itemIds) {
+            Map<String, String> itemInfo = getItemInfo(id);
+            String summary = "Item ID: " + id + "\nName: " + itemInfo.get("name") + "\nOwner: " + itemInfo.get("owner") + "\nDescription: " + itemInfo.get("description") + "\nAvailable: " + itemInfo.get("available");
+            summaryToId.put(summary, id);
+        }
+        return summaryToId;
+    }
+
 }

@@ -120,21 +120,4 @@ class Item implements Serializable {
         return "Item ID: " + id + "\nName: " + name + "\nOwner: " + owner + "\nDescription: " + description + "\nAvailable: " + available;
     }
 
-    /**
-     * Returns a JSONObject which includes the itemId, name, owner, description, stage, availability and dateCreated
-     * @return  The JSONObject containing the above identified item's itemId, name, owner, description, stage,
-     * availability and dateCreated
-     */
-    public JSONObject toJSON() throws JSONException {
-        // TODO: Make changes in controllers to use this instead of toString
-        JSONObject json = new JSONObject();
-        json.put("id", id);
-        json.put("name", name);
-        json.put("owner", owner);
-        json.put("description", description);
-        json.put("stage", stage);
-        json.put("available", available);
-        json.put("dateCreated", dateCreated);
-        return json;
-    }
 }

@@ -1,5 +1,7 @@
 package tradeadapters;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import tradegateway.TradeModel;
 import undocomponent.UndoAddProposedTrade;
 import undocomponent.UndoableOperation;
@@ -81,8 +83,8 @@ public class InitiateTradeController {
     }
 
     /**
-     * Returns a map of items info to the id of the item that are available for this TradingUser to trade (i.e. filters
-     * vacation, private/public, rank)
+     * Returns a map of items info in JSON to the id of the item that are available for this TradingUser to trade
+     * (i.e. filters vacation, private/public, rank)
      * @return map of items' info to id of the item
      */
     protected Map<String, String> getAvailableItems(){
@@ -95,7 +97,7 @@ public class InitiateTradeController {
             itemsAvailable.addAll(getAvailableItemsPublicAccount(tradeModel.getItemManager().getAvailableItems(userRank)));
         }
         for (String item: itemsAvailable){
-            infoToId.put(tradeModel.getItemManager().getItemInfo(item), item);
+            infoToId.put(tradeModel.getItemManager().getItemInfoJSON(item), item);
         }
         return infoToId;
     }
@@ -111,12 +113,12 @@ public class InitiateTradeController {
         List<String> details = new ArrayList<>();
         String itemId = otherInfo.get("chosen");
         if (way.equals("oneWay")){
-            details.add(tradeModel.getItemManager().getOwner(itemId));
+            details.add(getItemInfo(itemId).get("owner"));
             details.add(username);
             details.add(itemId);
         } else{
             details.add(username);
-            details.add(tradeModel.getItemManager().getOwner(itemId));
+            details.add(getItemInfo(itemId).get("owner"));
             details.add(otherInfo.get("giving"));
             details.add(itemId);
         }
@@ -151,7 +153,7 @@ public class InitiateTradeController {
         Set<String> itemsAvailable = tradeModel.getItemManager().getAvailableItems(userRank);
         List<String> userItemsAvailable = new ArrayList<>();
         for (String itemId: itemsAvailable) {
-            if (tradeModel.getItemManager().getOwner(itemId).equals(username)) {
+            if (getItemInfo(itemId).get("owner").equals(username)) {
                 userItemsAvailable.add(itemId);
             }
         }
@@ -167,7 +169,7 @@ public class InitiateTradeController {
         Set<String> couldTrade = tradeModel.getUserManager().getFriendList(username);
         couldTrade.removeIf(user -> tradeModel.getUserManager().getOnVacation().contains(user)); // remove users on vacation
         couldTrade.removeIf(friend -> !tradeModel.getUserManager().getCityByUsername(username).equalsIgnoreCase(tradeModel.getUserManager().getCityByUsername(friend))); // remove different city
-        allItems.removeIf(item -> !couldTrade.contains(tradeModel.getItemManager().getOwner(item)));
+        allItems.removeIf(item -> !couldTrade.contains(getItemInfo(item).get("owner")));
         return allItems;
     }
 
@@ -182,8 +184,13 @@ public class InitiateTradeController {
         couldNotTrade.addAll(tradeModel.getUserManager().getOnVacation()); // vacation
         couldNotTrade.add(username);
         String thisUserCity = tradeModel.getUserManager().getCityByUsername(username);
-        allItems.removeIf(item -> couldNotTrade.contains(tradeModel.getItemManager().getOwner(item)) |
-                !thisUserCity.equalsIgnoreCase(tradeModel.getUserManager().getCityByUsername(tradeModel.getItemManager().getOwner(item))));
+        allItems.removeIf(item -> couldNotTrade.contains(getItemInfo(item).get("owner")) |
+                !thisUserCity.equalsIgnoreCase(tradeModel.getUserManager().getCityByUsername(getItemInfo(item).get("owner"))));
         return allItems;
+    }
+
+    private Map<String, String> getItemInfo(String itemID) {
+        Gson gson = new Gson();
+        return gson.fromJson(tradeModel.getItemManager().getItemInfoJSON(itemID), new TypeToken<Map<String, String>>() {}.getType());
     }
 }

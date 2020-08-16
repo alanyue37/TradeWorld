@@ -1,5 +1,6 @@
 package itemcomponent;
 
+import com.google.gson.Gson;
 import tradegateway.ObservableDataModel;
 import undocomponent.NoLongerUndoableException;
 
@@ -22,16 +23,27 @@ public class ItemManager implements Serializable {
     }
 
     /**
-     * Returns the information of the item including its itemID, name, description, and its availability.
+     * Returns item info as JSON representation of Map of string key-value pairs with following keys:
+     * itemId, name, description, owner, available, stage, dateCreated
+     * frozen (true/false), rank (gold/silver/bronze), private (true/false), vacation (true/false), averageRating
      * Returns null if the item doesn't exist.
      * @param itemId    The id of the item
-     * @return  The information of the item in a string format
+     * @return  The information of the item in JSON format
      */
-    public String getItemInfo(String itemId) {
+    public String getItemInfoJSON(String itemId) {
         if (!items.containsKey(itemId)) {
             return null;
         }
-        return String.valueOf(items.get(itemId));
+        Gson gson = new Gson();
+        Map<String, String> info = new HashMap<>();
+        info.put("itemId", itemId);
+        info.put("name", items.get(itemId).getName());
+        info.put("description", items.get(itemId).getDescription());
+        info.put("owner", items.get(itemId).getOwner());
+        info.put("available", String.valueOf(items.get(itemId).isAvailable()));
+        info.put("stage", items.get(itemId).getStage());
+        info.put("dateCreated", String.valueOf(items.get(itemId).getDateCreated()));
+        return gson.toJson(info);
     }
 
     /**
@@ -78,30 +90,6 @@ public class ItemManager implements Serializable {
     }
 
     /**
-     * Returns the name of the item
-     * Precondition: An item with the given ID must exist.
-     *
-     * @param itemId    The id of the item
-     * @return  The name of the item
-     */
-    public String getName(String itemId) {
-        Item item = items.get(itemId);
-        return item.getName();
-    }
-
-    /**
-     * Returns the owner of the item
-     * Precondition: An item with the given ID must exist.
-     *
-     * @param itemId    The id of the item
-     * @return  The owner of the item
-     */
-    public String getOwner(String itemId) {
-        Item item = items.get(itemId);
-        return item.getOwner();
-    }
-
-    /**
      * Sets the owner for the item
      * Precondition: An item with the given ID must exist.
      *
@@ -112,30 +100,6 @@ public class ItemManager implements Serializable {
         Item item = items.get(itemId);
         item.setOwner(username);
         observableDataModel.setChanged();
-    }
-
-    /**
-     * Returns the description of the item
-     * Precondition: An item with the given ID must exist.
-     *
-     * @param itemId    The id of the item
-     * @return  The name of the item
-     */
-    public String getDescription(String itemId) {
-        Item item = items.get(itemId);
-        return item.getDescription();
-    }
-
-    /**
-     * Returns if an item is available
-     * Precondition: An item with the given ID must exist.
-     *
-     * @param itemId    The id of the item
-     * @return  The availability of the item
-     */
-    public boolean getAvailable(String itemId) {
-        Item item = items.get(itemId);
-        return item.isAvailable();
     }
 
     /**
