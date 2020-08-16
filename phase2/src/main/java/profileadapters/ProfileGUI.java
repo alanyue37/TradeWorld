@@ -42,6 +42,16 @@ public class ProfileGUI implements RunnableGUI {
     private Gson gson;
     Map<String, String> profileInfo;
 
+    /**
+     * Creates an instance of ProfileGUI -- profile view for a user who is not logged in
+     * Use the subclass LoggedInProfileGUI for logged in users; it displays more info and has more functionality
+     * This is primaroly meant for demo users.
+     * @param stage stage to display GUI on
+     * @param width width of window
+     * @param height height of window
+     * @param tradeModel reference to TradeModel instance
+     * @param ownProfile true iff looking at user is looking at own profile
+     */
     public ProfileGUI(Stage stage, int width, int height, TradeModel tradeModel, boolean ownProfile) {
         this.stage = stage;
         this.tradeModel = tradeModel;
@@ -56,12 +66,19 @@ public class ProfileGUI implements RunnableGUI {
         gson = new Gson();
     }
 
+    /**
+     * Returns the parent node this GUI of which this GUI is composed
+     * @return Parent node of all other nodes in this GUI
+     */
     @Override
     public Parent getRoot() {
         initializeScreen();
         return root;
     }
 
+    /**
+     * Shows a new window for this GUI
+     */
     @Override
     public void showScreen() {
         initializeScreen();

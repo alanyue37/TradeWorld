@@ -12,6 +12,10 @@ public class ProfileController  {
 
     private final TradeModel tradeModel;
 
+    /**
+     * Creates instance of ProfileController -- for profile related controllers
+     * @param tradeModel reference to TradeModel instance
+     */
     public ProfileController(TradeModel tradeModel) {
         this.tradeModel = tradeModel;
     }

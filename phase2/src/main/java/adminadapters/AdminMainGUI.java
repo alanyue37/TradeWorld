@@ -143,7 +143,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
      * or logs out.
      * @return the TabPane that provides options to set whichever threshold the Admin wants to set.
      */
-    public Parent setThresholdMenu() {
+    private Parent setThresholdMenu() {
         subRoot = new TabPane();
         subRoot.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
@@ -183,7 +183,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
      * This method allows the Admin User to create a new Admin.
      * @return the grid that allows the admin to add a new Admin.
      */
-    public Parent addNewAdmin() {
+    private Parent addNewAdmin() {
         Text title = new Text("Create a New Admin");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -236,7 +236,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
      * changed to frozen.
      * @return the grid that allows the Admin to unfreeze users.
      */
-    public Parent freezeUsers() {
+    private Parent freezeUsers() {
         Text title = new Text("Freeze Users");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -299,7 +299,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
      * changed to unfrozen.
      * @return the grid that allows the Admin to unfreeze users.
      */
-    public Parent unfreezeUsers() {
+    private Parent unfreezeUsers() {
         Text title = new Text("Unfreeze Users");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -356,7 +356,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
      * This method allows the Admin user to select items that should be added to the system.
      * @return the grid that allows the Admin to add items to the system.
      */
-    public Parent reviewItems() {
+    private Parent reviewItems() {
         Text title = new Text("Review Items");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -431,7 +431,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
      * invalid.
      * @return the grid that allows the Admin to set a lending thresholds.
      */
-    public Parent setLendingThreshold() {
+    private Parent setLendingThreshold() {
         Text title = new Text("Set Lending Threshold");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -488,7 +488,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
      * invalid.
      * @return the grid that allows the Admin to set a threshold for transactions.
      */
-    public Parent setLimitOfTransactionsThreshold() {
+    private Parent setLimitOfTransactionsThreshold() {
         Text title = new Text("Set Transactions Threshold");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -544,7 +544,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
      * invalid.
      * @return the grid that allows the Admin to set a threshold for incomplete trades.
      */
-    public Parent setLimitOfIncompleteTrades() {
+    private Parent setLimitOfIncompleteTrades() {
         Text title = new Text("Set Incomplete Trade Threshold");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -599,7 +599,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
      * invalid.
      * @return the grid that allows the Admin to set a threshold for edits.
      */
-    public Parent setLimitOfEdits() {
+    private Parent setLimitOfEdits() {
         Text title = new Text("Set Edit Threshold");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -652,7 +652,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
      * This method returns a grid that allows the admins to set a credit limit to rank users gold.
      * @return the grid that allows the Admins to set a threshold for gold.
      */
-    public Parent setGoldThreshold() {
+    private Parent setGoldThreshold() {
         Text title = new Text("Set Gold Threshold");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 
@@ -759,7 +759,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
      * trade, undo add reviews, and undo add wishlist items.
      * @return the grid that allows the Admin users to undo an action.
      */
-    public Parent undoActions() {
+    private Parent undoActions() {
         Text title = new Text("Undo Operations");
         title.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
 

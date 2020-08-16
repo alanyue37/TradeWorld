@@ -12,16 +12,29 @@ import trademain.RunnableGUI;
 public class DemoMainGUI extends MainGUI implements RunnableGUI {
     private TabPane root;
 
+    /**
+     * Creates an instance of DemoMainGUI -- the main screen for demo users.
+     * @param width the width of the window
+     * @param height the hieght of the window
+     * @param model reference to TradeModel instance
+     */
     public DemoMainGUI(int width, int height, TradeModel model) {
         super(width, height, model);
     }
 
+    /**
+     * Returns the parent node this GUI of which this GUI is composed
+     * @return Parent node of all other nodes in this GUI
+     */
     @Override
     public Parent getRoot() {
         initializeScreen();
         return root;
     }
 
+    /**
+     * Shows a new window for this GUI
+     */
     @Override
     public void showScreen() {
         initializeScreen();
@@ -31,9 +44,7 @@ public class DemoMainGUI extends MainGUI implements RunnableGUI {
         getStage().show();
     }
 
-    // frozen account
-
-    public void initializeScreen(){
+    private void initializeScreen(){
         root = new TabPane();
         root.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 

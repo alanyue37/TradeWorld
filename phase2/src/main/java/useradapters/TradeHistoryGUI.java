@@ -18,6 +18,7 @@ import org.json.JSONObject;
 import tradegateway.TradeModel;
 import trademain.RunnableGUI;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -99,24 +100,31 @@ public class TradeHistoryGUI implements RunnableGUI {
         result.prefWidthProperty().bind(stage.widthProperty());
         result.setPlaceholder(new Label("No past trading partners to display."));
 
-        List<String> trades = tradeModel.getTradeManager().getTradesOfUser(username, "completed");
-        try {
-            if (trades.size() > 0) {
-                for (int i = trades.size() - 1; i > trades.size() - count; i--) {
-                    JSONObject tradeInfo = tradeModel.getTradeManager().getTradeInfo(trades.get(i));
-                    JSONArray items = (JSONArray) tradeInfo.get("Users involved");
-                    for (int j = 0; j < items.length(); j++){
-                        String name = items.getString(j);
-                        if (!name.equals(username)){
-                            result.getItems().add(name);
-                            break;
-                        }
-                    }
-                }
-            }
-        } catch (JSONException e){
-            result.getItems().add("An error occurred.");
-        } catch (IndexOutOfBoundsException ignored) {} // Ignored because if user has fewer than 10 trades in history, we show all of them
+        List<String> completed = tradeModel.getTradeManager().getTradesOfUser(username, "completed");
+        Map<String, Integer> partners = tradeModel.getTradeManager().userToNumTradesInvolved(completed);
+        partners.remove(username);
+        List<String> frequentPartners = sortPartnersList(partners); // assumes that sort partners give best partner first
+        if (count >= frequentPartners.size()){
+            result.getItems().addAll(frequentPartners);
+        } else{
+            result.getItems().addAll(frequentPartners.subList(0, count));
+        }
         return result;
+    }
+
+    private List<String> sortPartnersList(Map<String, Integer> partners) {
+        List<String> sorted = new ArrayList<>();
+        for (String partner : partners.keySet()) {
+            if (sorted.size() == 0) {
+                sorted.add(partner);
+            } else {
+                int i = 0;
+                while ((i < sorted.size()) && partners.get(partner) < partners.get(sorted.get(i))) {
+                    i++;
+                }
+                sorted.add(i, partner);
+            }
+        }
+        return sorted;
     }
 }
