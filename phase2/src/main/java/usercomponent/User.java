@@ -84,12 +84,4 @@ class User implements Serializable {
         return true;
     }
 
-    /**
-     * Returns a string representation of this user
-     *
-     * @return A string representation of this user
-     */
-    public String toString() {
-        return name + "\n" + username;
-    }
 }

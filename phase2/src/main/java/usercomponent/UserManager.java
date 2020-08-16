@@ -434,4 +434,18 @@ public class UserManager implements Serializable {
         account.addToPendingFriends(username);
         observableDataModel.setChanged();
     }
+
+    /**
+     * Removes a friend of a TradingUser
+     * @param userOne username of one friend
+     * @param userTwo username of other friend
+     */
+    public void removeFriend(String userOne, String userTwo){
+        TradingUser accountOne = tradingUsers.get(userOne);
+        TradingUser accountTwo = tradingUsers.get(userTwo);
+        accountOne.removeFromFriends(userTwo);
+        accountTwo.removeFromFriends(userOne);
+        observableDataModel.setChanged();
+    }
+
 }

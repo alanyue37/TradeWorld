@@ -191,6 +191,14 @@ class TradingUser extends User {
     }
 
     /**
+     * Remove a user to given TradingUser
+     * @param username username of TradingUser to remove from friend list
+     */
+    protected void removeFromFriends(String username){
+        this.friends.remove(username);
+    }
+
+    /**
      * Adds a user to a given TradingUser's pending friend list.
      * @param username username of TradingUser to add to pending friend list.
      */

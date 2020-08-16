@@ -3,6 +3,7 @@ package profileadapters;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import tradegateway.TradeModel;
+import undocomponent.UndoAddFriend;
 import undocomponent.UndoAddReview;
 import undocomponent.UndoableOperation;
 
@@ -174,6 +175,10 @@ public class ProfileController  {
     protected void acceptOrIgnoreFriendsRequests(List<String> usernames, boolean accept) {
         for (String u : usernames) {
             tradeModel.getUserManager().setFriendRequest(tradeModel.getCurrentUser(), u, accept);
+            if (accept) {
+                UndoableOperation removeFriend = new UndoAddFriend(tradeModel.getCurrentUser(), u, tradeModel.getUserManager());
+                tradeModel.getUndoManager().add(removeFriend);
+            }
         }
     }
 
