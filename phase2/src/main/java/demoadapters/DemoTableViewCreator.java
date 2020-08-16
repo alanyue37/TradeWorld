@@ -4,7 +4,7 @@ import tradegateway.TradeModel;
 import useradapters.TableViewCreator;
 
 /**
- * Manages the creation of TableView tables used in the DemoGUIs.
+ * Factory responsible for the creation of TableView tables used in the DemoGUIs.
  */
 public class DemoTableViewCreator extends TableViewCreator {
 
