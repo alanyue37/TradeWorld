@@ -37,6 +37,14 @@ public class LoginGUI implements RunnableGUI {
     private final VBox root;
     private final Text errorMessage;
 
+    /**
+     * Creates instance of LoginGUI --- hte login screen
+     * @param stage stage to display GUI on
+     * @param width width of window
+     * @param height height of window
+     * @param tradeModel reference to TradeModel instance
+     * @param logo Image instance of logo to display on screen
+     */
     public LoginGUI(Stage stage, int width, int height, TradeModel tradeModel, Image logo) {
         this.stage = stage;
         this.controller = new LogInController(tradeModel);
@@ -49,12 +57,19 @@ public class LoginGUI implements RunnableGUI {
         errorMessage.setFill(Color.RED);
     }
 
+    /**
+     * Returns the parent node this GUI of which this GUI is composed
+     * @return Parent node of all other nodes in this GUI
+     */
     @Override
     public Parent getRoot() {
         initializeScreen();
         return root;
     }
 
+    /**
+     * Shows a new window for this GUI
+     */
     @Override
     public void showScreen() {
         initializeScreen();
