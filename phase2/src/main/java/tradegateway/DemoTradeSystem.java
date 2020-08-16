@@ -38,6 +38,9 @@ public class DemoTradeSystem {
         }
     }
 
+    /**
+     * Persists required information to disk. Call when exiting.
+     */
     public void persist() {
         try {
             tradeModel.clearState();

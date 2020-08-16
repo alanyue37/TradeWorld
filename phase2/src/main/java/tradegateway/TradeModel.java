@@ -162,7 +162,7 @@ public class TradeModel implements Serializable, ObservableDataModel {
     }
 
     /**
-     * Sets changed to true and notifies the observers.
+     * Sets internal changed state to true and notifies the observers.
      */
     public void setChanged() {
         this.changed = true;
