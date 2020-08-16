@@ -62,8 +62,8 @@ public class DemoTradeSystem {
         tradeModel.getUserManager().createAdminUser("Sophia", "a2", "a2");
         tradeModel.getUserManager().createAdminUser("Jeff", "a3", "a3");
         tradeModel.getUserManager().createTradingUser("Rachel", "u1", "u1", "Toronto");
-        tradeModel.getUserManager().createTradingUser("Bob", "u2", "u2", "Toronto");
-        tradeModel.getUserManager().createTradingUser("Ayushi", "u3", "u3", "Edmonton");
+        tradeModel.getUserManager().createTradingUser("Ayushi", "u2", "u2", "Toronto");
+        tradeModel.getUserManager().createTradingUser("Bob", "u3", "u3", "Edmonton");
         tradeModel.getUserManager().createTradingUser("Sarah", "u4", "u4", "Edmonton");
         tradeModel.getUserManager().createTradingUser("Michael", "u5", "u5", "Mississauga");
 

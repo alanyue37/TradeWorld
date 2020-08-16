@@ -71,32 +71,18 @@ public class UserMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         Tab tradeTab = new Tab("Trade", tradeParent);
         tabToGUI.put(tradeTab, tradeGUI);
 
-        ProfileGUI otherProfilesGUI = new LoggedInProfileGUI(getStage(), 800, 800, getTradeModel(), false);
-        Parent otherProfilesParent = otherProfilesGUI.getRoot();
-        Tab otherProfilesTab = new Tab("View Profiles", otherProfilesParent);
-        tabToGUI.put(otherProfilesTab, otherProfilesGUI);
-
         TradeHistoryGUI tradeHistoryGUI = new TradeHistoryGUI(getStage(), 800, 800, getTradeModel(), getTradeModel().getCurrentUser());
         Parent tradeHistoryParent = tradeHistoryGUI.getRoot();
         Tab tradeHistoryTab = new Tab("Trading History", tradeHistoryParent);
         tabToGUI.put(tradeHistoryTab, tradeHistoryGUI);
 
-        root.getTabs().addAll(profileTab, inventoryTab, wishlistTab, tradeTab, otherProfilesTab, tradeHistoryTab);
+        ProfileGUI otherProfilesGUI = new LoggedInProfileGUI(getStage(), 800, 800, getTradeModel(), false);
+        Parent otherProfilesParent = otherProfilesGUI.getRoot();
+        Tab otherProfilesTab = new Tab("View Profiles", otherProfilesParent);
+        tabToGUI.put(otherProfilesTab, otherProfilesGUI);
 
-        // Listener code below based on https://stackoverflow.com/questions/17522686/javafx-tabpane-how-to-listen-to-selection-changes
-        root.getSelectionModel().selectedItemProperty().addListener(
-                new ChangeListener<Tab>() {
-                    @Override
-                    public void changed(ObservableValue<? extends Tab> observableValue, Tab oldTab, Tab newTab) {
-                        /*profileTab.setContent(profileGUI.getRoot());
-                        inventoryTab.setContent(inventoryGUI.getRoot());
-                        wishlistTab.setContent(wishlistGUI.getRoot());
-                        tradeTab.setContent(tradeGUI.getRoot());
-                        otherProfilesTab.setContent(otherProfilesGUI.getRoot());
-                        tradeHistoryTab.setContent(tradeHistoryGUI.getRoot());*/
-                    }
-                }
-        );
+        root.getTabs().addAll(profileTab, inventoryTab, wishlistTab, tradeTab, tradeHistoryTab, otherProfilesTab);
+
     }
 
     @Override
