@@ -231,7 +231,6 @@ public class LoginGUI implements RunnableGUI {
     }
 
     private void logInHandler(String username, String password) {
-        // TODO: move to controller
         Gson gson = new Gson();
         Type type = new TypeToken<Map<String, String>>(){}.getType();
         Map<String, String> userInfo = gson.fromJson(controller.logIn(username, password), type);

@@ -120,7 +120,7 @@ public class AddItemGUI implements RunnableGUI {
             if (invalidInput()) {
                 setMessage("Fields cannot be empty. Please try again.");
             } else {
-                controller.createItem(tradeModel.getCurrentUser(), itemNameField.getText(), itemDescriptionField.getText());
+                controller.createItem(itemNameField.getText(), itemDescriptionField.getText());
                 clearInputFields();
                 setMessage("Item added");
                 // table.setItems(creator.create("own inventory").getItems());

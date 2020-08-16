@@ -4,7 +4,9 @@ import tradegateway.TradeModel;
 import undocomponent.UndoAddWishlistItem;
 import undocomponent.UndoableOperation;
 
-// TODO: javadoc
+/**
+ * A controller class that sends user input to use case classes and calls use case class methods.
+ */
 public class UserController {
 
     protected final TradeModel tradeModel;
@@ -18,13 +20,21 @@ public class UserController {
     }
 
     /**
-     * Allows user to create an item
+     * Allows the current user to create an item and add it to their inventory.
+     *
+     * @param itemName the name of the item
+     * @param itemDescription the description of the item
      */
-    protected void createItem(String username, String itemName, String itemDescription){
-        tradeModel.getItemManager().addItem(itemName, username, itemDescription);
+    protected void createItem(String itemName, String itemDescription){
+        tradeModel.getItemManager().addItem(itemName, tradeModel.getCurrentUser(), itemDescription);
     }
 
-    public void addItemToWishlist(String itemID){
+    /**
+     * Allows the current user to add the given item to their wishlist.
+     *
+     * @param itemID the item ID to add to the wishlist
+     */
+    protected void addItemToWishlist(String itemID){
         boolean added = tradeModel.getUserManager().addToWishlist(tradeModel.getCurrentUser(), itemID);
         if (added) {
             UndoableOperation undoableOperation = new UndoAddWishlistItem(tradeModel.getUserManager(), tradeModel.getCurrentUser(), itemID);
@@ -32,7 +42,12 @@ public class UserController {
         }
     }
 
-    public void removeItemFromWishlist(String itemID) {
+    /**
+     * Allows the current user to remove the given item from their wishlist.
+     *
+     * @param itemID the item ID to remove from thewishlist
+     */
+    protected void removeItemFromWishlist(String itemID) {
         tradeModel.getUserManager().removeFromWishlist(tradeModel.getCurrentUser(), itemID);
     }
 

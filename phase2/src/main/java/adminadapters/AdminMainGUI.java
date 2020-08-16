@@ -801,7 +801,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
 
         confirmToUndo.setOnAction(actionEvent -> {
             String selected = list.getSelectionModel().getSelectedItem();
-            if (selected != null) { // TODO: Is this the right check? Should we check for null instead?
+            if (selected != null) {
                 try {
                     controller.undoOperation(selected);
                     reviewItems.remove(selected);

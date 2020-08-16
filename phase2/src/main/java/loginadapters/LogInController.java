@@ -15,7 +15,7 @@ public class LogInController {
 
     /**
      * Creates a LogInController.
-     * @param tradeModel the tradegateway.TradeModel containing all the information
+     * @param tradeModel the TradeModel containing all the information
      */
     public LogInController(TradeModel tradeModel) {
         this.tradeModel = tradeModel;
@@ -23,11 +23,11 @@ public class LogInController {
 
     /**
      * Checks if username and password is correct and returns account info Map of String pairs in JSON.
-     * Check key "authenticated" is true or false to see if username and password combination exists.
-     * Check key "userType" to see if account is "trading" or "admin"
+     * Checks key "authenticated" is true or false to see if username and password combination exists.
+     * Checks key "userType" to see if account is "trading" or "admin".
      * @param user username to log in with
      * @param pass password to log in with
-     * @return JSON string of login success and account info. Get key "authenticated" // TODO: what does this mean?
+     * @return JSON string of login success and account info
      */
     public String logIn(String user, String pass) {
         Gson gson = new Gson();
@@ -49,7 +49,7 @@ public class LogInController {
     }
 
     /**
-     * Create a new username with the given info
+     * Create a new username with the given info.
      * @param name name of new user
      * @param user username of new user
      * @param pass password of new user
