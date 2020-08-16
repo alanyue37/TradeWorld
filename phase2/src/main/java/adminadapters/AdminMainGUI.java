@@ -15,6 +15,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
+
 import tradegateway.GUIObserver;
 import tradegateway.TradeModel;
 import trademain.MainGUI;
@@ -23,7 +24,6 @@ import undocomponent.NoLongerUndoableException;
 import useradapters.TableViewCreator;
 
 import java.util.*;
-
 
 /**
  * A GUI class that displays admin responsibilities to the screen and listens for the admin input.
@@ -40,13 +40,13 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
     private final TradeModel model;
     private final TabPane root;
     private TabPane subRoot;
-    private List<String> tabNames;
-    private Map<String, Label> messages;
+    private final List<String> tabNames;
+    private final Map<String, Label> messages;
 
     /**
-     * A constructor for AdminGUI class.
+     * Create a new AdminGUI class given a width, height, and TradeModel.
      * @param width The width of the screen.
-     * @param height    The height of the screen.
+     * @param height The height of the screen.
      * @param model The TradeModel.
      */
     public AdminMainGUI(int width, int height, TradeModel model) {
@@ -65,7 +65,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
     }
 
     /**
-     * This is an Admin menu in the TabPane which provides options.
+     * Initialize the Admin menu in the TabPane which provides options.
      */
     public void initializeScreen() {
         getTradeModel().addObserver(this);
@@ -102,19 +102,12 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
         );
     }
 
-    /**
-     * Returns the TabPane consisting of the Admin menu options.
-     * @return Returns the TabPane consisting of Admin menu options.
-     */
     @Override
     public Parent getRoot() {
         initializeScreen();
         return root;
     }
 
-    /**
-     * This method sets up the screen.
-     */
     @Override
     public void showScreen() {
         initializeScreen();
@@ -125,7 +118,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
     }
 
     /**
-     * This method refreshes/ updates the all the Admin screens.
+     * Update all the Admin screens.
      */
     @Override
     public void update() {
@@ -148,7 +141,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
      * This method presents a list on the screen and asks the Admin user to select an option. The selected determines
      * which method to call in the AdminGUI. This screen is displayed again until the Admin selects an option
      * or logs out.
-     * @return Returns a TabPane that provide options to set whichever threshold the Admin wants to set.
+     * @return the TabPane that provides options to set whichever threshold the Admin wants to set.
      */
     public Parent setThresholdMenu() {
         subRoot = new TabPane();
@@ -188,7 +181,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
 
     /**
      * This method allows the Admin User to create a new Admin.
-     * @return Returns a grid that allows the admin to add a new Admin.
+     * @return the grid that allows the admin to add a new Admin.
      */
     public Parent addNewAdmin() {
         Text title = new Text("Create a New Admin");
@@ -241,7 +234,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
     /**
      * This method allows the Admin user to freeze a given list of users. The selected users will have their status
      * changed to frozen.
-     * @return Returns a grid that allows the Admin to unfreeze users.
+     * @return the grid that allows the Admin to unfreeze users.
      */
     public Parent freezeUsers() {
         Text title = new Text("Freeze Users");
@@ -304,7 +297,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
     /**
      * This method allows the Admin user to unfreeze a given list of Users. The selected users will have their status
      * changed to unfrozen.
-     * @return Returns a grid that allows the Admin to unfreeze users.
+     * @return the grid that allows the Admin to unfreeze users.
      */
     public Parent unfreezeUsers() {
         Text title = new Text("Unfreeze Users");
@@ -361,7 +354,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
 
     /**
      * This method allows the Admin user to select items that should be added to the system.
-     * @return Returns a grid that allows the Admin to add items to the system.
+     * @return the grid that allows the Admin to add items to the system.
      */
     public Parent reviewItems() {
         Text title = new Text("Review Items");
@@ -436,7 +429,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
     /**
      * This method allows the Admin user to set a lending threshold and prompts the Admin user again if the input is
      * invalid.
-     * @return Returns a grid that allows the Admin to set a lending thresholds.
+     * @return the grid that allows the Admin to set a lending thresholds.
      */
     public Parent setLendingThreshold() {
         Text title = new Text("Set Lending Threshold");
@@ -493,7 +486,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
     /**
      * This method allows the Admin user to set a limit for weekly transactions and prompts the Admin user again if the input is
      * invalid.
-     * @return Returns a grid that allows the Admin to set a threshold for transactions.
+     * @return the grid that allows the Admin to set a threshold for transactions.
      */
     public Parent setLimitOfTransactionsThreshold() {
         Text title = new Text("Set Transactions Threshold");
@@ -549,7 +542,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
     /**
      * This method allows the Admin user to set a threshold for having incomplete trades and prompts the Admin user again if the input is
      * invalid.
-     * @return Returns a grid that allows the Admin to set a threshold for incomplete trades.
+     * @return the grid that allows the Admin to set a threshold for incomplete trades.
      */
     public Parent setLimitOfIncompleteTrades() {
         Text title = new Text("Set Incomplete Trade Threshold");
@@ -604,7 +597,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
     /**
      * This method allows the Admin user to set a threshold for edits and prompts the Admin user again if the input is
      * invalid.
-     * @return Returns a grid that allows the Admin to set a threshold for edits.
+     * @return the grid that allows the Admin to set a threshold for edits.
      */
     public Parent setLimitOfEdits() {
         Text title = new Text("Set Edit Threshold");
@@ -657,7 +650,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
 
     /**
      * This method returns a grid that allows the admins to set a credit limit to rank users gold.
-     * @return Returns a grid that allows the Admins to set a threshold for gold.
+     * @return the grid that allows the Admins to set a threshold for gold.
      */
     public Parent setGoldThreshold() {
         Text title = new Text("Set Gold Threshold");
@@ -710,7 +703,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
 
     /**
      * This method returns a grid that allows the admins to set a credit limit to rank users silver.
-     * @return Returns a grid that allows the Admins to set a threshold for silver.
+     * @return the grid that allows the Admins to set a threshold for silver.
      */
     public Parent setSilverThreshold() {
         Text title = new Text("Set Silver Threshold");
@@ -764,7 +757,7 @@ public class AdminMainGUI extends MainGUI implements RunnableGUI, GUIObserver {
     /**
      * This method allows the admin to undo actions such as undo the items added to the inventory, undo add proposed
      * trade, undo add reviews, and undo add wishlist items.
-     * @return Returns a grid that allows the Admin users to undo an action.
+     * @return the grid that allows the Admin users to undo an action.
      */
     public Parent undoActions() {
         Text title = new Text("Undo Operations");

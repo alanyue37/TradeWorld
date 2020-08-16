@@ -44,20 +44,12 @@ public class AddWishlistGUI implements RunnableGUI {
         creator = new TableViewCreator(model);
     }
 
-    /**
-     * Gets the Parent to be shown.
-     *
-     * @return the resulting Parent
-     */
     @Override
     public Parent getRoot() {
         initializeScreen();
         return grid;
     }
 
-    /**
-     * Sets the scene of the stage to this GUI.
-     */
     @Override
     public void showScreen() {
         Scene scene = new Scene(grid, width, height);
