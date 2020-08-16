@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Manages the creation of TableView tables used in various GUIs.
+ * Factory responsible for the creation of TableView tables used in various GUIs.
  */
 public class TableViewCreator {
 
