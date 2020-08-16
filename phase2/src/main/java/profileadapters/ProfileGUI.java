@@ -121,9 +121,11 @@ public class ProfileGUI implements RunnableGUI {
 
         // Set title
         titleRow = new HBox();
-        Label titleLabel = new Label(profileInfo.get("name") + " Profile");
+        Label titleLabel = new Label(profileInfo.get("name"));
         titleLabel.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-        titleRow.getChildren().add(titleLabel);
+        Label usernameLabel = new Label("Username: " + userProfile);
+        VBox titleColumn = new VBox(titleLabel, usernameLabel);
+        titleRow.getChildren().add(titleColumn);
 
         // Set profileInfoRow
         // City + rank
