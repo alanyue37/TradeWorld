@@ -3,9 +3,8 @@ A pre-made system with admins, users, and items can be found in the DemoTradeSys
 can be run using DemoMain in the package trademain. There are also a series of pre-made trades that have been commented
 out.
 
-To run the program without anything premade, run the program from Main.java in package trademain. If you have already
-run DemoMain before doing this, you must first delete serializedobjects.ser. In this case, the initial admin user that
-is able to add other admins to the system has username "ia" and password "initialize".
+To reset the program to the state given in DemoTradeSystem, the file serializedobjects.ser must be deleted. The initial
+admin user that is able to add other admins to the system has username "ia" and password "initialize".
 
 BEFORE RUNNING (IMPORTANT): Make sure File -> Project Structure -> Project compiler output ends in phase2/out
 In File -> Project Structure -> Modules, add the java-json.jar and gson-2.8.6.jar files.
